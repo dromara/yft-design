@@ -29,6 +29,7 @@ module.exports = {
     }],
     '@typescript-eslint/no-unused-vars': 'off',
     '@typescript-eslint/no-non-null-assertion': 'off',
+    'vue/comment-directive': 'off'
   },
   overrides: [
     {
