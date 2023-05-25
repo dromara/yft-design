@@ -1,0 +1,1 @@
+export const ScaleLimit = { min: 0.1, max: 5 }
