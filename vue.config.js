@@ -98,7 +98,7 @@ module.exports = defineConfig({
     }
   },
   pwa: {
-    name: "yifutu-draw",
+    name: "vue-fabric-draw",
     themeColor: "#d14424",
     iconPaths: {
       faviconSVG: null,
@@ -109,8 +109,8 @@ module.exports = defineConfig({
       msTileImage: null,
     },
     manifestOptions: {
-      name: "yifutu-draw",
-      short_name: "yifutu-draw",
+      name: "vue-fabric-draw",
+      short_name: "vue-fabric-draw",
       theme_color: "#d14424",
       icons: [
         {
@@ -146,7 +146,7 @@ module.exports = defineConfig({
     //       urlPattern: /.*/,
     //       handler: "networkFirst",
     //       options: {
-    //         cacheName: "yifutu-draw",
+    //         cacheName: "vue-fabric-draw",
     //         expiration: {
     //           maxAgeSeconds: 60 * 60 * 10,
     //         },

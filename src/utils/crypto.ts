@@ -1,6 +1,6 @@
 import CryptoJS from 'crypto-js'
 
-const CRYPTO_KEY = 'yifutu-draw'
+const CRYPTO_KEY = 'vue-fabric-draw'
 
 /**
  * 加密
