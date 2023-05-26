@@ -4,11 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "vitebuild": "vite build",
-    "build:report": "vue-cli-service build --report",
-    "lint": "vue-cli-service lint"
+    "build": "vite build"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.0.10",
