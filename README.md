@@ -6,7 +6,7 @@
 ## 项目运行
 ```
 npm install
-npm run serve
+npm run dev
 npm run build
 ```
 # 📚 功能列表

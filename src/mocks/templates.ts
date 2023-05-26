@@ -408,7 +408,7 @@ export const Templates: Template[] = [
         "globalCompositeOperation": "source-over",
         "skewX": 0,
         "skewY": 0,
-        "src": "https://www.yifutu.cn/static/web/param/20%E5%BC%BA.png",
+        "src": new URL(`/src/assets/images/index.png`, import.meta.url).href,
         "crossOrigin": null,
         "filters": []
       }
