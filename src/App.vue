@@ -20,7 +20,7 @@ onMounted(async () => {
   mainStore.setAvailableFonts()
 })
 
-if (process.env.NODE_ENV === 'production') {
+if (import.meta.env.MODE === 'production') {
   window.onbeforeunload = () => false
 }
 
