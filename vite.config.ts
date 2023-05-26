@@ -5,19 +5,29 @@
  * @LastEditors: June
  * @LastEditTime: 2023-05-26 08:43:28
  */
-import type { ConfigEnv, UserConfigExport } from "vite";
-import vue from "@vitejs/plugin-vue";
-import path from "path";
+
+
 import { VitePWA } from "vite-plugin-pwa";
 import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
 import { createHtmlPlugin } from "vite-plugin-html";
-import autoprefixer from 'autoprefixer'
+import type { ConfigEnv, UserConfigExport } from "vite";
+import path from "path";
+import vue from "@vitejs/plugin-vue";
+import autoprefixer from 'autoprefixer';
+import viteCompression from 'vite-plugin-compression';
 
 export default ({ command }: ConfigEnv): UserConfigExport => {
   return {
     base: "./", // publicPath
     plugins: [
       vue(),
+      viteCompression({
+        verbose: true,
+        disable: false,
+        threshold: 10240,
+        algorithm: 'gzip',
+        ext: '.gz',
+      }),
       VitePWA({
         registerType: "autoUpdate",
         workbox: {
