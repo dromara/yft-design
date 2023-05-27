@@ -29,7 +29,7 @@
 
 <script lang="ts" setup>
 import { nextTick, ref, watch } from 'vue'
-import trianglify from 'trianglify'
+import trianglify from '@/plugins/trianglify/trianglify'
 import { GridColorSelf } from '@/configs/gridColors'
 
 const props = defineProps({

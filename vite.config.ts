@@ -142,6 +142,15 @@ export default ({ command }: ConfigEnv): UserConfigExport => {
           drop_debugger: true,
         },
       },
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            vue: ['vue'],
+            fabric: ['fabric'],
+            'element-plus': ['element-plus']
+          }
+        }
+      }
     },
   };
 };
