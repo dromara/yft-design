@@ -269,7 +269,7 @@ import { WorkSpaceDrawType } from '@/configs/canvas'
 import { ImageElement, WorkSpaceElement } from '@/types/canvas'
 import { getRandomNum } from '@/utils/common'
 import { getImageDataURL } from '@/utils/image'
-import trianglify from 'trianglify'
+import trianglify from '@/plugins/trianglify/trianglify'
 import useCanvas from '@/views/Canvas/useCanvas'
 import GridFill from './GridFill.vue'
 import GradientFill from './GradientFill.vue'
@@ -367,6 +367,7 @@ const changeBackgroundType = (type: number) => {
   }
   // 网格
   else if (type === 3) {
+    console.log('ok')
     const templateBackground: WorkSpaceElement = {
       ...background.value,
       fillType: type,
@@ -692,8 +693,8 @@ const generateShadingBackground = async () => {
   const vHeight = item.vHeight
   const path = item.path
   const mode = item.mode
-  let svgWidth = width + shadingBackground.value.spacing[0]
-  let svgHeight = height - vHeight * (maxColors - shadingBackground.value.colorCounts) + shadingBackground.value.spacing[1]
+  const svgWidth = width + shadingBackground.value.spacing[0]
+  const svgHeight = height - vHeight * (maxColors - shadingBackground.value.colorCounts) + shadingBackground.value.spacing[1]
   const imageWidth = workSpaceDraw.width, imageHeight = workSpaceDraw.height
   let strokeGroup = ''
   for (let i = 0; i < maxColors - 1; i++) {

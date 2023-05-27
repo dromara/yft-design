@@ -269,7 +269,7 @@ import { BackgroundElement } from '@/types/canvas'
 import { getRandomNum } from '@/utils/common'
 import { getImageDataURL, getImageSize } from '@/utils/image'
 import { WorkSpaceDrawType } from '@/configs/canvas'
-import trianglify from 'trianglify'
+import trianglify from '@/plugins/trianglify/trianglify'
 import useCanvas from '@/views/Canvas/useCanvas'
 import useCanvasZindex from '@/hooks/useCanvasZindex'
 import GridFill from './GridFill.vue'
@@ -686,8 +686,8 @@ const generateShadingBackground = async () => {
   const vHeight = item.vHeight
   const path = item.path
   const mode = item.mode
-  let svgWidth = width + shadingBackground.value.spacing[0]
-  let svgHeight = height - vHeight * (maxColors - shadingBackground.value.colorCounts) + shadingBackground.value.spacing[1]
+  const svgWidth = width + shadingBackground.value.spacing[0]
+  const svgHeight = height - vHeight * (maxColors - shadingBackground.value.colorCounts) + shadingBackground.value.spacing[1]
   const imageWidth = handleElement.value.width, imageHeight = handleElement.value.height
   let strokeGroup = ''
   for (let i = 0; i < maxColors - 1; i++) {
