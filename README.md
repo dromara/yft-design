@@ -1,18 +1,6 @@
 # vue-fabric-draw
 > 一个基于 Vue3.x + TypeScript + fabric.js + pinia + element-plus 基于 canvas 的在线编辑应用，类似<b>[稿定设计](https://www.gaoding.com/)</b>，<b>[创客贴](https://www.chuangkit.com/)</b>在线编辑应用，支持 文字、图片、形状、线条、二维码 、条形码几种最常用的元素类型，每一种元素都拥有高度可编辑能力，缩略图显示，模板，支持导出json，svg, image文件。  
-<b>样式参考：[https://github.com/pipipi-pikachu/PPTist](https://github.com/pipipi-pikachu/PPTist)</b>  
 <b>在线体验：[http://draw.morestrive.com](http://draw.morestrive.com)</b>
-
-## 页面展示
-![avatar](doc/index.png)
-
-## 背景展示
-### 渐变背景
-![avatar](doc/gradient.png)
-### 网格背景
-![avatar](doc/grid.png)
-### 形状背景
-![avatar](doc/shape.png)
 
 ## 项目运行
 ```
@@ -20,6 +8,17 @@ npm install
 npm run dev
 npm run build
 ```
+
+### 页面功能
+![avatar](doc/index.png)
+### 渐变背景
+![avatar](doc/gradient.png)
+### 网格背景
+![avatar](doc/grid.png)
+### 形状背景
+![avatar](doc/shape.png)
+
+
 # 📚 功能列表
 ### 基础功能
 - 历史记录（撤销、重做）
