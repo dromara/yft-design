@@ -1,7 +1,10 @@
 # vue-fabric-draw
-> 一个基于 Vue3.x + TypeScript +fabric.js + pinia + element-plus + indexedDB(浏览器数据库) 的在线编辑应用，支持 文字、图片、形状、线条、二维码 几种最常用的元素类型，每一种元素都拥有高度可编辑能力，缩略图显示，模板，支持导出json 文件，image文件。  
+> 一个基于 Vue3.x + TypeScript + fabric.js + pinia + element-plus + indexedDB(浏览器数据库) 的在线编辑应用，支持 文字、图片、形状、线条、二维码 几种最常用的元素类型，每一种元素都拥有高度可编辑能力，缩略图显示，模板，支持导出json 文件，image文件。  
 <b>样式参考：[https://github.com/pipipi-pikachu/PPTist](https://github.com/pipipi-pikachu/PPTist)</b>  
 <b>在线体验：[http://draw.morestrive.com](http://draw.morestrive.com)</b>
+
+## 页面展示
+![avatar](doc/index.png)
 
 ## 项目运行
 ```
