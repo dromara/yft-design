@@ -6,6 +6,14 @@
 ## 页面展示
 ![avatar](doc/index.png)
 
+## 背景展示
+### 渐变背景
+![avatar](doc/gradient.png)
+### 网格背景
+![avatar](doc/grid.png)
+### 形状背景
+![avatar](doc/shape.png)
+
 ## 项目运行
 ```
 npm install
