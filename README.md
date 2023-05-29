@@ -10,7 +10,7 @@ npm run build
 ```
 
 ### 页面功能
-![avatar](doc/index.png)
+![avatar](http://github.com/more-strive/vue-fabric-draw/blob/main/doc/index.png)
 
 ### 渐变背景
 ![avatar](doc/gradient.png)
