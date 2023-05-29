@@ -11,10 +11,13 @@ npm run build
 
 ### 页面功能
 ![avatar](doc/index.png)
+
 ### 渐变背景
 ![avatar](doc/gradient.png)
+
 ### 网格背景
 ![avatar](doc/grid.png)
+
 ### 形状背景
 ![avatar](doc/shape.png)
 
