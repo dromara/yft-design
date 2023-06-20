@@ -1,4 +1,5 @@
-import * as fabric from 'fabric';
+import * as fabric from 'fabric'
+import { config } from 'fabric'
 import { TClassProperties } from '@/types/typedefs'
 
 
@@ -111,33 +112,33 @@ export class CropImage extends fabric.Image {
 
   }
 
-  // _drawCroppingLines(ctx: CanvasRenderingContext2D) {
-  //   // @ts-ignore
-  //   if (!this.isCropping || (this.canvas && (this.canvas.isCropping))) {
-  //     return;
-  //   }
-  //   const w = this.width;
-  //   const h = this.height;
-  //   // @ts-ignore
-  //   const zoom = this.canvas.getZoom() * config.devicePixelRatio;
-  //   ctx.save();
-  //   ctx.lineWidth = 1;
-  //   ctx.globalAlpha = 1;
-  //   // @ts-ignore
-  //   ctx.strokeStyle = this.cropLinesColor;
-  //   ctx.beginPath();
-  //   ctx.moveTo(-w / 2 + w / 3, -h / 2);
-  //   ctx.lineTo(-w / 2 + w / 3, h / 2);
-  //   ctx.moveTo(-w / 2 + 2 * w / 3, -h / 2);
-  //   ctx.lineTo(-w / 2 + 2 * w / 3, h / 2);
-  //   ctx.moveTo(-w / 2, -h / 2 + h / 3);
-  //   ctx.lineTo(w / 2, -h / 2 + h / 3);
-  //   ctx.moveTo(-w / 2, -h / 2 + 2 * h / 3);
-  //   ctx.lineTo(w / 2, -h / 2 + 2 * h / 3);
-  //   ctx.scale(1 / (this.scaleX * zoom), 1 / (this.scaleY * zoom));
-  //   ctx.stroke();
-  //   ctx.restore();
-  // }
+  _drawCroppingLines(ctx: CanvasRenderingContext2D) {
+    // @ts-ignore
+    if (!this.isCropping || (this.canvas && (this.canvas.isCropping))) {
+      return;
+    }
+    const w = this.width;
+    const h = this.height;
+    // @ts-ignore
+    const zoom = this.canvas.getZoom() * config.devicePixelRatio;
+    ctx.save();
+    ctx.lineWidth = 1;
+    ctx.globalAlpha = 1;
+    // @ts-ignore
+    ctx.strokeStyle = this.cropLinesColor;
+    ctx.beginPath();
+    ctx.moveTo(-w / 2 + w / 3, -h / 2);
+    ctx.lineTo(-w / 2 + w / 3, h / 2);
+    ctx.moveTo(-w / 2 + 2 * w / 3, -h / 2);
+    ctx.lineTo(-w / 2 + 2 * w / 3, h / 2);
+    ctx.moveTo(-w / 2, -h / 2 + h / 3);
+    ctx.lineTo(w / 2, -h / 2 + h / 3);
+    ctx.moveTo(-w / 2, -h / 2 + 2 * h / 3);
+    ctx.lineTo(w / 2, -h / 2 + 2 * h / 3);
+    ctx.scale(1 / (this.scaleX * zoom), 1 / (this.scaleY * zoom));
+    ctx.stroke();
+    ctx.restore();
+  }
 
   drawBorders(ctx:CanvasRenderingContext2D, options:any, styleOverride:any) {
     this._renderCroppingBorders(ctx);
