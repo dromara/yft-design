@@ -25,7 +25,7 @@
       </div>
       <div class="row">
         <div style="flex: 2;">边框粗细：</div>
-        <el-input-number style="flex: 3;" v-model="handleElement.strokeWidth"></el-input-number>
+        <el-input-number style="flex: 3;" v-model="handleElement.strokeWidth" @change="changeOutlineStyle"></el-input-number>
       </div>
     </template>
   </div>
@@ -40,9 +40,7 @@ import useCanvas from '@/views/Canvas/useCanvas'
 
 const [ canvas ] = useCanvas()
 const { canvasObject } = storeToRefs(useMainStore())
-const handleElement = computed(() => {
-  return canvasObject.value as CanvasElement
-})
+const handleElement = computed(() => canvasObject.value as CanvasElement)
 const hasOutline = ref(false)
 const outlineStyle = ref(0)
 

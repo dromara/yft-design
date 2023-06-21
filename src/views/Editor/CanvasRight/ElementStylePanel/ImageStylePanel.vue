@@ -71,7 +71,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, watch } from 'vue'
+import { computed, watch, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useMainStore, useTemplatesStore, useFabricStore } from '@/store'
 import { CLIPPATHS } from '@/configs/imageClip'
@@ -99,14 +99,8 @@ const [ canvas ] = useCanvas()
 const { canvasObject } = storeToRefs(mainStore)
 const { isCropping } = storeToRefs(fabricStore)
 const { setZindex } = useCanvasZindex()
-const handleElement = computed(() => {
-  const element = canvasObject.value as ImageElement | CropElement
-  if (!element) return element
-  if (element?.name === ElementNames.IMAGE) {
-    return element as ImageElement
-  }
-  return canvas.getObjects().filter(obj => (obj as RectElement).id === (element as CropElement).imageId)[0] as ImageElement
-})
+const handleElement = computed(() => canvasObject.value as ImageElement)
+
 
 // 打开自由裁剪
 const clipImage = () => {
