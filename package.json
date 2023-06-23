@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "vite build"
+    "build": "vite build",
+    "deploy": "bash deploy.sh"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.0.10",
