@@ -5,7 +5,7 @@ set -e
  
 # 生成静态文件， npm run docs:build
 npm run build
-rm -rf ../vue-fabric-draw-dist/dist/*
+rm -rf ../vue-fabric-draw-dist/*
 
 # 将build生成的dist目录拷贝至上一层目录中
 cp -r ./dist/* ../vue-fabric-draw-dist/
