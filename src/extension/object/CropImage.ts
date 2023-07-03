@@ -107,6 +107,8 @@ export class CropImage extends fabric.Image {
     super._render(ctx);
     // @ts-ignore
     this._drawCroppingLines(ctx);
+    // @ts-ignore
+    this._drawCroppingPath(ctx);
     ctx.restore();
     // this.strokeWidth = originalstrokeWidth;
 
@@ -137,6 +139,35 @@ export class CropImage extends fabric.Image {
     ctx.lineTo(w / 2, -h / 2 + 2 * h / 3);
     ctx.scale(1 / (this.scaleX * zoom), 1 / (this.scaleY * zoom));
     ctx.stroke();
+    ctx.restore();
+  }
+
+  _drawCroppingPath(ctx: CanvasRenderingContext2D) {
+    // @ts-ignore
+    if (!this.isCropping || (this.canvas && (this.canvas.isCropping))) {
+      return;
+    }
+    const w = this.width;
+    const h = this.height;
+    // @ts-ignore
+    const zoom = this.canvas.getZoom() * config.devicePixelRatio;
+    ctx.save();
+    ctx.lineWidth = 1;
+    ctx.globalAlpha = 1;
+    // @ts-ignore
+    ctx.strokeStyle = this.cropLinesColor;
+    console.log('zoom:', zoom)
+    // ctx.beginPath();
+    // ctx.moveTo(w / 2, 0);
+    // A rx ry x-axis-rotation large-arc-flag sweep-flag x y
+    // rx: x轴半径 ry: y轴半径   
+    // x-axis-rotation：指椭圆的X轴与水平方向顺时针方向夹角，可以想像成一个水平的椭圆绕中心点顺时针旋转的角度
+    // large-arc-flag：1表示大角度弧线，0为小角度弧线
+    // sweep-flag：1为顺时针方向，0为逆时针方向
+    // x：结束点x坐标
+    // y：结束点y坐标
+    ctx.stroke(new Path2D('M 0 -100 A 50 50 0 1 1 0 100 A 50 50 0 1 1 0 -100 Z'));
+    ctx.scale(1 / (this.scaleX * zoom), 1 / (this.scaleY * zoom));
     ctx.restore();
   }
 
