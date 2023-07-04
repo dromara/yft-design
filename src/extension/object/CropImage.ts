@@ -156,7 +156,7 @@ export class CropImage extends fabric.Image {
     ctx.globalAlpha = 1;
     // @ts-ignore
     ctx.strokeStyle = this.cropLinesColor;
-    console.log('zoom:', zoom)
+    // this.clipPath = clippath
     // ctx.beginPath();
     // ctx.moveTo(w / 2, 0);
     // A rx ry x-axis-rotation large-arc-flag sweep-flag x y
