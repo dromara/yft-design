@@ -286,7 +286,7 @@ export function extendWithCropImage(CropImage: any) {
       this.__isCropping = value;
       isCropping.value = value
       if (value) {
-        
+        this.clipPath = '';
         defaultCursor = fabricCanvas.defaultCursor;
         fabricCanvas.defaultCursor = 'move';
         // handle crop mode enter
@@ -338,6 +338,13 @@ export function extendWithCropImage(CropImage: any) {
         this.controls = standardControlSet;
         this.setCoords();
         fireCropImageEvent(this);
+        this.absolutePositioned = true
+        this.clipPath = new fabric.Path('M 0 -100 A 50 50 0 1 1 0 100 A 50 50 0 1 1 0 -100 Z', {
+          originX: 'center',
+          originY: 'center',
+          fill: '',
+        })
+        console.log('crop end...')
       }
     },
   });
