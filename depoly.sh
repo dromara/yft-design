@@ -21,5 +21,5 @@ git branch -M main
 
 # 如果你想要部署到 https://USERNAME.github.io
 # git remote add origin https://github.com/more-strive/morestrive.github.io.git
-# git push -u origin main
-# git push -f git@github.com:morestrive/morestrive.github.io.git main
+git push -u origin main
+git push -f https://github.com/more-strive/draw.git main
