@@ -171,7 +171,6 @@ function cropFromTop(eventData, transform, x, y) {
   t.target.height = newHeight;
   t.target.setPositionByOrigin(constraint, t.originX, anchorPoint);
   t.target.cropY += changeY;
-  console.log('cropFromTop-t.target.cropY:', t.target.cropY)
   return true;
 }
 

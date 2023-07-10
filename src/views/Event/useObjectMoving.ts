@@ -135,7 +135,7 @@ export const useObjectMoving = (evt: any) => {
         // activeObject.setPositionByOrigin(new Point(activeObject.lineCoords.tl.x + activeHalfWidth, activeObject.lineCoords.tl.y + activeHalfHeight), "center", "center")
       }
       else {
-        activeObject.setPositionByOrigin(new Point(objectLeft, activeObjectTop), "center", "center")
+        // activeObject.setPositionByOrigin(new Point(objectLeft, activeObjectTop), "center", "center")
       }
     }
 
@@ -190,7 +190,7 @@ export const useObjectMoving = (evt: any) => {
         // activeObject.setPositionByOrigin(new Point(activeObject.lineCoords.tl.x + activeHalfWidth, activeObject.lineCoords.tl.y + activeHalfHeight), "center", "center")
       }
       else {
-        activeObject.setPositionByOrigin(new Point(activeObjectLeft, objectTop), "center", "center")
+        // activeObject.setPositionByOrigin(new Point(activeObjectLeft, objectTop), "center", "center")
       }
     }
 

@@ -285,8 +285,18 @@ export function extendWithCropImage(CropImage: any) {
       if (value === this.isCropping) return;
       this.__isCropping = value;
       isCropping.value = value
+      const pathWitdh = 100
+      const width = this._element.naturalWidth || this._element.width;
+      const height = this._element.naturalHeight || this._element.height;
       if (value) {
         this.clipPath = '';
+        console.log('width:', this.width, width, 'height:', this.height, height)
+        // this.cropY = (height / 2 - pathWitdh / 2);
+        // this.cropX = (width/ 2 - pathWitdh / 2)
+        // this.height = height - this.cropY
+        // this.width = width - this.cropX
+        // this.top += this.cropY / 2
+        // this.left += this.cropX / 2
         defaultCursor = fabricCanvas.defaultCursor;
         fabricCanvas.defaultCursor = 'move';
         // handle crop mode enter
@@ -343,7 +353,6 @@ export function extendWithCropImage(CropImage: any) {
           originY: 'center',
           fill: '',
         })
-        console.log('crop end...')
       }
     },
   });

@@ -95,6 +95,7 @@ export class CropImage extends fabric.Image {
       const elHeight = this.getElementHeight();
       const imageCopyX = -(this.cropX || 0) - width / 2;
       const imageCopyY = -(this.cropY || 0) - height / 2;
+      // console.log('imageCropX:', imageCopyX, 'this.cropX:', this.cropX, 'width:', width, 'elWidth:', elWidth, 'imageCopyY:', imageCopyY, 'this.cropY:', this.cropY, 'height:', height, 'elHeight:', elHeight)
       ctx.drawImage(
         elementToDraw,
         imageCopyX,
