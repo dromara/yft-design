@@ -28,11 +28,13 @@ export default () => {
     const width = workSpace.width, height = workSpace.height
     const left = workSpace.left, top = workSpace.top
     const viewportTransform = canvas.viewportTransform
+    const activeObject = canvas.getActiveObject()
     if (ignoreClip) {
       canvas.getObjects().filter(obj => obj.type === WorkSpaceClipType).map(item => {item.stroke = TransparentFill})
       canvas.getObjects().filter(obj => obj.type === WorkSpaceSafeType).map(item => {item.stroke = TransparentFill})
       canvas.renderAll()
     }
+    if (activeObject) canvas.discardActiveObject()
     const result = canvas.toDataURL({
       multiplier: 1 / zoom,
       quality: quality,
@@ -48,6 +50,7 @@ export default () => {
     Exporting.value = false
     canvas.getObjects().filter(obj => obj.type === WorkSpaceClipType).map(item => {item.stroke = WorkSpaceClipColor})
     canvas.getObjects().filter(obj => obj.type === WorkSpaceSafeType).map(item => {item.stroke = WorkSpaceSafeColor})
+    if (activeObject) canvas.setActiveObject(activeObject)
     canvas.renderAll()
   }
 
