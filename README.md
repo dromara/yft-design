@@ -1,6 +1,7 @@
 # vue-fabric-draw
-> 一个基于 Vue3.x + TypeScript + fabric.js + pinia + element-plus 基于 canvas 的在线编辑应用，类似<b>[稿定设计](https://www.gaoding.com/)</b>，<b>[创客贴](https://www.chuangkit.com/)</b>在线编辑应用，支持 文字、图片、形状、线条、二维码 、条形码几种最常用的元素类型，每一种元素都拥有高度可编辑能力，缩略图显示，模板，支持导出json，svg, image文件。  
+> 基于 Canvas 的开源版"创客贴"，使用 Vue3 + TypeScript + Fabric.js + Pinia + Element-Plus，支持 文字、图片、形状、线条、二维码 、条形码几种最常用的元素类型，每一种元素都拥有高度可编辑能力，缩略图显示，模板，支持导出json，svg, image文件。  
 <b>在线体验：[http://draw.morestrive.com](http://draw.morestrive.com)</b>
+<b>Demo：[https://more-strive.github.io/draw/](https://more-strive.github.io/draw/)</b>
 
 ## 项目运行
 ```
