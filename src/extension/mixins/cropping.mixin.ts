@@ -289,8 +289,8 @@ export function extendWithCropImage(CropImage: any) {
       const width = this._element.naturalWidth || this._element.width;
       const height = this._element.naturalHeight || this._element.height;
       if (value) {
-        this.clipPath = '';
-        console.log('width:', this.width, width, 'height:', this.height, height)
+        // this.clipPath = '';
+        // console.log('width:', this.width, width, 'height:', this.height, height)
         // this.cropY = (height / 2 - pathWitdh / 2);
         // this.cropX = (width/ 2 - pathWitdh / 2)
         // this.height = height - this.cropY
@@ -348,11 +348,11 @@ export function extendWithCropImage(CropImage: any) {
         this.controls = standardControlSet;
         this.setCoords();
         fireCropImageEvent(this);
-        this.clipPath = new fabric.Path('M 0 -100 A 50 50 0 1 1 0 100 A 50 50 0 1 1 0 -100 Z', {
-          originX: 'center',
-          originY: 'center',
-          fill: '',
-        })
+        // this.clipPath = new fabric.Path('M 0 -100 A 50 50 0 1 1 0 100 A 50 50 0 1 1 0 -100 Z', {
+        //   originX: 'center',
+        //   originY: 'center',
+        //   fill: '',
+        // })
       }
     },
   });

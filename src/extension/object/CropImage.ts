@@ -109,7 +109,7 @@ export class CropImage extends fabric.Image {
     // @ts-ignore
     this._drawCroppingLines(ctx);
     // @ts-ignore
-    this._drawCroppingPath(ctx);
+    // this._drawCroppingPath(ctx);
     ctx.restore();
     // this.strokeWidth = originalstrokeWidth;
 

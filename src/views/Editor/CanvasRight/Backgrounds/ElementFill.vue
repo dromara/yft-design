@@ -407,6 +407,7 @@ const changeBackgroundType = (type: number) => {
 const updateBackground = (props: Partial<BackgroundElement>) => {
   const [ canvas ] = useCanvas()
   if (!canvasObject.value) return
+  console.log('props.fill:', props.fill, background.value.fillType)
   canvasObject.value.set({fill: props.fill, fillType: background.value.fillType, background: {...background.value, ...props}})
   canvas.renderAll()
   templatesStore.modifedElement()
@@ -453,8 +454,9 @@ const changeGradientName = (gradientName: string) => {
   const gradientColorLib = GradientColorLibs.filter(item => item.name === gradientName)[0]
   if (gradientColorLib) {
     background.value.gradientName = gradientName
-    updateBackground({gradientColor: gradientColorLib.colors})
+    
     generateGradientBackground()
+    // updateBackground({gradientColor: gradientColorLib.colors})
   } 
 }
 
@@ -609,6 +611,7 @@ const generateGridBackground = async (status?: string) => {
     points: null
   }
   const trianglifier = trianglify(defaultOptions)
+  // @ts-ignore
   const canvasBackground = trianglifier.toCanvas()
   const dataURL = canvasBackground.toDataURL('image/svg')
   const source = await util.loadImage(dataURL)

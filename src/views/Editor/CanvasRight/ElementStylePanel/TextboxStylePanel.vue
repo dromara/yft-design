@@ -116,7 +116,7 @@
     </el-row>
 
     <el-row class="mt-10">
-      <el-radio-group class="full-ratio" v-model="handleElement.textAlign">
+      <el-radio-group class="full-ratio" v-model="handleElement.textAlign" @change="handleTextAlign">
         <el-tooltip placement="top" content="左对齐" :hide-after="0">
           <el-radio-button label="left">
             <IconAlignTextLeft />
@@ -304,6 +304,12 @@ const handleElementLinethrough = () => {
 
 // 修改中划线
 const handleElementUnderline = () => {
+  templatesStore.modifedElement()
+  canvas.renderAll()
+}
+
+// 修改字体居中
+const handleTextAlign = () => {
   templatesStore.modifedElement()
   canvas.renderAll()
 }
