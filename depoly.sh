@@ -5,13 +5,13 @@ set -e
  
 # 生成静态文件， npm run docs:build
 npm run build
-rm -rf ../vue-fabric-draw-dist/*
+rm -rf ../vue-fabric-design-dist/*
 
 # 将build生成的dist目录拷贝至上一层目录中
-cp -r ./dist/* ../vue-fabric-draw-dist/
+cp -r ./dist/* ../vue-fabric-design-dist/
 
 # 进入生成的文件夹
-cd ../vue-fabric-draw-dist
+cd ../vue-fabric-design-dist
 
 # git初始化，每次初始化不影响推送
 git init

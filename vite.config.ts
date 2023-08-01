@@ -31,7 +31,7 @@ export default ({ command }: ConfigEnv): UserConfigExport => {
       VitePWA({
         registerType: "autoUpdate",
         workbox: {
-          cacheId: "vue-fabric-draw-cache",
+          cacheId: "vue-fabric-design-cache",
           runtimeCaching: [
             {
               urlPattern: /.*/i,
@@ -57,8 +57,8 @@ export default ({ command }: ConfigEnv): UserConfigExport => {
           ],
         },
         manifest: {
-          name: "vue-fabric-draw",
-          short_name: "vue-fabric-draw",
+          name: "vue-fabric-design",
+          short_name: "vue-fabric-design",
           theme_color: "#d14424",
           icons: [
             {
@@ -99,7 +99,7 @@ export default ({ command }: ConfigEnv): UserConfigExport => {
         minify: true,
         inject: {
           data: {
-            title: 'vue-fabric-draw'
+            title: 'vue-fabric-design'
           }
         }
       })
