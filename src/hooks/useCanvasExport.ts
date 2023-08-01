@@ -46,7 +46,7 @@ export default () => {
       top: top * zoom + viewportTransform[5]
     })
     const data = changeDataURLDPI(result, dpi)
-    saveAs(data, `yifutu_${Date.now()}.${format}`)
+    saveAs(data, `vue-fabric-design_${Date.now()}.${format}`)
     Exporting.value = false
     canvas.getObjects().filter(obj => obj.type === WorkSpaceClipType).map(item => {item.stroke = WorkSpaceClipColor})
     canvas.getObjects().filter(obj => obj.type === WorkSpaceSafeType).map(item => {item.stroke = WorkSpaceSafeColor})
@@ -74,7 +74,7 @@ export default () => {
       width: width + 'px',
       height: height + 'px'
     })
-    downloadSVGFile(data, `yifutu_${Date.now()}.svg`)
+    downloadSVGFile(data, `vue-fabric-design_${Date.now()}.svg`)
     workSpace.set({excludeFromExport: true})
     canvas.getObjects().filter(obj => obj.type === WorkSpaceClipType).map(item => {item.stroke = WorkSpaceClipColor})
     canvas.getObjects().filter(obj => obj.type === WorkSpaceSafeType).map(item => {item.stroke = WorkSpaceSafeColor})
@@ -109,7 +109,7 @@ export default () => {
     })
     const doc = new jsPDF({orientation: 'l', unit: 'px', format: [width, height]})
     doc.addImage(result, 'JPEG', 0, 0, width, height)
-    doc.save(`yifutu_${Date.now()}.${'pdf'}`)
+    doc.save(`vue-fabric-design_${Date.now()}.${'pdf'}`)
   }
 
   // 导出json
@@ -120,7 +120,7 @@ export default () => {
     
     console.log('canvas.toObject():', canvas.toObject())
     const blob = new Blob([JSON.stringify(templates.value)], { type: '' })
-    saveAs(blob, 'yifutu_draw.json')
+    saveAs(blob, 'vue-fabric-design_draw.json')
   }
 
   return {
