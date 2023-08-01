@@ -1,5 +1,6 @@
 <template>
-  <Editor/>
+  <Editor v-if="!isMobile()"/>
+  <Mobile v-else/>
 </template>
 
 <script lang="ts" setup>
@@ -7,8 +8,10 @@ import { onMounted } from 'vue'
 import { deleteDiscardedDB } from '@/utils/database'
 import { useMainStore, useSnapshotStore } from '@/store'
 import { storeToRefs } from 'pinia'
+import { isMobile } from '@/utils/common'
 import { LocalStorageDiscardedKey } from '@/configs/canvas'
 import Editor from '@/views/Editor/index.vue'
+import Mobile from './views/Editor/mobile.vue'
 
 const snapshotStore = useSnapshotStore()
 const mainStore = useMainStore()

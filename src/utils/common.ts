@@ -37,3 +37,8 @@ export const clamp = (value: number, minValue: number, maxValue: number) => {
   }
   return Math.max(minValue, Math.min(value, maxValue));
 }
+
+// 校验是否移动端
+export const isMobile = () => {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
