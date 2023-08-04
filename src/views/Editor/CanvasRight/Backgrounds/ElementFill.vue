@@ -407,7 +407,6 @@ const changeBackgroundType = (type: number) => {
 const updateBackground = (props: Partial<BackgroundElement>) => {
   const [ canvas ] = useCanvas()
   if (!canvasObject.value) return
-  console.log('props.fill:', props.fill, background.value.fillType)
   canvasObject.value.set({fill: props.fill, fillType: background.value.fillType, background: {...background.value, ...props}})
   canvas.renderAll()
   templatesStore.modifedElement()
@@ -454,9 +453,8 @@ const changeGradientName = (gradientName: string) => {
   const gradientColorLib = GradientColorLibs.filter(item => item.name === gradientName)[0]
   if (gradientColorLib) {
     background.value.gradientName = gradientName
-    
+    updateBackground({gradientColor: gradientColorLib.colors})
     generateGradientBackground()
-    // updateBackground({gradientColor: gradientColorLib.colors})
   } 
 }
 
