@@ -2,10 +2,10 @@
   <div class="vue-fabric-design">
     <div class="layout-content">
       <!-- <CanvasLeft class="layout-content-left" />
-      <CanvasMenu class="layout-content-menu" />
-      <CanvasThumb class="layout-content-thumb" /> -->
-      <div class="layout-content-center">
-        <CanvasHeader class="center-header" />
+      <CanvasMenu class="layout-content-menu" />-->
+      <MobileThumb class="layout-mobile-thumb" /> 
+      <div class="layout-mobile-center">
+        <MobileHeader class="center-header" />
         <CanvasCenter class="center-body"/>
         <CanvasFooter class="center-footer"/>
         <!-- <CanvasAffix class="center-affix"/> -->
@@ -21,8 +21,8 @@
 <script lang="ts" setup>
 import CanvasLeft from './CanvasLeft/index.vue'
 import CanvasMenu from './CanvasMenu/index.vue'
-import CanvasThumb from './CanvasThumb/index.vue'
-import CanvasHeader from './CanvasHeader/index.vue'
+import MobileThumb from './CanvasThumb/mobile.vue'
+import MobileHeader from './CanvasHeader/mobile.vue'
 import CanvasCenter from './CanvasCenter/index.vue'
 import CanvasRight from './CanvasRight/index.vue'
 import CanvasFooter from './CanvasFooter/index.vue'
@@ -51,7 +51,9 @@ import CanvasAffix from './CanvasAffix/index.vue'
   flex-direction: column;
   justify-content: space-between;
 }
-.layout-content-thumb {
+.layout-mobile-thumb {
+  position: absolute;
+  z-index: 10;
   width: 160px;
   height: 100%;
   display: flex;
@@ -60,9 +62,10 @@ import CanvasAffix from './CanvasAffix/index.vue'
   background-color: #fff;
   flex-direction: column;
   user-select: none;
+  transition: left 0.5s linear, right 0.5s linear;
 }
-.layout-content-center {
-  width: calc(100% - 50px - 160px - 260px);
+.layout-mobile-center {
+  width: 100%;
 
   .center-header {
     position: relative;
@@ -77,7 +80,6 @@ import CanvasAffix from './CanvasAffix/index.vue'
   }
   .center-body {
     height: calc(100% - 40px);
-    // margin: 100px;
   }
   .center-footer {
     height: 40px;

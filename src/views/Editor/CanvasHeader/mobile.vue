@@ -19,7 +19,7 @@
       </el-tooltip>
     </div>
 
-    <div class="center-handler">
+    <div class="right-handler">
       <el-tooltip placement="top" content="图层">
         <IconLayers class="handler-item" ref="layerRef"/>
       </el-tooltip>
@@ -94,23 +94,6 @@
       <el-tooltip placement="top" content="锁定">
         <IconLock class="handler-item" @click="changeElementLock(false)" v-if="lock"/>
         <IconUnlock class="handler-item" @click="changeElementLock(true)" v-else/>
-      </el-tooltip>
-    </div>
-    <div class="right-handler">
-      <IconMinus class="handler-item" @click="scaleCanvas('-')" />
-      <!-- <span class="text" ref="scaleRef">{{canvasZoom}}</span> -->
-      <el-popover placement="bottom" trigger="click" width="100" popper-class="viewport-size">
-        <template #reference>
-          <span class="text" ref="scaleRef">{{canvasZoom}}</span>
-        </template>
-        <div class="viewport-size-preset">
-          <div class="preset-item" v-for="item in canvasZoomPresets" :key="item" @click="applyCanvasPresetScale(item)">{{item}}%</div>
-        </div>
-      </el-popover>
-      <IconPlus class="handler-item"  @click="scaleCanvas('+')" />
-      <el-tooltip placement="top">
-        <template #content>适应屏幕</template>
-        <IconFullScreen class="handler-item" @click="resetCanvas()"/>
       </el-tooltip>
     </div>
   </div>
