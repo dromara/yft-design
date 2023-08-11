@@ -115,11 +115,11 @@ export default () => {
   // 导出json
   const exportJSON = () => {
     const [ canvas ] = useCanvas()
-    console.log('canvas.getObjects():', canvas.getObjects())
+    console.log('canvas.toObject():', canvas.toObject())
     const objects = canvas.getObjects()
     
     console.log('canvas.toObject():', canvas.toObject())
-    const blob = new Blob([JSON.stringify(templates.value)], { type: '' })
+    const blob = new Blob([JSON.stringify(canvas.toObject())], { type: '' })
     saveAs(blob, 'vue-fabric-design_draw.json')
   }
 

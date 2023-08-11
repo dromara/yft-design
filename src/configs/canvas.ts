@@ -33,7 +33,7 @@ export const WorkSpaceCommonOption = {
   selectable: false,
   transparentCorners: false,
   evented: false,
-  excludeFromExport: true,
+  // excludeFromExport: true,
   hasControls: false,
   hasBorders: false,
   perPixelTargetFind: false,

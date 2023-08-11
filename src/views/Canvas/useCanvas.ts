@@ -328,14 +328,16 @@ const initCanvas = () => {
 }
 
 // 初始化模板
-const initTemplate = () => {
+const initTemplate = async () => {
   if (!canvas) return
   const templatesStore = useTemplatesStore()
   const { createElement } = useHandleElement()
   const { currentTemplate } = storeToRefs(templatesStore)
-  currentTemplate.value.objects.forEach(element => {
-    createElement(element)
-  })
+  console.log('currentTemplate:', currentTemplate.value)
+  await canvas.loadFromJSON(currentTemplate.value)
+  // currentTemplate.value.objects.forEach(element => {
+  //   createElement(element)
+  // })
   // for (let i = 0; i < currentTemplate.value.objects.length; i++) {
   //   const element = currentTemplate.value.objects[i]
   // }
@@ -398,9 +400,9 @@ const initEditor = () => {
   const { wrapperRef } = storeToRefs(fabricStore)
   initConf()
   initCanvas()
-  initWorks()
+  // initWorks()
   initTemplate()
-  initBackground()
+  // initBackground()
   const { width, height } = useElementBounding(wrapperRef.value)
   watch([width, height], () => {
     setCanvasTransform(width.value, height.value)
