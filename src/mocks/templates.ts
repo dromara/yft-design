@@ -29613,8 +29613,53 @@ export const Templates1: Template[] = [
 
 export const Templates: Template[] = [
   {
+    "zoom": 0.4298950822503346,
+    "width": 456.97508743145806,
+    "height": 274.18505245887485,
     "version": "6.0.0-beta1",
     "objects": [
+        {
+            id: "WorkSpaceDrawType",
+            "rx": 0,
+            "ry": 0,
+            "name": "YFT-DRAW",
+            "lockMovementX": true,
+            "lockMovementY": true,
+            "objectCaching": false,
+            "transparentCorners": false,
+            "selectable": false,
+            "evented": false,
+            "type": "rect",
+            "version": "6.0.0-beta1",
+            "originX": "left",
+            "originY": "top",
+            "left": -3.6594,
+            "top": -57.139,
+            "width": 1070.5512,
+            "height": 645.3543,
+            "stroke": "rgba(255,255,255,1)",
+            "strokeWidth": 1,
+            "strokeDashArray": null,
+            "strokeLineCap": "butt",
+            "strokeDashOffset": 0,
+            "strokeLineJoin": "miter",
+            "strokeUniform": false,
+            "strokeMiterLimit": 4,
+            "scaleX": 1,
+            "scaleY": 1,
+            "angle": 0,
+            "flipX": false,
+            "flipY": false,
+            "opacity": 1,
+            "shadow": null,
+            "visible": true,
+            "backgroundColor": "",
+            "fillRule": "nonzero",
+            "paintFirst": "fill",
+            "globalCompositeOperation": "source-over",
+            "skewX": 0,
+            "skewY": 0
+        },
         {
             "layout": "fit-content",
             "subTargetCheck": true,
@@ -29633,8 +29678,8 @@ export const Templates: Template[] = [
             "version": "6.0.0-beta1",
             "originX": "left",
             "originY": "top",
-            "left": 100.4715,
-            "top": 90.0313,
+            "left": 100.2161,
+            "top": 52.987,
             "width": 822.8393,
             "height": 399.4938,
             "fill": "rgb(0,0,0)",
@@ -29687,7 +29732,7 @@ export const Templates: Template[] = [
                     "version": "6.0.0-beta1",
                     "originX": "left",
                     "originY": "top",
-                    "left": 28.8939,
+                    "left": 28.8938,
                     "top": -199.7469,
                     "width": 381.5258,
                     "height": 304.0082,
@@ -30118,8 +30163,8 @@ export const Templates: Template[] = [
             "version": "6.0.0-beta1",
             "originX": "center",
             "originY": "center",
-            "left": 444.2752,
-            "top": 187.5074,
+            "left": 527.1967,
+            "top": 287.3636,
             "width": 740,
             "height": 340,
             "fill": "rgb(0,0,0)",
@@ -30150,7 +30195,7 @@ export const Templates: Template[] = [
             "filters": []
         },
         {
-            "id": "WorkSpaceMaskType",
+            id: "WorkSpaceMaskType",
             "name": "YFT-DRAW",
             "lockMovementX": true,
             "lockMovementY": true,
@@ -30220,28 +30265,28 @@ export const Templates: Template[] = [
                 ],
                 [
                     "M",
-                    24996.595939107614,
-                    24979.905272440945
+                    24996.34057120638,
+                    24942.860966268105
                 ],
                 [
                     "L",
-                    24996.595939107614,
-                    25625.259603149603
+                    24996.34057120638,
+                    25588.215296976763
                 ],
                 [
                     "L",
-                    26067.147120209975,
-                    25625.259603149603
+                    26066.89175230874,
+                    25588.215296976763
                 ],
                 [
                     "L",
-                    26067.147120209975,
-                    24979.905272440945
+                    26066.89175230874,
+                    24942.860966268105
                 ],
                 [
                     "L",
-                    24996.595939107614,
-                    24979.905272440945
+                    24996.34057120638,
+                    24942.860966268105
                 ],
                 [
                     "Z"
@@ -30263,8 +30308,8 @@ export const Templates: Template[] = [
             "version": "6.0.0-beta1",
             "originX": "left",
             "originY": "top",
-            "left": 0.3755,
-            "top": -16.3152,
+            "left": 0.1201,
+            "top": -53.3595,
             "width": 1062.9921,
             "height": 637.7953,
             "fill": "rgba(0,0,0,0)",
@@ -30292,7 +30337,7 @@ export const Templates: Template[] = [
             "skewY": 0
         },
         {
-            "id": "WorkSpaceSafeType",
+            id: "WorkSpaceSafeType",
             "rx": 0,
             "ry": 0,
             "name": "YFT-DRAW",
@@ -30306,8 +30351,8 @@ export const Templates: Template[] = [
             "version": "6.0.0-beta1",
             "originX": "left",
             "originY": "top",
-            "left": 38.1707,
-            "top": 21.4801,
+            "left": 37.9154,
+            "top": -15.5642,
             "width": 987.4016,
             "height": 562.2047,
             "fill": "rgba(0,0,0,0)",
@@ -30335,7 +30380,7 @@ export const Templates: Template[] = [
             "skewY": 0
         },
         {
-            "id": "WorkSpaceLineType",
+            id: "WorkSpaceLineType",
             "layout": "fit-content",
             "subTargetCheck": false,
             "interactive": false,
@@ -30350,8 +30395,8 @@ export const Templates: Template[] = [
             "version": "6.0.0-beta1",
             "originX": "left",
             "originY": "top",
-            "left": -37.4198,
-            "top": -54.1105,
+            "left": -37.6752,
+            "top": -91.1548,
             "width": 1139.5827,
             "height": 714.3858,
             "fill": "rgb(0,0,0)",

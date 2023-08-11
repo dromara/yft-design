@@ -25,6 +25,7 @@ import {
   WorkSpaceMaskColor
 } from '@/configs/canvas'
 import useHandleBackground from '@/hooks/useHandleBackground'
+import { CanvasOption } from '@/types/option'
 
 
 
@@ -175,8 +176,8 @@ const setCanvasTransform = (width: number, height: number) => {
   if (!canvas) return
   const fabricStore = useFabricStore()
   const { zoom } = storeToRefs(fabricStore)
-  const WorkSpaceDraw = canvas.getObjects().filter(item => item.id === WorkSpaceDrawType)[0]
-  const WorkSpaceClip = canvas.getObjects().filter(item => item.id === WorkSpaceClipType)[0]
+  const WorkSpaceDraw = canvas.getObjects().filter(item => (item as CanvasOption).id === WorkSpaceDrawType)[0]
+  const WorkSpaceClip = canvas.getObjects().filter(item => (item as CanvasOption).id === WorkSpaceClipType)[0]
   if (!WorkSpaceDraw || !WorkSpaceClip) return
   const workSpaceBound = WorkSpaceDraw.getBoundingRect()
   const left = WorkSpaceDraw.left
@@ -348,7 +349,7 @@ export const initBackground = async () => {
   const templatesStore = useTemplatesStore()
   const { getBackgroundImageOption } = useHandleBackground()
   if (!canvas) return
-  const workSpaceDraw = canvas.getObjects().filter(item => item.id === WorkSpaceDrawType)[0]
+  const workSpaceDraw = canvas.getObjects().filter(item => (item as CanvasOption).id === WorkSpaceDrawType)[0]
   // const left = workSpaceDraw.left, top = workSpaceDraw.top
   const { currentTemplate } = storeToRefs(templatesStore)
   const workSpaceElement = currentTemplate.value.workSpace

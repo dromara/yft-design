@@ -21,7 +21,7 @@
 <script lang="ts" setup>
 import CanvasLeft from './CanvasLeft/index.vue'
 import CanvasMenu from './CanvasMenu/index.vue'
-// import CanvasThumb from './CanvasThumb/index.vue'
+import CanvasThumb from './CanvasThumb/index.vue'
 import CanvasHeader from './CanvasHeader/index.vue'
 import CanvasCenter from './CanvasCenter/index.vue'
 import CanvasRight from './CanvasRight/index.vue'

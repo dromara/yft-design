@@ -36,6 +36,7 @@ const props = defineProps({
 })
 
 // const viewportRatio = ref<number>(props.template.height / props.template.width) 
+
 const viewportRatio = computed(() => props.template.height / props.template.width)
 const height = computed(() => props.size * viewportRatio.value)
 const thumbnailTemplate = ref()
@@ -43,10 +44,11 @@ const thumbnailTemplate = ref()
 const thumbCanvas = ref<StaticCanvas | undefined>(undefined)
 
 onMounted(() => {
+  console.log('props.template:', props.template)
   thumbCanvas.value = new StaticCanvas(thumbnailTemplate.value, {
     width: props.size,
     height: props.size * viewportRatio.value,
-    backgroundColor: props.template.workSpace.fillType === 0 ? props.template.workSpace.fill as string : '#fff'
+    // backgroundColor: props.template.workSpace.fillType === 0 ? props.template.workSpace.fill as string : '#fff'
   })
   setThumbnailElement()
 })
@@ -61,16 +63,17 @@ const setThumbnailElement = async () => {
   const height = props.template.height / props.template.zoom
   if (!thumbCanvas.value) return
   await thumbCanvas.value.loadFromJSON(props.template)
-  thumbCanvas.value.getObjects().forEach(obj => {
-    if (typeof obj.left === 'number' && typeof obj.top === 'number') {
-      obj.left += width / 2
-      obj.top += height / 2
-    }
-  })
-  thumbCanvas.value.width = props.size
-  thumbCanvas.value.height = props.size * viewportRatio.value
+  // thumbCanvas.value.getObjects().forEach(obj => {
+  //   if (typeof obj.left === 'number' && typeof obj.top === 'number') {
+  //     obj.left += width / 2
+  //     obj.top += height / 2
+  //   }
+  // })
+  thumbCanvas.value.width = width
+  thumbCanvas.value.height = height
   thumbCanvas.value.setZoom(props.size / width)
-  setThumbnailBackground(width, height)
+  console.log('thumbCanvas.width:', width, height)
+  // setThumbnailBackground(width, height)
 }
 
 const setThumbnailBackground = async (width: number, height: number) => {
