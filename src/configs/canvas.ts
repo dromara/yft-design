@@ -67,5 +67,7 @@ export const toObjectFilter = [
   'codeContent',
   'codeSpace',
   'codeError',
-  'background'
+  'background',
+  'selectable',
+  'evented'
 ]
