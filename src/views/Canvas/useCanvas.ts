@@ -13,12 +13,12 @@ import useHandleElement from '@/hooks/useHandleElement'
 import useRotate from './useRotate'
 import { 
   WorkSpaceClipType, 
-  WorkSpaceName, 
-  WorkSpaceEditColor, 
   WorkSpaceDrawType,
-  WorkSpaceCommonOption,
   WorkSpaceMaskType, 
   WorkSpaceSafeType, 
+  WorkSpaceName, 
+  WorkSpaceEditColor, 
+  WorkSpaceCommonOption,
   WorkSpaceClipColor, 
   WorkSpaceSafeColor, 
   WorkSpaceLineType, 
@@ -175,8 +175,8 @@ const setCanvasTransform = (width: number, height: number) => {
   if (!canvas) return
   const fabricStore = useFabricStore()
   const { zoom } = storeToRefs(fabricStore)
-  const WorkSpaceDraw = canvas.getObjects(WorkSpaceDrawType)[0]
-  const WorkSpaceClip = canvas.getObjects(WorkSpaceClipType)[0]
+  const WorkSpaceDraw = canvas.getObjects().filter(item => item.id === WorkSpaceDrawType)[0]
+  const WorkSpaceClip = canvas.getObjects().filter(item => item.id === WorkSpaceClipType)[0]
   if (!WorkSpaceDraw || !WorkSpaceClip) return
   const workSpaceBound = WorkSpaceDraw.getBoundingRect()
   const left = WorkSpaceDraw.left
@@ -211,7 +211,7 @@ export const initWorks = () => {
     height: workHeight + 2 * clipPX,
     fill: WorkSpaceEditColor,
     stroke: WorkSpaceEditColor, 
-    type: WorkSpaceDrawType,
+    id: WorkSpaceDrawType,
     ...WorkSpaceCommonOption
   })
 
@@ -224,7 +224,7 @@ export const initWorks = () => {
     stroke: WorkSpaceClipColor, // 边框颜色
     strokeWidth: 1, // 边框大小
     visible: showClip.value,
-    type: WorkSpaceClipType,
+    id: WorkSpaceClipType,
     ...WorkSpaceCommonOption
   })
 
@@ -237,7 +237,7 @@ export const initWorks = () => {
     stroke: WorkSpaceSafeColor, // 边框颜色
     strokeWidth: 1, // 边框大小
     visible: showSafe.value,
-    type: WorkSpaceSafeType,
+    id: WorkSpaceSafeType,
     ...WorkSpaceCommonOption
   })
 
@@ -252,7 +252,7 @@ export const initWorks = () => {
     top: -PaddingHalf,
     fill: WorkSpaceMaskColor,
     opacity: opacity.value,
-    type: WorkSpaceMaskType,
+    id: WorkSpaceMaskType,
     ...WorkSpaceCommonOption
   })
   // [lineEnd, lineHeight, leftStart, top] 终止位置，线长，起始位置，top
@@ -348,7 +348,7 @@ export const initBackground = async () => {
   const templatesStore = useTemplatesStore()
   const { getBackgroundImageOption } = useHandleBackground()
   if (!canvas) return
-  const workSpaceDraw = canvas.getObjects(WorkSpaceDrawType)[0]
+  const workSpaceDraw = canvas.getObjects().filter(item => item.id === WorkSpaceDrawType)[0]
   // const left = workSpaceDraw.left, top = workSpaceDraw.top
   const { currentTemplate } = storeToRefs(templatesStore)
   const workSpaceElement = currentTemplate.value.workSpace
