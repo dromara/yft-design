@@ -58,15 +58,10 @@ export const useTemplatesStore = defineStore('Templates', {
   },
 
   actions: {
-    renderTemplate() {
+    async renderTemplate() {
       const [ canvas ] = useCanvas()
-      const { createElement } = useHandleElement()
       canvas.clear()
-      initWorks()
-      initBackground()
-      this.templates[this.templateIndex].objects.forEach(async (element) => {
-        await createElement(element as CanvasOption)
-      })
+      await canvas.loadFromJSON(this.currentTemplate)
       canvas.renderAll()
       
     },
@@ -75,18 +70,9 @@ export const useTemplatesStore = defineStore('Templates', {
       const mainStore = useMainStore()
       const [ canvas ] = useCanvas()
       
-      const { createElement } = useHandleElement()
       canvas.discardActiveObject()
       mainStore.setCanvasObject(null)
       await canvas.loadFromJSON(this.currentTemplate)
-      // canvas.remove(...canvas.getObjects().filter(item => (item as CanvasElement).name !== WorkSpaceName))
-      // for (let i = 0; i < this.templates[this.templateIndex].objects.length; i++) {
-      //   const element = this.templates[this.templateIndex].objects[i] as CanvasOption
-      //   await createElement(element as CanvasOption)
-      // }
-      // this.templates[this.templateIndex].objects.forEach(element => {
-      //   
-      // })
       canvas.renderAll()
     },
 
@@ -100,7 +86,7 @@ export const useTemplatesStore = defineStore('Templates', {
       //   element.left -= centerPoint.x
       //   element.top -= centerPoint.y
       // }
-      this.templates[this.templateIndex] = canvasTemplate.objects
+      this.templates[this.templateIndex] = canvasTemplate
       addHistorySnapshot()
     },
 
