@@ -87,10 +87,9 @@ export const useTemplatesStore = defineStore('Templates', {
       //   element.top -= centerPoint.y
       // }
       const workSpaceDraw = canvas.getObjects().filter(item => (item as CanvasOption).id === WorkSpaceDrawType)[0]
-      console.log('workSpaceDraw:', workSpaceDraw)
       canvasTemplate.width = workSpaceDraw.width
       canvasTemplate.height = workSpaceDraw.height
-      canvasTemplate.zoom = canvas.getZoom()
+      canvasTemplate.zoom =  canvas.getZoom()
       this.templates[this.templateIndex] = canvasTemplate
       addHistorySnapshot()
     },
