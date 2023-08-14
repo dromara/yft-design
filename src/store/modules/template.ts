@@ -62,7 +62,6 @@ export const useTemplatesStore = defineStore('Templates', {
       const [ canvas ] = useCanvas()
       await canvas.loadFromJSON(this.currentTemplate)
       canvas.renderAll()
-      
     },
 
     async renderElement() {

@@ -71,7 +71,6 @@ export default () => {
    */
   const resetCanvas = async () => {
     await templatesStore.renderTemplate()
-    console.log('set scale')
     const { width, height } = useElementBounding(wrapperRef.value)
     setCanvasTransform(width.value, height.value)
   }
@@ -79,6 +78,7 @@ export default () => {
   return {
     canvasScalePercentage,
     setCanvasScalePercentage,
+    setCanvasTransform,
     scaleCanvas,
     resetCanvas,
   }
