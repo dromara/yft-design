@@ -266,7 +266,7 @@ import { GradientCoords } from '@/types/elements'
 import { ShadingColorLibs, ShadingLigntColors } from '@/configs/shadingColors'
 import { ShadingBackground, ShadingColorLib } from '@/types/elements'
 import { WorkSpaceDrawType } from '@/configs/canvas'
-import { ImageElement, WorkSpaceElement } from '@/types/canvas'
+import { ImageElement, WorkSpaceElement, CanvasElement } from '@/types/canvas'
 import { getRandomNum } from '@/utils/common'
 import { getImageDataURL } from '@/utils/image'
 import trianglify from '@/plugins/trianglify/trianglify'
@@ -408,7 +408,7 @@ const changeBackgroundType = (type: number) => {
 const updateBackground = (props: Partial<WorkSpaceElement>) => {
   const [ canvas ] = useCanvas()
   templatesStore.updateTemplate({ workSpace: { ...background.value, ...props } })
-  const WorkSpaceDraw = canvas.getObjects(WorkSpaceDrawType)[0]
+  const WorkSpaceDraw = canvas.getObjects().filter(item => (item as CanvasElement).id === WorkSpaceDrawType)[0]
   WorkSpaceDraw.set({
     ...props,
     left: WorkSpaceDraw.left,
@@ -479,7 +479,7 @@ const updateGradientBackground = (index: number, color: string) => {
 // 生成渐变背景
 const generateGradientBackground = () => {
   const [ canvas ] = useCanvas()
-  const workSpaceDraw = canvas.getObjects(WorkSpaceDrawType)[0]
+  const workSpaceDraw = canvas.getObjects().filter(item =>(item as CanvasElement).id === WorkSpaceDrawType)[0]
   const width = workSpaceDraw.width
   const height = workSpaceDraw.height
   if (!width || !height) return 
@@ -593,10 +593,9 @@ const getGridColorFunction = () => {
 // 生成网格图片
 const generateGridBackground = async (status?: string) => {
   const [ canvas ] = useCanvas()
-  const workSpaceDraw = canvas.getObjects(WorkSpaceDrawType)[0]
-  
+  const workSpaceDraw = canvas.getObjects().filter(item =>(item as CanvasElement).id === WorkSpaceDrawType)[0]
   const gridColors = gridColorsRef.value && gridColorsRef.value.length > 0 && status !== 'random' ? gridColorsRef.value : 'random'
-  const { left, top, angle, scaleX, scaleY } = getBackgroundImageOption()
+ 
   if (!workSpaceDraw.width) return
   const defaultOptions = {
     width: workSpaceDraw.width,
@@ -614,12 +613,14 @@ const generateGridBackground = async (status?: string) => {
     points: null
   }
   const trianglifier = trianglify(defaultOptions)
-  const canvasBackground = trianglifier.toCanvas()
-  // const svgBackground = trianglifier.toSVG()
-  // const serialize = new XMLSerializer()
-  // const imageURL = `data:image/svg+xml,${serialize.serializeToString(svgBackground)}`
-  const imageURL = canvasBackground.toDataURL('image/svg')
+  // const canvasBackground = trianglifier.toCanvas()
+  const canvasBackground = trianglifier.toSVG()
+  const serialize = new XMLSerializer()
+  const imageURL = `data:image/svg+xml,${serialize.serializeToString(canvasBackground)}`
+  // console.log('canvasBackground:', canvasBackground)
+  // const imageURL = canvasBackground.toDataURL('image/svg')
   const backgroundImage = await Image.fromURL(imageURL)
+  const left = workSpaceDraw.left, top = workSpaceDraw.top, angle = workSpaceDraw.angle, scaleX = workSpaceDraw.scaleX, scaleY = workSpaceDraw.scaleY
   backgroundImage.set({left, top, angle, scaleX, scaleY})
   generateBackgroundImage(backgroundImage, imageURL)
   updateBackground({fill: TransparentFill, gaidImageURL: imageURL})
@@ -685,7 +686,7 @@ const multiStroke = (index: number, vHeight: number, maxColors: number, mode: st
 // 底纹样式背景生成
 const generateShadingBackground = async () => {
   const [ canvas ] = useCanvas()
-  const workSpaceDraw = canvas.getObjects(WorkSpaceDrawType)[0]
+  const workSpaceDraw = canvas.getObjects().filter(item =>(item as CanvasElement).id === WorkSpaceDrawType)[0]
   const item = shadingElement.value
   const maxColors = item.path.split('~').length + 1
   const width = item.width
@@ -718,8 +719,8 @@ const generateShadingBackground = async () => {
     </svg>
   `
   const imageURL = `data:image/svg+xml,${svg}`
-  const { left, top, angle, scaleX, scaleY } = getBackgroundImageOption()
   const backgroundImage = await Image.fromURL(imageURL)
+  const left = workSpaceDraw.left, top = workSpaceDraw.top, angle = workSpaceDraw.angle, scaleX = workSpaceDraw.scaleX, scaleY = workSpaceDraw.scaleY
   backgroundImage.set({left, top, angle, scaleX, scaleY, width: imageWidth, height: imageHeight})
   
   generateBackgroundImage(backgroundImage, imageURL)
