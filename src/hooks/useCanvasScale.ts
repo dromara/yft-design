@@ -69,8 +69,7 @@ export default () => {
   /**
    * 重置画布尺寸和位置
    */
-  const resetCanvas = async () => {
-    await templatesStore.renderTemplate()
+  const resetCanvas = () => {
     const { width, height } = useElementBounding(wrapperRef.value)
     setCanvasTransform(width.value, height.value)
   }

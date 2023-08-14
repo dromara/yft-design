@@ -2,8 +2,8 @@ import { useFabricStore } from "@/store"
 
 import { ScaleLimit } from "@/configs/scale"
 import { storeToRefs } from "pinia"
-import useCanvas from "@/views/Canvas/useCanvas"
 import { Point } from "fabric"
+import useCanvas from "@/views/Canvas/useCanvas"
 
 export const useMouseWheel = ({e, pointer}: any) => {
   const fabricStore = useFabricStore()
