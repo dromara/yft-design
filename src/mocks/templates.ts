@@ -29630,6 +29630,7 @@ export const Templates: Template[] = [
             "selectable": false,
             "evented": false,
             "type": "rect",
+            "fill": '',
             "version": "6.0.0-beta1",
             "originX": "left",
             "originY": "top",
