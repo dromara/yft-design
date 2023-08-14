@@ -76,15 +76,16 @@ export const useTemplatesStore = defineStore('Templates', {
 
     modifedElement() {
       const [ canvas ] = useCanvas()
-      // const { centerPoint } = useCenter()
+      const { centerPoint } = useCenter()
       const { addHistorySnapshot } = useHistorySnapshot()
       const canvasTemplate = canvas.toObject(toObjectFilter)
-      // for (let i = 0; i < canvasTemplate.objects.length; i++) {
-      //   const element = canvasTemplate.objects[i] as CanvasElement
-      //   element.left -= centerPoint.x
-      //   element.top -= centerPoint.y
-      // }
       const workSpaceDraw = canvas.getObjects().filter(item => (item as CanvasOption).id === WorkSpaceDrawType)[0]
+      console.log('centerPonint:', centerPoint)
+      for (let i = 0; i < canvasTemplate.objects.length; i++) {
+        const element = canvasTemplate.objects[i] as CanvasElement
+        element.left -= centerPoint.x
+        element.top -= centerPoint.y
+      }
       canvasTemplate.width = workSpaceDraw.width
       canvasTemplate.height = workSpaceDraw.height
       canvasTemplate.zoom =  canvas.getZoom()

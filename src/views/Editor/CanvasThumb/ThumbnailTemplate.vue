@@ -15,7 +15,7 @@
 <script lang="ts" setup>
 import { computed, onMounted, PropType, ref, watch } from 'vue'
 import { StaticCanvas, Gradient, Pattern, Rect, Image } from 'fabric'
-import { Template } from '@/types/canvas'
+import { CanvasElement, Template } from '@/types/canvas'
 import { TransparentFill } from '@/configs/background'
 import { CanvasOption } from '@/types/option'
 import { WorkSpaceDrawType } from '@/configs/canvas'
@@ -46,7 +46,6 @@ const thumbnailTemplate = ref()
 const thumbCanvas = ref<StaticCanvas | undefined>(undefined)
 
 onMounted(() => {
-  console.log('props.template:', props.template)
   thumbCanvas.value = new StaticCanvas(thumbnailTemplate.value, {
     width: props.size,
     height: props.size * viewportRatio.value,
@@ -65,19 +64,19 @@ const setThumbnailElement = async () => {
   const height = props.template.height / props.template.zoom
   if (!thumbCanvas.value) return
   await thumbCanvas.value.loadFromJSON(props.template)
+  const thumbWorkSpaceDraw = thumbCanvas.value.getObjects().filter(item => (item as CanvasElement).id === WorkSpaceDrawType)[0]
+  console.log('width:', width, thumbWorkSpaceDraw.width)
   thumbCanvas.value.renderAll()
-  // thumbCanvas.value.getObjects().forEach(obj => {
-  //   if (typeof obj.left === 'number' && typeof obj.top === 'number') {
-  //     obj.left -= width / 2
-  //     obj.top -= height / 2
-  //   }
-  // })
-
-  thumbCanvas.value.width = width
-  thumbCanvas.value.height = height
+  thumbCanvas.value.getObjects().forEach(obj => {
+    if (typeof obj.left === 'number' && typeof obj.top === 'number') {
+      obj.left += width / 2
+      obj.top += height / 2
+    }
+  })
+  thumbCanvas.value.width = props.size
+  thumbCanvas.value.height = props.size * viewportRatio.value
   thumbCanvas.value.setZoom(props.size / width)
-  thumbCanvas.value.renderAll()
-  console.log('zoom:', props.size / width)
+  console.log('thumbWorkSpaceDraw:', thumbWorkSpaceDraw.left, 'width:', thumbWorkSpaceDraw.width, thumbWorkSpaceDraw.top, thumbCanvas.value.viewportTransform)
   // console.log('thumbCanvas.value.viewportTransform:', thumbCanvas.value.viewportTransform)
   // setThumbnailBackground(width, height)
 }
