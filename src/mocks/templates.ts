@@ -29633,7 +29633,6 @@ export const Templates: Template[] = [
             "version": "6.0.0-beta1",
             "originX": "left",
             "originY": "top",
-            "fill": "#fff",
             "left": -3.6594,
             "top": -57.139,
             "width": 1070.5512,
