@@ -17,6 +17,8 @@ import { computed, onMounted, PropType, ref, watch } from 'vue'
 import { StaticCanvas, Gradient, Pattern, Rect, Image } from 'fabric'
 import { Template } from '@/types/canvas'
 import { TransparentFill } from '@/configs/background'
+import { CanvasOption } from '@/types/option'
+import { WorkSpaceDrawType } from '@/configs/canvas'
 
 const RectFillType = 'RectFillType'
 
@@ -59,20 +61,24 @@ watch(props ,() => {
 }, { deep: true, immediate: true })
 
 const setThumbnailElement = async () => {
-  // const width = props.template.width / props.template.zoom
-  // const height = props.template.height / props.template.zoom
+  const width = props.template.width / props.template.zoom
+  const height = props.template.height / props.template.zoom
   if (!thumbCanvas.value) return
   await thumbCanvas.value.loadFromJSON(props.template)
+  thumbCanvas.value.renderAll()
   // thumbCanvas.value.getObjects().forEach(obj => {
   //   if (typeof obj.left === 'number' && typeof obj.top === 'number') {
-  //     obj.left += width / 2
-  //     obj.top += height / 2
+  //     obj.left -= width / 2
+  //     obj.top -= height / 2
   //   }
   // })
-  thumbCanvas.value.width = props.template.width
-  thumbCanvas.value.height = props.template.height
-  thumbCanvas.value.setZoom(props.size / props.template.width)
-  // console.log('thumbCanvas.width:', width, 'props.template.width:', props.template.width , 'heigth', height, 'zoom:',props.template.zoom)
+
+  thumbCanvas.value.width = width
+  thumbCanvas.value.height = height
+  thumbCanvas.value.setZoom(props.size / width)
+  thumbCanvas.value.renderAll()
+  console.log('zoom:', props.size / width)
+  // console.log('thumbCanvas.value.viewportTransform:', thumbCanvas.value.viewportTransform)
   // setThumbnailBackground(width, height)
 }
 

@@ -176,8 +176,8 @@ const setCanvasTransform = (width: number, height: number) => {
   if (!canvas) return
   const fabricStore = useFabricStore()
   const { zoom } = storeToRefs(fabricStore)
-  const WorkSpaceDraw = canvas.getObjects().filter(item => (item as CanvasOption).id === WorkSpaceDrawType)[0]
-  const WorkSpaceClip = canvas.getObjects().filter(item => (item as CanvasOption).id === WorkSpaceClipType)[0]
+  const WorkSpaceDraw = canvas.getObjects().filter(item => (item as CanvasElement).id === WorkSpaceDrawType)[0]
+  const WorkSpaceClip = canvas.getObjects().filter(item => (item as CanvasElement).id === WorkSpaceClipType)[0]
   if (!WorkSpaceDraw || !WorkSpaceClip) return
   const workSpaceBound = WorkSpaceDraw.getBoundingRect()
   const left = WorkSpaceDraw.left

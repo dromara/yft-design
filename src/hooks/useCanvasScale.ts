@@ -1,13 +1,19 @@
 import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useFabricStore, useTemplatesStore } from '@/store'
+import { useElementBounding } from '@vueuse/core'
+import { 
+  WorkSpaceClipType, 
+  WorkSpaceDrawType,
+} from '@/configs/canvas'
+import { CanvasElement } from '@/types/canvas'
 import useCanvas from '@/views/Canvas/useCanvas'
 import useCenter from '@/views/Canvas/useCenter'
 
 export default () => {
   const fabricStore = useFabricStore()
   const templatesStore = useTemplatesStore()
-  const { zoom } = storeToRefs(fabricStore)
+  const { zoom, wrapperRef } = storeToRefs(fabricStore)
   const canvasScalePercentage = computed(() => Math.round(zoom.value * 100) + '%')
 
   /**
@@ -39,11 +45,35 @@ export default () => {
     zoom.value = canvas.getZoom()
   }
 
+  // 更新视图区长宽
+  const setCanvasTransform = (width: number, height: number) => {
+    const [ canvas ] = useCanvas()
+    if (!canvas) return
+    const fabricStore = useFabricStore()
+    const { zoom } = storeToRefs(fabricStore)
+    const WorkSpaceDraw = canvas.getObjects().filter(item => (item as CanvasElement).id === WorkSpaceDrawType)[0]
+    const WorkSpaceClip = canvas.getObjects().filter(item => (item as CanvasElement).id === WorkSpaceClipType)[0]
+    if (!WorkSpaceDraw || !WorkSpaceClip) return
+    const workSpaceBound = WorkSpaceDraw.getBoundingRect()
+    const left = WorkSpaceDraw.left
+    const top = WorkSpaceDraw.top
+    const canvasTransform = canvas.viewportTransform
+    if (!canvasTransform || !left || !top) return
+    zoom.value = canvas.getZoom()
+    canvasTransform[4] = (width - workSpaceBound.width) / 2 - left * canvas.getZoom()
+    canvasTransform[5] = (height - workSpaceBound.height) / 2 - top * canvas.getZoom()
+    canvas.setViewportTransform(canvasTransform)
+    canvas.renderAll()
+  }
+
   /**
    * 重置画布尺寸和位置
    */
-  const resetCanvas = () => {
-    templatesStore.renderTemplate()
+  const resetCanvas = async () => {
+    await templatesStore.renderTemplate()
+    console.log('set scale')
+    const { width, height } = useElementBounding(wrapperRef.value)
+    setCanvasTransform(width.value, height.value)
   }
 
   return {

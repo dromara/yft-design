@@ -60,7 +60,6 @@ export const useTemplatesStore = defineStore('Templates', {
   actions: {
     async renderTemplate() {
       const [ canvas ] = useCanvas()
-      canvas.clear()
       await canvas.loadFromJSON(this.currentTemplate)
       canvas.renderAll()
       
@@ -90,6 +89,7 @@ export const useTemplatesStore = defineStore('Templates', {
       canvasTemplate.width = workSpaceDraw.width
       canvasTemplate.height = workSpaceDraw.height
       canvasTemplate.zoom =  canvas.getZoom()
+      canvasTemplate.viewportTransform = canvas.viewportTransform
       this.templates[this.templateIndex] = canvasTemplate
       addHistorySnapshot()
     },
