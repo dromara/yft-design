@@ -178,7 +178,6 @@ const changeSlideIndex = (index: number) => {
   if (templateIndex.value === index) return
   templatesStore.setTemplateIndex(index)
   templatesStore.renderTemplate()
-  canvasObject.value = null
 }
 
 </script>

@@ -1,14 +1,18 @@
-import { defineStore } from 'pinia'
+import { defineStore, storeToRefs } from 'pinia'
 import { Templates } from '@/mocks/templates'
 import { Template, CanvasElement } from '@/types/canvas'
 import { toObjectFilter, WorkSpaceName, WorkSpaceDrawType, WorkSpaceClipType } from '@/configs/canvas'
 import useHandleElement from '@/hooks/useHandleElement'
+import useCanvasScale from '@/hooks/useCanvasScale'
+
 import useCanvas, { initWorks, initBackground } from '@/views/Canvas/useCanvas'
 import useHistorySnapshot from '@/hooks/useHistorySnapshot'
 
 import useCenter from '@/views/Canvas/useCenter'
+import { useElementBounding } from '@vueuse/core'
 import { CanvasOption } from '@/types/option'
 import { useMainStore } from './main'
+import { useFabricStore } from './fabric'
 
 interface UpdateElementData {
   id: string | string[]
@@ -59,19 +63,27 @@ export const useTemplatesStore = defineStore('Templates', {
 
   actions: {
     async renderTemplate() {
+      const mainStore = useMainStore()
+      const fabricStore = useFabricStore()
       const [ canvas ] = useCanvas()
+      const { wrapperRef } = storeToRefs(fabricStore)
+      const { setCanvasTransform } = useCanvasScale()
+      canvas.discardActiveObject()
+      mainStore.setCanvasObject(null)
       await canvas.loadFromJSON(this.currentTemplate)
+      const { width, height } = useElementBounding(wrapperRef.value)
+      setCanvasTransform(width.value, height.value)
       canvas.renderAll()
     },
 
     async renderElement() {
-      const mainStore = useMainStore()
-      const [ canvas ] = useCanvas()
-      
-      canvas.discardActiveObject()
-      mainStore.setCanvasObject(null)
-      await canvas.loadFromJSON(this.currentTemplate)
-      canvas.renderAll()
+      // const mainStore = useMainStore()
+      // const [ canvas ] = useCanvas()
+      // canvas.discardActiveObject()
+      // mainStore.setCanvasObject(null)
+      // await canvas.loadFromJSON(this.currentTemplate)
+      // canvas.renderAll()
+      await this.renderTemplate()
     },
 
     modifedElement() {
