@@ -17,8 +17,7 @@ import { computed, onMounted, PropType, ref, watch } from 'vue'
 import { StaticCanvas, Gradient, Pattern, Rect, Image } from 'fabric'
 import { CanvasElement, Template } from '@/types/canvas'
 import { TransparentFill } from '@/configs/background'
-import { CanvasOption } from '@/types/option'
-import { WorkSpaceDrawType } from '@/configs/canvas'
+import { WorkSpaceDrawType, WorkSpaceName } from '@/configs/canvas'
 
 const RectFillType = 'RectFillType'
 
@@ -63,9 +62,9 @@ const setThumbnailElement = async () => {
   if (!thumbCanvas.value) return
   await thumbCanvas.value.loadFromJSON(props.template)
   const thumbWorkSpaceDraw = thumbCanvas.value.getObjects().filter(item => (item as CanvasElement).id === WorkSpaceDrawType)[0]
-  
+  thumbCanvas.value.getObjects().filter(item => (item as CanvasElement).name === WorkSpaceName && (item as CanvasElement).id !== WorkSpaceDrawType).map(item => (item as CanvasElement).visible = false)
   thumbCanvas.value.renderAll()
-  const thumbZoom = props.size / thumbCanvas.value.width
+  const thumbZoom = props.size / (props.template.width / props.template.zoom)
   thumbCanvas.value.width = props.size
   thumbCanvas.value.height = props.size * viewportRatio.value
   thumbCanvas.value.setZoom(thumbZoom)
