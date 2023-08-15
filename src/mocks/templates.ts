@@ -30161,7 +30161,7 @@ export const Templates: Template[] = [
         "transparentCorners": false,
         "selectable": true,
         "evented": true,
-        "type": "image",
+        "type": "cropimage",
         "version": "6.0.0-beta1",
         "originX": "center",
         "originY": "center",

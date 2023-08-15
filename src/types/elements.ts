@@ -2,6 +2,7 @@ export const enum ElementNames {
   TEXTBOX = 'textbox',
   TEXT = 'text',
   IMAGE = 'image',
+  CROPIMAGE = 'cropimage',
   CROP = 'crop',
   MASK = 'mask',
   PATH = 'path',
