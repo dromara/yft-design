@@ -95,6 +95,7 @@ export const useTemplatesStore = defineStore('Templates', {
       canvasTemplate.width = workSpaceDraw.width * canvas.getZoom()
       canvasTemplate.height = workSpaceDraw.height * canvas.getZoom()
       canvasTemplate.zoom = canvas.getZoom()
+      canvasTemplate.workSpace = this.templates[this.templateIndex].workSpace
       canvasTemplate.viewportTransform = canvas.viewportTransform
       this.templates[this.templateIndex] = canvasTemplate
       addHistorySnapshot()
@@ -135,11 +136,9 @@ export const useTemplatesStore = defineStore('Templates', {
       addHistorySnapshot()
     },
 
-    updateTemplate(props: Partial<Template>) {
-      const { addHistorySnapshot } = useHistorySnapshot()
+    updateWorkSpace(props: Partial<Template>) {
       const templateIndex = this.templateIndex
       this.templates[templateIndex] = { ...this.templates[templateIndex], ...props }
-      addHistorySnapshot()
     },
 
     deleteTemplate(templateId: string | string[]) {
@@ -164,15 +163,15 @@ export const useTemplatesStore = defineStore('Templates', {
     updateElement(data: UpdateElementData) {
       const { addHistorySnapshot } = useHistorySnapshot()
       const { id, props, left, top } = data
-      const { centerPoint } = useCenter()
-      if (typeof props.left === 'number' && typeof props.top === 'number') {
-        props.left -= (left ? left : centerPoint.x)
-        props.top -= (top ? top : centerPoint.y)
-      }
-      if (props.clipPath && typeof props.clipPath.left === 'number' && typeof props.clipPath.top === 'number') {
-        props.clipPath.left -= (left ? left : centerPoint.x)
-        props.clipPath.top -= (top ? top : centerPoint.y)
-      }
+      // const { centerPoint } = useCenter()
+      // if (typeof props.left === 'number' && typeof props.top === 'number') {
+      //   props.left -= (left ? left : centerPoint.x)
+      //   props.top -= (top ? top : centerPoint.y)
+      // }
+      // if (props.clipPath && typeof props.clipPath.left === 'number' && typeof props.clipPath.top === 'number') {
+      //   props.clipPath.left -= (left ? left : centerPoint.x)
+      //   props.clipPath.top -= (top ? top : centerPoint.y)
+      // }
       const elementIds = typeof id === 'string' ? [id] : id
       if (!elementIds) return
       const template = this.templates[this.templateIndex]

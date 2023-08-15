@@ -17,7 +17,7 @@ import { computed, onMounted, PropType, ref, watch } from 'vue'
 import { StaticCanvas, Gradient, Pattern, Rect, Image } from 'fabric'
 import { CanvasElement, Template } from '@/types/canvas'
 import { TransparentFill } from '@/configs/background'
-import { WorkSpaceDrawType, WorkSpaceName } from '@/configs/canvas'
+import { WorkSpaceDrawType, WorkSpaceName, toObjectFilter } from '@/configs/canvas'
 
 const RectFillType = 'RectFillType'
 

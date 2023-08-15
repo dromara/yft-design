@@ -256,7 +256,7 @@ import { GradientColorLibs } from '@/configs/gradientColors'
 import { GradientCoords } from '@/types/elements'
 import { ShadingColorLibs, ShadingLigntColors } from '@/configs/shadingColors'
 import { ShadingBackground, ShadingColorLib } from '@/types/elements'
-import { WorkSpaceDrawType } from '@/configs/canvas'
+import { WorkSpaceDrawType, toObjectFilter } from '@/configs/canvas'
 import { ImageElement, WorkSpaceElement, CanvasElement } from '@/types/canvas'
 import { getRandomNum } from '@/utils/common'
 import { getImageDataURL } from '@/utils/image'
@@ -358,7 +358,6 @@ const changeBackgroundType = (type: number) => {
   }
   // 网格
   else if (type === 3) {
-    console.log('ok')
     const templateBackground: WorkSpaceElement = {
       ...background.value,
       fillType: type,
@@ -398,8 +397,7 @@ const changeBackgroundType = (type: number) => {
 // 设置背景
 const updateBackground = (props: Partial<WorkSpaceElement>) => {
   const [ canvas ] = useCanvas()
-  templatesStore.updateTemplate({ workSpace: { ...background.value, ...props } })
-  const WorkSpaceDraw = canvas.getObjects().filter(item => (item as CanvasElement).id === WorkSpaceDrawType)[0]
+  const WorkSpaceDraw = canvas.getObjects().filter(item => (item as CanvasElement).id === WorkSpaceDrawType)[0] as CanvasElement
   WorkSpaceDraw.set({
     ...props,
     left: WorkSpaceDraw.left,
@@ -407,6 +405,8 @@ const updateBackground = (props: Partial<WorkSpaceElement>) => {
     width: WorkSpaceDraw.width,
     height: WorkSpaceDraw.height,
   })
+  templatesStore.updateWorkSpace({ workSpace: { ...background.value, ...props } })
+  templatesStore.updateElement({ id: WorkSpaceDraw.id, props: WorkSpaceDraw.toObject(toObjectFilter as any[]) })
   canvas.renderAll()
 }
 
