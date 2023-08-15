@@ -45,40 +45,34 @@ const thumbnailTemplate = ref()
 // let thumbnailCanvas: StaticCanvas 
 const thumbCanvas = ref<StaticCanvas | undefined>(undefined)
 
-onMounted(() => {
+onMounted(async () => {
   thumbCanvas.value = new StaticCanvas(thumbnailTemplate.value, {
     width: props.size,
     height: props.size * viewportRatio.value,
     // backgroundColor: props.template.workSpace.fillType === 0 ? props.template.workSpace.fill as string : '#fff'
   })
-  setThumbnailElement()
+  await setThumbnailElement()
 })
 
-watch(props ,() => {
+watch(props, async () => {
   if (!thumbCanvas.value) return
-  setThumbnailElement()
+  await setThumbnailElement()
 }, { deep: true, immediate: true })
 
 const setThumbnailElement = async () => {
-  const width = props.template.width / props.template.zoom
-  const height = props.template.height / props.template.zoom
   if (!thumbCanvas.value) return
   await thumbCanvas.value.loadFromJSON(props.template)
   const thumbWorkSpaceDraw = thumbCanvas.value.getObjects().filter(item => (item as CanvasElement).id === WorkSpaceDrawType)[0]
-  console.log('width:', width, thumbWorkSpaceDraw.width)
+  
   thumbCanvas.value.renderAll()
-  thumbCanvas.value.getObjects().forEach(obj => {
-    if (typeof obj.left === 'number' && typeof obj.top === 'number') {
-      obj.left += width / 2
-      obj.top += height / 2
-    }
-  })
+  const thumbZoom = props.size / thumbCanvas.value.width
   thumbCanvas.value.width = props.size
   thumbCanvas.value.height = props.size * viewportRatio.value
-  thumbCanvas.value.setZoom(props.size / width)
-  console.log('thumbWorkSpaceDraw:', thumbWorkSpaceDraw.left, 'width:', thumbWorkSpaceDraw.width, thumbWorkSpaceDraw.top, thumbCanvas.value.viewportTransform)
-  // console.log('thumbCanvas.value.viewportTransform:', thumbCanvas.value.viewportTransform)
-  // setThumbnailBackground(width, height)
+  thumbCanvas.value.setZoom(thumbZoom)
+  const thumbViewportTransform = thumbCanvas.value.viewportTransform
+  thumbViewportTransform[4] = -thumbWorkSpaceDraw.left * thumbZoom
+  thumbViewportTransform[5] = -thumbWorkSpaceDraw.top * thumbZoom
+  thumbCanvas.value.setViewportTransform(thumbViewportTransform)
 }
 
 const setThumbnailBackground = async (width: number, height: number) => {
