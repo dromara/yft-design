@@ -29616,6 +29616,7 @@ export const Templates: Template[] = [
     "zoom": 0.4298950822503346,
     "width": 456.97508743145806,
     "height": 274.18505245887485,
+    "clip": 1,
     "version": "6.0.0-beta1",
     "objects": [
       {

@@ -78,23 +78,20 @@ export const useTemplatesStore = defineStore('Templates', {
     },
 
     async renderElement() {
-      // const mainStore = useMainStore()
-      // const [ canvas ] = useCanvas()
-      // canvas.discardActiveObject()
-      // mainStore.setCanvasObject(null)
-      // await canvas.loadFromJSON(this.currentTemplate)
-      // canvas.renderAll()
       await this.renderTemplate()
     },
 
     modifedElement() {
+      const fabricStore = useFabricStore()
       const [ canvas ] = useCanvas()
+      const { clip } = storeToRefs(fabricStore)
       const { addHistorySnapshot } = useHistorySnapshot()
       const canvasTemplate = canvas.toObject(toObjectFilter)
       const workSpaceDraw = canvas.getObjects().filter(item => (item as CanvasOption).id === WorkSpaceClipType)[0]
       canvasTemplate.width = workSpaceDraw.width * canvas.getZoom()
       canvasTemplate.height = workSpaceDraw.height * canvas.getZoom()
       canvasTemplate.zoom = canvas.getZoom()
+      canvasTemplate.clip = clip.value
       canvasTemplate.workSpace = this.templates[this.templateIndex].workSpace
       canvasTemplate.viewportTransform = canvas.viewportTransform
       this.templates[this.templateIndex] = canvasTemplate

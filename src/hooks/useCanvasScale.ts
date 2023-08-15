@@ -50,7 +50,30 @@ export default () => {
     const [ canvas ] = useCanvas()
     if (!canvas) return
     const fabricStore = useFabricStore()
-    const { zoom } = storeToRefs(fabricStore)
+    const templatesStore = useTemplatesStore()
+    const { scalePercentage, zoom, clip } = storeToRefs(fabricStore)
+    const { currentTemplate } = storeToRefs(templatesStore)
+    const scalePercentageVal = scalePercentage.value / 100
+    let zoomVal = 1
+    const workWidth = currentTemplate.value.width / currentTemplate.value.zoom
+    const workHeight = currentTemplate.value.height / currentTemplate.value.zoom
+    const canvasWidth = canvas.width ? canvas.width : fabricStore.getWidth()
+    const canvasHeight = canvas.height ? canvas.height : fabricStore.getHeight()
+    // const viewportTransform = currentTemplate.value.viewportTransform
+    
+    if (canvasWidth < workWidth || canvasHeight < workHeight) {
+      //按照宽度缩放
+      if (workWidth / canvasWidth > workHeight / canvasHeight) {
+        zoomVal = workWidth / (canvasWidth * scalePercentageVal)
+      } 
+      //按照高度缩放
+      else {  
+        zoomVal = workHeight / (canvasHeight * scalePercentageVal)
+      }
+    }
+    zoom.value = 1 / zoomVal
+    clip.value = currentTemplate.value.clip
+    canvas.setZoom(zoom.value)
     const WorkSpaceDraw = canvas.getObjects().filter(item => (item as CanvasElement).id === WorkSpaceDrawType)[0]
     const WorkSpaceClip = canvas.getObjects().filter(item => (item as CanvasElement).id === WorkSpaceClipType)[0]
     if (!WorkSpaceDraw || !WorkSpaceClip) return
