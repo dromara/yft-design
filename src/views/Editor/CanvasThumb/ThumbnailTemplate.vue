@@ -72,6 +72,7 @@ const setThumbnailElement = async () => {
   thumbViewportTransform[5] = -thumbWorkSpaceDraw.top * thumbZoom
   thumbCanvas.value.setViewportTransform(thumbViewportTransform)
   thumbCanvas.value.renderAll()
+  // console.log('thumbWorkSpaceDraw.fill', thumbWorkSpaceDraw.fill)
 }
 
 const setThumbnailBackground = async (width: number, height: number) => {

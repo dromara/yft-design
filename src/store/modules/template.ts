@@ -161,17 +161,7 @@ export const useTemplatesStore = defineStore('Templates', {
     },
 
     updateElement(data: UpdateElementData) {
-      const { addHistorySnapshot } = useHistorySnapshot()
       const { id, props, left, top } = data
-      // const { centerPoint } = useCenter()
-      // if (typeof props.left === 'number' && typeof props.top === 'number') {
-      //   props.left -= (left ? left : centerPoint.x)
-      //   props.top -= (top ? top : centerPoint.y)
-      // }
-      // if (props.clipPath && typeof props.clipPath.left === 'number' && typeof props.clipPath.top === 'number') {
-      //   props.clipPath.left -= (left ? left : centerPoint.x)
-      //   props.clipPath.top -= (top ? top : centerPoint.y)
-      // }
       const elementIds = typeof id === 'string' ? [id] : id
       if (!elementIds) return
       const template = this.templates[this.templateIndex]
@@ -179,7 +169,8 @@ export const useTemplatesStore = defineStore('Templates', {
         return elementIds.includes(el.id) ? { ...el, ...props }: el
       })
       this.templates[this.templateIndex].objects = (elements as CanvasOption[])
-      addHistorySnapshot()
+      this.modifedElement()
+      // addHistorySnapshot()
     },
 
     addElement(element: CanvasOption | CanvasOption[]) {

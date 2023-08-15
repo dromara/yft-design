@@ -780,12 +780,12 @@ const generateShadingBackgroundRandom = () => {
   generateShadingBackground()
 }
 
+// 设置背景图片
 const generateBackgroundImage = async (backgroundImage: Image, url: string) => {
   const [ canvas ] = useCanvas()
   if (canvasObject.value && canvasObject.value.name === 'backgroundImage') {
     const imageElement = canvasObject.value as ImageElement
     await imageElement.setSrc(url)
-    templatesStore.modifedElement()
   }
   else {
     canvas.backgroundImage = backgroundImage
