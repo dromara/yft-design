@@ -63,7 +63,6 @@ const setThumbnailElement = async (init: boolean) => {
   await thumbCanvas.value.loadFromJSON(props.template)
   const thumbWorkSpaceDraw = thumbCanvas.value.getObjects().filter(item => (item as CanvasElement).id === WorkSpaceDrawType)[0]
   thumbCanvas.value.getObjects().filter(item => (item as CanvasElement).name === WorkSpaceName && (item as CanvasElement).id !== WorkSpaceDrawType).map(item => (item as CanvasElement).visible = false)
-  thumbCanvas.value.renderAll()
   const width = init ? props.template.width / props.template.zoom : thumbCanvas.value.width
   const thumbZoom = props.size / width
   thumbCanvas.value.width = props.size
@@ -72,7 +71,9 @@ const setThumbnailElement = async (init: boolean) => {
   const thumbViewportTransform = thumbCanvas.value.viewportTransform
   thumbViewportTransform[4] = -thumbWorkSpaceDraw.left * thumbZoom
   thumbViewportTransform[5] = -thumbWorkSpaceDraw.top * thumbZoom
+  console.log('thumbViewportTransform:', thumbViewportTransform, thumbWorkSpaceDraw.left, thumbWorkSpaceDraw.top)
   thumbCanvas.value.setViewportTransform(thumbViewportTransform)
+  thumbCanvas.value.renderAll()
 }
 
 const setThumbnailBackground = async (width: number, height: number) => {

@@ -29631,6 +29631,7 @@ export const Templates: Template[] = [
             "evented": false,
             "type": "rect",
             "fill": '',
+            "color": '#fff',
             "version": "6.0.0-beta1",
             "originX": "left",
             "originY": "top",

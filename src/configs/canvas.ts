@@ -54,6 +54,7 @@ export const toObjectFilter = [
   'isShow',
   'isCheck',
   'color', 
+  'fill',
   'isCrop', 
   'cropId', 
   'fillType', 

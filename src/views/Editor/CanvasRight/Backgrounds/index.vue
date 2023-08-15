@@ -54,15 +54,6 @@
 
     <!-- 渐变填充 -->
     <div v-if="background.fillType === 2">
-      <!-- <el-row class="mb-10">
-        <el-select class="full-row" v-model="background.gradientName" @change="changeGradientName">
-          <el-option v-for="(item, nameIndex) in GradientColorLibs" :key="nameIndex" :value="item.name">
-            <div style="display: flex">
-              <GradientFill :name="item.name" :type="background.gradientType" :colors="item.colors"></GradientFill>
-            </div>
-          </el-option>
-        </el-select>
-      </el-row> -->
       <div class="background-gradient-body">
         <div class="gradient-content" v-for="(item, nameIndex) in GradientColorLibs" :key="nameIndex" :value="item.name" @click.stop="changeGradientName(item.name)">
           <GradientFill :name="item.name" :type="background.gradientType" :colors="item.colors"></GradientFill>
