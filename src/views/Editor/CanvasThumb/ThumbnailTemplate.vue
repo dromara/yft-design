@@ -37,7 +37,6 @@ const props = defineProps({
 })
 
 // const viewportRatio = ref<number>(props.template.height / props.template.width) 
-
 const viewportRatio = computed(() => props.template.height / props.template.width)
 const height = computed(() => props.size * viewportRatio.value)
 const thumbnailTemplate = ref()
@@ -50,20 +49,20 @@ onMounted(async () => {
     height: props.size * viewportRatio.value,
     // backgroundColor: props.template.workSpace.fillType === 0 ? props.template.workSpace.fill as string : '#fff'
   })
-  await setThumbnailElement(true)
+  await setThumbnailElement()
 })
 
 watch(props, async () => {
   if (!thumbCanvas.value) return
-  await setThumbnailElement(false)
+  await setThumbnailElement()
 }, { deep: true, immediate: true })
 
-const setThumbnailElement = async (init: boolean) => {
+const setThumbnailElement = async () => {
   if (!thumbCanvas.value) return
   await thumbCanvas.value.loadFromJSON(props.template)
   const thumbWorkSpaceDraw = thumbCanvas.value.getObjects().filter(item => (item as CanvasElement).id === WorkSpaceDrawType)[0]
   thumbCanvas.value.getObjects().filter(item => (item as CanvasElement).name === WorkSpaceName && (item as CanvasElement).id !== WorkSpaceDrawType).map(item => (item as CanvasElement).visible = false)
-  const width = init ? props.template.width / props.template.zoom : thumbCanvas.value.width
+  const width = props.template.width / props.template.zoom
   const thumbZoom = props.size / width
   thumbCanvas.value.width = props.size
   thumbCanvas.value.height = props.size * viewportRatio.value
@@ -71,7 +70,6 @@ const setThumbnailElement = async (init: boolean) => {
   const thumbViewportTransform = thumbCanvas.value.viewportTransform
   thumbViewportTransform[4] = -thumbWorkSpaceDraw.left * thumbZoom
   thumbViewportTransform[5] = -thumbWorkSpaceDraw.top * thumbZoom
-  console.log('thumbViewportTransform:', thumbViewportTransform, thumbWorkSpaceDraw.left, thumbWorkSpaceDraw.top)
   thumbCanvas.value.setViewportTransform(thumbViewportTransform)
   thumbCanvas.value.renderAll()
 }

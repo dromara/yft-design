@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { Templates } from '@/mocks/templates'
 import { Template, CanvasElement } from '@/types/canvas'
-import { toObjectFilter, WorkSpaceName, WorkSpaceDrawType } from '@/configs/canvas'
+import { toObjectFilter, WorkSpaceName, WorkSpaceDrawType, WorkSpaceClipType } from '@/configs/canvas'
 import useHandleElement from '@/hooks/useHandleElement'
 import useCanvas, { initWorks, initBackground } from '@/views/Canvas/useCanvas'
 import useHistorySnapshot from '@/hooks/useHistorySnapshot'
@@ -78,10 +78,10 @@ export const useTemplatesStore = defineStore('Templates', {
       const [ canvas ] = useCanvas()
       const { addHistorySnapshot } = useHistorySnapshot()
       const canvasTemplate = canvas.toObject(toObjectFilter)
-      const workSpaceDraw = canvas.getObjects().filter(item => (item as CanvasOption).id === WorkSpaceDrawType)[0]
-      canvasTemplate.width = workSpaceDraw.width
-      canvasTemplate.height = workSpaceDraw.height
-      canvasTemplate.zoom =  canvas.getZoom()
+      const workSpaceDraw = canvas.getObjects().filter(item => (item as CanvasOption).id === WorkSpaceClipType)[0]
+      canvasTemplate.width = workSpaceDraw.width * canvas.getZoom()
+      canvasTemplate.height = workSpaceDraw.height * canvas.getZoom()
+      canvasTemplate.zoom = canvas.getZoom()
       canvasTemplate.viewportTransform = canvas.viewportTransform
       this.templates[this.templateIndex] = canvasTemplate
       addHistorySnapshot()
