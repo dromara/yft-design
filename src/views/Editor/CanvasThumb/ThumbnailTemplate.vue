@@ -50,21 +50,22 @@ onMounted(async () => {
     height: props.size * viewportRatio.value,
     // backgroundColor: props.template.workSpace.fillType === 0 ? props.template.workSpace.fill as string : '#fff'
   })
-  await setThumbnailElement()
+  await setThumbnailElement(true)
 })
 
 watch(props, async () => {
   if (!thumbCanvas.value) return
-  await setThumbnailElement()
+  await setThumbnailElement(false)
 }, { deep: true, immediate: true })
 
-const setThumbnailElement = async () => {
+const setThumbnailElement = async (init: boolean) => {
   if (!thumbCanvas.value) return
   await thumbCanvas.value.loadFromJSON(props.template)
   const thumbWorkSpaceDraw = thumbCanvas.value.getObjects().filter(item => (item as CanvasElement).id === WorkSpaceDrawType)[0]
   thumbCanvas.value.getObjects().filter(item => (item as CanvasElement).name === WorkSpaceName && (item as CanvasElement).id !== WorkSpaceDrawType).map(item => (item as CanvasElement).visible = false)
   thumbCanvas.value.renderAll()
-  const thumbZoom = props.size / (props.template.width / props.template.zoom)
+  const width = init ? props.template.width / props.template.zoom : thumbCanvas.value.width
+  const thumbZoom = props.size / width
   thumbCanvas.value.width = props.size
   thumbCanvas.value.height = props.size * viewportRatio.value
   thumbCanvas.value.setZoom(thumbZoom)
