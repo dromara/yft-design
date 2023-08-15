@@ -334,17 +334,14 @@ const initCanvas = () => {
 const initTemplate = async () => {
   if (!canvas) return
   const templatesStore = useTemplatesStore()
-  const { createElement } = useHandleElement()
+  const { setCanvasTransform } = useCanvasScale()
+  const fabricStore = useFabricStore()
   const { currentTemplate } = storeToRefs(templatesStore)
-  console.log('currentTemplate:', currentTemplate.value)
+  const { wrapperRef } = storeToRefs(fabricStore)
   await canvas.loadFromJSON(currentTemplate.value)
+  const { width, height } = useElementBounding(wrapperRef.value)
+  setCanvasTransform(width.value, height.value)
   canvas.renderAll()
-  // currentTemplate.value.objects.forEach(element => {
-  //   createElement(element)
-  // })
-  // for (let i = 0; i < currentTemplate.value.objects.length; i++) {
-  //   const element = currentTemplate.value.objects[i]
-  // }
 }
 
 // 初始化背景

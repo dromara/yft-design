@@ -70,6 +70,7 @@ export const useTemplatesStore = defineStore('Templates', {
       const { setCanvasTransform } = useCanvasScale()
       canvas.discardActiveObject()
       mainStore.setCanvasObject(null)
+      canvas.clear()
       await canvas.loadFromJSON(this.currentTemplate)
       const { width, height } = useElementBounding(wrapperRef.value)
       setCanvasTransform(width.value, height.value)
