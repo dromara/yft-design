@@ -3,6 +3,7 @@ import { useMainStore, useTemplatesStore } from "@/store"
 import usePolygonControl from "@/hooks/usePolygonControl"
 import useCanvas from "../Canvas/useCanvas"
 import useHandleBackground from "@/hooks/useHandleBackground"
+import { extendWithCropImage } from '@/extension/mixins/cropping.mixin'
 
 export const useMousedblClick = (evt: any) => {
   const [ canvas ] = useCanvas()
@@ -15,9 +16,11 @@ export const useMousedblClick = (evt: any) => {
     if (targetObject.type === ElementNames.POLYGON) {
       setPolygonControl(targetObject)
     }
-    // if (targetObject.type === ElementNames.IMAGE) {
-    //   console.log('targetObject:', targetObject)
-    // }
+    if (targetObject.type === ElementNames.CROPIMAGE) {
+      if (typeof targetObject.isCropping === 'undefined') {
+        extendWithCropImage(targetObject)
+      }
+    }
   }
   else {
     const backgroundImage = canvas.get("backgroundImage")

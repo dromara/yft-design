@@ -1,14 +1,18 @@
-import { defineStore } from 'pinia'
+import { defineStore, storeToRefs } from 'pinia'
 import { Templates } from '@/mocks/templates'
 import { Template, CanvasElement } from '@/types/canvas'
-import { toObjectFilter, WorkSpaceName } from '@/configs/canvas'
+import { toObjectFilter, WorkSpaceName, WorkSpaceDrawType, WorkSpaceClipType } from '@/configs/canvas'
 import useHandleElement from '@/hooks/useHandleElement'
+import useCanvasScale from '@/hooks/useCanvasScale'
+
 import useCanvas, { initWorks, initBackground } from '@/views/Canvas/useCanvas'
 import useHistorySnapshot from '@/hooks/useHistorySnapshot'
 
 import useCenter from '@/views/Canvas/useCenter'
+import { useElementBounding } from '@vueuse/core'
 import { CanvasOption } from '@/types/option'
 import { useMainStore } from './main'
+import { useFabricStore } from './fabric'
 
 interface UpdateElementData {
   id: string | string[]
@@ -58,48 +62,39 @@ export const useTemplatesStore = defineStore('Templates', {
   },
 
   actions: {
-    renderTemplate() {
+    async renderTemplate() {
+      const mainStore = useMainStore()
+      const fabricStore = useFabricStore()
       const [ canvas ] = useCanvas()
-      const { createElement } = useHandleElement()
+      const { wrapperRef } = storeToRefs(fabricStore)
+      const { setCanvasTransform } = useCanvasScale()
+      canvas.discardActiveObject()
+      mainStore.setCanvasObject(null)
       canvas.clear()
-      initWorks()
-      initBackground()
-      this.templates[this.templateIndex].objects.forEach(async (element) => {
-        await createElement(element as CanvasOption)
-      })
+      await canvas.loadFromJSON(this.currentTemplate)
+      const { width, height } = useElementBounding(wrapperRef.value)
+      setCanvasTransform(width.value, height.value)
       canvas.renderAll()
-      
     },
 
     async renderElement() {
-      const mainStore = useMainStore()
-      const [ canvas ] = useCanvas()
-      
-      const { createElement } = useHandleElement()
-      canvas.discardActiveObject()
-      mainStore.setCanvasObject(null)
-      canvas.remove(...canvas.getObjects().filter(item => (item as CanvasElement).name !== WorkSpaceName))
-      for (let i = 0; i < this.templates[this.templateIndex].objects.length; i++) {
-        const element = this.templates[this.templateIndex].objects[i] as CanvasOption
-        await createElement(element as CanvasOption)
-      }
-      // this.templates[this.templateIndex].objects.forEach(element => {
-      //   
-      // })
-      canvas.renderAll()
+      await this.renderTemplate()
     },
 
     modifedElement() {
+      const fabricStore = useFabricStore()
       const [ canvas ] = useCanvas()
-      const { centerPoint } = useCenter()
+      const { clip } = storeToRefs(fabricStore)
       const { addHistorySnapshot } = useHistorySnapshot()
       const canvasTemplate = canvas.toObject(toObjectFilter)
-      for (let i = 0; i < canvasTemplate.objects.length; i++) {
-        const element = canvasTemplate.objects[i] as CanvasElement
-        element.left -= centerPoint.x
-        element.top -= centerPoint.y
-      }
-      this.templates[this.templateIndex].objects = canvasTemplate.objects
+      const workSpaceDraw = canvas.getObjects().filter(item => (item as CanvasOption).id === WorkSpaceClipType)[0]
+      canvasTemplate.width = workSpaceDraw.width * canvas.getZoom()
+      canvasTemplate.height = workSpaceDraw.height * canvas.getZoom()
+      canvasTemplate.zoom = canvas.getZoom()
+      canvasTemplate.clip = clip.value
+      canvasTemplate.workSpace = this.templates[this.templateIndex].workSpace
+      canvasTemplate.viewportTransform = canvas.viewportTransform
+      this.templates[this.templateIndex] = canvasTemplate
       addHistorySnapshot()
     },
 
@@ -138,11 +133,9 @@ export const useTemplatesStore = defineStore('Templates', {
       addHistorySnapshot()
     },
 
-    updateTemplate(props: Partial<Template>) {
-      const { addHistorySnapshot } = useHistorySnapshot()
+    updateWorkSpace(props: Partial<Template>) {
       const templateIndex = this.templateIndex
       this.templates[templateIndex] = { ...this.templates[templateIndex], ...props }
-      addHistorySnapshot()
     },
 
     deleteTemplate(templateId: string | string[]) {
@@ -165,17 +158,7 @@ export const useTemplatesStore = defineStore('Templates', {
     },
 
     updateElement(data: UpdateElementData) {
-      const { addHistorySnapshot } = useHistorySnapshot()
       const { id, props, left, top } = data
-      const { centerPoint } = useCenter()
-      if (typeof props.left === 'number' && typeof props.top === 'number') {
-        props.left -= (left ? left : centerPoint.x)
-        props.top -= (top ? top : centerPoint.y)
-      }
-      if (props.clipPath && typeof props.clipPath.left === 'number' && typeof props.clipPath.top === 'number') {
-        props.clipPath.left -= (left ? left : centerPoint.x)
-        props.clipPath.top -= (top ? top : centerPoint.y)
-      }
       const elementIds = typeof id === 'string' ? [id] : id
       if (!elementIds) return
       const template = this.templates[this.templateIndex]
@@ -183,7 +166,8 @@ export const useTemplatesStore = defineStore('Templates', {
         return elementIds.includes(el.id) ? { ...el, ...props }: el
       })
       this.templates[this.templateIndex].objects = (elements as CanvasOption[])
-      addHistorySnapshot()
+      this.modifedElement()
+      // addHistorySnapshot()
     },
 
     addElement(element: CanvasOption | CanvasOption[]) {

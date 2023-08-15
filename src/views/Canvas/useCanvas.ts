@@ -10,21 +10,23 @@ import { CanvasElement } from '@/types/canvas'
 import { TransparentFill } from '@/configs/background'
 import { drawRotateIcon, drawAngleIcon, drawVerticalLeftLineIcon, drawVerticalRightLineIcon } from '@/utils/drawer'
 import useHandleElement from '@/hooks/useHandleElement'
+import useCanvasScale from '@/hooks/useCanvasScale'
 import useRotate from './useRotate'
 import { 
   WorkSpaceClipType, 
-  WorkSpaceName, 
-  WorkSpaceEditColor, 
   WorkSpaceDrawType,
-  WorkSpaceCommonOption,
   WorkSpaceMaskType, 
   WorkSpaceSafeType, 
+  WorkSpaceName, 
+  WorkSpaceEditColor, 
+  WorkSpaceCommonOption,
   WorkSpaceClipColor, 
   WorkSpaceSafeColor, 
   WorkSpaceLineType, 
   WorkSpaceMaskColor
 } from '@/configs/canvas'
 import useHandleBackground from '@/hooks/useHandleBackground'
+import { CanvasOption } from '@/types/option'
 
 
 
@@ -170,29 +172,30 @@ const setCanvasSize = (width: number, height: number) => {
   canvas.renderAll()
 }
 
-// 更新视图区长宽
-const setCanvasTransform = (width: number, height: number) => {
-  if (!canvas) return
-  const fabricStore = useFabricStore()
-  const { zoom } = storeToRefs(fabricStore)
-  const WorkSpaceDraw = canvas.getObjects(WorkSpaceDrawType)[0]
-  const WorkSpaceClip = canvas.getObjects(WorkSpaceClipType)[0]
-  if (!WorkSpaceDraw || !WorkSpaceClip) return
-  const workSpaceBound = WorkSpaceDraw.getBoundingRect()
-  const left = WorkSpaceDraw.left
-  const top = WorkSpaceDraw.top
-  const canvasTransform = canvas.viewportTransform
-  if (!canvasTransform || !left || !top) return
-  zoom.value = canvas.getZoom()
-  canvasTransform[4] = (width - workSpaceBound.width) / 2 - left * canvas.getZoom()
-  canvasTransform[5] = (height - workSpaceBound.height) / 2 - top * canvas.getZoom()
-  canvas.setViewportTransform(canvasTransform)
-}
+// // 更新视图区长宽
+// const setCanvasTransform = (width: number, height: number) => {
+//   if (!canvas) return
+//   const fabricStore = useFabricStore()
+//   const { zoom } = storeToRefs(fabricStore)
+//   const WorkSpaceDraw = canvas.getObjects().filter(item => (item as CanvasElement).id === WorkSpaceDrawType)[0]
+//   const WorkSpaceClip = canvas.getObjects().filter(item => (item as CanvasElement).id === WorkSpaceClipType)[0]
+//   if (!WorkSpaceDraw || !WorkSpaceClip) return
+//   const workSpaceBound = WorkSpaceDraw.getBoundingRect()
+//   const left = WorkSpaceDraw.left
+//   const top = WorkSpaceDraw.top
+//   const canvasTransform = canvas.viewportTransform
+//   if (!canvasTransform || !left || !top) return
+//   zoom.value = canvas.getZoom()
+//   canvasTransform[4] = (width - workSpaceBound.width) / 2 - left * canvas.getZoom()
+//   canvasTransform[5] = (height - workSpaceBound.height) / 2 - top * canvas.getZoom()
+//   canvas.setViewportTransform(canvasTransform)
+// }
 
 // 初始化工作台
 export const initWorks = () => {
   if (!canvas) return
   const fabricStore = useFabricStore()
+  const { setCanvasTransform } = useCanvasScale()
   const { zoom, clip, safe, diagonal, opacity, showClip, showSafe, wrapperRef } = storeToRefs(fabricStore)
   const canvasWidth = canvas.width ? canvas.width : fabricStore.getWidth()
   const canvasHeight = canvas.height ? canvas.height : fabricStore.getHeight()
@@ -211,7 +214,7 @@ export const initWorks = () => {
     height: workHeight + 2 * clipPX,
     fill: WorkSpaceEditColor,
     stroke: WorkSpaceEditColor, 
-    type: WorkSpaceDrawType,
+    id: WorkSpaceDrawType,
     ...WorkSpaceCommonOption
   })
 
@@ -224,7 +227,7 @@ export const initWorks = () => {
     stroke: WorkSpaceClipColor, // 边框颜色
     strokeWidth: 1, // 边框大小
     visible: showClip.value,
-    type: WorkSpaceClipType,
+    id: WorkSpaceClipType,
     ...WorkSpaceCommonOption
   })
 
@@ -237,7 +240,7 @@ export const initWorks = () => {
     stroke: WorkSpaceSafeColor, // 边框颜色
     strokeWidth: 1, // 边框大小
     visible: showSafe.value,
-    type: WorkSpaceSafeType,
+    id: WorkSpaceSafeType,
     ...WorkSpaceCommonOption
   })
 
@@ -252,7 +255,7 @@ export const initWorks = () => {
     top: -PaddingHalf,
     fill: WorkSpaceMaskColor,
     opacity: opacity.value,
-    type: WorkSpaceMaskType,
+    id: WorkSpaceMaskType,
     ...WorkSpaceCommonOption
   })
   // [lineEnd, lineHeight, leftStart, top] 终止位置，线长，起始位置，top
@@ -328,17 +331,17 @@ const initCanvas = () => {
 }
 
 // 初始化模板
-const initTemplate = () => {
+const initTemplate = async () => {
   if (!canvas) return
   const templatesStore = useTemplatesStore()
-  const { createElement } = useHandleElement()
+  const { setCanvasTransform } = useCanvasScale()
+  const fabricStore = useFabricStore()
   const { currentTemplate } = storeToRefs(templatesStore)
-  currentTemplate.value.objects.forEach(element => {
-    createElement(element)
-  })
-  // for (let i = 0; i < currentTemplate.value.objects.length; i++) {
-  //   const element = currentTemplate.value.objects[i]
-  // }
+  const { wrapperRef } = storeToRefs(fabricStore)
+  await canvas.loadFromJSON(currentTemplate.value)
+  const { width, height } = useElementBounding(wrapperRef.value)
+  setCanvasTransform(width.value, height.value)
+  canvas.renderAll()
 }
 
 // 初始化背景
@@ -346,7 +349,7 @@ export const initBackground = async () => {
   const templatesStore = useTemplatesStore()
   const { getBackgroundImageOption } = useHandleBackground()
   if (!canvas) return
-  const workSpaceDraw = canvas.getObjects(WorkSpaceDrawType)[0]
+  const workSpaceDraw = canvas.getObjects().filter(item => (item as CanvasOption).id === WorkSpaceDrawType)[0]
   // const left = workSpaceDraw.left, top = workSpaceDraw.top
   const { currentTemplate } = storeToRefs(templatesStore)
   const workSpaceElement = currentTemplate.value.workSpace
@@ -396,11 +399,12 @@ export const initBackground = async () => {
 const initEditor = () => {
   const fabricStore = useFabricStore()
   const { wrapperRef } = storeToRefs(fabricStore)
+  const { setCanvasTransform } = useCanvasScale()
   initConf()
   initCanvas()
-  initWorks()
+  // initWorks()
   initTemplate()
-  initBackground()
+  // initBackground()
   const { width, height } = useElementBounding(wrapperRef.value)
   watch([width, height], () => {
     setCanvasTransform(width.value, height.value)

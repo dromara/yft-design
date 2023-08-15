@@ -6,6 +6,7 @@ import { useFabricStore, useTemplatesStore } from '@/store'
 import { ImageFormat } from '@/types/canvas'
 import { WorkSpaceClipColor, WorkSpaceClipType, WorkSpaceDrawType, WorkSpaceName, WorkSpaceSafeColor, WorkSpaceSafeType } from '@/configs/canvas'
 import { DefaultDPI, DefaultRatio } from '@/configs/size'
+import { toObjectFilter } from '@/configs/canvas'
 import { changeDataURLDPI } from '@/utils/changdpi'
 import { TransparentFill } from '@/configs/background'
 // import { fabric } from 'fabric'
@@ -115,11 +116,11 @@ export default () => {
   // 导出json
   const exportJSON = () => {
     const [ canvas ] = useCanvas()
-    console.log('canvas.getObjects():', canvas.getObjects())
+    console.log('canvas.toObject():', canvas.toObject())
     const objects = canvas.getObjects()
     
-    console.log('canvas.toObject():', canvas.toObject())
-    const blob = new Blob([JSON.stringify(templates.value)], { type: '' })
+    console.log('canvas.toObject():', canvas.toObject(toObjectFilter))
+    const blob = new Blob([JSON.stringify(canvas.toObject())], { type: '' })
     saveAs(blob, 'vue-fabric-design_draw.json')
   }
 

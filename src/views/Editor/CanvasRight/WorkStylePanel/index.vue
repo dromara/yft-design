@@ -104,7 +104,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Rect } from 'fabric'
+import { Canvas, Rect } from 'fabric'
 import { storeToRefs } from 'pinia'
 import { ElMessage } from 'element-plus'
 import { ref, watch, onMounted } from 'vue'
@@ -114,6 +114,7 @@ import { WorkSpaceClipType, WorkSpaceMaskType } from '@/configs/canvas'
 import { DesignUnitMode, DesignSizeMode, MinSize, MaxSize } from '@/configs/background'
 import useCanvas from '@/views/Canvas/useCanvas'
 import Backgrounds from '../Backgrounds/index.vue'
+import { CanvasElement } from '@/types/canvas'
 
 const mainStore = useMainStore()
 const templatesStore = useTemplatesStore()
@@ -130,7 +131,7 @@ const canvasHeight = ref<number>(px2mm(currentTemplate.value.height / currentTem
 watch(currentTemplate, () => {
   const [ canvas ] = useCanvas()
   if (!canvas) return
-  const workSpaceClip = canvas.getObjects(WorkSpaceClipType)[0]
+  const workSpaceClip = canvas.getObjects().filter(item => (item as CanvasElement).id === WorkSpaceClipType)[0]
   if (!workSpaceClip) return
   const workWidth = workSpaceClip.width ? workSpaceClip.width : 0, workHeight = workSpaceClip.height ? workSpaceClip.height : 0
   if (unitMode.value === 0) {
@@ -233,7 +234,7 @@ const changeFixedRatio = (fixedStatus: boolean) => {
 // 修改直角圆角
 const changeWorkRound = (roundStatus: boolean) => {
   const [ canvas ] = useCanvas()
-  const workSpaceclip = canvas.getObjects(WorkSpaceClipType)[0] as Rect
+  const workSpaceclip = canvas.getObjects().filter(item => (item as CanvasElement).id === WorkSpaceClipType)[0] as Rect
   isRound.value = roundStatus
   if (isRound.value) {
     workSpaceclip.rx = 10
@@ -284,7 +285,7 @@ watch(gridColorRecent, () => {
 
 const changeMaskOpacity = () => {
   const [ canvas ] = useCanvas()
-  const workMask = canvas.getObjects(WorkSpaceMaskType)[0]
+  const workMask = canvas.getObjects().filter(item => (item as CanvasElement).id === WorkSpaceMaskType)[0]
   if (!workMask) return
   workMask.set('opacity', opacity.value)
   canvas.renderAll()

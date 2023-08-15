@@ -1,13 +1,19 @@
 import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useFabricStore, useTemplatesStore } from '@/store'
+import { useElementBounding } from '@vueuse/core'
+import { 
+  WorkSpaceClipType, 
+  WorkSpaceDrawType,
+} from '@/configs/canvas'
+import { CanvasElement } from '@/types/canvas'
 import useCanvas from '@/views/Canvas/useCanvas'
 import useCenter from '@/views/Canvas/useCenter'
 
 export default () => {
   const fabricStore = useFabricStore()
   const templatesStore = useTemplatesStore()
-  const { zoom } = storeToRefs(fabricStore)
+  const { zoom, wrapperRef } = storeToRefs(fabricStore)
   const canvasScalePercentage = computed(() => Math.round(zoom.value * 100) + '%')
 
   /**
@@ -39,16 +45,62 @@ export default () => {
     zoom.value = canvas.getZoom()
   }
 
+  // 更新视图区长宽
+  const setCanvasTransform = (width: number, height: number) => {
+    const [ canvas ] = useCanvas()
+    if (!canvas) return
+    const fabricStore = useFabricStore()
+    const templatesStore = useTemplatesStore()
+    const { scalePercentage, zoom, clip } = storeToRefs(fabricStore)
+    const { currentTemplate } = storeToRefs(templatesStore)
+    const scalePercentageVal = scalePercentage.value / 100
+    let zoomVal = 1
+    const workWidth = currentTemplate.value.width / currentTemplate.value.zoom
+    const workHeight = currentTemplate.value.height / currentTemplate.value.zoom
+    const canvasWidth = canvas.width ? canvas.width : fabricStore.getWidth()
+    const canvasHeight = canvas.height ? canvas.height : fabricStore.getHeight()
+    // const viewportTransform = currentTemplate.value.viewportTransform
+    
+    if (canvasWidth < workWidth || canvasHeight < workHeight) {
+      //按照宽度缩放
+      if (workWidth / canvasWidth > workHeight / canvasHeight) {
+        zoomVal = workWidth / (canvasWidth * scalePercentageVal)
+      } 
+      //按照高度缩放
+      else {  
+        zoomVal = workHeight / (canvasHeight * scalePercentageVal)
+      }
+    }
+    zoom.value = 1 / zoomVal
+    clip.value = currentTemplate.value.clip
+    canvas.setZoom(zoom.value)
+    const WorkSpaceDraw = canvas.getObjects().filter(item => (item as CanvasElement).id === WorkSpaceDrawType)[0]
+    const WorkSpaceClip = canvas.getObjects().filter(item => (item as CanvasElement).id === WorkSpaceClipType)[0]
+    if (!WorkSpaceDraw || !WorkSpaceClip) return
+    const workSpaceBound = WorkSpaceDraw.getBoundingRect()
+    const left = WorkSpaceDraw.left
+    const top = WorkSpaceDraw.top
+    const canvasTransform = canvas.viewportTransform
+    if (!canvasTransform || !left || !top) return
+    zoom.value = canvas.getZoom()
+    canvasTransform[4] = (width - workSpaceBound.width) / 2 - left * canvas.getZoom()
+    canvasTransform[5] = (height - workSpaceBound.height) / 2 - top * canvas.getZoom()
+    canvas.setViewportTransform(canvasTransform)
+    canvas.renderAll()
+  }
+
   /**
    * 重置画布尺寸和位置
    */
   const resetCanvas = () => {
-    templatesStore.renderTemplate()
+    const { width, height } = useElementBounding(wrapperRef.value)
+    setCanvasTransform(width.value, height.value)
   }
 
   return {
     canvasScalePercentage,
     setCanvasScalePercentage,
+    setCanvasTransform,
     scaleCanvas,
     resetCanvas,
   }

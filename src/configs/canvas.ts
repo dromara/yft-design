@@ -33,7 +33,7 @@ export const WorkSpaceCommonOption = {
   selectable: false,
   transparentCorners: false,
   evented: false,
-  excludeFromExport: true,
+  // excludeFromExport: true,
   hasControls: false,
   hasBorders: false,
   perPixelTargetFind: false,
@@ -54,6 +54,7 @@ export const toObjectFilter = [
   'isShow',
   'isCheck',
   'color', 
+  'fill',
   'isCrop', 
   'cropId', 
   'fillType', 
@@ -67,5 +68,7 @@ export const toObjectFilter = [
   'codeContent',
   'codeSpace',
   'codeError',
-  'background'
+  'background',
+  'selectable',
+  'evented'
 ]
