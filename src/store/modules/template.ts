@@ -66,12 +66,13 @@ export const useTemplatesStore = defineStore('Templates', {
       const mainStore = useMainStore()
       const [ canvas ] = useCanvas()
       const { resetCanvas } = useCanvasScale()
+      const { renderElement } = useHandleElement()
       canvas.discardActiveObject()
       mainStore.setCanvasObject(null)
-      // canvas.clear()
-      await canvas.loadFromJSON(this.currentTemplate)
+      await canvas.loadFromJSON(this.currentTemplate, canvas.renderAll.bind(canvas))
       resetCanvas()
       canvas.renderAll()
+      renderElement()
     },
 
     async renderElement() {
@@ -105,11 +106,13 @@ export const useTemplatesStore = defineStore('Templates', {
 
     setSize(width: number, height: number, zoom: number) {
       const { addHistorySnapshot } = useHistorySnapshot()
+      const { setCanvasWorkSpace } = useCanvasScale()
       this.templates.forEach(template => {
         template.width = width
         template.height = height
         template.zoom = zoom
       })
+      setCanvasWorkSpace()
       addHistorySnapshot()
     },
 
@@ -155,7 +158,8 @@ export const useTemplatesStore = defineStore('Templates', {
     },
 
     updateElement(data: UpdateElementData) {
-      const { id, props, left, top } = data
+      const { addHistorySnapshot } = useHistorySnapshot()
+      const { id, props } = data
       const elementIds = typeof id === 'string' ? [id] : id
       if (!elementIds) return
       const template = this.templates[this.templateIndex]
@@ -163,8 +167,20 @@ export const useTemplatesStore = defineStore('Templates', {
         return elementIds.includes(el.id) ? { ...el, ...props }: el
       })
       this.templates[this.templateIndex].objects = (elements as CanvasOption[])
-      this.modifedElement()
-      // addHistorySnapshot()
+      addHistorySnapshot()
+    },
+
+    updateCommonElement(data: UpdateElementData) {
+      const { addHistorySnapshot } = useHistorySnapshot()
+      const { id, props } = data
+      const elementIds = typeof id === 'string' ? [id] : id
+      this.templates.forEach(template => {
+        const elements = template.objects.map(el => {
+          return elementIds.includes(el.id) ? { ...el, ...props }: el
+        })
+        template.objects = (elements as CanvasOption[])
+      })
+      addHistorySnapshot()
     },
 
     addElement(element: CanvasOption | CanvasOption[]) {
