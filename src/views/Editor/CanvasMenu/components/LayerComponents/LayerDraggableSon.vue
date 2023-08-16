@@ -90,8 +90,23 @@ const contextmenusThumbnailItem = (): ContextmenuItem[] => {
 
 // 拖拽调整顺序后进行数据的同步
 const handleDragMoved = (eventData: { moved: { newIndex: number, oldIndex: number, element: CanvasOption} }) => {
+  console.log('son-eventData:', eventData)
   sortElement(eventData.moved.newIndex, eventData.moved.oldIndex, eventData.moved.element)
 }
+
+const handleDragRemove = () => {
+  console.log('remove:----')
+}
+
+const dragend = () => {
+  console.log('dragend:----')
+}
+
+const dragenter = (e: any, item: string): void => {
+  console.log("enter", item, e.target, e.target.classList)
+  // e.target.classList.add("active")
+}
+
 </script>
 
 <style lang="scss" scoped>

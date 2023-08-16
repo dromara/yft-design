@@ -91,6 +91,7 @@ const contextmenusThumbnailItem = (): ContextmenuItem[] => {
 
 // 拖拽调整顺序后进行数据的同步
 const handleDragMoved = (eventData: { moved: { newIndex: number, oldIndex: number, element: CanvasOption} }) => {
+  console.log('self-eventData:', eventData)
   sortElement(eventData.moved.newIndex, eventData.moved.oldIndex, eventData.moved.element)
 }
 </script>
