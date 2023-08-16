@@ -57,18 +57,14 @@ export default () => {
     let zoomVal = 1
     const workWidth = currentTemplate.value.width / currentTemplate.value.zoom
     const workHeight = currentTemplate.value.height / currentTemplate.value.zoom
-    const canvasWidth = canvas.width ? canvas.width : fabricStore.getWidth()
-    const canvasHeight = canvas.height ? canvas.height : fabricStore.getHeight()
-    // const viewportTransform = currentTemplate.value.viewportTransform
-    
-    if (canvasWidth < workWidth || canvasHeight < workHeight) {
+    if (width < workWidth || height < workHeight) {
       //按照宽度缩放
-      if (workWidth / canvasWidth > workHeight / canvasHeight) {
-        zoomVal = workWidth / (canvasWidth * scalePercentageVal)
+      if (workWidth / width > workHeight / height) {
+        zoomVal = workWidth / (width * scalePercentageVal)
       } 
       //按照高度缩放
       else {  
-        zoomVal = workHeight / (canvasHeight * scalePercentageVal)
+        zoomVal = workHeight / (height * scalePercentageVal)
       }
     }
     zoom.value = 1 / zoomVal
