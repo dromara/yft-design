@@ -172,25 +172,6 @@ const setCanvasSize = (width: number, height: number) => {
   canvas.renderAll()
 }
 
-// // 更新视图区长宽
-// const setCanvasTransform = (width: number, height: number) => {
-//   if (!canvas) return
-//   const fabricStore = useFabricStore()
-//   const { zoom } = storeToRefs(fabricStore)
-//   const WorkSpaceDraw = canvas.getObjects().filter(item => (item as CanvasElement).id === WorkSpaceDrawType)[0]
-//   const WorkSpaceClip = canvas.getObjects().filter(item => (item as CanvasElement).id === WorkSpaceClipType)[0]
-//   if (!WorkSpaceDraw || !WorkSpaceClip) return
-//   const workSpaceBound = WorkSpaceDraw.getBoundingRect()
-//   const left = WorkSpaceDraw.left
-//   const top = WorkSpaceDraw.top
-//   const canvasTransform = canvas.viewportTransform
-//   if (!canvasTransform || !left || !top) return
-//   zoom.value = canvas.getZoom()
-//   canvasTransform[4] = (width - workSpaceBound.width) / 2 - left * canvas.getZoom()
-//   canvasTransform[5] = (height - workSpaceBound.height) / 2 - top * canvas.getZoom()
-//   canvas.setViewportTransform(canvasTransform)
-// }
-
 // 初始化工作台
 export const initWorks = () => {
   if (!canvas) return

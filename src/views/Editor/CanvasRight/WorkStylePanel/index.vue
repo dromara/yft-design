@@ -110,7 +110,7 @@ import { ElMessage } from 'element-plus'
 import { ref, watch, onMounted } from 'vue'
 import { mm2px, px2mm } from '@/utils/image'
 import { useFabricStore, useMainStore, useTemplatesStore } from '@/store'
-import { WorkSpaceClipType, WorkSpaceMaskType } from '@/configs/canvas'
+import { WorkSpaceClipType, WorkSpaceDrawType, WorkSpaceMaskType } from '@/configs/canvas'
 import { DesignUnitMode, DesignSizeMode, MinSize, MaxSize } from '@/configs/background'
 import useCanvas from '@/views/Canvas/useCanvas'
 import Backgrounds from '../Backgrounds/index.vue'
@@ -168,6 +168,7 @@ const getCanvasSize = () => {
 
 // 修改画布宽度
 const changeTemplateWidth = () => {
+  const [ canvas ] = useCanvas()
   const ratio = currentTemplate.value.height / currentTemplate.value.width
   let { width, height } = getCanvasSize()
   if ((width / zoom.value) < mm2px(MinSize)) {
@@ -187,7 +188,7 @@ const changeTemplateWidth = () => {
   height = isFixed.value ?  (width * ratio) : height
   templatesStore.setSize(width, height, zoom.value)
   sizeMode.value = 2
-  templatesStore.renderTemplate()
+  // templatesStore.renderTemplate()
 }
 
 // 修改画布高度
