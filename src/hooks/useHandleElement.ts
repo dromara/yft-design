@@ -532,7 +532,7 @@ export default () => {
     isChecked.value = queryTextboxChecked(elements)
   }
 
-  const renderElement = () => {
+  const resetElement = () => {
     const [ canvas ] = useCanvas()
     const element = canvas.getObjects()[0]
     elementCoords.value = element.getCoords()
@@ -562,6 +562,6 @@ export default () => {
     forwardElement,
     backwardElement,
     checkElement,
-    renderElement
+    resetElement
   }
 }
