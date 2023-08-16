@@ -64,16 +64,13 @@ export const useTemplatesStore = defineStore('Templates', {
   actions: {
     async renderTemplate() {
       const mainStore = useMainStore()
-      const fabricStore = useFabricStore()
       const [ canvas ] = useCanvas()
-      const { wrapperRef } = storeToRefs(fabricStore)
-      const { setCanvasTransform } = useCanvasScale()
+      const { resetCanvas } = useCanvasScale()
       canvas.discardActiveObject()
       mainStore.setCanvasObject(null)
-      canvas.clear()
+      // canvas.clear()
       await canvas.loadFromJSON(this.currentTemplate)
-      const { width, height } = useElementBounding(wrapperRef.value)
-      setCanvasTransform(width.value, height.value)
+      resetCanvas()
       canvas.renderAll()
     },
 
