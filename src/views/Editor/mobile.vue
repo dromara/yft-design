@@ -1,5 +1,5 @@
 <template>
-  <div class="vue-fabric-design">
+  <div class="yft-deign">
     <div class="layout-content">
       <!-- <CanvasLeft class="layout-content-left" />
       <CanvasMenu class="layout-content-menu" />-->
@@ -31,7 +31,7 @@ import CanvasAffix from './CanvasAffix/index.vue'
 </script>
 
 <style lang="scss" scoped>
-.vue-fabric-design {
+.yft-deign {
   height: 100%;
 }
 .layout-header {

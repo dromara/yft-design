@@ -31,7 +31,7 @@ export default ({ command }: ConfigEnv): UserConfigExport => {
       VitePWA({
         registerType: "autoUpdate",
         workbox: {
-          cacheId: "vue-fabric-design-cache",
+          cacheId: "yft-deign-cache",
           runtimeCaching: [
             {
               urlPattern: /.*/i,
@@ -57,8 +57,8 @@ export default ({ command }: ConfigEnv): UserConfigExport => {
           ],
         },
         manifest: {
-          name: "vue-fabric-design",
-          short_name: "vue-fabric-design",
+          name: "yft-deign",
+          short_name: "yft-deign",
           theme_color: "#d14424",
           icons: [
             {
@@ -99,7 +99,7 @@ export default ({ command }: ConfigEnv): UserConfigExport => {
         minify: true,
         inject: {
           data: {
-            title: 'vue-fabric-design'
+            title: 'yft-deign'
           }
         }
       })
