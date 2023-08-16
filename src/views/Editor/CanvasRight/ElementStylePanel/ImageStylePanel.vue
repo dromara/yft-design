@@ -75,20 +75,19 @@ import { computed, watch, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useMainStore, useTemplatesStore, useFabricStore } from '@/store'
 import { CLIPPATHS } from '@/configs/imageClip'
-import { ImageElement, CropElement, CanvasElement, RectElement } from '@/types/canvas'
+import { ImageElement } from '@/types/canvas'
 import ElementOutline from '../Components/ElementOutline.vue'
 import ElementShadow from '../Components/ElementShadow.vue'
 import ElementFlip from '../Components/ElementFlip.vue'
 import ElementFilter from '../Components/ElementFilter.vue'
 import ElementMask from '../Components/ElementMask.vue'
-import * as fabric from 'fabric'
 import { ratioClipOptions } from '@/configs/images'
 import useCanvas from '@/views/Canvas/useCanvas'
 import { ElementNames } from '@/types/elements'
-import { nanoid } from 'nanoid'
 import useCanvasZindex from '@/hooks/useCanvasZindex'
 import { getImageDataURL } from '@/utils/image'
 import { toObjectFilter, WorkSpaceName } from '@/configs/canvas'
+import { extendWithCropImage } from '@/extension/mixins/cropping.mixin'
 
 const shapeClipPathOptions = CLIPPATHS
 
@@ -104,55 +103,9 @@ const handleElement = computed(() => canvasObject.value as ImageElement)
 
 // 打开自由裁剪
 const clipImage = () => {
-  if (!handleElement.value || handleElement.value.type !== ElementNames.IMAGE || isCropping.value) return
+  if (!handleElement.value || handleElement.value.type !== ElementNames.CROPIMAGE || isCropping.value) return
+  extendWithCropImage(handleElement.value)
   handleElement.value.isCropping = true
-  // canvas.discardActiveObject()
-  // mainStore.setCanvasObject(null)
-  // const scaleX = handleElement.value.scaleX ? handleElement.value.scaleX : 1, scaleY = handleElement.value.scaleY ? handleElement.value.scaleY : 1
-  // const elementLeft = handleElement.value.left ? handleElement.value.left : 0, elementTop = handleElement.value.top ? handleElement.value.top : 0
-  // const elementWidth = handleElement.value.width ? handleElement.value.width : 0, elementHeight = handleElement.value.height ? handleElement.value.height : 0
-  // let _handleElement = handleElement.value, left = elementLeft - elementWidth / 2 * scaleX, top = elementTop - elementHeight / 2 * scaleY
-
-  // if (handleElement.value.isCrop) {
-  //   handleElement.value.visible = false
-  //   _handleElement = (canvas.getObjects().filter(obj => (obj as RectElement).id === handleElement.value.originId)[0]) as ImageElement
-  //   _handleElement.setCoords()
-  //   _handleElement.visible = true
-  //   left = elementLeft, top = elementTop
-  //   // @ts-ignore
-  //   templatesStore.updateElement({id: _handleElement.id, props: _handleElement.toObject(toObjectFilter)})
-  // }
-  
-  // isCroping.value = true
-  // canvas.selection = false
-  // const cropElement = new fabric.Rect({
-  //   // @ts-ignore
-  //   id: nanoid(15),
-  //   imageId: _handleElement.id,
-  //   name: ElementNames.CROP,
-  //   width: elementWidth,
-  //   height: elementHeight,
-  //   left,
-  //   top,
-  //   cornerColor: 'black',
-  //   fill: '',
-  //   scaleX: scaleX,
-  //   scaleY: scaleY,
-  //   stroke: '#555',
-  //   strokeWidth: 1,
-  //   evented: true,
-  //   selectable: true,
-  // })
-  // cropElement.controls.mt.visible = true
-  // cropElement.controls.mb.visible = true
-  // canvas.add(cropElement)
-  // canvas.setActiveObject(cropElement)
-  // mainStore.setCanvasObject(cropElement as RectElement)
-  // canvas.renderAll()
-  // fabricStore.handleChangeIsCroping(isCroping.value)
-  // cropElement.setCoords()
-  // setZindex(canvas)
-  // addMask(_handleElement, cropElement as CropElement)
 }
 
 // const addImageMask = (imageElement: ImageElement, cropElement: CropElement) => {
