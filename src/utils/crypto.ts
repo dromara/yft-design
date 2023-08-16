@@ -1,6 +1,6 @@
 import CryptoJS from 'crypto-js'
 
-const CRYPTO_KEY = 'vue-fabric-design'
+const CRYPTO_KEY = 'yft-design'
 
 /**
  * 加密
