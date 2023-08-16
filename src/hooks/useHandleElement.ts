@@ -532,6 +532,13 @@ export default () => {
     isChecked.value = queryTextboxChecked(elements)
   }
 
+  const renderElement = () => {
+    const [ canvas ] = useCanvas()
+    const element = canvas.getObjects()[0]
+    elementCoords.value = element.getCoords()
+    elementCoords.value.length = 0
+  }
+
   return {
     createElement,
     sortElement,
@@ -554,6 +561,7 @@ export default () => {
     backElement,
     forwardElement,
     backwardElement,
-    checkElement
+    checkElement,
+    renderElement
   }
 }

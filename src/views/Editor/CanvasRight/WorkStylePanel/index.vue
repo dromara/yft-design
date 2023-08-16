@@ -289,6 +289,7 @@ const changeMaskOpacity = () => {
   if (!workMask) return
   workMask.set('opacity', opacity.value)
   canvas.renderAll()
+  templatesStore.modifedElement()
 }
 </script>
 
