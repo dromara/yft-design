@@ -65,7 +65,7 @@ export const useTemplatesStore = defineStore('Templates', {
     async renderTemplate() {
       const mainStore = useMainStore()
       const [ canvas ] = useCanvas()
-      const { resetCanvas } = useCanvasScale()
+      // const { resetCanvas } = useCanvasScale()
       const { resetElement } = useHandleElement()
       canvas.discardActiveObject()
       mainStore.setCanvasObject(null)

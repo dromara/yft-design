@@ -8,8 +8,10 @@ import { copyText, readClipboard } from "@/utils/clipboard"
 import { encrypt } from "@/utils/crypto"
 import { ElMessage } from 'element-plus'
 import { KEYS } from '@/configs/hotkey'
+import { WorkSpaceName } from "@/configs/canvas"
 import usePasteTextClipboardData from '@/hooks/usePasteTextClipboardData'
 import useCanvas from "@/views/Canvas/useCanvas"
+
 
 
 export default () => {
@@ -35,7 +37,7 @@ export default () => {
       width: currentTemplate.value.width,
       height: currentTemplate.value.height,
       clip: currentTemplate.value.clip,
-      objects: [],
+      objects: [...currentTemplate.value.objects.filter(item => item.name === WorkSpaceName)],
       workSpace: {
         fillType: 0,
         left: 0,
