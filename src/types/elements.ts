@@ -22,6 +22,11 @@ export interface ColorStop {
   opacity?: number
 }
 
+export interface ColorGradient {
+  color: string
+  offset: number
+  opacity?: number
+}
 /**
  * 形状渐变
  * 
