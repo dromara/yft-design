@@ -20,6 +20,5 @@ export const useMouseWheel = ({e, pointer}: any) => {
   if (zoomVal < ScaleLimit.min) zoomVal = ScaleLimit.min
   zoom.value = zoomVal
   canvas.zoomToPoint(new Point(e.offsetX, e.offsetY), zoomVal)
-  canvas.renderAll()
 }
 

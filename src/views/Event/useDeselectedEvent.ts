@@ -21,7 +21,6 @@ export default () => {
       if (deselectedObject[0].name === 'backgroundImage') {
         setBackgroundImageOption(deselectedObject[0] as CanvasElement)
       }
-      canvas.renderAll()
     }
     
   }

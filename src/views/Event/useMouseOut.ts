@@ -17,5 +17,4 @@ export const useMouseOut = (evt: any) => {
   if (targetObject.group) {
     elementCoords.value = [targetObject.oCoords.bl, targetObject.oCoords.br, targetObject.oCoords.tr, targetObject.oCoords.tl]
   }
-  canvas.renderAll()
 }

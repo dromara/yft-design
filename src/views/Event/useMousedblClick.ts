@@ -27,7 +27,6 @@ export const useMousedblClick = (evt: any) => {
       backgroundImage.name = 'backgroundImage'
       canvas.add(backgroundImage)
       canvas.setActiveObject(backgroundImage)
-      canvas.renderAll()
       mainStore.setCanvasObject(null)
       templatesStore.modifedElement()
     }
