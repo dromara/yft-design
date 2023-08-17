@@ -82,7 +82,7 @@ export const useTemplatesStore = defineStore('Templates', {
       resetElement()
     },
 
-    modifedElement() {
+    async modifedElement() {
       const fabricStore = useFabricStore()
       const [ canvas ] = useCanvas()
       const { clip } = storeToRefs(fabricStore)
