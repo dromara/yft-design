@@ -10,5 +10,4 @@ export const useMouseOver = (evt: any) => {
   if (!evt.target) return
   elementCoords.value.length = 0
   elementHover.value = ''
-  canvas.renderAll()
 }

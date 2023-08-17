@@ -23,5 +23,4 @@ export const useMouseUp = (evt: any) => {
   if (canvasObject.value && isModifed.value) {
     templatesStore.modifedElement()
   }
-  canvas.renderAll()
 }

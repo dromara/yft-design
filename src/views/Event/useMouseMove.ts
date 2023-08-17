@@ -21,7 +21,6 @@ export const useMouseMove = (evt: any) => {
     canvas.relativePan(delta)
     canvas.discardActiveObject()
     mainStore.setCanvasObject(null)
-    canvas.renderAll()
   }
   
   if (clonedObject.value) {

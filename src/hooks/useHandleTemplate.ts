@@ -100,9 +100,6 @@ export default () => {
 
   // 创建一页空白页并添加到下一页
   const createTemplate = () => {
-    const [ canvas ] = useCanvas()
-    canvas.clear()
-    canvas.renderAll()
     mainStore.setActiveElementIdList([])
     templatesStore.addTemplate(getEmptyTemplate())
     templatesStore.setTemplateIndex(templateIndex.value)

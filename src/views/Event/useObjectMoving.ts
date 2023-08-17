@@ -102,7 +102,6 @@ export const useObjectMoving = (evt: any) => {
       elementCoords.value = [activeObject.group.oCoords.bl, activeObject.group.oCoords.br, activeObject.group.oCoords.tr, activeObject.group.oCoords.tl]
     }
   }
-  const activeHalfHeight = activeObjectHeight / 2, activeHalfWidth = activeObjectWidth / 2
   const activeObjectCenter = activeObject.getCenterPoint()
   const activeObjectLeft = activeObjectCenter.x
   const activeObjectTop = activeObjectCenter.y
