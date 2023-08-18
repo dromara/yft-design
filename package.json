@@ -2,6 +2,12 @@
   "name": "yft-deign",
   "version": "0.1.0",
   "private": true,
+  "keywords": [
+    "Vue3",
+    "fabric.js",
+    "Typescript",
+    "Element-plus"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "vite build",
