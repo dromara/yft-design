@@ -173,6 +173,7 @@ const setCanvasSize = (width: number, height: number) => {
 // 更新视图区长宽
 const setCanvasTransform = (width: number, height: number) => {
   if (!canvas) return
+  initWorkSpace()
   const fabricStore = useFabricStore()
   const { zoom } = storeToRefs(fabricStore)
   const WorkSpaceDraw = canvas.getObjects(WorkSpaceDrawType)[0]
