@@ -3,7 +3,6 @@
 <b>体验Demo：[https://yft.design](https://yft.design)</b>  
 <b>体验Demo：[https://more-strive.github.io/design/](https://more-strive.github.io/design/)</b>
 
-[![Anurag's GitHub stats](https://github-readme-stats.vercel.app/api?username=more-strive)](https://github.com/anuraghazra/github-readme-stats)
 ## 项目运行
 ```
 npm install
