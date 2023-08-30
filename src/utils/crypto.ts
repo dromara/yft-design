@@ -1,6 +1,6 @@
 import CryptoJS from 'crypto-js'
 
-const CRYPTO_KEY = 'yft-deign'
+const CRYPTO_KEY = 'yft-design'
 
 /**
  * 加密

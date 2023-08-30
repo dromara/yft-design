@@ -31,7 +31,7 @@ export default ({ command }: ConfigEnv): UserConfigExport => {
       VitePWA({
         registerType: "autoUpdate",
         workbox: {
-          cacheId: "yft-deign-cache",
+          cacheId: "yft-design-cache",
           runtimeCaching: [
             {
               urlPattern: /.*/i,
@@ -57,8 +57,8 @@ export default ({ command }: ConfigEnv): UserConfigExport => {
           ],
         },
         manifest: {
-          name: "yft-deign",
-          short_name: "yft-deign",
+          name: "yft-design",
+          short_name: "yft-design",
           theme_color: "#d14424",
           icons: [
             {
@@ -99,7 +99,7 @@ export default ({ command }: ConfigEnv): UserConfigExport => {
         minify: true,
         inject: {
           data: {
-            title: 'yft-deign'
+            title: 'yft-design'
           }
         }
       })

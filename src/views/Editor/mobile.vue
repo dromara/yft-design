@@ -1,5 +1,5 @@
 <template>
-  <div class="yft-deign">
+  <div class="yft-design">
     <div class="layout-content">
       <!-- <CanvasLeft class="layout-content-left" />
       <CanvasMenu class="layout-content-menu" />-->
@@ -31,7 +31,7 @@ import CanvasAffix from './CanvasAffix/index.vue'
 </script>
 
 <style lang="scss" scoped>
-.yft-deign {
+.yft-design {
   height: 100%;
 }
 .layout-header {
