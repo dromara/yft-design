@@ -40,4 +40,5 @@ export const WEB_FONTS = [
   { label: '素材集市酷方体', value: '素材集市酷方体' },
   { label: '途牛类圆体', value: '途牛类圆体' },
   { label: '锐字真言体', value: '锐字真言体' },
+  { label: '得意黑', value: '得意黑' },
 ]
