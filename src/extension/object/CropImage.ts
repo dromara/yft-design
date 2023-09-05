@@ -1,5 +1,5 @@
 import * as fabric from 'fabric'
-import { config } from 'fabric'
+import { config, classRegistry } from 'fabric'
 import { TClassProperties } from '@/types/typedefs'
 
 
@@ -238,11 +238,11 @@ const imageDefaultValues: Partial<TClassProperties<CropImage>> = {
 
 Object.assign(CropImage.prototype, {
   ...imageDefaultValues,
-  cacheProperties: [...fabric.Object.prototype.cacheProperties, 'cropX', 'cropY'],
+  cacheProperties: [...fabric.Object.cacheProperties, 'cropX', 'cropY'],
 });
 
-fabric.util.classRegistry.setClass(CropImage, 'cropimage');
-fabric.util.classRegistry.setSVGClass(CropImage, 'cropimage');
+classRegistry.setClass(CropImage, 'cropimage');
+classRegistry.setSVGClass(CropImage, 'cropimage');
 
 // if (typeof CropImage.prototype.isCropping === 'undefined') {
 //   extendWithCropping(CropImage);

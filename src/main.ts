@@ -16,7 +16,7 @@ import Directive from "@/plugins/directive"
 
 import "virtual:svg-icons-register"
 import { useRegisterSW } from 'virtual:pwa-register/vue';
-useRegisterSW();
+// useRegisterSW();
 
 const app = createApp(App);
 app.use(createPinia());

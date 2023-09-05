@@ -35,9 +35,9 @@ let canvas: null | Canvas = null
 const initConf = () => {
   const { rotateElement, unrotateElement } = useRotate()
   Object.prototype.objectCaching = false
-  Object.prototype.controls.mtr.withConnection = false
-  Object.prototype.controls.mtr.cursorStyle = "pointer"
-  Object.prototype.controls.mtr.offsetY = 20
+  // Object.prototype.controls.mtr.withConnection = false
+  // Object.prototype.controls.mtr.cursorStyle = "pointer"
+  // Object.prototype.controls.mtr.offsetY = 20
   Object.prototype.set({
     borderColor: 'blue',
     cornerColor: 'white',          // 激活状态角落图标的填充颜色
@@ -57,68 +57,68 @@ const initConf = () => {
   // Object.prototype.controls.mt.visible = false
   // Object.prototype.controls.mb.visible = false
 
-  Object.prototype.controls.mtr = new Control({
-    x: 0,
-    y: -0.5,
-    actionHandler: controlsUtils.rotationWithSnapping,
-    cursorStyleHandler: controlsUtils.rotationStyleHandler,
-    actionName: 'rotating',
-    render: drawRotateIcon,
-    sizeX: 20,
-    sizeY: 20,
-    offsetY: -20,
-    withConnection: false,
-    mouseDownHandler: () => rotateElement(),
-    mouseUpHandler: () => unrotateElement()
-  })
+  // Object.prototype.controls.mtr = new Control({
+  //   x: 0,
+  //   y: -0.5,
+  //   actionHandler: controlsUtils.rotationWithSnapping,
+  //   cursorStyleHandler: controlsUtils.rotationStyleHandler,
+  //   actionName: 'rotating',
+  //   render: drawRotateIcon,
+  //   sizeX: 20,
+  //   sizeY: 20,
+  //   offsetY: -20,
+  //   withConnection: false,
+  //   mouseDownHandler: () => rotateElement(),
+  //   mouseUpHandler: () => unrotateElement()
+  // })
 
-  Object.prototype.controls.angle = new Control({
-    x: 0,
-    y: -0.5,
-    actionName: 'angle',
-    render: drawAngleIcon,
-    sizeX: 20,
-    sizeY: 20,
-    offsetY: -60,
-    withConnection: false,
-  })
+  // Object.prototype.controls.angle = new Control({
+  //   x: 0,
+  //   y: -0.5,
+  //   actionName: 'angle',
+  //   render: drawAngleIcon,
+  //   sizeX: 20,
+  //   sizeY: 20,
+  //   offsetY: -60,
+  //   withConnection: false,
+  // })
   
-  Textbox.prototype.controls.ml = new Control({
-    x: -0.5,
-    y: 0,
-    actionHandler: controlsUtils.changeWidth,
-    cursorStyleHandler: controlsUtils.scaleSkewCursorStyleHandler,
-    actionName: 'resizing',
-    render: drawVerticalLeftLineIcon,
-    sizeX: 28,
-    sizeY: 28,
-    withConnection: true,
-  })
+  // Textbox.prototype.controls.ml = new Control({
+  //   x: -0.5,
+  //   y: 0,
+  //   actionHandler: controlsUtils.changeWidth,
+  //   cursorStyleHandler: controlsUtils.scaleSkewCursorStyleHandler,
+  //   actionName: 'resizing',
+  //   render: drawVerticalLeftLineIcon,
+  //   sizeX: 28,
+  //   sizeY: 28,
+  //   withConnection: true,
+  // })
 
-  Textbox.prototype.controls.mtr = new Control({
-    x: 0,
-    y: -0.5,
-    actionHandler: controlsUtils.rotationWithSnapping,
-    cursorStyleHandler: controlsUtils.rotationStyleHandler,
-    actionName: 'rotating',
-    render: drawRotateIcon,
-    sizeX: 20,
-    sizeY: 20,
-    offsetY: -20,
-    withConnection: false,
-  })
+  // Textbox.prototype.controls.mtr = new Control({
+  //   x: 0,
+  //   y: -0.5,
+  //   actionHandler: controlsUtils.rotationWithSnapping,
+  //   cursorStyleHandler: controlsUtils.rotationStyleHandler,
+  //   actionName: 'rotating',
+  //   render: drawRotateIcon,
+  //   sizeX: 20,
+  //   sizeY: 20,
+  //   offsetY: -20,
+  //   withConnection: false,
+  // })
 
-  Textbox.prototype.controls.mr = new Control({
-    x: 0.5,
-    y: 0,
-    actionHandler: controlsUtils.changeWidth,
-    cursorStyleHandler: controlsUtils.scaleSkewCursorStyleHandler,
-    actionName: 'resizing',
-    render: drawVerticalRightLineIcon,
-    sizeX: 28,
-    sizeY: 28,
-    withConnection: true,
-  })
+  // Textbox.prototype.controls.mr = new Control({
+  //   x: 0.5,
+  //   y: 0,
+  //   actionHandler: controlsUtils.changeWidth,
+  //   cursorStyleHandler: controlsUtils.scaleSkewCursorStyleHandler,
+  //   actionName: 'resizing',
+  //   render: drawVerticalRightLineIcon,
+  //   sizeX: 28,
+  //   sizeY: 28,
+  //   withConnection: true,
+  // })
 }
 
 const initWorkSpace = () => {
@@ -205,6 +205,7 @@ export const initWorks = () => {
   const diagonalPX = diagonal.value * DefaultDPI / DefaultRatio
   const safePX = 2 * safe.value * DefaultDPI / DefaultRatio
 
+  // @ts-ignore
   const workSpaceDraw = new Rect({
     left: left - clipPX,
     top: top - clipPX,
@@ -216,6 +217,7 @@ export const initWorks = () => {
     ...WorkSpaceCommonOption
   })
 
+  // @ts-ignore
   const workSpaceClip = new Rect({
     left: left,
     top: top,
@@ -229,6 +231,7 @@ export const initWorks = () => {
     ...WorkSpaceCommonOption
   })
 
+  // @ts-ignore
   const workSpaceSafe = new Rect({
     left: left + safePX,
     top: top + safePX,
@@ -248,6 +251,7 @@ export const initWorks = () => {
   L${PaddingHalf + left + workWidth + clipPX} ${PaddingHalf + top + workHeight + clipPX} 
   L${PaddingHalf + left + workWidth + clipPX} ${PaddingHalf + top - clipPX} 
   L${PaddingHalf + left - clipPX} ${PaddingHalf + top - clipPX} Z`
+  // @ts-ignore
   const workSpaceMask = new Path(maskPath, {
     left: -PaddingHalf,
     top: -PaddingHalf,
@@ -281,6 +285,7 @@ export const initWorks = () => {
   ]
   const diagonalLines: Line[] = []
   diagonals.forEach(line => {
+    // @ts-ignore
     const diagonalLine = new Line(line, {
       selectable: false,
       hoverCursor: 'default',
@@ -295,6 +300,7 @@ export const initWorks = () => {
   })
   
   const workLineGroup = new Group([...diagonalLines], {
+    // @ts-ignore
     type: WorkSpaceLineType, 
     left: left - diagonalHalfPX - clipPX, 
     top: top - diagonalHalfPX - clipPX, 
@@ -329,14 +335,15 @@ const initCanvas = () => {
 }
 
 // 初始化模板
-const initTemplate = () => {
+const initTemplate = async () => {
   if (!canvas) return
   const templatesStore = useTemplatesStore()
-  const { createElement } = useHandleElement()
+  // const { createElement } = useHandleElement()
   const { currentTemplate } = storeToRefs(templatesStore)
-  currentTemplate.value.objects.forEach(element => {
-    createElement(element)
-  })
+  await canvas.loadFromJSON(currentTemplate.value)
+  // currentTemplate.value.objects.forEach(element => {
+  //   createElement(element)
+  // })
   // for (let i = 0; i < currentTemplate.value.objects.length; i++) {
   //   const element = currentTemplate.value.objects[i]
   // }
@@ -367,6 +374,7 @@ export const initBackground = async () => {
     }
     else {
       // let scaleX = 1, scaleY = 1
+      // @ts-ignore
       const imageElement = await Image.fromURL(workSpaceElement.imageURL)
       // if (workSpaceElement.imageSize === 'cover') {
       //   scaleX = workWidth / imageElement.width, scaleY = workHeight / imageElement.height
@@ -379,6 +387,7 @@ export const initBackground = async () => {
   // 网格
   else if (workSpaceElement.fillType === 3) {
     if (!workSpaceElement.gaidImageURL) return
+    // @ts-ignore
     const imageElement = await Image.fromURL(workSpaceElement.gaidImageURL) 
     imageElement.set({left, top, angle, scaleX, scaleY})
     canvas.set('backgroundImage', imageElement)
@@ -387,6 +396,7 @@ export const initBackground = async () => {
   // 底纹
   else if (workSpaceElement.fillType === 4) {
     if (!workSpaceElement.shadingImageURL) return
+    // @ts-ignore
     const imageElement = await Image.fromURL(workSpaceElement.shadingImageURL) 
     imageElement.set({left, top, angle, scaleX, scaleY})
     canvas.set('backgroundImage', imageElement)
@@ -401,7 +411,7 @@ const initEditor = () => {
   initCanvas()
   initWorks()
   initTemplate()
-  initBackground()
+  // initBackground()
   const { width, height } = useElementBounding(wrapperRef.value)
   watch([width, height], () => {
     setCanvasTransform(width.value, height.value)

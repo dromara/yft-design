@@ -91,14 +91,14 @@ export const useTemplatesStore = defineStore('Templates', {
 
     modifedElement() {
       const [ canvas ] = useCanvas()
-      const { centerPoint } = useCenter()
+      // const { centerPoint } = useCenter()
       const { addHistorySnapshot } = useHistorySnapshot()
       const canvasTemplate = canvas.toObject(toObjectFilter)
-      for (let i = 0; i < canvasTemplate.objects.length; i++) {
-        const element = canvasTemplate.objects[i] as CanvasElement
-        element.left -= centerPoint.x
-        element.top -= centerPoint.y
-      }
+      // for (let i = 0; i < canvasTemplate.objects.length; i++) {
+      //   const element = canvasTemplate.objects[i] as CanvasElement
+      //   element.left -= centerPoint.x
+      //   element.top -= centerPoint.y
+      // }
       this.templates[this.templateIndex].objects = canvasTemplate.objects
       addHistorySnapshot()
     },
