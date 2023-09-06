@@ -3,11 +3,12 @@ import { storeToRefs } from 'pinia'
 import { useFabricStore, useTemplatesStore } from '@/store'
 import useCanvas from '@/views/Canvas/useCanvas'
 import useCenter from '@/views/Canvas/useCenter'
+import { useElementBounding } from '@vueuse/core'
 
 export default () => {
   const fabricStore = useFabricStore()
   const templatesStore = useTemplatesStore()
-  const { zoom } = storeToRefs(fabricStore)
+  const { zoom, wrapperRef } = storeToRefs(fabricStore)
   const canvasScalePercentage = computed(() => Math.round(zoom.value * 100) + '%')
 
   /**
@@ -46,10 +47,17 @@ export default () => {
     templatesStore.renderTemplate()
   }
 
+  const setCanvasSize = () => {
+    const [ canvas ] = useCanvas()
+    const { width, height } = useElementBounding(wrapperRef.value)
+    canvas.setDimensions({width: width.value, height: height.value})
+  }
+
   return {
     canvasScalePercentage,
     setCanvasScalePercentage,
     scaleCanvas,
     resetCanvas,
+    setCanvasSize
   }
 }

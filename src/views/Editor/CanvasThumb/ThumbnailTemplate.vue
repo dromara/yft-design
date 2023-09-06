@@ -60,17 +60,17 @@ const setThumbnailElement = async () => {
   const width = props.template.width / props.template.zoom
   const height = props.template.height / props.template.zoom
   if (!thumbCanvas.value) return
-  await thumbCanvas.value.loadFromJSON(props.template)
-  thumbCanvas.value.getObjects().forEach(obj => {
-    if (typeof obj.left === 'number' && typeof obj.top === 'number') {
-      obj.left += width / 2
-      obj.top += height / 2
-    }
-  })
+  thumbCanvas.value.loadFromJSON(props.template)
+  // thumbCanvas.value.getObjects().forEach(obj => {
+  //   if (typeof obj.left === 'number' && typeof obj.top === 'number') {
+  //     obj.left += width / 2
+  //     obj.top += height / 2
+  //   }
+  // })
   thumbCanvas.value.width = props.size
   thumbCanvas.value.height = props.size * viewportRatio.value
   thumbCanvas.value.setZoom(props.size / width)
-  setThumbnailBackground(width, height)
+  // setThumbnailBackground(width, height)
 }
 
 const setThumbnailBackground = async (width: number, height: number) => {

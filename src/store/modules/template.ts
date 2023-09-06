@@ -1,4 +1,4 @@
-import { defineStore } from 'pinia'
+import { defineStore, storeToRefs } from 'pinia'
 import { Templates } from '@/mocks/templates'
 import { Template, CanvasElement } from '@/types/canvas'
 import { toObjectFilter, WorkSpaceName } from '@/configs/canvas'
@@ -9,6 +9,8 @@ import useHistorySnapshot from '@/hooks/useHistorySnapshot'
 import useCenter from '@/views/Canvas/useCenter'
 import { CanvasOption } from '@/types/option'
 import { useMainStore } from './main'
+import { useFabricStore } from './fabric'
+import { useElementBounding } from '@vueuse/core'
 
 interface UpdateElementData {
   id: string | string[]
@@ -60,6 +62,8 @@ export const useTemplatesStore = defineStore('Templates', {
   actions: {
     async renderTemplate() {
       const [ canvas ] = useCanvas()
+      const fabricStore = useFabricStore()
+      const { wrapperRef } = storeToRefs(fabricStore)
       // const { createElement } = useHandleElement()
       // canvas.clear()
       // initWorks()
@@ -69,6 +73,8 @@ export const useTemplatesStore = defineStore('Templates', {
       // })
       await canvas.loadFromJSON(this.currentTemplate)
       canvas.renderAll()
+      const { width, height } = useElementBounding(wrapperRef.value)
+      canvas.setDimensions({width: width.value, height: height.value})
       
     },
 

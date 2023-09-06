@@ -8,7 +8,7 @@ import { useTemplatesStore } from '@/store'
 import { CanvasElement } from '@/types/canvas'
 import { TransparentFill } from '@/configs/background'
 import { drawRotateIcon, drawAngleIcon, drawVerticalLeftLineIcon, drawVerticalRightLineIcon } from '@/utils/drawer'
-import useHandleElement from '@/hooks/useHandleElement'
+import useCanvasScale from '@/hooks/useCanvasScale'
 import useRotate from './useRotate'
 import { 
   WorkSpaceClipType, 
@@ -161,15 +161,15 @@ const initWorkSpace = () => {
   }
 }
 
-// 更新画布尺寸
-const setCanvasSize = (width: number, height: number) => {
-  if (!canvas) return
-  const fabricStore = useFabricStore()
-  const { zoom } = storeToRefs(fabricStore)
-  zoom.value = canvas.getZoom()
-  canvas.setDimensions({width, height})
-  canvas.renderAll()
-}
+// // 更新画布尺寸
+// const setCanvasSize = (width: number, height: number) => {
+//   if (!canvas) return
+//   const fabricStore = useFabricStore()
+//   const { zoom } = storeToRefs(fabricStore)
+//   zoom.value = canvas.getZoom()
+//   canvas.setDimensions({width, height})
+//   canvas.renderAll()
+// }
 
 // 更新视图区长宽
 const setCanvasTransform = (width: number, height: number) => {
@@ -189,7 +189,7 @@ const setCanvasTransform = (width: number, height: number) => {
   // canvasTransform[4] = (width - workWidth) / 2 - canvas.getZoom()
   // canvasTransform[5] = (height - workHeight) / 2 - canvas.getZoom()
   canvas.setViewportTransform(canvasTransform)
-  canvas.setDimensions({width, height})
+  
   canvas.renderAll()
 }
 
@@ -340,11 +340,14 @@ const initCanvas = () => {
 // 初始化模板
 const initTemplate = async () => {
   if (!canvas) return
+  const { setCanvasSize } = useCanvasScale()
   const templatesStore = useTemplatesStore()
+  
   // const { createElement } = useHandleElement()
   const { currentTemplate } = storeToRefs(templatesStore)
   await canvas.loadFromJSON(currentTemplate.value)
-  canvas.renderAll()
+  // canvas.renderAll()
+  setCanvasSize()
   // currentTemplate.value.objects.forEach(element => {
   //   createElement(element)
   // })
