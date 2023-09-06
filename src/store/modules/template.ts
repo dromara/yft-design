@@ -58,15 +58,16 @@ export const useTemplatesStore = defineStore('Templates', {
   },
 
   actions: {
-    renderTemplate() {
+    async renderTemplate() {
       const [ canvas ] = useCanvas()
-      const { createElement } = useHandleElement()
-      canvas.clear()
-      initWorks()
-      initBackground()
-      this.templates[this.templateIndex].objects.forEach(async (element) => {
-        await createElement(element as CanvasOption)
-      })
+      // const { createElement } = useHandleElement()
+      // canvas.clear()
+      // initWorks()
+      // initBackground()
+      // this.templates[this.templateIndex].objects.forEach(async (element) => {
+      //   await createElement(element as CanvasOption)
+      // })
+      await canvas.loadFromJSON(this.currentTemplate)
       canvas.renderAll()
       
     },

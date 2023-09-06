@@ -1,10 +1,9 @@
 import { storeToRefs } from 'pinia'
 import { Canvas, Rect, Object, Control, Textbox, controlsUtils, Path, Line, Group, Image } from 'fabric'
 import { useFabricStore } from '@/store/modules/fabric'
-import { watchEffect, watch } from 'vue'
+import { watch } from 'vue'
 import { useElementBounding } from '@vueuse/core'
 import { DefaultDPI, DefaultRatio } from '@/configs/size'
-
 import { useTemplatesStore } from '@/store'
 import { CanvasElement } from '@/types/canvas'
 import { TransparentFill } from '@/configs/background'
@@ -35,6 +34,8 @@ let canvas: null | Canvas = null
 const initConf = () => {
   const { rotateElement, unrotateElement } = useRotate()
   Object.prototype.objectCaching = false
+  // controlsUtils.createObjectDefaultControls()
+  console.log('Object:', Object)
   // Object.prototype.controls.mtr.withConnection = false
   // Object.prototype.controls.mtr.cursorStyle = "pointer"
   // Object.prototype.controls.mtr.offsetY = 20
@@ -50,7 +51,7 @@ const initConf = () => {
     centeredRotation: true,        // 旋转按钮旋转是否是左上角为圆心旋转
     transparentCorners: false,     // 激活状态角落的图标是否透明
     rotatingPointOffset: 5,        // 旋转距旋转体的距离
-    lockUniScaling: false,         // 只显示四角的操作
+    lockUniScaling: true,         // 只显示四角的操作
     hasRotatingPoint: true,        // 是否显示旋转按钮
   })
 
@@ -173,21 +174,23 @@ const setCanvasSize = (width: number, height: number) => {
 // 更新视图区长宽
 const setCanvasTransform = (width: number, height: number) => {
   if (!canvas) return
-  initWorkSpace()
+  const { workWidth, workHeight } = initWorkSpace()
   const fabricStore = useFabricStore()
   const { zoom } = storeToRefs(fabricStore)
-  const WorkSpaceDraw = canvas.getObjects(WorkSpaceDrawType)[0]
-  const WorkSpaceClip = canvas.getObjects(WorkSpaceClipType)[0]
-  if (!WorkSpaceDraw || !WorkSpaceClip) return
-  const workSpaceBound = WorkSpaceDraw.getBoundingRect()
-  const left = WorkSpaceDraw.left
-  const top = WorkSpaceDraw.top
+  // const WorkSpaceDraw = canvas.getObjects(WorkSpaceDrawType)[0]
+  // const WorkSpaceClip = canvas.getObjects(WorkSpaceClipType)[0]
+  // if (!WorkSpaceDraw || !WorkSpaceClip) return
+  // const workSpaceBound = WorkSpaceDraw.getBoundingRect()
+  // const left = WorkSpaceDraw.left
+  // const top = WorkSpaceDraw.top
   const canvasTransform = canvas.viewportTransform
-  if (!canvasTransform || !left || !top) return
+  // if (!canvasTransform ) return
   zoom.value = canvas.getZoom()
-  canvasTransform[4] = (width - workSpaceBound.width) / 2 - left * canvas.getZoom()
-  canvasTransform[5] = (height - workSpaceBound.height) / 2 - top * canvas.getZoom()
+  // canvasTransform[4] = (width - workWidth) / 2 - canvas.getZoom()
+  // canvasTransform[5] = (height - workHeight) / 2 - canvas.getZoom()
   canvas.setViewportTransform(canvasTransform)
+  canvas.setDimensions({width, height})
+  canvas.renderAll()
 }
 
 // 初始化工作台
@@ -341,6 +344,7 @@ const initTemplate = async () => {
   // const { createElement } = useHandleElement()
   const { currentTemplate } = storeToRefs(templatesStore)
   await canvas.loadFromJSON(currentTemplate.value)
+  canvas.renderAll()
   // currentTemplate.value.objects.forEach(element => {
   //   createElement(element)
   // })
@@ -409,16 +413,16 @@ const initEditor = () => {
   const { wrapperRef } = storeToRefs(fabricStore)
   initConf()
   initCanvas()
-  initWorks()
+  // initWorks()
   initTemplate()
   // initBackground()
   const { width, height } = useElementBounding(wrapperRef.value)
   watch([width, height], () => {
     setCanvasTransform(width.value, height.value)
   })
-  watchEffect(() => {
-    setCanvasSize(width.value, height.value)
-  })
+  // watchEffect(() => {
+  //   setCanvasSize(width.value, height.value)
+  // })
 }
 
 export const toggleSelection = (selection?: boolean) => {

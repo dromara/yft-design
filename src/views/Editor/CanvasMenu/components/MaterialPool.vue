@@ -32,8 +32,8 @@ import { Search } from '@element-plus/icons-vue'
 import { nanoid } from 'nanoid'
 
 import { PathPoolItem, LinePoolItem, ElementNames } from '@/types/elements'
-import { loadSVGFromURL, Group } from 'fabric'
-import { getImageDataURL } from '@/utils/image'
+import { loadSVGFromURL, loadSVGFromString, Group } from 'fabric'
+import { getImageDataURL, getImageText } from '@/utils/image'
 import { useTemplatesStore } from '@/store'
 import useCanvas from '@/views/Canvas/useCanvas'
 import useCenter from '@/views/Canvas/useCenter'
@@ -59,37 +59,42 @@ const svgRevier = (option: any) => {
 
 }
 
-const svgCallback = (objects: CanvasElement[], options: any, elements: any, allElements: any) => {
+const svgCallback = (element: Element, fabricObject: CanvasElement) => {
   const templatesStore = useTemplatesStore()
   const [ canvas ] = useCanvas()
-  const { centerPoint } = useCenter()
-  objects.forEach(item => {
-    item.id = nanoid(10)
-    if (item.type === ElementNames.TEXT) {
-      item.type = ElementNames.TEXTBOX
-    }
-    item.name = item.type
-  })
-  const svgGroup = new Group(objects, { 
-    id: nanoid(10),
-    name: ElementNames.GROUP, 
-    // interactive: true, 
-    // subTargetCheck: true, 
-    left: centerPoint.x,
-    top: centerPoint.y
-  })
-  const left = svgGroup.left - svgGroup.width / 2, top = svgGroup.top - svgGroup.height / 2
-  svgGroup.set({left, top})
-  canvas.add(svgGroup)
-  canvas.setActiveObject(svgGroup)
-  templatesStore.modifedElement()
+  // const { centerPoint } = useCenter()
+  // objects.forEach(item => {
+  //   item.id = nanoid(10)
+  //   if (item.type === ElementNames.TEXT) {
+  //     item.type = ElementNames.TEXTBOX
+  //   }
+  //   item.name = item.type
+  // })
+  // const svgGroup = new Group(objects, { 
+  //   id: nanoid(10),
+  //   name: ElementNames.GROUP, 
+  //   // interactive: true, 
+  //   // subTargetCheck: true, 
+  //   left: centerPoint.x,
+  //   top: centerPoint.y
+  // })
+  // const left = svgGroup.left - svgGroup.width / 2, top = svgGroup.top - svgGroup.height / 2
+  // svgGroup.set({left, top})
+  canvas.add(fabricObject)
+  // canvas.setActiveObject(svgGroup)
+  // templatesStore.modifedElement()
 }
 
 const drawMaterial = async (files: FileList) => {
   const materialFile = files[0]
+  const [ canvas ] = useCanvas()
   if (!materialFile) return
-  const dataURl = await getImageDataURL(materialFile)
-  loadSVGFromURL(dataURl, svgCallback, svgRevier, {})
+  const dataText = await getImageText(materialFile)
+  console.log('dataText:', dataText)
+  // @ts-ignore
+  loadSVGFromString(dataText, svgCallback, {})
+  canvas.renderAll()
+  // loadSVGFromURL(dataURl, svgCallback, svgRevier, {})
   // getImageDataURL(imageFile).then(dataURL => createImageElement(dataURL))
 }
 

@@ -49,6 +49,22 @@ export const getImageSize = (src: string): Promise<ImageSize> => {
   })
 }
 
+/**
+ * 读取图片文件的dataURL
+ * @param file 图片文件
+ */
+export const getImageText = (file: File): Promise<string> => {
+  return new Promise(resolve => {
+    const reader = new FileReader()
+    reader.addEventListener('load', () => {
+      console.log(reader.result)
+      resolve(reader.result as string)
+    })
+    reader.readAsText(file)
+  })
+}
+
+
 // px2mm
 export const px2mm = (value: number) => {
   return value / 300 * DefaultRatio
