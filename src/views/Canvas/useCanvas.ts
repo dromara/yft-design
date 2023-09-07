@@ -435,6 +435,7 @@ export const toggleSelection = (selection?: boolean) => {
   // 补充使用这个让其画布上的元素禁止选中
   Object.prototype.selectable = canvas.selection
   // 补充这个方法，禁止选中所有元素
+  console.log('selection:', selection)
   canvas.getObjects().filter(obj => (obj as CanvasElement).name !== WorkSpaceName).map(item => item.set({selection}))
 }
 
