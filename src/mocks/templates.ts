@@ -22,6 +22,7 @@ export const Templates: Template[] = [
         "top": -66.9603,
         "fill": "#fff",
         "selectable": false,
+        "evented": false,
         "width": 1070.5512,
         "height": 645.3543,
         "stroke": "rgba(255,255,255,1)",

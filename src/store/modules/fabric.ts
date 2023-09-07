@@ -83,7 +83,6 @@ export const useFabricStore = defineStore({
     // 是否拖拽
     setIsDraggingState(flag: boolean) {
       this.isDragging = flag
-      // toggleSelection(!flag)
     },
   },
 })

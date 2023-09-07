@@ -3,10 +3,11 @@ import { useFabricStore, useTemplatesStore } from "@/store"
 import { storeToRefs } from "pinia"
 import { useMainStore } from "@/store/modules/main"
 import { CanvasElement } from "@/types/canvas"
+import { TPointerEvent } from 'fabric'
 import useCanvas from "@/views/Canvas/useCanvas"
 
 
-export const useMouseUp = (evt: any) => {
+export const useMouseUp = (evt: TPointerEvent) => {
   const fabricStore = useFabricStore()
   const mainStore = useMainStore()
   const templatesStore = useTemplatesStore()
@@ -18,7 +19,7 @@ export const useMouseUp = (evt: any) => {
   horizontalLines.value.length = 0
   elementCoords.value.length = 0
   elementHover.value = ''
-  canvasObject.value = canvas.getActiveObject() ? canvas.getActiveObject() as CanvasElement : null
+  mainStore.setCanvasObject(canvas.getActiveObject() ? canvas.getActiveObject() as CanvasElement : null)
   if (!canvasObject.value) return
   if (canvasObject.value && isModifed.value) {
     templatesStore.modifedElement()
