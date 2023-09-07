@@ -122,7 +122,7 @@ const initConf = () => {
   // })
 }
 
-const initWorkSpace = () => {
+const initWorkSpace = (width: number, height: number) => {
   const fabricStore = useFabricStore()
   const templatesStore = useTemplatesStore()
   const { scalePercentage, zoom, clip } = storeToRefs(fabricStore)
@@ -138,18 +138,21 @@ const initWorkSpace = () => {
       workHeight
     }
   }
-  const canvasWidth = canvas.width ? canvas.width : fabricStore.getWidth()
-  const canvasHeight = canvas.height ? canvas.height : fabricStore.getHeight()
+  // const canvasWidth = canvas.width ? canvas.width : fabricStore.getWidth()
+  // const canvasHeight = canvas.height ? canvas.height : fabricStore.getHeight()
+
+  // const canvasWidth = width
+  // const canvasHeight = height
   // const viewportTransform = currentTemplate.value.viewportTransform
   
-  if (canvasWidth < workWidth || canvasHeight < workHeight) {
+  if (width < workWidth || height < workHeight) {
     //按照宽度缩放
-    if (workWidth / canvasWidth > workHeight / canvasHeight) {
-      zoomVal = workWidth / (canvasWidth * scalePercentageVal)
+    if (workWidth / width > workHeight / height) {
+      zoomVal = workWidth / (width * scalePercentageVal)
     } 
     //按照高度缩放
     else {  
-      zoomVal = workHeight / (canvasHeight * scalePercentageVal)
+      zoomVal = workHeight / (height * scalePercentageVal)
     }
   }
   zoom.value = 1 / zoomVal
@@ -175,10 +178,11 @@ const initWorkSpace = () => {
 const setCanvasTransform = () => {
   
   if (!canvas) return
-  initWorkSpace()
+  
   const fabricStore = useFabricStore()
   const { zoom, wrapperRef } = storeToRefs(fabricStore)
   const { width, height } = useElementBounding(wrapperRef.value)
+  initWorkSpace(width.value, height.value)
   const WorkSpaceDraw = canvas.getObjects().filter(item => (item as CanvasElement).id === WorkSpaceDrawType)[0]
   // const WorkSpaceClip = canvas.getObjects(WorkSpaceClipType)[0]
   if (!WorkSpaceDraw) return
@@ -201,7 +205,7 @@ export const initWorks = () => {
   const { zoom, clip, safe, diagonal, opacity, showClip, showSafe, wrapperRef } = storeToRefs(fabricStore)
   const canvasWidth = canvas.width ? canvas.width : fabricStore.getWidth()
   const canvasHeight = canvas.height ? canvas.height : fabricStore.getHeight()
-  const { workWidth, workHeight } = initWorkSpace()
+  const { workWidth, workHeight } = initWorkSpace(0, 0)
   const left = (canvasWidth - workWidth) / 2 * zoom.value
   const top = (canvasHeight - workHeight ) / 2 * zoom.value
   const Padding = 50000, PaddingHalf = Padding / 2
