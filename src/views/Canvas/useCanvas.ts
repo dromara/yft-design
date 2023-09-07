@@ -172,24 +172,25 @@ const initWorkSpace = () => {
 // }
 
 // 更新视图区长宽
-const setCanvasTransform = (width: number, height: number) => {
+const setCanvasTransform = () => {
+  
   if (!canvas) return
-  const { workWidth, workHeight } = initWorkSpace()
+  initWorkSpace()
   const fabricStore = useFabricStore()
-  const { zoom } = storeToRefs(fabricStore)
-  // const WorkSpaceDraw = canvas.getObjects(WorkSpaceDrawType)[0]
+  const { zoom, wrapperRef } = storeToRefs(fabricStore)
+  const { width, height } = useElementBounding(wrapperRef.value)
+  const WorkSpaceDraw = canvas.getObjects().filter(item => (item as CanvasElement).id === WorkSpaceDrawType)[0]
   // const WorkSpaceClip = canvas.getObjects(WorkSpaceClipType)[0]
-  // if (!WorkSpaceDraw || !WorkSpaceClip) return
-  // const workSpaceBound = WorkSpaceDraw.getBoundingRect()
-  // const left = WorkSpaceDraw.left
-  // const top = WorkSpaceDraw.top
+  if (!WorkSpaceDraw) return
+  const workSpaceBound = WorkSpaceDraw.getBoundingRect()
+  const left = WorkSpaceDraw.left, top = WorkSpaceDraw.top
   const canvasTransform = canvas.viewportTransform
   // if (!canvasTransform ) return
   zoom.value = canvas.getZoom()
-  // canvasTransform[4] = (width - workWidth) / 2 - canvas.getZoom()
-  // canvasTransform[5] = (height - workHeight) / 2 - canvas.getZoom()
+  canvasTransform[4] = (width.value - workSpaceBound.width) / 2 - left * zoom.value
+  canvasTransform[5] = (height.value - workSpaceBound.height) / 2 - top * zoom.value
   canvas.setViewportTransform(canvasTransform)
-  
+  canvas.setDimensions({width: width.value, height: height.value})
   canvas.renderAll()
 }
 
@@ -318,8 +319,8 @@ export const initWorks = () => {
   canvas.bringObjectToFront(workLineGroup)
   canvas.renderAll()
 
-  const { width, height } = useElementBounding(wrapperRef.value)
-  setCanvasTransform(width.value, height.value)
+  
+  setCanvasTransform()
 }
 
 const initCanvas = () => {
@@ -347,7 +348,7 @@ const initTemplate = async () => {
   const { currentTemplate } = storeToRefs(templatesStore)
   await canvas.loadFromJSON(currentTemplate.value)
   // canvas.renderAll()
-  setCanvasSize()
+  setCanvasTransform()
   // currentTemplate.value.objects.forEach(element => {
   //   createElement(element)
   // })
@@ -421,7 +422,7 @@ const initEditor = () => {
   // initBackground()
   const { width, height } = useElementBounding(wrapperRef.value)
   watch([width, height], () => {
-    setCanvasTransform(width.value, height.value)
+    setCanvasTransform()
   })
   // watchEffect(() => {
   //   setCanvasSize(width.value, height.value)
