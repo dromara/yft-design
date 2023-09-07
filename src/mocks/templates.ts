@@ -20,7 +20,7 @@ export const Templates: Template[] = [
         "originY": "top",
         "left": -3.5975,
         "top": -66.9603,
-        "fill": '',
+        "fill": "#fff",
         "width": 1070.5512,
         "height": 645.3543,
         "stroke": "rgba(255,255,255,1)",
@@ -475,7 +475,7 @@ export const Templates: Template[] = [
         "filters": []
       }
     ],
-    "background": "rgba(255,255,255,1)",
+    "background": "#f3f3f3",
     "workSpace": {
       "fillType": 0,
       "left": 0,
@@ -486,7 +486,7 @@ export const Templates: Template[] = [
     }
   },
   {
-    "background": "#fff",
+    "background": "#f3f3f3",
     "zoom": 0.4298950822503346,
     "width": 456.97508743145806,
     "height": 274.18505245887485,
@@ -502,6 +502,7 @@ export const Templates: Template[] = [
         "version": "6.0.0-beta1",
         "originX": "left",
         "originY": "top",
+        "fill": "#fff",
         "left": -3.6264,
         "top": -66.6196,
         "width": 1070.5512,
@@ -29013,7 +29014,7 @@ export const Templates: Template[] = [
     }
   },
   {
-    "background": "#fff",
+    "background": "#f3f3f3",
     "zoom": 0.4298950822503346,
     "width": 456.97508743145806,
     "height": 274.18505245887485,
@@ -29029,8 +29030,9 @@ export const Templates: Template[] = [
         "version": "6.0.0-beta1",
         "originX": "left",
         "originY": "top",
-        "left": -3.7079,
-        "top": -53.1267,
+        "fill": "#fff",
+        "left": -3.5975,
+        "top": -66.9603,
         "width": 1070.5512,
         "height": 645.3543,
         "stroke": "rgba(255,255,255,1)",
