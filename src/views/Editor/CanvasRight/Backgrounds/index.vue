@@ -592,9 +592,7 @@ const getGridColorFunction = () => {
 
 // 生成网格图片
 const generateGridBackground = async (status?: string) => {
-  const [ canvas ] = useCanvas()
   const { workSpaceDraw } = useCenter()
-  
   const gridColors = gridColorsRef.value && gridColorsRef.value.length > 0 && status !== 'random' ? gridColorsRef.value : 'random'
   const { left, top, angle, scaleX, scaleY } = getBackgroundImageOption()
   if (!workSpaceDraw.width) return
@@ -614,12 +612,12 @@ const generateGridBackground = async (status?: string) => {
     points: null
   }
   const trianglifier = trianglify(defaultOptions)
-  const canvasBackground = trianglifier.toCanvas()
-  // const svgBackground = trianglifier.toSVG()
-  // const serialize = new XMLSerializer()
-  // const imageURL = `data:image/svg+xml,${serialize.serializeToString(svgBackground)}`
-  const imageURL = canvasBackground.toDataURL('image/svg')
-  const backgroundImage = await Image.fromURL(imageURL)
+  // @ts-ignore
+  const svgBackground = trianglifier.toSVG()
+  const serialize = new XMLSerializer()
+  const imageURL = `data:image/svg+xml,${serialize.serializeToString(svgBackground)}`
+  // const imageURL = canvasBackground.toDataURL('image/svg')
+  const backgroundImage = await Image.fromURL(imageURL, { crossOrigin: 'anonymous' }, {})
   backgroundImage.set({left, top, angle, scaleX, scaleY})
   generateBackgroundImage(backgroundImage, imageURL)
   updateBackground({fill: TransparentFill, gaidImageURL: imageURL})
@@ -684,7 +682,6 @@ const multiStroke = (index: number, vHeight: number, maxColors: number, mode: st
 
 // 底纹样式背景生成
 const generateShadingBackground = async () => {
-  const [ canvas ] = useCanvas()
   const { workSpaceDraw } = useCenter()
   const item = shadingElement.value
   const maxColors = item.path.split('~').length + 1
@@ -719,7 +716,7 @@ const generateShadingBackground = async () => {
   `
   const imageURL = `data:image/svg+xml,${svg}`
   const { left, top, angle, scaleX, scaleY } = getBackgroundImageOption()
-  const backgroundImage = await Image.fromURL(imageURL)
+  const backgroundImage = await Image.fromURL(imageURL, { crossOrigin: 'anonymous' }, {})
   backgroundImage.set({left, top, angle, scaleX, scaleY, width: imageWidth, height: imageHeight})
   
   generateBackgroundImage(backgroundImage, imageURL)
