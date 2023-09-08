@@ -1,19 +1,16 @@
 import { useFabricStore } from "@/store"
 import { storeToRefs } from "pinia"
-import { TPointerEvent } from "fabric"
 import useCanvas from "@/views/Canvas/useCanvas"
-import { CanvasElement } from "@/types/canvas"
 
 
-export const useMouseOut = (evt: TPointerEvent) => {
+export const useMouseOut = (evt: any) => {
   const fabricStore = useFabricStore()
   const { elementCoords, elementHover } = storeToRefs(fabricStore)
   const [ canvas ] = useCanvas()
-  const targetObject = evt.target as CanvasElement | null
-  if (!targetObject) return
+  if (!evt.target) return
   // elementCoords.value.length = 0
   const activeObject = canvas.getActiveObject()
-  
+  const targetObject = evt.target
   if (activeObject === targetObject) return
   elementCoords.value = targetObject.getCoords()
   elementHover.value = targetObject.id

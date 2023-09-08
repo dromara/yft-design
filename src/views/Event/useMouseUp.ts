@@ -3,11 +3,10 @@ import { useFabricStore, useTemplatesStore } from "@/store"
 import { storeToRefs } from "pinia"
 import { useMainStore } from "@/store/modules/main"
 import { CanvasElement } from "@/types/canvas"
-import { TPointerEvent } from 'fabric'
 import useCanvas from "@/views/Canvas/useCanvas"
 
 
-export const useMouseUp = (evt: TPointerEvent) => {
+export const useMouseUp = (evt: any) => {
   const fabricStore = useFabricStore()
   const mainStore = useMainStore()
   const { elementCoords, elementHover, verticalLines, horizontalLines, isDragging } = storeToRefs(fabricStore)
