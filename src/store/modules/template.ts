@@ -106,7 +106,10 @@ export const useTemplatesStore = defineStore('Templates', {
       //   element.left -= centerPoint.x
       //   element.top -= centerPoint.y
       // }
+      console.log('canvasTemplate:', canvasTemplate)
       this.templates[this.templateIndex].objects = canvasTemplate.objects
+      this.templates[this.templateIndex].background = canvasTemplate.background
+      this.templates[this.templateIndex].backgroundImage = canvasTemplate.backgroundImage
       addHistorySnapshot()
     },
 

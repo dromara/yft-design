@@ -29,11 +29,11 @@ export interface Template {
   version: string
   workSpace: WorkSpaceElement
   background?: string
+  backgroundImage?: string
   zoom: number
   width: number
   height: number
   clip: number,
-  viewportTransform?: number[]
   objects: CanvasOption[]
 }
 

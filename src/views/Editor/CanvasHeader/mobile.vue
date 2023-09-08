@@ -108,6 +108,7 @@ import { CanvasElement, GroupElement } from '@/types/canvas'
 import { WorkSpaceDrawType } from '@/configs/canvas'
 import { useFabricStore, useMainStore, useSnapshotStore, useTemplatesStore } from "@/store"
 import useCanvas from '@/views/Canvas/useCanvas'
+import useCenter from '@/views/Canvas/useCenter'
 import useCanvasZindex from '@/hooks/useCanvasZindex'
 import useCanvasScale from '@/hooks/useCanvasScale'
 import useHandleElement from '@/hooks/useHandleElement'

@@ -592,6 +592,7 @@ const getGridColorFunction = () => {
 
 // 生成网格图片
 const generateGridBackground = async (status?: string) => {
+  const [ canvas ] = useCanvas()
   const { workSpaceDraw } = useCenter()
   const gridColors = gridColorsRef.value && gridColorsRef.value.length > 0 && status !== 'random' ? gridColorsRef.value : 'random'
   const { left, top, angle, scaleX, scaleY } = getBackgroundImageOption()
@@ -619,7 +620,7 @@ const generateGridBackground = async (status?: string) => {
   // const imageURL = canvasBackground.toDataURL('image/svg')
   const backgroundImage = await Image.fromURL(imageURL, { crossOrigin: 'anonymous' }, {})
   backgroundImage.set({left, top, angle, scaleX, scaleY})
-  generateBackgroundImage(backgroundImage, imageURL)
+  setBackgroundImage(backgroundImage, imageURL)
   updateBackground({fill: TransparentFill, gaidImageURL: imageURL})
 }
 
@@ -719,7 +720,7 @@ const generateShadingBackground = async () => {
   const backgroundImage = await Image.fromURL(imageURL, { crossOrigin: 'anonymous' }, {})
   backgroundImage.set({left, top, angle, scaleX, scaleY, width: imageWidth, height: imageHeight})
   
-  generateBackgroundImage(backgroundImage, imageURL)
+  setBackgroundImage(backgroundImage, imageURL)
   updateBackground({ shadingImageURL: imageURL, fill: TransparentFill })
 }
 
@@ -785,14 +786,16 @@ const generateShadingBackgroundRandom = () => {
   generateShadingBackground()
 }
 
-const generateBackgroundImage = async (backgroundImage: Image, url: string) => {
+const setBackgroundImage = async (backgroundImage: Image, url: string) => {
   const [ canvas ] = useCanvas()
+  
   if (canvasObject.value && canvasObject.value.name === 'backgroundImage') {
     const imageElement = canvasObject.value as ImageElement
     await imageElement.setSrc(url)
     templatesStore.modifedElement()
   }
   else {
+    console.log('canvasObject.value:', backgroundImage)
     canvas.backgroundImage = backgroundImage
   }
 }
