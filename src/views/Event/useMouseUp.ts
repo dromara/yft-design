@@ -10,9 +10,7 @@ import useCanvas from "@/views/Canvas/useCanvas"
 export const useMouseUp = (evt: TPointerEvent) => {
   const fabricStore = useFabricStore()
   const mainStore = useMainStore()
-  const templatesStore = useTemplatesStore()
-  const { elementCoords, elementHover, verticalLines, horizontalLines, isDragging, isModifed } = storeToRefs(fabricStore)
-  const { canvasObject } = storeToRefs(mainStore)
+  const { elementCoords, elementHover, verticalLines, horizontalLines, isDragging } = storeToRefs(fabricStore)
   const [ canvas ] = useCanvas()
   if (isDragging.value) fabricStore.setIsDraggingState(false)
   verticalLines.value.length = 0
@@ -20,8 +18,4 @@ export const useMouseUp = (evt: TPointerEvent) => {
   elementCoords.value.length = 0
   elementHover.value = ''
   mainStore.setCanvasObject(canvas.getActiveObject() ? canvas.getActiveObject() as CanvasElement : null)
-  if (!canvasObject.value) return
-  if (canvasObject.value && isModifed.value) {
-    templatesStore.modifedElement()
-  }
 }
