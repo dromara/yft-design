@@ -92,7 +92,7 @@ const drawMaterial = async (files: FileList) => {
   const dataText = await getImageText(materialFile)
   console.log('dataText:', dataText)
   // @ts-ignore
-  loadSVGFromString(dataText, svgCallback, {})
+  await loadSVGFromString(dataText, svgCallback, {})
   canvas.renderAll()
   // loadSVGFromURL(dataURl, svgCallback, svgRevier, {})
   // getImageDataURL(imageFile).then(dataURL => createImageElement(dataURL))

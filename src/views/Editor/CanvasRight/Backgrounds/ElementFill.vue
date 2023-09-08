@@ -271,6 +271,7 @@ import { getImageDataURL, getImageSize } from '@/utils/image'
 import { WorkSpaceDrawType } from '@/configs/canvas'
 import trianglify from '@/plugins/trianglify/trianglify'
 import useCanvas from '@/views/Canvas/useCanvas'
+import useCenter from '@/views/Canvas/useCenter'
 import useCanvasZindex from '@/hooks/useCanvasZindex'
 import GridFill from './GridFill.vue'
 import GradientFill from './GradientFill.vue'
@@ -676,10 +677,7 @@ const multiStroke = (index: number, vHeight: number, maxColors: number, mode: st
 
 // 底纹样式背景生成
 const generateShadingBackground = async () => {
-  const [ canvas ] = useCanvas()
   if (!handleElement.value) return
-  const workSpaceDraw = canvas.getObjects(WorkSpaceDrawType)[0]
-  const left = workSpaceDraw.left, top = workSpaceDraw.top
   const item = shadingElement.value
   const maxColors = item.path.split('~').length + 1
   const width = item.width

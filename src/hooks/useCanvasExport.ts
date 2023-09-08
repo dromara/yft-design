@@ -23,10 +23,10 @@ export default () => {
   const exportImage = (format: string, quality: number, dpi: number, ignoreClip = true) => {
     Exporting.value = true
     const [ canvas ] = useCanvas()
-    const workSpace = canvas.getObjects(WorkSpaceDrawType)[0]
+    const { workSpaceDraw } = useCenter()
     const zoom = canvas.getZoom()
-    const width = workSpace.width, height = workSpace.height
-    const left = workSpace.left, top = workSpace.top
+    const width = workSpaceDraw.width, height = workSpaceDraw.height
+    const left = workSpaceDraw.left, top = workSpaceDraw.top
     const viewportTransform = canvas.viewportTransform
     const activeObject = canvas.getActiveObject()
     if (ignoreClip) {
@@ -46,7 +46,7 @@ export default () => {
       top: top * zoom + viewportTransform[5]
     })
     const data = changeDataURLDPI(result, dpi)
-    saveAs(data, `yft-design_${Date.now()}.${format}`)
+    saveAs(data, `yft-design-${Date.now()}.${format}`)
     Exporting.value = false
     canvas.getObjects().filter(obj => obj.type === WorkSpaceClipType).map(item => {item.stroke = WorkSpaceClipColor})
     canvas.getObjects().filter(obj => obj.type === WorkSpaceSafeType).map(item => {item.stroke = WorkSpaceSafeColor})
@@ -57,9 +57,8 @@ export default () => {
   const exportSVG = () => {
     const [ canvas ] = useCanvas()
     const { originPoint } = useCenter()
-    const workSpace = canvas.getObjects(WorkSpaceDrawType)[0]
-    const width = workSpace.width, height = workSpace.height
-    workSpace.set({excludeFromExport: false})
+    const { workSpaceDraw } = useCenter()
+    const width = workSpaceDraw.width, height = workSpaceDraw.height
     canvas.getObjects().filter(obj => obj.type === WorkSpaceClipType).map(item => {item.stroke = TransparentFill})
     canvas.getObjects().filter(obj => obj.type === WorkSpaceSafeType).map(item => {item.stroke = TransparentFill})
     canvas.renderAll()
@@ -74,8 +73,7 @@ export default () => {
       width: width + 'px',
       height: height + 'px'
     })
-    downloadSVGFile(data, `yft-design_${Date.now()}.svg`)
-    workSpace.set({excludeFromExport: true})
+    downloadSVGFile(data, `yft-design-${Date.now()}.svg`)
     canvas.getObjects().filter(obj => obj.type === WorkSpaceClipType).map(item => {item.stroke = WorkSpaceClipColor})
     canvas.getObjects().filter(obj => obj.type === WorkSpaceSafeType).map(item => {item.stroke = WorkSpaceSafeColor})
     canvas.renderAll()
@@ -89,11 +87,11 @@ export default () => {
     const [ canvas ] = useCanvas()
     const { clip } = storeToRefs(useFabricStore())
     const zoom = canvas.getZoom()
-    const workSpace = canvas.getObjects(WorkSpaceDrawType)[0]
-    const width = workSpace.width ? workSpace.width * zoom : 0
-    const height = workSpace.height ? workSpace.height * zoom : 0
-    const left = workSpace.left ? workSpace.left : 0
-    const top = workSpace.top ? workSpace.top : 0
+    const { workSpaceDraw } = useCenter()
+    const width = workSpaceDraw.width ? workSpaceDraw.width * zoom : 0
+    const height = workSpaceDraw.height ? workSpaceDraw.height * zoom : 0
+    const left = workSpaceDraw.left ? workSpaceDraw.left : 0
+    const top = workSpaceDraw.top ? workSpaceDraw.top : 0
     const viewportTransform = canvas.viewportTransform
     if (!viewportTransform) return
     
@@ -109,7 +107,7 @@ export default () => {
     })
     const doc = new jsPDF({orientation: 'l', unit: 'px', format: [width, height]})
     doc.addImage(result, 'JPEG', 0, 0, width, height)
-    doc.save(`yft-design_${Date.now()}.${'pdf'}`)
+    doc.save(`yft-design-${Date.now()}.${'pdf'}`)
   }
 
   // 导出json
@@ -119,8 +117,8 @@ export default () => {
     const objects = canvas.getObjects()
     
     console.log('canvas.toObject():', canvas.toObject())
-    const blob = new Blob([JSON.stringify(templates.value)], { type: '' })
-    saveAs(blob, 'yft-design_draw.json')
+    const blob = new Blob(canvas.toObject(), { type: '' })
+    saveAs(blob, `yft-design-${Date.now()}.json`)
   }
 
   return {

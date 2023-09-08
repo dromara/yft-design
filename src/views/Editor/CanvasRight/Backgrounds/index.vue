@@ -265,12 +265,12 @@ import { GradientColorLibs } from '@/configs/gradientColors'
 import { GradientCoords } from '@/types/elements'
 import { ShadingColorLibs, ShadingLigntColors } from '@/configs/shadingColors'
 import { ShadingBackground, ShadingColorLib } from '@/types/elements'
-import { WorkSpaceDrawType } from '@/configs/canvas'
 import { ImageElement, WorkSpaceElement } from '@/types/canvas'
 import { getRandomNum } from '@/utils/common'
 import { getImageDataURL } from '@/utils/image'
 import trianglify from '@/plugins/trianglify/trianglify'
 import useCanvas from '@/views/Canvas/useCanvas'
+import useCenter from '@/views/Canvas/useCenter'
 import GridFill from './GridFill.vue'
 import GradientFill from './GradientFill.vue'
 import useHandleBackground from '@/hooks/useHandleBackground'
@@ -407,14 +407,14 @@ const changeBackgroundType = (type: number) => {
 // 设置背景
 const updateBackground = (props: Partial<WorkSpaceElement>) => {
   const [ canvas ] = useCanvas()
+  const { workSpaceDraw } = useCenter()
   templatesStore.updateTemplate({ workSpace: { ...background.value, ...props } })
-  const WorkSpaceDraw = canvas.getObjects(WorkSpaceDrawType)[0]
-  WorkSpaceDraw.set({
+  workSpaceDraw.set({
     ...props,
-    left: WorkSpaceDraw.left,
-    top: WorkSpaceDraw.top,
-    width: WorkSpaceDraw.width,
-    height: WorkSpaceDraw.height,
+    left: workSpaceDraw.left,
+    top: workSpaceDraw.top,
+    width: workSpaceDraw.width,
+    height: workSpaceDraw.height,
   })
   canvas.renderAll()
 }
@@ -479,7 +479,7 @@ const updateGradientBackground = (index: number, color: string) => {
 // 生成渐变背景
 const generateGradientBackground = () => {
   const [ canvas ] = useCanvas()
-  const workSpaceDraw = canvas.getObjects(WorkSpaceDrawType)[0]
+  const { workSpaceDraw } = useCenter()
   const width = workSpaceDraw.width
   const height = workSpaceDraw.height
   if (!width || !height) return 
@@ -593,7 +593,7 @@ const getGridColorFunction = () => {
 // 生成网格图片
 const generateGridBackground = async (status?: string) => {
   const [ canvas ] = useCanvas()
-  const workSpaceDraw = canvas.getObjects(WorkSpaceDrawType)[0]
+  const { workSpaceDraw } = useCenter()
   
   const gridColors = gridColorsRef.value && gridColorsRef.value.length > 0 && status !== 'random' ? gridColorsRef.value : 'random'
   const { left, top, angle, scaleX, scaleY } = getBackgroundImageOption()
@@ -685,7 +685,7 @@ const multiStroke = (index: number, vHeight: number, maxColors: number, mode: st
 // 底纹样式背景生成
 const generateShadingBackground = async () => {
   const [ canvas ] = useCanvas()
-  const workSpaceDraw = canvas.getObjects(WorkSpaceDrawType)[0]
+  const { workSpaceDraw } = useCenter()
   const item = shadingElement.value
   const maxColors = item.path.split('~').length + 1
   const width = item.width

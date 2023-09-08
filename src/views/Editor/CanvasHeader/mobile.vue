@@ -233,7 +233,7 @@ const sendBackwards = () => {
 const leftAlign = () => {
   if (!handleElement.value) return
   const [ canvas ] = useCanvas()
-  const workSpaceDraw = canvas.getObjects(WorkSpaceDrawType)[0]
+  const { workSpaceDraw } = useCenter()
   if (!workSpaceDraw.left || !workSpaceDraw.width || !handleElement.value.width) return
   handleElement.value.left = workSpaceDraw.left + handleElement.value.width / 2 
 }
@@ -241,7 +241,7 @@ const leftAlign = () => {
 const verticallyAlign = () => {
   if (!handleElement.value) return
   const [ canvas ] = useCanvas()
-  const workSpaceDraw = canvas.getObjects(WorkSpaceDrawType)[0]
+  const { workSpaceDraw } = useCenter()
   if (!workSpaceDraw.left || !workSpaceDraw.width || !handleElement.value.width) return
   handleElement.value.left = workSpaceDraw.getCenterPoint().x
 }
@@ -249,7 +249,7 @@ const verticallyAlign = () => {
 const rightAlign = () => {
   if (!handleElement.value) return
   const [ canvas ] = useCanvas()
-  const workSpaceDraw = canvas.getObjects(WorkSpaceDrawType)[0]
+  const { workSpaceDraw } = useCenter()
   if (!workSpaceDraw.left || !workSpaceDraw.width || !handleElement.value.width) return
   handleElement.value.left = workSpaceDraw.left + workSpaceDraw.width - handleElement.value.width / 2
 }
@@ -257,7 +257,7 @@ const rightAlign = () => {
 const topAlign = () => {
   if (!handleElement.value) return
   const [ canvas ] = useCanvas()
-  const workSpaceDraw = canvas.getObjects(WorkSpaceDrawType)[0]
+  const { workSpaceDraw } = useCenter()
   if (!workSpaceDraw.top || !workSpaceDraw.height || !handleElement.value.height) return
   handleElement.value.top = workSpaceDraw.top + handleElement.value.height / 2 
 }
@@ -265,7 +265,7 @@ const topAlign = () => {
 const horizontallyAlign = () => {
   if (!handleElement.value) return
   const [ canvas ] = useCanvas()
-  const workSpaceDraw = canvas.getObjects(WorkSpaceDrawType)[0]
+  const { workSpaceDraw } = useCenter()
   if (!workSpaceDraw.top || !workSpaceDraw.height || !handleElement.value.height) return
   handleElement.value.top = workSpaceDraw.getCenterPoint().y
 }
@@ -273,7 +273,7 @@ const horizontallyAlign = () => {
 const bottomAlign = () => {
   if (!handleElement.value) return
   const [ canvas ] = useCanvas()
-  const workSpaceDraw = canvas.getObjects(WorkSpaceDrawType)[0]
+  const { workSpaceDraw } = useCenter()
   if (!workSpaceDraw.top || !workSpaceDraw.height || !handleElement.value.height) return
   handleElement.value.top = workSpaceDraw.top + workSpaceDraw.height - handleElement.value.height / 2
 }

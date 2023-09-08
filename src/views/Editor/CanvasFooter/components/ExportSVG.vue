@@ -28,9 +28,8 @@ const { templates } = storeToRefs(useTemplatesStore())
 const getSVGContent = () => {
   const [ canvas ] = useCanvas()
   const { originPoint } = useCenter()
-  const workSpace = canvas.getObjects(WorkSpaceDrawType)[0]
-  const width = workSpace.width, height = workSpace.height
-  workSpace.set({excludeFromExport: false})
+  const { workSpaceDraw } = useCenter()
+  const width = workSpaceDraw.width, height = workSpaceDraw.height
   canvas.getObjects().filter(obj => obj.type === WorkSpaceClipType).map(item => {item.stroke = TransparentFill})
   canvas.getObjects().filter(obj => obj.type === WorkSpaceSafeType).map(item => {item.stroke = TransparentFill})
   canvas.renderAll()
@@ -45,7 +44,6 @@ const getSVGContent = () => {
     width: width + 'px',
     height: height + 'px'
   })
-  workSpace.set({excludeFromExport: true})
   canvas.getObjects().filter(obj => obj.type === WorkSpaceClipType).map(item => {item.stroke = WorkSpaceClipColor})
   canvas.getObjects().filter(obj => obj.type === WorkSpaceSafeType).map(item => {item.stroke = WorkSpaceSafeColor})
   canvas.renderAll()
