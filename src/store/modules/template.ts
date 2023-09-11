@@ -2,7 +2,7 @@ import { defineStore, storeToRefs } from 'pinia'
 import { Templates } from '@/mocks/templates'
 import { Template, CanvasElement } from '@/types/canvas'
 import { toObjectFilter, WorkSpaceName } from '@/configs/canvas'
-import useHandleElement from '@/hooks/useHandleElement'
+import useCanvasScale from '@/hooks/useCanvasScale'
 import useCanvas, { initWorks, initBackground } from '@/views/Canvas/useCanvas'
 import useHistorySnapshot from '@/hooks/useHistorySnapshot'
 
@@ -80,20 +80,23 @@ export const useTemplatesStore = defineStore('Templates', {
 
     async renderElement() {
       const mainStore = useMainStore()
+      const { setCanvasSize } = useCanvasScale()
       const [ canvas ] = useCanvas()
       
-      const { createElement } = useHandleElement()
+      // const { createElement } = useHandleElement()
       canvas.discardActiveObject()
       mainStore.setCanvasObject(null)
-      canvas.remove(...canvas.getObjects().filter(item => (item as CanvasElement).name !== WorkSpaceName))
-      for (let i = 0; i < this.templates[this.templateIndex].objects.length; i++) {
-        const element = this.templates[this.templateIndex].objects[i] as CanvasOption
-        await createElement(element as CanvasOption)
-      }
+      await canvas.loadFromJSON(this.currentTemplate)
+      setCanvasSize()
+      // canvas.remove(...canvas.getObjects().filter(item => (item as CanvasElement).name !== WorkSpaceName))
+      // for (let i = 0; i < this.templates[this.templateIndex].objects.length; i++) {
+      //   const element = this.templates[this.templateIndex].objects[i] as CanvasOption
+      //   await createElement(element as CanvasOption)
+      // }
       // this.templates[this.templateIndex].objects.forEach(element => {
       //   
       // })
-      canvas.renderAll()
+      // canvas.renderAll()
     },
 
     modifedElement() {

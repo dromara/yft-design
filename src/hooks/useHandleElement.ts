@@ -3,7 +3,7 @@ import { nanoid } from "nanoid"
 import { storeToRefs } from "pinia"
 import { KEYS } from '@/configs/hotkey'
 import { ElementNames } from "@/types/elements"
-import { Pattern, util, Gradient } from "fabric"
+import { Pattern, util, Gradient, classRegistry } from "fabric"
 import { toObjectFilter, WorkSpaceName } from "@/configs/canvas"
 import { useFabricStore, useMainStore, useTemplatesStore } from "@/store"
 import { 
@@ -98,7 +98,7 @@ export default () => {
     const elementTop = element.top + centerPoint.y
     if (element.type === ElementNames.IMAGE) {
       const imageOption = element as ImageOption
-      const CropImage = util.classRegistry.getClass('cropimage')
+      const CropImage = classRegistry.getClass('cropimage')
       const imageElement = await CropImage.fromURL(imageOption.src)
       if (typeof imageElement.isCropping === 'undefined') {
         extendWithCropImage(imageElement)

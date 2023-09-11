@@ -35,7 +35,7 @@ const initConf = () => {
   const { rotateElement, unrotateElement } = useRotate()
   Object.prototype.objectCaching = false
   // controlsUtils.createObjectDefaultControls()
-  console.log('Object:', Object)
+  // console.log('Object:', Object)
   // Object.prototype.controls.mtr.withConnection = false
   // Object.prototype.controls.mtr.cursorStyle = "pointer"
   // Object.prototype.controls.mtr.offsetY = 20
