@@ -18,7 +18,7 @@
         <el-tooltip placement="top" :hide-after="0" content="拖拽" v-if="!element.group && element.type !== ElementNames.GROUP">
           <IconApplicationMenu class="common-icon" v-if="!element.group && element.type !== ElementNames.GROUP"/>
         </el-tooltip>
-        <div class="element-type">{{ element.name }}</div>
+        <div class="element-type">{{ element.type }}</div>
         <div class="element-text" v-if="element.type === ElementNames.TEXTBOX || element.type === ElementNames.TEXT">{{ (element as TextboxElement).text }}</div>
         
       </div>
@@ -81,9 +81,7 @@ const props = defineProps({
 const mainStore = useMainStore()
 const { canvasObject } = storeToRefs(mainStore)
 
-const handleElement = computed(() => {
-  return canvasObject.value as CanvasElement
-})
+const handleElement = computed(() => canvasObject.value as CanvasElement)
 </script>
 <style lang="scss" scoped>
 .layout-search {

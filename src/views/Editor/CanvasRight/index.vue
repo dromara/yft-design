@@ -55,7 +55,8 @@ const currentPanelComponent = computed(() => {
     [RightStates.ELEMENT_WORKER]: WorkStylePanel,
     [RightStates.ELEMENT_STYLE]: ElemnetStylePanel,
   }
-  return panelMap[rightState.value]
+  //@ts-ignore
+  return panelMap[rightState.value as RightStates]
 })
 
 </script>

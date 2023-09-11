@@ -22,7 +22,7 @@
             <el-popover trigger="click" placement="bottom" :width="265" @click.stop>
               <template #reference>
                 <el-button class="font-color">
-                  <TextColorButton :color="handleElement.color">
+                  <TextColorButton :color="handleElement.fill">
                     <IconText />
                   </TextColorButton>
                 </el-button>
@@ -217,10 +217,10 @@ const handleElementFontSize = () => {
 
 // 修改字体颜色
 const updateFontColor = (color: string) => {
-  handleElement.value.color = color
-  if (handleElement.value.fillType === 0) {
-    handleElement.value.fill = color
-  }
+  handleElement.value.fill = color
+  // if (handleElement.value.fillType === 0) {
+  //   handleElement.value.fill = color
+  // }
   templatesStore.modifedElement()
   canvas.renderAll()
 }

@@ -38,8 +38,9 @@ const { canvasObject } = storeToRefs(useMainStore())
 
 const currentPanelComponent = computed(() => {
   if (!canvasObject.value) return null
-  if (canvasObject.value.name) {
-    return panelMap[canvasObject.value.name as ElementNames]
+  if (canvasObject.value.type) {
+    //@ts-ignore
+    return panelMap[canvasObject.value.type as ElementNames]
   }
   return null
 })
