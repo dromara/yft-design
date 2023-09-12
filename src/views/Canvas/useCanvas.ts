@@ -1,5 +1,5 @@
 import { storeToRefs } from 'pinia'
-import { Canvas, Rect, Object, Control, Textbox, controlsUtils, Path, Line, Group, Image } from 'fabric'
+import { Canvas, Rect, Object as FabricObject, Control, Textbox, controlsUtils, Path, Line, Group, Image } from 'fabric'
 import { useFabricStore } from '@/store/modules/fabric'
 import { watch } from 'vue'
 import { useElementBounding } from '@vueuse/core'
@@ -33,31 +33,23 @@ let canvas: null | Canvas = null
 // 初始化配置
 const initConf = () => {
   const { rotateElement, unrotateElement } = useRotate()
-  Object.prototype.objectCaching = false
-  // controlsUtils.createObjectDefaultControls()
-  // console.log('Object:', Object)
-  // Object.prototype.controls.mtr.withConnection = false
-  // Object.prototype.controls.mtr.cursorStyle = "pointer"
-  // Object.prototype.controls.mtr.offsetY = 20
-  Object.prototype.set({
-    borderColor: 'blue',
-    cornerColor: 'white',          // 激活状态角落图标的填充颜色
-    cornerStrokeColor: '#c0c0c0',  // 激活状态角落图标的边框颜色
-    borderOpacityWhenMoving: 1,
-    borderScaleFactor: 1,
-    cornerSize: 10,
-    cornerStyle: 'circle',         // rect,circle
-    centeredScaling: false,        // 角落放大缩小是否是以图形中心为放大原点
-    centeredRotation: true,        // 旋转按钮旋转是否是左上角为圆心旋转
-    transparentCorners: false,     // 激活状态角落的图标是否透明
-    rotatingPointOffset: 5,        // 旋转距旋转体的距离
-    lockUniScaling: true,         // 只显示四角的操作
-    hasRotatingPoint: true,        // 是否显示旋转按钮
-  })
-
+  FabricObject.prototype.objectCaching = false
+  FabricObject.ownDefaults.borderColor = 'blue'
+  FabricObject.ownDefaults.cornerColor = 'white'
+  FabricObject.ownDefaults.cornerStrokeColor = '#c0c0c0'
+  FabricObject.ownDefaults.borderOpacityWhenMoving = 1
+  FabricObject.ownDefaults.borderScaleFactor = 1
+  FabricObject.ownDefaults.cornerSize = 10
+  FabricObject.ownDefaults.cornerStyle = 'circle'
+  FabricObject.ownDefaults.centeredScaling = false
+  FabricObject.ownDefaults.centeredRotation = true
+  FabricObject.ownDefaults.transparentCorners = false
+  FabricObject.ownDefaults.rotatingPointOffset = 5
+  FabricObject.ownDefaults.lockUniScaling = true
+  FabricObject.ownDefaults.hasRotatingPoint = true
   // Object.prototype.controls.mt.visible = false
   // Object.prototype.controls.mb.visible = false
-
+  console.log('FabricObject.ownDefaults.controls :', FabricObject.ownDefaults )
   // Object.prototype.controls.mtr = new Control({
   //   x: 0,
   //   y: -0.5,
@@ -438,7 +430,7 @@ export const toggleSelection = (selection?: boolean) => {
   // 这个禁止选中方法没有生效
   canvas.selection = selection !== undefined ? selection : !canvas.selection
   // 补充使用这个让其画布上的元素禁止选中
-  Object.prototype.selectable = canvas.selection
+  FabricObject.prototype.selectable = canvas.selection
   // 补充这个方法，禁止选中所有元素
   canvas.getObjects().filter(obj => (obj as CanvasElement).name !== WorkSpaceName).map(item => item.set({selection}))
 }
