@@ -5,6 +5,7 @@ import { watch } from 'vue'
 import { useElementBounding } from '@vueuse/core'
 import { GuideLines } from '@/app/guideLiles'
 import { HoverBorders } from '@/app/hoverBorders'
+import { WheelScroll } from '@/app/wheelScroll'
 import { DefaultDPI, DefaultRatio } from '@/configs/size'
 import { useTemplatesStore } from '@/store'
 import { CanvasElement } from '@/types/canvas'
@@ -334,6 +335,7 @@ const initCanvas = () => {
   })
   new GuideLines(canvas)
   new HoverBorders(canvas)
+  new WheelScroll(canvas)
   canvas.preserveObjectStacking = true
   canvas.renderAll()
 }

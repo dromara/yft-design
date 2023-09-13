@@ -27,7 +27,7 @@ useCanvasHotkey()
 
 onMounted(() => {
   initEditor()
-  initEvent()
+  // initEvent()
 })
 
 // 点击画布区域
