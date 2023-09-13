@@ -217,6 +217,7 @@ export default () => {
   const resetCanvas = () => {
     const { width, height } = useElementBounding(wrapperRef.value)
     setCanvasTransform(width.value, height.value)
+    setCanvasSize()
   }
 
   return {

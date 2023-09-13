@@ -9,7 +9,6 @@ import { useTemplatesStore } from '@/store'
 import { CanvasElement } from '@/types/canvas'
 import { TransparentFill } from '@/configs/background'
 import { drawRotateIcon, drawAngleIcon, drawVerticalLeftLineIcon, drawVerticalRightLineIcon } from '@/utils/drawer'
-import useHandleElement from '@/hooks/useHandleElement'
 import useCanvasScale from '@/hooks/useCanvasScale'
 import useRotate from './useRotate'
 import { 
