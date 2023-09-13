@@ -83,8 +83,8 @@ export default () => {
     clip.value = currentTemplate.value.clip
     canvas.setZoom(zoom.value)
     const WorkSpaceDraw = canvas.getObjects().filter(item => (item as CanvasElement).id === WorkSpaceDrawType)[0]
-    const WorkSpaceClip = canvas.getObjects().filter(item => (item as CanvasElement).id === WorkSpaceClipType)[0]
-    if (!WorkSpaceDraw || !WorkSpaceClip) return
+    // const WorkSpaceClip = canvas.getObjects().filter(item => (item as CanvasElement).id === WorkSpaceClipType)[0]
+    if (!WorkSpaceDraw) return
     const workSpaceBound = WorkSpaceDraw.getBoundingRect()
     const left = WorkSpaceDraw.left
     const top = WorkSpaceDraw.top
@@ -205,6 +205,12 @@ export default () => {
     templatesStore.updateCommonElement({ id: WorkSpaceLineType, props: workSpaceLine.toObject(toObjectFilter as any[]) })
   }
 
+  const setCanvasSize = () => {
+    const [ canvas ] = useCanvas()
+    const { width, height } = useElementBounding(wrapperRef.value)
+    canvas.setDimensions({width: width.value, height: height.value})
+  } 
+
   /**
    * 重置画布尺寸和位置
    */
@@ -218,6 +224,7 @@ export default () => {
     setCanvasScalePercentage,
     setCanvasTransform,
     setCanvasWorkSpace,
+    setCanvasSize,
     scaleCanvas,
     resetCanvas,
   }

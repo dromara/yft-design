@@ -314,15 +314,15 @@ const initCanvas = () => {
 // 初始化模板
 const initTemplate = async () => {
   if (!canvas) return
-  const templatesStore = useTemplatesStore()
-  const { setCanvasTransform } = useCanvasScale()
   const fabricStore = useFabricStore()
-  const { currentTemplate } = storeToRefs(templatesStore)
   const { wrapperRef } = storeToRefs(fabricStore)
-  await canvas.loadFromJSON(currentTemplate.value)
+  const templatesStore = useTemplatesStore()
+  const { currentTemplate } = storeToRefs(templatesStore)
+  const { setCanvasSize, setCanvasTransform } = useCanvasScale()
   const { width, height } = useElementBounding(wrapperRef.value)
+  await canvas.loadFromJSON(currentTemplate.value)
+  setCanvasSize()
   setCanvasTransform(width.value, height.value)
-  canvas.renderAll()
 }
 
 // 初始化背景
@@ -388,10 +388,8 @@ const initEditor = () => {
   // initBackground()
   const { width, height } = useElementBounding(wrapperRef.value)
   watch([width, height], () => {
-    setCanvasTransform(width.value, height.value)
-  })
-  watchEffect(() => {
     setCanvasSize(width.value, height.value)
+    setCanvasTransform(width.value, height.value)
   })
 }
 
