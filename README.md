@@ -1,6 +1,6 @@
 # yft-design
 > 基于 Canvas 的开源版"创客贴"，使用 Vue3 + TypeScript + Fabric.js + Pinia + Element-Plus，支持 文字、图片、形状、线条、二维码 、条形码几种最常用的元素类型，每一种元素都拥有高度可编辑能力，缩略图显示，模板，支持导出json，svg, image文件。  
-<b>在线体验：[http://draw.morestrive.com](http://draw.morestrive.com)</b>  
+<b>在线体验：[https://yft.design](https://yft.design)</b>  s
 <b>Demo：[https://more-strive.github.io/design/](https://more-strive.github.io/design/)</b>
 
 ## 项目运行
