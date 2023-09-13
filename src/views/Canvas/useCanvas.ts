@@ -162,16 +162,6 @@ const initWorkSpace = () => {
   }
 }
 
-// 更新画布尺寸
-const setCanvasSize = (width: number, height: number) => {
-  if (!canvas) return
-  const fabricStore = useFabricStore()
-  const { zoom } = storeToRefs(fabricStore)
-  zoom.value = canvas.getZoom()
-  canvas.setDimensions({width, height})
-  canvas.renderAll()
-}
-
 // 初始化工作台
 export const initWorks = () => {
   if (!canvas) return
@@ -380,7 +370,7 @@ export const initBackground = async () => {
 const initEditor = () => {
   const fabricStore = useFabricStore()
   const { wrapperRef } = storeToRefs(fabricStore)
-  const { setCanvasTransform } = useCanvasScale()
+  const { setCanvasTransform, setCanvasSize } = useCanvasScale()
   initConf()
   initCanvas()
   // initWorks()
@@ -388,7 +378,7 @@ const initEditor = () => {
   // initBackground()
   const { width, height } = useElementBounding(wrapperRef.value)
   watch([width, height], () => {
-    setCanvasSize(width.value, height.value)
+    setCanvasSize()
     setCanvasTransform(width.value, height.value)
   })
 }

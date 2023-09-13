@@ -1,15 +1,14 @@
 import { defineStore, storeToRefs } from 'pinia'
 import { Templates } from '@/mocks/templates'
 import { Template, CanvasElement } from '@/types/canvas'
-import { toObjectFilter, WorkSpaceName, WorkSpaceDrawType, WorkSpaceClipType } from '@/configs/canvas'
-import useHandleElement from '@/hooks/useHandleElement'
+import { toObjectFilter, WorkSpaceDrawType } from '@/configs/canvas'
+
 import useCanvasScale from '@/hooks/useCanvasScale'
 
-import useCanvas, { initWorks, initBackground } from '@/views/Canvas/useCanvas'
+import useCanvas from '@/views/Canvas/useCanvas'
 import useHistorySnapshot from '@/hooks/useHistorySnapshot'
 
 import useCenter from '@/views/Canvas/useCenter'
-import { useElementBounding } from '@vueuse/core'
 import { CanvasOption } from '@/types/option'
 import { useMainStore } from './main'
 import { useFabricStore } from './fabric'
@@ -88,7 +87,8 @@ export const useTemplatesStore = defineStore('Templates', {
       const { clip } = storeToRefs(fabricStore)
       const { addHistorySnapshot } = useHistorySnapshot()
       const canvasTemplate = canvas.toObject(toObjectFilter)
-      const workSpaceDraw = canvas.getObjects().filter(item => (item as CanvasOption).id === WorkSpaceClipType)[0]
+      const workSpaceDraw = canvas.getObjects().filter(item => (item as CanvasOption).id === WorkSpaceDrawType)[0]
+      if (!workSpaceDraw) return
       canvasTemplate.width = workSpaceDraw.width * canvas.getZoom()
       canvasTemplate.height = workSpaceDraw.height * canvas.getZoom()
       canvasTemplate.zoom = canvas.getZoom()
