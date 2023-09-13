@@ -3,6 +3,7 @@ import { Canvas, Rect, Object as FabricObject, Control, Textbox, controlsUtils, 
 import { useFabricStore } from '@/store/modules/fabric'
 import { watch } from 'vue'
 import { useElementBounding } from '@vueuse/core'
+import { GuideLines } from '@/app/guideLiles'
 import { DefaultDPI, DefaultRatio } from '@/configs/size'
 import { useTemplatesStore } from '@/store'
 import { CanvasElement } from '@/types/canvas'
@@ -330,6 +331,7 @@ const initCanvas = () => {
     height: fabricHeight,
     backgroundColor: WorkSpaceEditColor,
   })
+  new GuideLines(canvas)
   canvas.preserveObjectStacking = true
   canvas.renderAll()
 }
