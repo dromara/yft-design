@@ -441,7 +441,7 @@ export const Templates: Template[] = [
       {
         "cropX": 0,
         "cropY": 0,
-        "type": "image",
+        "type": "cropimage",
         "version": "6.0.0-beta1",
         "originX": "center",
         "originY": "center",
