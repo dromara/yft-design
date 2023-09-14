@@ -1,5 +1,4 @@
 import { Object as FabricObject, Group as OriginGroup, classRegistry, TPointerEventInfo, TPointerEvent, GroupProps } from 'fabric'
-// import { CommonGroup } from '@/core/canvas/shapes/commonGroup'
 
 export class Group extends OriginGroup {
   public subTargetCheck = true
