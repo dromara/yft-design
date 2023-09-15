@@ -65,9 +65,7 @@ export class Ruler extends Disposable {
   /**
    * 选取对象矩形坐标
    */
-  private objectRect:
-    | undefined
-    | {
+  private objectRect: undefined | {
         x: HighlightRect[]
         y: HighlightRect[]
       }

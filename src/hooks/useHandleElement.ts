@@ -90,93 +90,93 @@ export default () => {
     return clipPath
   }
 
-  const createElement = async (element: CanvasOption) => {
-    const [ canvas ] = useCanvas()
-    const { centerPoint } = useCenter()
-    if (!element.left || !element.top) return
-    const elementLeft = element.left + centerPoint.x
-    const elementTop = element.top + centerPoint.y
-    if (element.type === ElementNames.IMAGE) {
-      const imageOption = element as ImageOption
-      const CropImage = classRegistry.getClass('cropimage')
-      const imageElement = await CropImage.fromURL(imageOption.src)
-      if (typeof imageElement.isCropping === 'undefined') {
-        extendWithCropImage(imageElement)
-      }
-      imageElement.set(imageOption)
-      imageElement.left = elementLeft 
-      imageElement.top = elementTop
-      canvas.add(imageElement)
-      setZindex(canvas)
-    }
-    else if (element.type === ElementNames.TEXTBOX) {
-      const textboxElementOption = element as TextboxOption
-      const textContent = textboxElementOption.text
-      const textboxElement = new fabric.Textbox(textContent, textboxElementOption) as TextboxElement
-      textboxElement.left = elementLeft
-      textboxElement.top = elementTop
-      setElementFill(textboxElement)
-      canvas.add(textboxElement)
-      setZindex(canvas)
-    }
-    else if (element.type === ElementNames.TEXT) {
-      const textboxElementOption = element as TextboxOption
-      const textContent = textboxElementOption.text
-      const textboxElement = new fabric.Text(textContent, textboxElementOption) as TextboxElement
-      textboxElement.left = elementLeft
-      textboxElement.top = elementTop
-      setElementFill(textboxElement)
-      canvas.add(textboxElement)
-      setZindex(canvas)
-    }
-    else if (element.type === ElementNames.PATH) {
-      const pathOption = element as PathOption
-      const clipPath = getElementClippath(pathOption)
-      if (clipPath) pathOption.clipPath = clipPath
-      const pathElement = new fabric.Path(pathOption.path, pathOption) as PathElement
-      pathElement.left = elementLeft
-      pathElement.top = elementTop
-      setElementFill(pathElement)
-      canvas.add(pathElement)
-      setZindex(canvas)
-    }
-    else if (element.type === ElementNames.RECT) {
-      const rectOption = element as RectOption
-      const clipPath = getElementClippath(rectOption)
-      if (clipPath) rectOption.clipPath = clipPath
-      const rectElement = new fabric.Rect(rectOption as Record<string, any>) as RectElement
-      rectElement.left = elementLeft
-      rectElement.top = elementTop
-      setElementFill(rectElement)
-      canvas.add(rectElement)
-      setZindex(canvas)
-    }
-    else if (element.type === ElementNames.POLYGON) {
-      const polygonElementOption = element as PolygonOption
-      const polygonElement = new fabric.Polygon(polygonElementOption.points, polygonElementOption) as PolygonElement
-      polygonElement.left = elementLeft
-      polygonElement.top = elementTop
-      setElementFill(polygonElement)
-      canvas.add(polygonElement)
-      setZindex(canvas)
-    }
-    else if (element.type === ElementNames.GROUP) {
-      const groupOption = element as GroupOption
-      const groupOptionIds: string[] = []
-      groupOption.objects.forEach(item => {
-        createElement(item)
-        groupOptionIds.push(item.id)
-      })
-      const groupObjects = canvas.getObjects().filter(item => groupOptionIds.includes((item as CanvasElement).id)) as CanvasElement[]
-      const groupElement = new fabric.Group([], groupOption)
-      groupElement.add(...groupObjects)
-      canvas.remove(...groupObjects)
-      groupElement.left = elementLeft
-      groupElement.top = elementTop
-      canvas.add(groupElement)
-      setZindex(canvas)
-    }
-  } 
+  // const createElement = async (element: CanvasOption) => {
+  //   const [ canvas ] = useCanvas()
+  //   const { centerPoint } = useCenter()
+  //   if (!element.left || !element.top) return
+  //   const elementLeft = element.left + centerPoint.x
+  //   const elementTop = element.top + centerPoint.y
+  //   if (element.type === ElementNames.IMAGE) {
+  //     const imageOption = element as ImageOption
+  //     const CropImage = classRegistry.getClass('cropimage')
+  //     const imageElement = await CropImage.fromURL(imageOption.src)
+  //     if (typeof imageElement.isCropping === 'undefined') {
+  //       extendWithCropImage(imageElement)
+  //     }
+  //     imageElement.set(imageOption)
+  //     imageElement.left = elementLeft 
+  //     imageElement.top = elementTop
+  //     canvas.add(imageElement)
+  //     setZindex(canvas)
+  //   }
+  //   else if (element.type === ElementNames.TEXTBOX) {
+  //     const textboxElementOption = element as TextboxOption
+  //     const textContent = textboxElementOption.text
+  //     const textboxElement = new fabric.Textbox(textContent, textboxElementOption) as TextboxElement
+  //     textboxElement.left = elementLeft
+  //     textboxElement.top = elementTop
+  //     setElementFill(textboxElement)
+  //     canvas.add(textboxElement)
+  //     setZindex(canvas)
+  //   }
+  //   else if (element.type === ElementNames.TEXT) {
+  //     const textboxElementOption = element as TextboxOption
+  //     const textContent = textboxElementOption.text
+  //     const textboxElement = new fabric.Text(textContent, textboxElementOption) as TextboxElement
+  //     textboxElement.left = elementLeft
+  //     textboxElement.top = elementTop
+  //     setElementFill(textboxElement)
+  //     canvas.add(textboxElement)
+  //     setZindex(canvas)
+  //   }
+  //   else if (element.type === ElementNames.PATH) {
+  //     const pathOption = element as PathOption
+  //     const clipPath = getElementClippath(pathOption)
+  //     if (clipPath) pathOption.clipPath = clipPath
+  //     const pathElement = new fabric.Path(pathOption.path, pathOption) as PathElement
+  //     pathElement.left = elementLeft
+  //     pathElement.top = elementTop
+  //     setElementFill(pathElement)
+  //     canvas.add(pathElement)
+  //     setZindex(canvas)
+  //   }
+  //   else if (element.type === ElementNames.RECT) {
+  //     const rectOption = element as RectOption
+  //     const clipPath = getElementClippath(rectOption)
+  //     if (clipPath) rectOption.clipPath = clipPath
+  //     const rectElement = new fabric.Rect(rectOption as Record<string, any>) as RectElement
+  //     rectElement.left = elementLeft
+  //     rectElement.top = elementTop
+  //     setElementFill(rectElement)
+  //     canvas.add(rectElement)
+  //     setZindex(canvas)
+  //   }
+  //   else if (element.type === ElementNames.POLYGON) {
+  //     const polygonElementOption = element as PolygonOption
+  //     const polygonElement = new fabric.Polygon(polygonElementOption.points, polygonElementOption) as PolygonElement
+  //     polygonElement.left = elementLeft
+  //     polygonElement.top = elementTop
+  //     setElementFill(polygonElement)
+  //     canvas.add(polygonElement)
+  //     setZindex(canvas)
+  //   }
+  //   else if (element.type === ElementNames.GROUP) {
+  //     const groupOption = element as GroupOption
+  //     const groupOptionIds: string[] = []
+  //     groupOption.objects.forEach(item => {
+  //       createElement(item)
+  //       groupOptionIds.push(item.id)
+  //     })
+  //     const groupObjects = canvas.getObjects().filter(item => groupOptionIds.includes((item as CanvasElement).id)) as CanvasElement[]
+  //     const groupElement = new fabric.Group([], groupOption)
+  //     groupElement.add(...groupObjects)
+  //     canvas.remove(...groupObjects)
+  //     groupElement.left = elementLeft
+  //     groupElement.top = elementTop
+  //     canvas.add(groupElement)
+  //     setZindex(canvas)
+  //   }
+  // } 
 
   const sortElement = async (newIndex: number, oldIndex: number, option: CanvasOption) => {
     if (oldIndex === newIndex) return
@@ -533,7 +533,7 @@ export default () => {
   }
 
   return {
-    createElement,
+    // createElement,
     sortElement,
     lockElement,
     copyElement,

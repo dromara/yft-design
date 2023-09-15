@@ -337,7 +337,7 @@ const initCanvas = () => {
   new GuideLines(canvas)
   new HoverBorders(canvas)
   new WheelScroll(canvas)
-  new Ruler(canvas)
+  // new Ruler(canvas)
   canvas.preserveObjectStacking = true
   canvas.renderAll()
 }
