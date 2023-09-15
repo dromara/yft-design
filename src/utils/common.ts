@@ -42,3 +42,5 @@ export const clamp = (value: number, minValue: number, maxValue: number) => {
 export const isMobile = () => {
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 }
+
+export const PiBy180 = Math.PI / 180
