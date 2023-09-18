@@ -161,50 +161,39 @@ const { canUndo, canRedo } = storeToRefs(useSnapshotStore())
 
 const { redo, undo } = useHistorySnapshot()
 
-const canGroup = ref(false)
-const canUnGroup = ref(false)
-
-const lock = ref(false)
-
 const handleElement = computed(() => canvasObject.value as CanvasElement)
+
+const canGroup = computed(() => {
+  if (!handleElement.value) return false
+  return handleElement.value.type === ElementNames.ACTIVE
+})
+const canUnGroup = computed(() => {
+  if (!handleElement.value) return false
+  return handleElement.value.type === ElementNames.GROUP
+})
+
+const lock = computed(() => {
+  if (!handleElement.value) return false
+  return handleElement.value.lockMovementX && handleElement.value.lockMovementY ? true : false
+})
 
 // 锁定解锁
 const changeElementLock = (status: boolean) => {
-  lock.value = status
   if (!handleElement.value) return
-  handleElement.value.lockMovementX = status
-  handleElement.value.lockMovementY = status
+  handleElement.value.lockMovementY = handleElement.value.lockMovementX = status
 }
 
 // 组合
 const group = () => {
-  const [ canvas ] = useCanvas()
-  const activeObject = canvas.getActiveObject() as GroupElement
-  if (!activeObject || activeObject.type !== ElementNames.ACTIVE) return
+  if (!handleElement.value || handleElement.value.type !== ElementNames.ACTIVE) return
   combineElements()
-  canGroup.value = false
-  canUnGroup.value = true
 }
 
 // 解除组合
 const ungroup = () => {
-  const [ canvas ] = useCanvas()
-  const groupObject = canvas.getActiveObject() as GroupElement
-  if (!groupObject || groupObject.type !== ElementNames.GROUP) return
+  if (!handleElement.value || handleElement.value.type !== ElementNames.GROUP) return
   uncombineElements()
-  canUnGroup.value = false
-  canGroup.value = true
 }
-
-// watch(handleElement, () => {
-//   canGroup.value = false
-//   canUnGroup.value = false
-//   if (!handleElement.value) return
-//   rotate.value = handleElement.value.angle ? handleElement.value.angle : rotate.value
-//   lock.value = handleElement.value.lockMovementX && handleElement.value.lockMovementX ? true : false
-//   canGroup.value = handleElement.value.type === ElementNames.ACTIVE
-//   canUnGroup.value = handleElement.value.type === ElementNames.GROUP
-// }, {deep: true})
 
 // 置顶
 const bringToFront = () => {

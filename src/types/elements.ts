@@ -11,7 +11,7 @@ export const enum ElementNames {
   QRCODE = 'qrcode',
   BARCODE = 'barcode',
   GROUP = 'group',
-  ACTIVE = 'activeSelection',
+  ACTIVE = 'activeselection',
   CIRCLE = 'circle'
 }
 
