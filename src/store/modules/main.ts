@@ -6,6 +6,7 @@ import { SYS_FONTS } from '@/configs/fonts'
 import { isSupportFont } from '@/utils/fonts'
 import { ExportTypes, PoolType } from '@/types/common'
 import { CanvasElement } from '@/types/canvas'
+import useCanvas from '@/views/Canvas/useCanvas'
 
 export interface MainState {
   canvasObject: CanvasElement | null
@@ -80,6 +81,13 @@ export const useMainStore = defineStore('main', {
     
     async setCanvasObject(canvasObject: CanvasElement | null) {
       this.canvasObject = canvasObject
+    },
+
+    setActiveObject() {
+      const [ canvas ] = useCanvas()
+      if (!canvas) return
+      const activeObject = canvas._activeObject as CanvasElement | null
+      // this.setCanvasObject(activeObject)
     },
     // setHandleElementId(handleElementId: string) {
     //   this.handleElementId = handleElementId

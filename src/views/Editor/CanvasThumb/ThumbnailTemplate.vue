@@ -62,7 +62,6 @@ watch(props ,() => {
 
 const setThumbnailElement = async () => {
   if (!thumbCanvas.value) return
-  console.log('props.template:', props.template)
   await thumbCanvas.value.loadFromJSON(props.template)
   const thumbWorkSpaceDraw = thumbCanvas.value.getObjects().filter(item => (item as CanvasElement).id === WorkSpaceDrawType)[0]
   thumbCanvas.value.getObjects().filter(item => (item as CanvasElement).name === WorkSpaceName && (item as CanvasElement).id !== WorkSpaceDrawType).map(item => (item as CanvasElement).visible = false)

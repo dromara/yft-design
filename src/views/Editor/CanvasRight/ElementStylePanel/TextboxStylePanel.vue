@@ -335,12 +335,12 @@ const handleElementStyleClear = () => {
   canvas.renderAll()
 }
 
-watch(handleElement, () => {
-  if (!handleElement.value) return
-  if (handleElement.value.fillType === 0 || !handleElement.value.fillType) {
-    handleElement.value.color = handleElement.value.fill as string
-  }
-})
+// watch(handleElement, () => {
+//   if (!handleElement.value) return
+//   if (handleElement.value.fillType === 0 || !handleElement.value.fillType) {
+//     handleElement.value.color = handleElement.value.fill as string
+//   }
+// })
 </script>
 
 <style lang="scss" scoped>

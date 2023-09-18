@@ -123,7 +123,8 @@ export class Ruler extends Disposable {
     if (value) {
       this.canvas.on(this.canvasEvents)
       this.render({ ctx: this.canvas.contextContainer })
-    } else {
+    } 
+    else {
       this.canvas.off(this.canvasEvents)
       this.canvas.requestRenderAll()
     }

@@ -161,16 +161,16 @@ const backgroundColor = ref('#fff')
 const outlineStyle = ref(0)
 const outlineWidth = ref(0)
 
-watch(handleGroupElement, () => {
-  if (!handleGroupElement.value) return
-  if (handleTextboxElement.value) {
-    fontColor.value = handleTextboxElement.value.fill as string
-  }
-  if (handleOutlineElement.value && handleOutlineElement.value.stroke && handleOutlineElement.value.strokeWidth) {
-    outlineColor.value = handleOutlineElement.value.stroke as string
-    outlineWidth.value = handleOutlineElement.value.strokeWidth
-  }
-})
+// watch(handleGroupElement, () => {
+//   if (!handleGroupElement.value) return
+//   if (handleTextboxElement.value) {
+//     fontColor.value = handleTextboxElement.value.fill as string
+//   }
+//   if (handleOutlineElement.value && handleOutlineElement.value.stroke && handleOutlineElement.value.strokeWidth) {
+//     outlineColor.value = handleOutlineElement.value.stroke as string
+//     outlineWidth.value = handleOutlineElement.value.strokeWidth
+//   }
+// })
 
 
 const fontOptionGroups = ref<FontGroupOption[]>([

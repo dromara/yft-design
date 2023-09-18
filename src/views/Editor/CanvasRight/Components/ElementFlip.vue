@@ -33,10 +33,10 @@ onUnmounted(() => {
   handleFlip.value = []
 })
 
-watch(handleElement, () => {
-  handleFlip.value = []
-  checkElementFlip()
-})
+// watch(handleElement, () => {
+//   handleFlip.value = []
+//   checkElementFlip()
+// })
 
 const checkElementFlip = () => {
   if (handleElement.value && (handleElement.value.name === ElementNames.IMAGE || handleElement.value.type === ElementNames.PATH)) {

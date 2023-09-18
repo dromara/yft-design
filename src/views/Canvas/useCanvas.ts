@@ -345,20 +345,10 @@ const initCanvas = () => {
 // 初始化模板
 const initTemplate = async () => {
   if (!canvas) return
-  const { setCanvasSize } = useCanvasScale()
   const templatesStore = useTemplatesStore()
-  
-  // const { createElement } = useHandleElement()
   const { currentTemplate } = storeToRefs(templatesStore)
   await canvas.loadFromJSON(currentTemplate.value)
-  // canvas.renderAll()
   setCanvasTransform()
-  // currentTemplate.value.objects.forEach(element => {
-  //   createElement(element)
-  // })
-  // for (let i = 0; i < currentTemplate.value.objects.length; i++) {
-  //   const element = currentTemplate.value.objects[i]
-  // }
 }
 
 // 初始化背景
@@ -423,14 +413,10 @@ const initEditor = () => {
   initCanvas()
   // initWorks()
   initTemplate()
-  // initBackground()
   const { width, height } = useElementBounding(wrapperRef.value)
   watch([width, height], () => {
     setCanvasTransform()
   })
-  // watchEffect(() => {
-  //   setCanvasSize(width.value, height.value)
-  // })
 }
 
 export const toggleSelection = (selection?: boolean) => {

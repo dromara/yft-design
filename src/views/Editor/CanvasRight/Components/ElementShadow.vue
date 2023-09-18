@@ -88,18 +88,18 @@ const shadowColor = ref('#000000')
 
 const handleElement = computed(() => canvasObject.value as CanvasElement)
 
-watch(handleElement, () => {
-  if (!handleElement.value) return
+// watch(handleElement, () => {
+//   if (!handleElement.value) return
   
-  shadow.value = handleElement.value.shadow ? handleElement.value.shadow : undefined
-  hasShadow.value = shadow.value ? true : false
-  if (hasShadow.value) {
-    offsetX.value = (shadow.value as fabric.Shadow).offsetX
-    offsetY.value = (shadow.value as fabric.Shadow).offsetY
-    blur.value = (shadow.value as fabric.Shadow).blur
-  }
+//   shadow.value = handleElement.value.shadow ? handleElement.value.shadow : undefined
+//   hasShadow.value = shadow.value ? true : false
+//   if (hasShadow.value) {
+//     offsetX.value = (shadow.value as fabric.Shadow).offsetX
+//     offsetY.value = (shadow.value as fabric.Shadow).offsetY
+//     blur.value = (shadow.value as fabric.Shadow).blur
+//   }
   
-})
+// })
 
 const updateShadowColor = (color: string) => {
   shadowColor.value = color

@@ -126,20 +126,20 @@ const isVerticalText = computed(() => {
   return handleElement.value?.type === 'text' && handleElement.value.vertical
 })
 
-watch(handleElement, () => {
-  if (!handleElement.value) return
+// watch(handleElement, () => {
+//   if (!handleElement.value) return
 
-  left.value = handleElement.value.left
-  top.value = handleElement.value.top
+//   left.value = handleElement.value.left
+//   top.value = handleElement.value.top
 
-  fixedRatio.value = 'fixedRatio' in handleElement.value && !!handleElement.value.fixedRatio
+//   fixedRatio.value = 'fixedRatio' in handleElement.value && !!handleElement.value.fixedRatio
 
-  if (handleElement.value.type !== 'line') {
-    width.value = handleElement.value.width
-    height.value = handleElement.value.height
-    rotate.value = 'rotate' in handleElement.value && handleElement.value.rotate !== undefined ? round(handleElement.value.rotate, 1) : 0
-  }
-}, { deep: true, immediate: true })
+//   if (handleElement.value.type !== 'line') {
+//     width.value = handleElement.value.width
+//     height.value = handleElement.value.height
+//     rotate.value = 'rotate' in handleElement.value && handleElement.value.rotate !== undefined ? round(handleElement.value.rotate, 1) : 0
+//   }
+// }, { deep: true, immediate: true })
 
 
 // 设置元素位置

@@ -45,12 +45,12 @@ const sourcePattern = ref<string>(PatternImages[0].name)
 
 
 
-watch(handleElement, () => {
-  if (!handleElement.value) return
+// watch(handleElement, () => {
+//   if (!handleElement.value) return
   
-  hasPattern.value = handleElement.value.fillType === 1
+//   hasPattern.value = handleElement.value.fillType === 1
   
-})
+// })
 
 const updatePatternElement = async () => {
   const imageURL = PatternImages.filter(item => item.name === sourcePattern.value)[0].url

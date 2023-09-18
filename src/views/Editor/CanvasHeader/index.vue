@@ -196,15 +196,15 @@ const ungroup = () => {
   canGroup.value = true
 }
 
-watch(handleElement, () => {
-  canGroup.value = false
-  canUnGroup.value = false
-  if (!handleElement.value) return
-  rotate.value = handleElement.value.angle ? handleElement.value.angle : rotate.value
-  lock.value = handleElement.value.lockMovementX && handleElement.value.lockMovementX ? true : false
-  canGroup.value = handleElement.value.type === ElementNames.ACTIVE
-  canUnGroup.value = handleElement.value.type === ElementNames.GROUP
-}, {deep: true})
+// watch(handleElement, () => {
+//   canGroup.value = false
+//   canUnGroup.value = false
+//   if (!handleElement.value) return
+//   rotate.value = handleElement.value.angle ? handleElement.value.angle : rotate.value
+//   lock.value = handleElement.value.lockMovementX && handleElement.value.lockMovementX ? true : false
+//   canGroup.value = handleElement.value.type === ElementNames.ACTIVE
+//   canUnGroup.value = handleElement.value.type === ElementNames.GROUP
+// }, {deep: true})
 
 // 置顶
 const bringToFront = () => {

@@ -11,10 +11,10 @@ export const useMouseUp = (evt: any) => {
   const mainStore = useMainStore()
   const { elementCoords, elementHover, verticalLines, horizontalLines, isDragging } = storeToRefs(fabricStore)
   const [ canvas ] = useCanvas()
-  if (isDragging.value) fabricStore.setIsDraggingState(false)
-  verticalLines.value.length = 0
-  horizontalLines.value.length = 0
-  elementCoords.value.length = 0
-  elementHover.value = ''
-  mainStore.setCanvasObject(canvas.getActiveObject() ? canvas.getActiveObject() as CanvasElement : null)
+  // if (isDragging.value) fabricStore.setIsDraggingState(false)
+  // verticalLines.value.length = 0
+  // horizontalLines.value.length = 0
+  // elementCoords.value.length = 0
+  // elementHover.value = ''
+  // mainStore.setCanvasObject(canvas.getActiveObject() ? canvas.getActiveObject() as CanvasElement : null)
 }

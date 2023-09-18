@@ -44,10 +44,10 @@ const handleElement = computed(() => canvasObject.value as CanvasElement)
 const hasOutline = ref(false)
 const outlineStyle = ref(0)
 
-watch(handleElement, () => {
-  if (!handleElement.value) return
-  hasOutline.value = handleElement.value.stroke ? true : false
-})
+// watch(handleElement, () => {
+//   if (!handleElement.value) return
+//   hasOutline.value = handleElement.value.stroke ? true : false
+// })
 
 const toggleOutline = (status: boolean) => {
   if (!handleElement.value) return

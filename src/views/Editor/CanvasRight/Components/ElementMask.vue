@@ -80,19 +80,19 @@ const changeImageFilter = () => {
   canvas.renderAll()
 }
 
-watch(handleElement, () => {
-  if (!handleElement.value || handleElement.value.type !== 'image') return
-  // @ts-ignore
-  const blendColorFilter = handleElement.value.filters?.filter(obj => obj.type === BlendColorFilter)[0] as filters.BlendColor
-  if (blendColorFilter) {
-    hasColorMask.value = true
-    maskColor.value = blendColorFilter.color
-    maskAlpha.value = blendColorFilter.alpha
-  }
-  else {
-    hasColorMask.value = false
-  }
-})
+// watch(handleElement, () => {
+//   if (!handleElement.value || handleElement.value.type !== 'image') return
+//   // @ts-ignore
+//   const blendColorFilter = handleElement.value.filters?.filter(obj => obj.type === BlendColorFilter)[0] as filters.BlendColor
+//   if (blendColorFilter) {
+//     hasColorMask.value = true
+//     maskColor.value = blendColorFilter.color
+//     maskAlpha.value = blendColorFilter.alpha
+//   }
+//   else {
+//     hasColorMask.value = false
+//   }
+// })
 
 const toggleColorMask = (status: boolean) => {
   if (!handleElement.value) return

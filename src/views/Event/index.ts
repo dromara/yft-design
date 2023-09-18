@@ -17,7 +17,7 @@ import { useTextEditingExited } from "./useTextEditingExited"
 export const initEvent = () => {
   const [ canvas ] = useCanvas()
   if (!canvas) return
-  // canvas.on('mouse:down', useMouseDown)
+  canvas.on('mouse:down', useMouseDown)
   // canvas.on('mouse:move', useMouseMove)
   // canvas.on('mouse:up', useMouseUp)
   // canvas.on('mouse:wheel', useMouseWheel)

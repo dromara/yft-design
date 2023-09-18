@@ -276,17 +276,17 @@ const hasFilters = ref(false)
 
 
 
-watch(handleElement, () => {
-  if (!handleElement.value || handleElement.value.type !== ElementNames.IMAGE) return
+// watch(handleElement, () => {
+//   if (!handleElement.value || handleElement.value.type !== ElementNames.IMAGE) return
 
-  const filters = handleElement.value.filters?.filter(obj => obj.type !== 'BlendColor')
-  if (filters && filters.length > 0) {
-    hasFilters.value = true
-  }
-  else {
-    colorMatrix.value = JSON.parse(JSON.stringify(defaultFilters))
-  }
-})
+//   const filters = handleElement.value.filters?.filter(obj => obj.type !== 'BlendColor')
+//   if (filters && filters.length > 0) {
+//     hasFilters.value = true
+//   }
+//   else {
+//     colorMatrix.value = JSON.parse(JSON.stringify(defaultFilters))
+//   }
+// })
 
 // 图片灰度
 const changeGrayScaleMode = (mode: string) => {

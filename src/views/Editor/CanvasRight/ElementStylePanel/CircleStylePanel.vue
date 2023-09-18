@@ -33,10 +33,10 @@ const handleElement = computed(() => canvasObject.value as PathElement)
 const fillType = ref<number>(0)
 
 
-watch(handleElement, () => {
-  if (!handleElement.value) return
-  if (typeof handleElement.value.fill !== 'string') fillType.value = 1
-})
+// watch(handleElement, () => {
+//   if (!handleElement.value) return
+//   if (typeof handleElement.value.fill !== 'string') fillType.value = 1
+// })
 
 
 </script>

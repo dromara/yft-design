@@ -3,7 +3,7 @@ import { Templates } from '@/mocks/templates'
 import { Template, CanvasElement } from '@/types/canvas'
 import { toObjectFilter, WorkSpaceName } from '@/configs/canvas'
 import useCanvasScale from '@/hooks/useCanvasScale'
-import useCanvas, { initWorks, initBackground } from '@/views/Canvas/useCanvas'
+import useCanvas from '@/views/Canvas/useCanvas'
 import useHistorySnapshot from '@/hooks/useHistorySnapshot'
 
 import useCenter from '@/views/Canvas/useCenter'
@@ -109,7 +109,6 @@ export const useTemplatesStore = defineStore('Templates', {
       //   element.left -= centerPoint.x
       //   element.top -= centerPoint.y
       // }
-      console.log('canvasTemplate:', canvasTemplate)
       this.templates[this.templateIndex].objects = canvasTemplate.objects
       this.templates[this.templateIndex].background = canvasTemplate.background
       this.templates[this.templateIndex].backgroundImage = canvasTemplate.backgroundImage
