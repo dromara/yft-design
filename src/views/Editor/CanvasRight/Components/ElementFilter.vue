@@ -3,10 +3,10 @@
     <div class="row">
       <div style="flex: 2;"><b>启用滤镜：</b></div>
       <div class="switch-wrapper" style="flex: 3;">
-        <el-switch v-model="hasFilters" @change="toggleFilters(hasFilters)"></el-switch>
+        <el-switch v-model="openFilter" @change="toggleFilters"></el-switch>
       </div>
     </div>
-    <div class="filter" v-if="hasFilters">
+    <div class="filter" v-if="openFilter">
       <el-row class="mt-10">
         <el-col :span="5">灰度：</el-col>
       </el-row>
@@ -85,7 +85,7 @@
         <el-col :span="5" class="flex-align">亮度：</el-col>
         <el-col :span="2"></el-col>
         <el-col :span="11">
-          <el-slider class="slider-wrapper" :min="-1" :max="1" :step="0.01" v-model="brightness" @change="(value) => changeColorMode('Brightness', value)"></el-slider>
+          <el-slider class="slider-wrapper" :min="-1" :max="1" :step="0.01" v-model="brightness" @change="(value: number) => changeColorMode('Brightness', value)"></el-slider>
         </el-col>
         <el-col :span="4" class="slider-num">{{ brightness }}</el-col>
       </el-row>
@@ -94,7 +94,7 @@
         <el-col :span="5" class="flex-align">对比：</el-col>
         <el-col :span="2"></el-col>
         <el-col :span="11">
-          <el-slider class="slider-wrapper" :min="-1" :max="1" :step="0.01" v-model="contrast" @change="(value) => changeColorMode('Contrast', value)"></el-slider>
+          <el-slider class="slider-wrapper" :min="-1" :max="1" :step="0.01" v-model="contrast" @change="(value: number) => changeColorMode('Contrast', value)"></el-slider>
         </el-col>
         <el-col :span="4" class="slider-num">{{ contrast }}</el-col>
       </el-row>
@@ -103,7 +103,7 @@
         <el-col :span="5" class="flex-align">饱和：</el-col>
         <el-col :span="2"></el-col>
         <el-col :span="11">
-          <el-slider class="slider-wrapper" :min="-1" :max="1" :step="0.01" v-model="saturation" @change="(value) => changeColorMode('Saturation', value)"></el-slider>
+          <el-slider class="slider-wrapper" :min="-1" :max="1" :step="0.01" v-model="saturation" @change="(value: number) => changeColorMode('Saturation', value)"></el-slider>
         </el-col>
         <el-col :span="4" class="slider-num">{{ saturation }}</el-col>
       </el-row>
@@ -112,7 +112,7 @@
         <el-col :span="5" class="flex-align">鲜艳：</el-col>
         <el-col :span="2"></el-col>
         <el-col :span="11">
-          <el-slider class="slider-wrapper" :min="-1" :max="1" :step="0.01" v-model="vibrance" @change="(value) => changeColorMode('Vibrance', value)"></el-slider>
+          <el-slider class="slider-wrapper" :min="-1" :max="1" :step="0.01" v-model="vibrance" @change="(value: number) => changeColorMode('Vibrance', value)"></el-slider>
         </el-col>
         <el-col :span="4" class="slider-num">{{ vibrance }}</el-col>
       </el-row>
@@ -121,7 +121,7 @@
         <el-col :span="5" class="flex-align">色调：</el-col>
         <el-col :span="2"></el-col>
         <el-col :span="11">
-          <el-slider class="slider-wrapper" :min="-2" :max="2" :step="0.002" v-model="hue" @change="(value) => changeColorMode('Hue', value)"></el-slider>
+          <el-slider class="slider-wrapper" :min="-2" :max="2" :step="0.002" v-model="hue" @change="(value: number) => changeColorMode('Hue', value)"></el-slider>
         </el-col>
         <el-col :span="4" class="slider-num">{{ hue }}</el-col>
       </el-row>
@@ -130,7 +130,7 @@
         <el-col :span="5" class="flex-align">噪音：</el-col>
         <el-col :span="2"></el-col>
         <el-col :span="11">
-          <el-slider class="slider-wrapper" :min="0" :max="1000" :step="100" v-model="noise" @change="(value) => changeColorMode('Noise', value)"></el-slider>
+          <el-slider class="slider-wrapper" :min="0" :max="1000" :step="100" v-model="noise" @change="(value: number) => changeColorMode('Noise', value)"></el-slider>
         </el-col>
         <el-col :span="4" class="slider-num">{{ noise }}</el-col>
       </el-row>
@@ -139,7 +139,7 @@
         <el-col :span="5" class="flex-align">像素：</el-col>
         <el-col :span="2"></el-col>
         <el-col :span="11">
-          <el-slider class="slider-wrapper" :min="2" :max="20" :step="1" v-model="pixelate" @change="(value) => changeColorMode('Pixelate', value)"></el-slider>
+          <el-slider class="slider-wrapper" :min="2" :max="20" :step="1" v-model="pixelate" @change="(value: number) => changeColorMode('Pixelate', value)"></el-slider>
         </el-col>
         <el-col :span="4" class="slider-num">{{ pixelate }}</el-col>
       </el-row>
@@ -148,7 +148,7 @@
         <el-col :span="5" class="flex-align">模糊：</el-col>
         <el-col :span="2"></el-col>
         <el-col :span="11">
-          <el-slider class="slider-wrapper" :min="-1" :max="1" :step="0.01" v-model="blur" @change="(value) => changeColorMode('Blur', value)"></el-slider>
+          <el-slider class="slider-wrapper" :min="-1" :max="1" :step="0.01" v-model="blur" @change="(value: number) => changeColorMode('Blur', value)"></el-slider>
         </el-col>
         <el-col :span="4" class="slider-num">{{ blur }}</el-col>
       </el-row>
@@ -209,7 +209,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useMainStore } from '@/store'
 import { filters } from 'fabric'
@@ -238,7 +238,7 @@ const defaultFilters: FilterOption[] = [
   { label: '灰度', key: 'grayscale', default: 0, value: 0, unit: '%', max: 100, step: 5 },
   { label: '饱和度', key: 'saturate', default: 100, value: 100, unit: '%', max: 200, step: 5 },
   { label: '色相', key: 'hue-rotate', default: 0, value: 0, unit: 'deg', max: 360, step: 10 },
-  { label: '不透明度', key: 'opacity', default: 100, value: 100, unit: '%', max: 100, step: 5 },
+  { label: '透明度', key: 'opacity', default: 100, value: 100, unit: '%', max: 100, step: 5 },
 ]
 
 interface RemoveColorOption {
@@ -262,31 +262,28 @@ const removeColor = ref<RemoveColorOption>({ distance: 0.5, color: '#fff'})
 // 伽马色
 const isGamma = ref(false)
 const gammaColor = ref<GammaColorOption>({ red: 0.2, green: 0.2, blue: 0.2 })
-const brightness = ref(0) // 亮度
-const contrast = ref(0) // 对比
-const saturation = ref(0) // 饱和
-const vibrance = ref(0) // 鲜艳
-const hue = ref(0) // 色调
-const noise = ref(0) // 噪音
-const pixelate = ref(0) // 像素
-const blur = ref(0) // 模糊
+const brightness = ref(0)    // 亮度
+const contrast = ref(0)      // 对比
+const saturation = ref(0)    // 饱和
+const vibrance = ref(0)      // 鲜艳
+const hue = ref(0)           // 色调
+const noise = ref(0)         // 噪音
+const pixelate = ref(0)      // 像素
+const blur = ref(0)          // 模糊
 // 矩阵
-const colorMatrix = ref<string[]>([])
-const hasFilters = ref(false)
+const colorMatrix = ref<string[]>(JSON.parse(JSON.stringify(defaultFilters)))
+// const hasFilters = ref(false)
 
+const hasFilter = computed(() => {
+  if (!handleElement.value || handleElement.value.type !== ElementNames.IMAGE) return false
+    const filters = handleElement.value.filters.filter(obj => obj.type !== 'BlendColor')
+    if (filters && filters.length > 0) {
+      return true
+    }
+    return false
+})
 
-
-// watch(handleElement, () => {
-//   if (!handleElement.value || handleElement.value.type !== ElementNames.IMAGE) return
-
-//   const filters = handleElement.value.filters?.filter(obj => obj.type !== 'BlendColor')
-//   if (filters && filters.length > 0) {
-//     hasFilters.value = true
-//   }
-//   else {
-//     colorMatrix.value = JSON.parse(JSON.stringify(defaultFilters))
-//   }
-// })
+const openFilter = ref<boolean>(hasFilter.value)
 
 // 图片灰度
 const changeGrayScaleMode = (mode: string) => {
@@ -295,8 +292,7 @@ const changeGrayScaleMode = (mode: string) => {
   if (!handleElement.value.filters) handleElement.value.filters = []
   mode === grayScaleMode.value ? grayScaleMode.value = '' : grayScaleMode.value = mode
   if (grayScaleMode.value) {
-    // @ts-ignore
-    handleElement.value.filters.push(new filters.Grayscale({mode: grayScaleMode.value}))
+    handleElement.value.filters.push(new filters.Grayscale({mode: grayScaleMode.value}) as filters.BaseFilter)
     elementFilters.value.push(grayScaleType)
   }
   else {
@@ -309,17 +305,15 @@ const changeGrayScaleMode = (mode: string) => {
 
 const changeFilters = () => {
   if (!handleElement.value) return
-  if (!handleElement.value.filters) handleElement.value.filters = []
   elementFilters.value.forEach(item => {
-    const itemFilter = handleElement.value.filters?.filter(obj => obj.type === item)[0]
+    const itemFilter = handleElement.value.filters.filter(obj => obj.type === item)[0]
     if (!itemFilter) {
       if (item === 'Invert') {
-        // @ts-ignore
-        handleElement.value.filters?.push(new filters.Invert())
+        handleElement.value.filters.push(new filters.Invert() as filters.BaseFilter)
       }
       else if (item === 'Sepia') {
         // @ts-ignore
-        handleElement.value.filters?.push(new filters.Sepia())
+        handleElement.value.filters.push(new filters.Sepia())
       }
       else if (item === 'BlackWhite') {
         // @ts-ignore
@@ -331,7 +325,7 @@ const changeFilters = () => {
       }
       else if (item === 'Vintage') {
         // @ts-ignore
-        handleElement.value.filters?.push(new filters.Vintage())
+        handleElement.value.filters.push(new filters.Vintage())
       }
       else if (item === 'Technicolor') {
         // @ts-ignore
@@ -355,8 +349,7 @@ const changeFilters = () => {
     handleElement.value.filters?.push(new filters.Convolute({matrix: [ 0, -1,  0, -1,  5, -1, 0, -1,  0 ]}))
   }
   if (elementFilters.value.includes('Emboss')) {
-    // @ts-ignore
-    handleElement.value.filters?.push(new filters.Convolute({matrix: [ 1,   1,  1,  1, 0.7, -1, -1,  -1, -1 ]}))
+    handleElement.value.filters?.push(new filters.Convolute({matrix: [ 1,   1,  1,  1, 0.7, -1, -1,  -1, -1 ]}) as filters.BaseFilter)
   }
   handleElement.value.applyFilters()
   canvas.renderAll()
@@ -372,8 +365,7 @@ const updateRemoveColor = (color: string) => {
   })
   removeColor.value.color = color
   handleElement.value.filters = handleElement.value.filters.filter(obj => obj.type !== 'RemoveColor')
-  // @ts-ignore
-  handleElement.value.filters.push(removeColorFilter)
+  handleElement.value.filters.push(removeColorFilter as filters.BaseFilter)
   handleElement.value.applyFilters()
 }
 
@@ -386,8 +378,7 @@ const updateRemoveDistance = () => {
     color: removeColor.value.color,
   })
   handleElement.value.filters = handleElement.value.filters.filter(obj => obj.type !== 'RemoveColor')
-  // @ts-ignore
-  handleElement.value.filters.push(removeColorFilter)
+  handleElement.value.filters.push(removeColorFilter as filters.BaseFilter)
   handleElement.value.applyFilters()
 }
 
@@ -426,79 +417,70 @@ const openGamaColor = () => {
   }
 }
 
-// 修改亮度
+// 修改色彩模式
 const changeColorMode = (type: string, value: number) => {
   if (!handleElement.value) return
-  if (!handleElement.value.filters) handleElement.value.filters = []
   if (type === 'Brightness') {
     brightness.value = value
     const brightnessFilter = new filters.Brightness({brightness: brightness.value})
     handleElement.value.filters = handleElement.value.filters.filter(obj => obj.type !== type)
-    // @ts-ignore
-    handleElement.value.filters.push(brightnessFilter)
+    handleElement.value.filters.push(brightnessFilter as filters.BaseFilter)
   }
   else if (type === 'Contrast') {
     contrast.value = value
     const contrastFilter = new filters.Contrast({contrast: contrast.value})
     handleElement.value.filters = handleElement.value.filters.filter(obj => obj.type !== type)
-    // @ts-ignore
-    handleElement.value.filters.push(contrastFilter)
+    handleElement.value.filters.push(contrastFilter as filters.BaseFilter)
   }
   else if (type === 'Saturation') {
     saturation.value = value
     const saturationFilter = new filters.Saturation({saturation: saturation.value})
     handleElement.value.filters = handleElement.value.filters.filter(obj => obj.type !== type)
-    // @ts-ignore
-    handleElement.value.filters.push(saturationFilter)
+    handleElement.value.filters.push(saturationFilter as filters.BaseFilter)
   }
   else if (type === 'Vibrance') {
     vibrance.value = value
     const vibranceFilter = new filters.Vibrance({vibrance: vibrance.value})
     handleElement.value.filters = handleElement.value.filters.filter(obj => obj.type !== type)
-    // @ts-ignore
-    handleElement.value.filters.push(vibranceFilter)
+    handleElement.value.filters.push(vibranceFilter as filters.BaseFilter)
   }
   else if (type === 'Hue') {
     hue.value = value
     const hueFilter = new filters.HueRotation({rotation: hue.value})
     handleElement.value.filters = handleElement.value.filters.filter(obj => obj.type !== type)
-    // @ts-ignore
-    handleElement.value.filters.push(hueFilter)
+    handleElement.value.filters.push(hueFilter as filters.BaseFilter)
   }
   else if (type === 'Noise') {
     noise.value = value
     const noiseFilter = new filters.Noise({noise: noise.value})
     handleElement.value.filters = handleElement.value.filters.filter(obj => obj.type !== type)
-    // @ts-ignore
-    handleElement.value.filters.push(noiseFilter)
+    handleElement.value.filters.push(noiseFilter as filters.BaseFilter)
   }
   else if (type === 'Pixelate') {
     pixelate.value = value
     const pixelateFilter = new filters.Pixelate({blocksize: pixelate.value})
     handleElement.value.filters = handleElement.value.filters.filter(obj => obj.type !== type)
-    // @ts-ignore
-    handleElement.value.filters.push(pixelateFilter)
+    handleElement.value.filters.push(pixelateFilter as filters.BaseFilter)
   }
   else if (type === 'Blur') {
     blur.value = value
     const blurFilter = new filters.Blur({blur: blur.value})
     handleElement.value.filters = handleElement.value.filters.filter(obj => obj.type !== type)
-    // @ts-ignore
-    handleElement.value.filters.push(blurFilter)
+    handleElement.value.filters.push(blurFilter as filters.BaseFilter)
   }
   handleElement.value.applyFilters()
   canvas.renderAll()
 }
 
-const toggleFilters = () => {
-  // if (!handleElement.value) return
-  // if (checked) {
-  //   ({ id: handleElement.value.id, props: { filters: {} } })
-  // }
-  // else {
-  //   slidesStore.removeElementProps({ id: handleElement.value.id, propName: 'filters' })
-  // }
-  // 
+const toggleFilters = (checked: boolean) => {
+  if (!handleElement.value) return
+  if (checked) {
+    handleElement.value.filters.push({})
+  }
+  else {
+    handleElement.value.filters.length = 0
+  }
+  
 }
 </script>
 
