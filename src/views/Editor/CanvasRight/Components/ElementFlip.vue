@@ -1,17 +1,14 @@
 <template>
-  <!-- <div class="element-flip"> -->
-    <el-row>
-      <el-checkbox-group class="full-group" v-model="handleFlip" @change="changeElementFlip">
-        <el-checkbox-button label="flipY">
-          <IconFlipVertically />垂直翻转
-        </el-checkbox-button>
-        <el-checkbox-button label="flipX">
-          <IconFlipHorizontally />水平翻转
-        </el-checkbox-button>
-      </el-checkbox-group>
-    </el-row>
-    
-  <!-- </div> -->
+  <el-row>
+    <el-checkbox-group class="full-group" v-model="handleFlip" @change="changeElementFlip">
+      <el-checkbox-button label="flipY">
+        <IconFlipVertically />垂直翻转
+      </el-checkbox-button>
+      <el-checkbox-button label="flipX">
+        <IconFlipHorizontally />水平翻转
+      </el-checkbox-button>
+    </el-checkbox-group>
+  </el-row>
 </template>
 
 <script lang="ts" setup>
@@ -21,37 +18,32 @@ import { useMainStore } from '@/store'
 import { ElementNames } from '@/types/elements'
 import useCanvas from '@/views/Canvas/useCanvas'
 const { canvasObject } = storeToRefs(useMainStore())
-const handleFlip = ref<string[]>([])
+
 
 const handleElement = computed(() => canvasObject.value)
 
-onMounted(() => {
-  checkElementFlip()
-})
-
-onUnmounted(() => {
-  handleFlip.value = []
-})
-
-// watch(handleElement, () => {
-//   handleFlip.value = []
-//   checkElementFlip()
-// })
-
-const checkElementFlip = () => {
-  if (handleElement.value && (handleElement.value.name === ElementNames.IMAGE || handleElement.value.type === ElementNames.PATH)) {
-    if (handleElement.value.flipX && !handleFlip.value.includes('flipX')) {
-      handleFlip.value.push('flipX')
+const elementFlip = computed(() => {
+  let flips: string[] = []
+  if (!handleElement.value) return flips
+  const handleType = handleElement.value.type
+  if (handleType === ElementNames.IMAGE || handleType === ElementNames.PATH) {
+    if (handleElement.value.flipX) {
+      flips.push('flipX')
     }
-    if (handleElement.value.flipY && !handleFlip.value.includes('flipY')) {
-      handleFlip.value.push('flipY')
+    if (handleElement.value.flipY) {
+      flips.push('flipY')
     }
   }
-}
+  return flips
+})
+
+const handleFlip = ref<string[]>(elementFlip.value)
 
 const changeElementFlip = (value: string[]) => {
   const [ canvas ] = useCanvas()
-  if (handleElement.value && (handleElement.value.name === ElementNames.IMAGE || handleElement.value.type === ElementNames.PATH)) {
+  if (!handleElement.value) return
+  const handleType = handleElement.value.type
+  if (handleType === ElementNames.IMAGE || handleType === ElementNames.PATH) {
     handleElement.value.flipX = value.includes('flipX')
     handleElement.value.flipY = value.includes('flipY')
   }

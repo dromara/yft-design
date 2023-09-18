@@ -3,19 +3,10 @@
     <div class="row">
       <div style="flex: 1;"><b>启用蒙版：</b></div>
       <div class="switch-wrapper" style="flex: 1;">
-        <el-switch v-model="hasColorMask" @change="toggleColorMask(hasColorMask)"></el-switch>
+        <el-switch v-model="openColorMask" @change="toggleColorMask"></el-switch>
       </div>
     </div>
-    <template v-if="hasColorMask">
-      <!-- <div class="row" style="margin-top: 15px;">
-        <div style="flex: 2;">蒙版颜色：</div>
-        <el-popover trigger="click" width="265">
-          <template #reference>
-            <ColorButton :color="maskColor" style="flex: 3;" />
-          </template>
-          <ColorPicker :modelValue="maskColor" @update:modelValue="color => updateMaskColor(color)"/>
-        </el-popover>
-      </div> -->
+    <template v-if="openColorMask">
       <el-row>
         <el-col :span="7" class="slider-name">蒙版颜色：</el-col>
         <el-col :span="3"></el-col>
@@ -41,11 +32,12 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useMainStore } from '@/store'
 import { ImageElement } from '@/types/canvas'
-import { filters, Gradient } from 'fabric'
+import { ElementNames } from '@/types/elements'
+import { filters } from 'fabric'
 import useCanvas from '@/views/Canvas/useCanvas'
 
 const BlendColorFilter = 'BlendColor'
@@ -54,8 +46,20 @@ const maskAlpha = ref(0.3)
 const [ canvas ] = useCanvas()
 const { canvasObject } = storeToRefs(useMainStore())
 
-const hasColorMask = ref(false)
+// const hasColorMask = ref(false)
+
 const handleElement = computed(() => canvasObject.value as ImageElement)
+const hasColorMask = computed(() => {
+  if (!handleElement.value || handleElement.value.type !== ElementNames.IMAGE) return false
+  const blendColorFilter = handleElement.value.filters.filter(obj => obj.type === BlendColorFilter)[0] as filters.BlendColor
+  if (blendColorFilter) {
+    maskColor.value = blendColorFilter.color
+    maskAlpha.value = blendColorFilter.alpha
+    return true
+  }
+  return false
+})
+const openColorMask = ref(hasColorMask.value)
 
 const updateMaskColor = (color: string) => {
   maskColor.value = color
@@ -67,52 +71,34 @@ const updateMaskAlpha = () => {
 }
 
 const changeImageFilter = () => {
-  
   const blendFilter = new filters.BlendColor({
     color: maskColor.value,
     mode: 'add',
     alpha: maskAlpha.value
   })
-  handleElement.value.filters = handleElement.value.filters?.filter(obj => obj.type !== BlendColorFilter)
-  // @ts-ignore
-  handleElement.value.filters?.push(blendFilter)
+  handleElement.value.filters = handleElement.value.filters.filter(obj => obj.type !== BlendColorFilter)
+  handleElement.value.filters.push(blendFilter as filters.BaseFilter)
   handleElement.value.applyFilters()
   canvas.renderAll()
 }
 
-// watch(handleElement, () => {
-//   if (!handleElement.value || handleElement.value.type !== 'image') return
-//   // @ts-ignore
-//   const blendColorFilter = handleElement.value.filters?.filter(obj => obj.type === BlendColorFilter)[0] as filters.BlendColor
-//   if (blendColorFilter) {
-//     hasColorMask.value = true
-//     maskColor.value = blendColorFilter.color
-//     maskAlpha.value = blendColorFilter.alpha
-//   }
-//   else {
-//     hasColorMask.value = false
-//   }
-// })
-
-const toggleColorMask = (status: boolean) => {
+const toggleColorMask = () => {
   if (!handleElement.value) return
   const [ canvas ] = useCanvas()
-  hasColorMask.value = status
-  if (hasColorMask.value) {
-    // @ts-ignore
-    const blendColorFilter = handleElement.value.filters?.filter(obj => obj.type === BlendColorFilter)[0]
+  if (openColorMask.value) {
+    const blendColorFilter = handleElement.value.filters.filter(obj => obj.type === BlendColorFilter)[0]
     if (!blendColorFilter) {
       const blendFilter = new filters.BlendColor({
         color: maskColor.value,
         mode: 'add',
         alpha: maskAlpha.value
       })
-      handleElement.value.filters.push(blendFilter)
+      handleElement.value.filters.push(blendFilter as filters.BaseFilter)
       handleElement.value.applyFilters()
     }
   }
   else {
-    handleElement.value.filters = handleElement.value.filters?.filter(obj => obj.type !== BlendColorFilter)
+    handleElement.value.filters = handleElement.value.filters.filter(obj => obj.type !== BlendColorFilter)
     handleElement.value.applyFilters()
   }
   canvas.renderAll()
