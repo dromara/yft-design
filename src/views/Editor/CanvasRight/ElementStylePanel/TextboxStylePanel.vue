@@ -78,12 +78,12 @@
           </el-checkbox-button>
         </el-tooltip>
         <el-tooltip placement="top" content="下划线" :hide-after="0">
-          <el-checkbox-button v-model="handleElement.underline" @change="handleElementLinethrough()">
+          <el-checkbox-button v-model="hasUnderline" @change="handleElementUnderline()">
             <IconTextUnderline />
           </el-checkbox-button>
         </el-tooltip>
         <el-tooltip placement="top" content="删除线" :hide-after="0">
-          <el-checkbox-button v-model="handleElement.linethrough" @change="handleElementUnderline()">
+          <el-checkbox-button v-model="hasLinethrough" @change="handleElementLinethrough()">
             <IconStrikethrough />
           </el-checkbox-button>
         </el-tooltip>
@@ -151,15 +151,6 @@
       </el-select>
     </div>
 
-    <!-- <div class="row">
-      <div style="flex: 2;">字间距：</div>
-      <el-select style="flex: 3" suffix-icon="IconFullwidth" v-model="handleElement.charSpacing">
-        <el-option v-for="item in CharSpaceLibs" :key="item" :value="item" :label="item"></el-option>
-      </el-select>
-    </div> -->
-
-    <!-- <el-divider />
-    <ElementGradient /> -->
     <el-divider />
     <ElementStroke />
     <el-divider />
@@ -193,7 +184,9 @@ const [ canvas ] = useCanvas()
 const handleElement = computed(() => canvasObject.value as TextboxElement)
 
 const hasFontWeight = ref(false)
-const hasFontStyle = ref(false)
+const hasFontStyle = computed(() => handleElement.value.fontStyle !== 'normal')
+const hasUnderline = computed(() => handleElement.value.underline)
+const hasLinethrough = computed(() => handleElement.value.linethrough)
 const fontOptionGroups = ref<FontGroupOption[]>([
   {
     label: '系统字体',
@@ -263,7 +256,7 @@ const handleElementBlod = () => {
   else {
     const elementStyle = handleElement.value.styles
     if (handleElement.value.fontWeight === fontBold) {
-      handleElement.value.fontWeight = fontNormal
+      handleElement.value.set({fontWeight: fontNormal})
       for (let i in elementStyle) {
         for (let j in elementStyle[i]) {
           elementStyle[i][j].fontWeight = fontNormal
@@ -285,47 +278,41 @@ const handleElementBlod = () => {
 
 // 修改斜体
 const handleElementItalic = () => {
-  if (handleElement.value.fontStyle === 'italic') {
-    handleElement.value.fontStyle = 'normal'
-    hasFontStyle.value = false
-  } 
-  else {
-    handleElement.value.fontStyle = 'italic'
-    hasFontStyle.value = true
-  }
+  const fontStyle = handleElement.value.fontStyle === 'italic' ? 'normal': 'italic'
+  handleElement.value.set({fontStyle})
   templatesStore.modifedElement()
   canvas.renderAll()
 }
 
 // 修改删除线
 const handleElementLinethrough = () => {
+  handleElement.value.set({linethrough: !handleElement.value.linethrough})
   templatesStore.modifedElement()
   canvas.renderAll()
 }
 
 // 修改中划线
 const handleElementUnderline = () => {
+  handleElement.value.set({underline: !handleElement.value.underline})
   templatesStore.modifedElement()
   canvas.renderAll()
 }
 
 // 修改字体居中
-const handleTextAlign = () => {
+const handleTextAlign = (textAlign: string) => {
+  handleElement.value.set({textAlign})
   templatesStore.modifedElement()
   canvas.renderAll()
 }
 
 // 修改缩进
 const handleElementCharSpacing = (mode: '+' | '-') => {
-  if (!handleElement.value.charSpacing) {
-    handleElement.value.charSpacing = 3
+  const handleCharSpacing = handleElement.value.charSpacing
+  if (!handleCharSpacing) {
+    handleElement.value.set({charSpacing: 3})
   }
-  if (mode === '+') {
-    handleElement.value.charSpacing += 10
-  }
-  else {
-    handleElement.value.charSpacing -= 10
-  }
+  const charSpacing = mode === '+' ? handleCharSpacing + 10 : handleCharSpacing - 10
+  handleElement.value.set({ charSpacing })
   templatesStore.modifedElement()
   canvas.renderAll()
 }
@@ -335,13 +322,6 @@ const handleElementStyleClear = () => {
   templatesStore.modifedElement()
   canvas.renderAll()
 }
-
-// watch(handleElement, () => {
-//   if (!handleElement.value) return
-//   if (handleElement.value.fillType === 0 || !handleElement.value.fillType) {
-//     handleElement.value.color = handleElement.value.fill as string
-//   }
-// })
 </script>
 
 <style lang="scss" scoped>

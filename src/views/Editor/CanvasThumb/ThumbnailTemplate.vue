@@ -58,7 +58,7 @@ onMounted(() => {
 watch(props ,() => {
   if (!thumbCanvas.value) return
   setThumbnailElement()
-}, { deep: true, immediate: true })
+}, { deep: true })
 
 const setThumbnailElement = async () => {
   if (!thumbCanvas.value) return
