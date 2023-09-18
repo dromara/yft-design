@@ -11,33 +11,11 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue'
-import { storeToRefs } from 'pinia'
-import { useMainStore } from '@/store'
-
 
 import ElementOpacity from '../Components/ElementOpacity.vue'
 import ElementOutline from '../Components/ElementOutline.vue'
 import ElementShadow from '../Components/ElementShadow.vue'
 import ElementFill from '../Backgrounds/ElementFill.vue'
-import useCanvas from '@/views/Canvas/useCanvas'
-import { PathElement } from '@/types/canvas'
-
-const mainStore = useMainStore()
-const { canvasObject } = storeToRefs(mainStore)
-
-const handleElement = computed(() => canvasObject.value as PathElement)
-
-
-// 填充类型
-const fillType = ref<number>(0)
-
-
-// watch(handleElement, () => {
-//   if (!handleElement.value) return
-//   if (typeof handleElement.value.fill !== 'string') fillType.value = 1
-// })
-
 
 </script>
 

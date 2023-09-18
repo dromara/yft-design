@@ -37,10 +37,6 @@ const { canvasObject } = storeToRefs(useMainStore())
 
 const hasStroke = ref(false)
 const handleStroke = computed(() => canvasObject.value as TextboxElement)
-// watch(handleStroke, () => {
-//   if (!handleStroke.value) return
-//   hasStroke.value = handleStroke.value.stroke ? true : false
-// })
 
 
 const updateStrokeColor = (color: string) => {

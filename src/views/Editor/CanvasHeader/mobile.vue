@@ -100,12 +100,11 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed } from 'vue'
 import { ElementNames } from '@/types/elements'
 import { storeToRefs } from 'pinia'
 import { CanvasOption } from '@/types/option'
-import { CanvasElement, GroupElement } from '@/types/canvas'
-import { WorkSpaceDrawType } from '@/configs/canvas'
+import { CanvasElement } from '@/types/canvas'
 import { useFabricStore, useMainStore, useSnapshotStore, useTemplatesStore } from "@/store"
 import useCanvas from '@/views/Canvas/useCanvas'
 import useCenter from '@/views/Canvas/useCenter'
@@ -144,50 +143,39 @@ const { canUndo, canRedo } = storeToRefs(useSnapshotStore())
 
 const { redo, undo } = useHistorySnapshot()
 
-const canGroup = ref(false)
-const canUnGroup = ref(false)
-
-const lock = ref(false)
-
 const handleElement = computed(() => canvasObject.value as CanvasElement)
+
+const canGroup = computed(() => {
+  if (!handleElement.value) return false
+  return handleElement.value.type === ElementNames.ACTIVE
+})
+const canUnGroup = computed(() => {
+  if (!handleElement.value) return false
+  return handleElement.value.type === ElementNames.GROUP
+})
+
+const lock = computed(() => {
+  if (!handleElement.value) return false
+  return handleElement.value.lockMovementX && handleElement.value.lockMovementY ? true : false
+})
 
 // 锁定解锁
 const changeElementLock = (status: boolean) => {
-  lock.value = status
   if (!handleElement.value) return
-  handleElement.value.lockMovementX = status
-  handleElement.value.lockMovementY = status
+  handleElement.value.lockMovementY = handleElement.value.lockMovementX = status
 }
 
 // 组合
 const group = () => {
-  const [ canvas ] = useCanvas()
-  const activeObject = canvas.getActiveObject() as GroupElement
-  if (!activeObject || activeObject.type !== ElementNames.ACTIVE) return
+  if (!handleElement.value || handleElement.value.type !== ElementNames.ACTIVE) return
   combineElements()
-  canGroup.value = false
-  canUnGroup.value = true
 }
 
 // 解除组合
 const ungroup = () => {
-  const [ canvas ] = useCanvas()
-  const groupObject = canvas.getActiveObject() as GroupElement
-  if (!groupObject || groupObject.type !== ElementNames.GROUP) return
+  if (!handleElement.value || handleElement.value.type !== ElementNames.GROUP) return
   uncombineElements()
-  canUnGroup.value = false
-  canGroup.value = true
 }
-
-// watch(handleElement, () => {
-//   canGroup.value = false
-//   canUnGroup.value = false
-//   if (!handleElement.value) return
-//   rotate.value = handleElement.value.angle ? handleElement.value.angle : rotate.value
-//   lock.value = handleElement.value.lockMovementX && handleElement.value.lockMovementX ? true : false
-//   canGroup.value = handleElement.value.type === ElementNames.ACTIVE
-//   canUnGroup.value = handleElement.value.type === ElementNames.GROUP
-// }, {deep: true})
 
 // 置顶
 const bringToFront = () => {
@@ -233,7 +221,6 @@ const sendBackwards = () => {
 // 左对齐
 const leftAlign = () => {
   if (!handleElement.value) return
-  const [ canvas ] = useCanvas()
   const { workSpaceDraw } = useCenter()
   if (!workSpaceDraw.left || !workSpaceDraw.width || !handleElement.value.width) return
   handleElement.value.left = workSpaceDraw.left + handleElement.value.width / 2 
@@ -241,7 +228,6 @@ const leftAlign = () => {
 // 水平居中
 const verticallyAlign = () => {
   if (!handleElement.value) return
-  const [ canvas ] = useCanvas()
   const { workSpaceDraw } = useCenter()
   if (!workSpaceDraw.left || !workSpaceDraw.width || !handleElement.value.width) return
   handleElement.value.left = workSpaceDraw.getCenterPoint().x
@@ -249,7 +235,6 @@ const verticallyAlign = () => {
 // 右对齐
 const rightAlign = () => {
   if (!handleElement.value) return
-  const [ canvas ] = useCanvas()
   const { workSpaceDraw } = useCenter()
   if (!workSpaceDraw.left || !workSpaceDraw.width || !handleElement.value.width) return
   handleElement.value.left = workSpaceDraw.left + workSpaceDraw.width - handleElement.value.width / 2
@@ -257,7 +242,6 @@ const rightAlign = () => {
 // 上对齐
 const topAlign = () => {
   if (!handleElement.value) return
-  const [ canvas ] = useCanvas()
   const { workSpaceDraw } = useCenter()
   if (!workSpaceDraw.top || !workSpaceDraw.height || !handleElement.value.height) return
   handleElement.value.top = workSpaceDraw.top + handleElement.value.height / 2 

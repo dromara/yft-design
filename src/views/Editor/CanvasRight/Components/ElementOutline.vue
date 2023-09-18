@@ -3,10 +3,10 @@
     <div class="row">
       <div style="flex: 2;"><b>启用边框：</b></div>
       <div class="switch-wrapper" style="flex: 3;">
-        <el-switch v-model="hasOutline" @change="toggleOutline(hasOutline)"></el-switch>
+        <el-switch v-model="openOutline" @change="toggleOutline"></el-switch>
       </div>
     </div>
-    <template v-if="hasOutline">
+    <template v-if="openOutline">
       <div class="row">
         <div style="flex: 2;">边框样式：</div>
         <el-select style="flex: 3;" v-model="outlineStyle" @change="changeOutlineStyle">
@@ -32,7 +32,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch, computed } from 'vue'
+import { ref, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useMainStore } from '@/store'
 import { CanvasElement } from '@/types/canvas'
@@ -40,18 +40,17 @@ import useCanvas from '@/views/Canvas/useCanvas'
 
 const [ canvas ] = useCanvas()
 const { canvasObject } = storeToRefs(useMainStore())
-const handleElement = computed(() => canvasObject.value as CanvasElement)
-const hasOutline = ref(false)
 const outlineStyle = ref(0)
+const handleElement = computed(() => canvasObject.value as CanvasElement)
+const hasOutline = computed(() => {
+    if (!handleElement.value) return false
+    return handleElement.value.stroke ? true : false
+})
+const openOutline = ref(hasOutline.value)
 
-// watch(handleElement, () => {
-//   if (!handleElement.value) return
-//   hasOutline.value = handleElement.value.stroke ? true : false
-// })
-
-const toggleOutline = (status: boolean) => {
+const toggleOutline = () => {
   if (!handleElement.value) return
-  if (status) {
+  if (openOutline.value) {
     handleElement.value.stroke = '#555'
     handleElement.value.strokeWidth = 1
   }

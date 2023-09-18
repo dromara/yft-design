@@ -3,10 +3,10 @@
     <div class="row">
       <div style="flex: 2; "><b>启用底纹：</b></div>
       <div class="switch-wrapper" style="flex: 3;">
-        <el-switch v-model="hasPattern" @change="togglePatterns"></el-switch>
+        <el-switch v-model="openPattern" @change="togglePatterns"></el-switch>
       </div>
     </div>
-    <template v-if="hasPattern">
+    <template v-if="openPattern">
       <div class="row">
         <div style="flex: 2;">底纹模式：</div>
         <el-select class="select" v-model="repeatPattern" @change="updatePatternElement">
@@ -39,18 +39,15 @@ const { canvasObject } = storeToRefs(useMainStore())
 const handleElement = computed(() => canvasObject.value as TextboxElement)
 
 
-const hasPattern = ref(false)
 const repeatPattern = ref<TPatternRepeat>('repeat')
 const sourcePattern = ref<string>(PatternImages[0].name)
 
+const hasPattern = computed(() => {
+  if (!handleElement.value) return false
+  return handleElement.value.fillType === 1
+})
 
-
-// watch(handleElement, () => {
-//   if (!handleElement.value) return
-  
-//   hasPattern.value = handleElement.value.fillType === 1
-  
-// })
+const openPattern = ref(hasPattern.value)
 
 const updatePatternElement = async () => {
   const imageURL = PatternImages.filter(item => item.name === sourcePattern.value)[0].url

@@ -141,7 +141,7 @@ const { activeElementList, canvasObject, availableFonts } = storeToRefs(useMainS
 const handleGroupElement = computed(() => canvasObject.value as GroupElement)
 const handleTextboxElement = computed(() => {
   if (!handleGroupElement.value) return
-  if (!handleGroupElement.value._objects) return
+  if (!handleGroupElement.value.objects) return
   const textboxElements = handleGroupElement.value._objects.filter(obj => obj.type === ElementNames.TEXTBOX)
   return textboxElements[0] as TextboxElement
 })
@@ -171,6 +171,9 @@ const outlineWidth = ref(0)
 //     outlineWidth.value = handleOutlineElement.value.strokeWidth
 //   }
 // })
+const computedFillColor = computed(() => {
+  if (!handleGroupElement.value) return ''
+})
 
 
 const fontOptionGroups = ref<FontGroupOption[]>([

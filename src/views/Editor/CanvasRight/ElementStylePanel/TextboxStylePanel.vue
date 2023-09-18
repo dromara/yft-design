@@ -27,7 +27,7 @@
                   </TextColorButton>
                 </el-button>
               </template>
-              <ColorPicker :modelValue="handleElement.color" @update:modelValue="color => updateFontColor(color)"/>
+              <ColorPicker :modelValue="handleElement.fill" @update:modelValue="(color: string) => updateFontColor(color)"/>
             </el-popover>
           </div>
         </el-tooltip>
@@ -43,7 +43,7 @@
                   </TextColorButton>
                 </el-button>
               </template>
-              <ColorPicker :modelValue="handleElement.backgroundColor" @update:modelValue="color => updateBackgroundColor(color)"/>
+              <ColorPicker :modelValue="handleElement.backgroundColor" @update:modelValue="(color: string) => updateBackgroundColor(color)"/>
             </el-popover>
           </div>
         </el-tooltip>
@@ -206,28 +206,29 @@ const fontOptionGroups = ref<FontGroupOption[]>([
 ])
 
 // 修改字体族
-const handleElementFontFamily = () => {
+const handleElementFontFamily = (fontFamily: string) => {
+  handleElement.value.set({fontFamily})
+  templatesStore.modifedElement()
   canvas.renderAll()
 }
 
-// 修改字体族
-const handleElementFontSize = () => {
+// 修改字体大小
+const handleElementFontSize = (fontSize: number) => {
+  handleElement.value.set({fontSize})
+  templatesStore.modifedElement()
   canvas.renderAll()
 }
 
 // 修改字体颜色
-const updateFontColor = (color: string) => {
-  handleElement.value.fill = color
-  // if (handleElement.value.fillType === 0) {
-  //   handleElement.value.fill = color
-  // }
+const updateFontColor = (fill: string) => {
+  handleElement.value.set({fill})
   templatesStore.modifedElement()
   canvas.renderAll()
 }
 
 // 修改背景颜色
-const updateBackgroundColor = (color: string) => {
-  handleElement.value.backgroundColor = color
+const updateBackgroundColor = (backgroundColor: string) => {
+  handleElement.value.set({backgroundColor})
   templatesStore.modifedElement()
   canvas.renderAll()
 }
@@ -235,7 +236,7 @@ const updateBackgroundColor = (color: string) => {
 // 修改字体大小
 const handleElementFontsize = (mode: string) => {
   if (!handleElement.value.fontSize) {
-    handleElement.value.fontSize = 36
+    handleElement.value.set({fontSize: 36})
   }
   if (mode === '+') {
     handleElement.value.fontSize += 1

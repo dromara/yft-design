@@ -3,10 +3,10 @@
     <div class="row">
       <div style="flex: 2;"><b>启用阴影：</b></div>
       <div class="switch-wrapper" style="flex: 3;">
-        <el-switch v-model="hasShadow" @change="toggleShadow"></el-switch>
+        <el-switch v-model="openShadow" @change="toggleShadow"></el-switch>
       </div>
     </div>
-    <template v-if="hasShadow">
+    <template v-if="openShadow">
       <el-row>
         <el-col :span="7" class="slider-name">水平阴影：</el-col>
         <el-col :span="3"></el-col>
@@ -43,27 +43,6 @@
           </el-popover>
         </el-col>
       </el-row>
-      <!-- <div class="row">
-        <div style="flex: 2;">水平阴影：</div>
-        <el-slider class="slider" v-model="offsetX" :min="1" :max="10" @change="changeOffsetX"></el-slider>
-      </div>
-      <div class="row">
-        <div style="flex: 2;">垂直阴影：</div>
-        <el-slider class="slider" v-model="offsetY" :min="1" :max="10" @change="changeOffsetY"></el-slider>
-      </div>
-      <div class="row">
-        <div style="flex: 2;">模糊距离：</div>
-        <el-slider class="slider" v-model="blur" :min="1" :max="10" @change="changeBlur"></el-slider>
-      </div> -->
-      <!-- <div class="row">
-        <div style="flex: 2;">阴影颜色：</div>
-        <el-popover trigger="click" width="265">
-          <template #reference>
-            <ColorButton :color="shadowColor" style="flex: 3;" />
-          </template>
-          <ColorPicker :modelValue="shadowColor" @update:modelValue="color => updateShadowColor(color)"/>
-        </el-popover>
-      </div> -->
     </template>
   </div>
 </template>
@@ -78,28 +57,25 @@ import { CanvasElement } from '@/types/canvas'
 const [ canvas ] = useCanvas()
 const { canvasObject } = storeToRefs(useMainStore())
 
-const shadow = ref<string | fabric.Shadow | undefined>(undefined)
-
-const hasShadow = ref(false)
 const offsetX = ref<number | undefined>(1)
 const offsetY = ref<number | undefined>(1)
 const blur = ref<number | undefined>(5)
 const shadowColor = ref('#000000')
 
 const handleElement = computed(() => canvasObject.value as CanvasElement)
+const hasShadow = computed(() => {
+  if (!handleElement.value) return false
+  if (handleElement.value.shadow) {
+    offsetX.value = (handleElement.value.shadow as fabric.Shadow).offsetX
+    offsetY.value = (handleElement.value.shadow as fabric.Shadow).offsetY
+    blur.value = (handleElement.value.shadow as fabric.Shadow).blur
+    shadowColor.value = (handleElement.value.shadow as fabric.Shadow).color
+    return true
+  }
+  return false
+})
+const openShadow = ref(hasShadow.value)
 
-// watch(handleElement, () => {
-//   if (!handleElement.value) return
-  
-//   shadow.value = handleElement.value.shadow ? handleElement.value.shadow : undefined
-//   hasShadow.value = shadow.value ? true : false
-//   if (hasShadow.value) {
-//     offsetX.value = (shadow.value as fabric.Shadow).offsetX
-//     offsetY.value = (shadow.value as fabric.Shadow).offsetY
-//     blur.value = (shadow.value as fabric.Shadow).blur
-//   }
-  
-// })
 
 const updateShadowColor = (color: string) => {
   shadowColor.value = color
@@ -120,21 +96,19 @@ const changeBlur = () => {
 
 const updateShadowElement = () => {
   const [ canvas ] = useCanvas()
-  const shadowElement = new fabric.Shadow({
+  if (!handleElement.value) return
+  handleElement.value.shadow = new fabric.Shadow({
     color: shadowColor.value,
     offsetX: offsetX.value,
     offsetY: offsetY.value,
     blur: blur.value
   })
-  if (handleElement.value) {
-    handleElement.value.shadow = shadowElement
-  }
   canvas.renderAll()
 }
 
 const toggleShadow = () => {
-  if (!canvasObject.value) return
-  if (hasShadow.value) {
+  if (!handleElement.value) return
+  if (openShadow.value) {
     updateShadowElement()
   }
   else {
