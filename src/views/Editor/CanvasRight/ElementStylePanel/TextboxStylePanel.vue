@@ -2,7 +2,7 @@
   <div class="text-style-panel">    
     <el-row>
       <el-col :span="12">
-        <el-select v-model="handleElement.fontFamily" @change="handleElementFontFamily">
+        <el-select v-model="elementFontFamily" @change="handleElementFontFamily">
           <el-option-group v-for="group in fontOptionGroups" :key="group.label" :label="group.label">
             <el-option v-for="item in group.options" :key="item" :value="item.value" :label="item.label" :style="{fontFamily: item.value}"></el-option>
           </el-option-group>
@@ -182,15 +182,14 @@ const templatesStore = useTemplatesStore()
 const { canvasObject, availableFonts } = storeToRefs(mainStore)
 const [ canvas ] = useCanvas()
 const handleElement = computed(() => canvasObject.value as TextboxElement)
-
-const hasFontWeight = ref(false)
+const hasFontFamily = computed(() => handleElement.value.fontFamily)
+const elementFontFamily = ref<string>(hasFontFamily.value)
+const hasFontWeight = computed(() => handleElement.value.fontWeight !== 'normal')
 const hasFontStyle = computed(() => handleElement.value.fontStyle !== 'normal')
 const hasUnderline = computed(() => handleElement.value.underline)
 const hasLinethrough = computed(() => handleElement.value.linethrough)
-const textAlign = computed(() => {
-  console.log('handleElement.value.textAlign:', handleElement.value.textAlign)
-  return handleElement.value.textAlign
-})
+const textAlign = computed(() => handleElement.value.textAlign)
+
 const fontOptionGroups = ref<FontGroupOption[]>([
   {
     label: '系统字体',
@@ -249,6 +248,7 @@ const handleElementFontsize = (mode: string) => {
 const handleElementBlod = () => {
   const fontBold = 'bold', fontNormal = 'normal'
   if (handleElement.value.isEditing) {
+    console.log('handleElement.value:', handleElement.value)
     const blodState = handleElement.value.getSelectionStyles().find(item => item.fontWeight !== fontBold)
     if (!blodState || (JSON.stringify(blodState) === '{}' && handleElement.value.fontWeight === fontBold)) {
       handleElement.value.setSelectionStyles({'fontWeight': fontNormal})
@@ -263,15 +263,16 @@ const handleElementBlod = () => {
       handleElement.value.set({fontWeight: fontNormal})
       for (let i in elementStyle) {
         for (let j in elementStyle[i]) {
-          elementStyle[i][j].fontWeight = fontNormal
+          (elementStyle[i][j] as TextboxElement).set({fontWeight: fontNormal})
         }
       }
     }
     else {
-      handleElement.value.fontWeight = fontBold
+      handleElement.value.set({fontWeight: fontBold})
       for (let i in elementStyle) {
         for (let j in elementStyle[i]) {
-          elementStyle[i][j].fontWeight = fontBold
+          (elementStyle[i][j] as TextboxElement).set({fontWeight: fontBold})
+          // elementStyle[i][j].fontWeight = fontBold
         }
       }
     }

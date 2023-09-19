@@ -34,7 +34,7 @@ export default () => {
       fillType: 0,
       hasControls: true,
       hasBorders: true,
-      fontWeight: '400',
+      fontWeight: 'normal',
       charSpacing: 3,
       opacity: 1,
       lineHeight: 1.3,
