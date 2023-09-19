@@ -107,41 +107,66 @@
 import { Rect } from 'fabric'
 import { storeToRefs } from 'pinia'
 import { ElMessage } from 'element-plus'
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch, onMounted, computed } from 'vue'
 import { mm2px, px2mm } from '@/utils/image'
 import { useFabricStore, useMainStore, useTemplatesStore } from '@/store'
 import { WorkSpaceClipType, WorkSpaceMaskType } from '@/configs/canvas'
 import { DesignUnitMode, DesignSizeMode, MinSize, MaxSize } from '@/configs/background'
 import useCanvas from '@/views/Canvas/useCanvas'
+import useCenter from '@/views/Canvas/useCenter'
 import Backgrounds from '../Backgrounds/index.vue'
+import useHistorySnapshot from '@/hooks/useHistorySnapshot'
 
 const mainStore = useMainStore()
 const templatesStore = useTemplatesStore()
 const fabricStore = useFabricStore()
-
+const { addHistorySnapshot } = useHistorySnapshot()
 const { sizeMode, unitMode } = storeToRefs(mainStore)
 const { currentTemplate } = storeToRefs(templatesStore)
 const { clip, safe, zoom, opacity } = storeToRefs(fabricStore)
 
-const canvasWidth = ref<number>(px2mm(currentTemplate.value.width / currentTemplate.value.zoom))
-const canvasHeight = ref<number>(px2mm(currentTemplate.value.height / currentTemplate.value.zoom))
+// const canvasWidth = ref<number>(px2mm(currentTemplate.value.width / currentTemplate.value.zoom))
+// const canvasHeight = ref<number>(px2mm(currentTemplate.value.height / currentTemplate.value.zoom))
 
-
-watch(currentTemplate, () => {
+const workSpaceWidth = computed(() => {
+  let workWidth = px2mm(currentTemplate.value.width / currentTemplate.value.zoom)
   const [ canvas ] = useCanvas()
-  if (!canvas) return
-  const workSpaceClip = canvas.getObjects(WorkSpaceClipType)[0]
-  if (!workSpaceClip) return
-  const workWidth = workSpaceClip.width ? workSpaceClip.width : 0, workHeight = workSpaceClip.height ? workSpaceClip.height : 0
-  if (unitMode.value === 0) {
-    canvasWidth.value = px2mm(workWidth)
-    canvasHeight.value = px2mm(workHeight)
-  } 
-  else {
-    canvasWidth.value = workWidth
-    canvasHeight.value = workHeight
-  }
-}, { deep: true, immediate: true })
+  if (!canvas) return workWidth
+  const { workSpaceDraw } = useCenter()
+  if (!workSpaceDraw) return workWidth
+  workWidth = workSpaceDraw.width
+  if (unitMode.value === 0) return px2mm(workWidth)
+  return workWidth
+})
+
+const workSpaceHeight = computed(() => {
+  let workHeight = px2mm(currentTemplate.value.height / currentTemplate.value.zoom)
+  const [ canvas ] = useCanvas()
+  if (!canvas) return workHeight
+  const { workSpaceDraw } = useCenter()
+  if (!workSpaceDraw) return workHeight 
+  workHeight = workSpaceDraw.height
+  if (unitMode.value === 0) return px2mm(workHeight)
+  return workHeight
+})
+
+const canvasWidth = ref<number>(workSpaceWidth.value)
+const canvasHeight = ref<number>(workSpaceHeight.value)
+// watch(currentTemplate, () => {
+//   const [ canvas ] = useCanvas()
+//   const { workSpaceDraw } = useCenter()
+//   if (!canvas) return
+//   if (!workSpaceDraw) return
+//   const workWidth = workSpaceDraw.width ? workSpaceDraw.width : 0, workHeight = workSpaceDraw.height ? workSpaceDraw.height : 0
+//   if (unitMode.value === 0) {
+//     canvasWidth.value = px2mm(workWidth)
+//     canvasHeight.value = px2mm(workHeight)
+//   } 
+//   else {
+//     canvasWidth.value = workWidth
+//     canvasHeight.value = workHeight
+//   }
+// }, { deep: true, immediate: true })
 
 // 宽高固定比例
 const isFixed = ref(false)
@@ -167,6 +192,8 @@ const getCanvasSize = () => {
 
 // 修改画布宽度
 const changeTemplateWidth = () => {
+  const [ canvas ] = useCanvas()
+  const { workSpaceDraw } = useCenter()
   const ratio = currentTemplate.value.height / currentTemplate.value.width
   let { width, height } = getCanvasSize()
   if ((width / zoom.value) < mm2px(MinSize)) {
@@ -184,13 +211,17 @@ const changeTemplateWidth = () => {
     width = mm2px(MaxSize) * zoom.value
   }
   height = isFixed.value ?  (width * ratio) : height
+  workSpaceDraw.set({width: width / zoom.value, height: height / zoom.value})
   templatesStore.setSize(width, height, zoom.value)
   sizeMode.value = 2
-  templatesStore.renderTemplate()
+  canvas.renderAll()
+  addHistorySnapshot()
 }
 
 // 修改画布高度
 const changeTemplateHeight = () => {
+  const [ canvas ] = useCanvas()
+  const { workSpaceDraw } = useCenter()
   const ratio = currentTemplate.value.height / currentTemplate.value.width
   let { width, height } = getCanvasSize()
   if ((height / zoom.value) < mm2px(MinSize)) {
@@ -208,9 +239,11 @@ const changeTemplateHeight = () => {
     height = mm2px(MaxSize) * zoom.value
   }
   width = isFixed.value ? (height / ratio) : width
+  workSpaceDraw.set({width: width / zoom.value, height: height / zoom.value})
   templatesStore.setSize(width, height, zoom.value)
   sizeMode.value = 2
-  templatesStore.renderTemplate()
+  canvas.renderAll()
+  addHistorySnapshot()
 }
 
 // 修改出血尺寸
