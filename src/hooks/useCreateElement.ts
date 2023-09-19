@@ -3,9 +3,9 @@ import { useFabricStore, useTemplatesStore } from "@/store"
 import { useMainStore } from '@/store/modules/main'
 import { RightStates, ElementNames, BarCodeOption } from '@/types/elements'
 import { nanoid } from 'nanoid'
-import { QRCodeElement, BarCodeElement, ImageElement, LineElement, PolygonElement, PathElement, TextboxElement } from '@/types/canvas'
+import { QRCodeElement, BarCodeElement, ImageElement, LineElement, PolygonElement, PathElement, TextboxElement, CanvasElement } from '@/types/canvas'
 import { getImageSize } from '@/utils/image'
-import { util } from 'fabric'
+import { classRegistry } from 'fabric'
 import JsBarcode from 'jsbarcode'
 import * as fabric from "fabric"
 import { extendWithCropImage } from '@/extension/mixins/cropping.mixin'
@@ -34,15 +34,16 @@ export default () => {
       fillType: 0,
       hasControls: true,
       hasBorders: true,
-      fontWeight: 400,
+      fontWeight: '400',
       charSpacing: 3,
       opacity: 1,
       lineHeight: 1.3,
       originX: 'center',
       originY: 'center',
+      textAlign: 'justify-center',
       name: ElementNames.TEXTBOX,
       splitByGrapheme: textStyle === 'direction' ? true : false,
-    }) as TextboxElement
+    })
     if (textHollow) {
       textBoxElement.fill = ''
       textBoxElement.stroke = 'black'
@@ -51,7 +52,7 @@ export default () => {
     canvas.add(textBoxElement)
     canvas.setActiveObject(textBoxElement)
     rightState.value = RightStates.ELEMENT_STYLE
-    mainStore.setCanvasObject(textBoxElement)
+    mainStore.setCanvasObject(textBoxElement as CanvasElement)
     templatesStore.modifedElement()
     setZindex(canvas)
   }
@@ -70,11 +71,11 @@ export default () => {
       originY: 'center',
       fill: '#ff5e17',
       name: ElementNames.PATH,
-    }) as PathElement
+    })
     canvas.add(pathElement)
     canvas.setActiveObject(pathElement)
     rightState.value = RightStates.ELEMENT_STYLE
-    mainStore.setCanvasObject(pathElement)
+    mainStore.setCanvasObject(pathElement as CanvasElement)
     templatesStore.modifedElement()
     setZindex(canvas)
   }
@@ -144,9 +145,8 @@ export default () => {
       else if (height > currentTemplateHeight.value) {
         imageScale = currentTemplateHeight.value / height
       }
-      const CropImage = util.classRegistry.getClass('cropimage')
+      const CropImage = classRegistry.getClass('cropimage')
       const imageElement = await CropImage.fromURL(url, {
-        // @ts-ignore
         id: nanoid(10),
         angle: 0,
         left: centerPoint.x,
@@ -176,7 +176,7 @@ export default () => {
   const createQRCodeElement = async (url: string, style: string, content?: string, error?: number, space?: boolean) => {
     const [ canvas ] = useCanvas()
     const { centerPoint } = useCenter()
-    const codeObject = await fabric.Image.fromURL(url, {
+    const codeObject = await fabric.Image.fromURL(url, {crossOrigin: 'anonymous'}, {
       // @ts-ignore
       id: nanoid(10),
       angle: 0,
@@ -205,7 +205,7 @@ export default () => {
   const createBarCodeElement = async (url: string, codeContent: string, codeOption: JsBarcode.BaseOptions) => {
     const [ canvas ] = useCanvas()
     const { centerPoint } = useCenter()
-    const barcodeObject = await fabric.Image.fromURL(url, {
+    const barcodeObject = await fabric.Image.fromURL(url,  {crossOrigin: 'anonymous'}, {
       // @ts-ignore
       id: nanoid(10),
       angle: 0,

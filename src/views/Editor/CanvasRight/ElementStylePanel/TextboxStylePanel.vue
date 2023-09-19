@@ -116,19 +116,19 @@
     </el-row>
 
     <el-row class="mt-10">
-      <el-radio-group class="full-ratio" v-model="handleElement.textAlign" @change="handleTextAlign">
+      <el-radio-group class="full-ratio" v-model="textAlign" @change="handleTextAlign">
         <el-tooltip placement="top" content="左对齐" :hide-after="0">
-          <el-radio-button label="left">
+          <el-radio-button label="justify-left">
             <IconAlignTextLeft />
           </el-radio-button>
         </el-tooltip>
         <el-tooltip placement="top" content="居中" :hide-after="0">
-          <el-radio-button label="center">
+          <el-radio-button label="justify-center">
             <IconAlignTextCenter />
           </el-radio-button>
         </el-tooltip>
         <el-tooltip placement="top" content="右对齐" :hide-after="0">
-          <el-radio-button label="right">
+          <el-radio-button label="justify-right">
             <IconAlignTextRight />
           </el-radio-button>
         </el-tooltip>
@@ -187,6 +187,10 @@ const hasFontWeight = ref(false)
 const hasFontStyle = computed(() => handleElement.value.fontStyle !== 'normal')
 const hasUnderline = computed(() => handleElement.value.underline)
 const hasLinethrough = computed(() => handleElement.value.linethrough)
+const textAlign = computed(() => {
+  console.log('handleElement.value.textAlign:', handleElement.value.textAlign)
+  return handleElement.value.textAlign
+})
 const fontOptionGroups = ref<FontGroupOption[]>([
   {
     label: '系统字体',
