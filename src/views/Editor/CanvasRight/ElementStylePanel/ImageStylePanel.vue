@@ -88,7 +88,7 @@ import { ElementNames } from '@/types/elements'
 import { nanoid } from 'nanoid'
 import useCanvasZindex from '@/hooks/useCanvasZindex'
 import { getImageDataURL } from '@/utils/image'
-import { toObjectFilter, WorkSpaceName } from '@/configs/canvas'
+import { propertiesToInclude, WorkSpaceName } from '@/configs/canvas'
 
 const shapeClipPathOptions = CLIPPATHS
 
@@ -120,7 +120,7 @@ const clipImage = () => {
   //   _handleElement.visible = true
   //   left = elementLeft, top = elementTop
   //   // @ts-ignore
-  //   templatesStore.updateElement({id: _handleElement.id, props: _handleElement.toObject(toObjectFilter)})
+  //   templatesStore.updateElement({id: _handleElement.id, props: _handleElement.toObject(propertiesToInclude)})
   // }
   
   // isCroping.value = true
@@ -254,7 +254,7 @@ const resetImage = () => {
   handleElement.value.filters = []
   handleElement.value.applyFilters()
   // @ts-ignore
-  const props = handleElement.value.toObject(toObjectFilter)
+  const props = handleElement.value.toObject(propertiesToInclude)
   templatesStore.updateElement({ id: props.id,  props})
 
   

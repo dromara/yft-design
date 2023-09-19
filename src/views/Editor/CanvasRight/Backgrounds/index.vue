@@ -14,7 +14,7 @@
             <template #reference>
               <ColorButton :color="background.color || '#fff'"/>
             </template>
-            <ColorPicker :modelValue="background.color" @update:modelValue="color => updateBackground({color: color, fill: color})"/>
+            <ColorPicker :modelValue="background.color" @update:modelValue="(color: string) => updateBackground({color: color, fill: color})"/>
           </el-popover>
         </el-col>
 
@@ -43,7 +43,7 @@
     </div>
         <!-- 图片填充 -->
         <div v-if="background.fillType === 1">
-      <FileInput @change="files => uploadBackgroundImage(files)">
+      <FileInput @change="(files: FileList) => uploadBackgroundImage(files)">
         <div class="background-image">
           <div class="content" :style="{ backgroundImage: `url(${background.imageURL})` }">
             <IconPlus />
@@ -54,15 +54,6 @@
 
     <!-- 渐变填充 -->
     <div v-if="background.fillType === 2">
-      <!-- <el-row class="mb-10">
-        <el-select class="full-row" v-model="background.gradientName" @change="changeGradientName">
-          <el-option v-for="(item, nameIndex) in GradientColorLibs" :key="nameIndex" :value="item.name">
-            <div style="display: flex">
-              <GradientFill :name="item.name" :type="background.gradientType" :colors="item.colors"></GradientFill>
-            </div>
-          </el-option>
-        </el-select>
-      </el-row> -->
       <div class="background-gradient-body">
         <div class="gradient-content" v-for="(item, nameIndex) in GradientColorLibs" :key="nameIndex" :value="item.name" @click.stop="changeGradientName(item.name)">
           <GradientFill :name="item.name" :type="background.gradientType" :colors="item.colors"></GradientFill>
@@ -102,7 +93,7 @@
             <template #reference>
               <ColorButton :color="item.color || '#fff'"/>
             </template>
-            <ColorPicker :modelValue="item.color" @update:modelValue="color => updateGradientBackground(index, color)"/>
+            <ColorPicker :modelValue="item.color" @update:modelValue="(color: string) => updateGradientBackground(index, color)"/>
           </el-popover>
         </div>
       </div>
@@ -233,7 +224,7 @@
             <template #reference>
               <div class="color-select"></div>
             </template>
-            <ColorPicker :modelValue="color" @update:modelValue="color => changeShadingIndexColor(index, color)"/>
+            <ColorPicker :modelValue="color" @update:modelValue="(color: string) => changeShadingIndexColor(index, color)"/>
           </el-popover>
         </div>
       </div>
@@ -258,13 +249,14 @@ import { ref, computed, watch, onMounted } from 'vue'
 import { useMainStore, useTemplatesStore } from '@/store'
 import { storeToRefs } from 'pinia'
 import { debounce } from 'lodash'
-import { Gradient, Pattern, Image, util, Path, Group } from 'fabric'
+import { Gradient, Pattern, Image, util } from 'fabric'
 import { TransparentFill, BackgroundFillMode, BackgroundFillImageMode, BackgroundFillGridMode, BackgroundFillGradientMode } from '@/configs/background'
 import { GridColorLibs } from '@/configs/gridColors'
 import { GradientColorLibs } from '@/configs/gradientColors'
 import { GradientCoords } from '@/types/elements'
 import { ShadingColorLibs, ShadingLigntColors } from '@/configs/shadingColors'
 import { ShadingBackground, ShadingColorLib } from '@/types/elements'
+import { propertiesToInclude } from '@/configs/canvas'
 import { ImageElement, WorkSpaceElement } from '@/types/canvas'
 import { getRandomNum } from '@/utils/common'
 import { getImageDataURL } from '@/utils/image'
@@ -367,7 +359,6 @@ const changeBackgroundType = (type: number) => {
   }
   // 网格
   else if (type === 3) {
-    console.log('ok')
     const templateBackground: WorkSpaceElement = {
       ...background.value,
       fillType: type,
@@ -408,7 +399,6 @@ const changeBackgroundType = (type: number) => {
 const updateBackground = (props: Partial<WorkSpaceElement>) => {
   const [ canvas ] = useCanvas()
   const { workSpaceDraw } = useCenter()
-  templatesStore.updateTemplate({ workSpace: { ...background.value, ...props } })
   workSpaceDraw.set({
     ...props,
     left: workSpaceDraw.left,
@@ -416,6 +406,8 @@ const updateBackground = (props: Partial<WorkSpaceElement>) => {
     width: workSpaceDraw.width,
     height: workSpaceDraw.height,
   })
+  templatesStore.updateWorkSpace({ workSpace: { ...background.value, ...props } })
+  templatesStore.updateElement({ id: workSpaceDraw.id, props: workSpaceDraw.toObject(propertiesToInclude as any[]) })
   canvas.renderAll()
 }
 
@@ -478,7 +470,6 @@ const updateGradientBackground = (index: number, color: string) => {
 
 // 生成渐变背景
 const generateGradientBackground = () => {
-  const [ canvas ] = useCanvas()
   const { workSpaceDraw } = useCenter()
   const width = workSpaceDraw.width
   const height = workSpaceDraw.height
@@ -592,10 +583,9 @@ const getGridColorFunction = () => {
 
 // 生成网格图片
 const generateGridBackground = async (status?: string) => {
-  const [ canvas ] = useCanvas()
   const { workSpaceDraw } = useCenter()
   const gridColors = gridColorsRef.value && gridColorsRef.value.length > 0 && status !== 'random' ? gridColorsRef.value : 'random'
-  const { left, top, angle, scaleX, scaleY } = getBackgroundImageOption()
+ 
   if (!workSpaceDraw.width) return
   const defaultOptions = {
     width: workSpaceDraw.width,
@@ -614,13 +604,13 @@ const generateGridBackground = async (status?: string) => {
   }
   const trianglifier = trianglify(defaultOptions)
   // @ts-ignore
-  const svgBackground = trianglifier.toSVG()
+  const canvasBackground = trianglifier.toSVG()
   const serialize = new XMLSerializer()
-  const imageURL = `data:image/svg+xml,${serialize.serializeToString(svgBackground)}`
-  // const imageURL = canvasBackground.toDataURL('image/svg')
-  const backgroundImage = await Image.fromURL(imageURL, { crossOrigin: 'anonymous' }, {})
+  const imageURL = `data:image/svg+xml,${serialize.serializeToString(canvasBackground)}`
+  const backgroundImage = await Image.fromURL(imageURL, {crossOrigin: 'anonymous'}, {})
+  const left = workSpaceDraw.left, top = workSpaceDraw.top, angle = workSpaceDraw.angle, scaleX = workSpaceDraw.scaleX, scaleY = workSpaceDraw.scaleY
   backgroundImage.set({left, top, angle, scaleX, scaleY})
-  setBackgroundImage(backgroundImage, imageURL)
+  generateBackgroundImage(backgroundImage, imageURL)
   updateBackground({fill: TransparentFill, gaidImageURL: imageURL})
 }
 
@@ -716,11 +706,11 @@ const generateShadingBackground = async () => {
     </svg>
   `
   const imageURL = `data:image/svg+xml,${svg}`
-  const { left, top, angle, scaleX, scaleY } = getBackgroundImageOption()
-  const backgroundImage = await Image.fromURL(imageURL, { crossOrigin: 'anonymous' }, {})
+  const backgroundImage = await Image.fromURL(imageURL, {crossOrigin: 'anonymous'}, {})
+  const left = workSpaceDraw.left, top = workSpaceDraw.top, angle = workSpaceDraw.angle, scaleX = workSpaceDraw.scaleX, scaleY = workSpaceDraw.scaleY
   backgroundImage.set({left, top, angle, scaleX, scaleY, width: imageWidth, height: imageHeight})
   
-  setBackgroundImage(backgroundImage, imageURL)
+  generateBackgroundImage(backgroundImage, imageURL)
   updateBackground({ shadingImageURL: imageURL, fill: TransparentFill })
 }
 
@@ -786,16 +776,14 @@ const generateShadingBackgroundRandom = () => {
   generateShadingBackground()
 }
 
-const setBackgroundImage = async (backgroundImage: Image, url: string) => {
+// 设置背景图片
+const generateBackgroundImage = async (backgroundImage: Image, url: string) => {
   const [ canvas ] = useCanvas()
-  
   if (canvasObject.value && canvasObject.value.name === 'backgroundImage') {
     const imageElement = canvasObject.value as ImageElement
     await imageElement.setSrc(url)
-    templatesStore.modifedElement()
   }
   else {
-    console.log('canvasObject.value:', backgroundImage)
     canvas.backgroundImage = backgroundImage
   }
 }

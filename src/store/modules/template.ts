@@ -1,7 +1,7 @@
 import { defineStore, storeToRefs } from 'pinia'
 import { Templates } from '@/mocks/templates'
 import { Template, CanvasElement } from '@/types/canvas'
-import { toObjectFilter, WorkSpaceName } from '@/configs/canvas'
+import { propertiesToInclude } from '@/configs/canvas'
 import useCanvasScale from '@/hooks/useCanvasScale'
 import useCanvas from '@/views/Canvas/useCanvas'
 import useHistorySnapshot from '@/hooks/useHistorySnapshot'
@@ -103,7 +103,7 @@ export const useTemplatesStore = defineStore('Templates', {
       const [ canvas ] = useCanvas()
       // const { centerPoint } = useCenter()
       const { addHistorySnapshot } = useHistorySnapshot()
-      const canvasTemplate = canvas.toObject(toObjectFilter)
+      const canvasTemplate = canvas.toObject(propertiesToInclude)
       // for (let i = 0; i < canvasTemplate.objects.length; i++) {
       //   const element = canvasTemplate.objects[i] as CanvasElement
       //   element.left -= centerPoint.x
@@ -176,18 +176,14 @@ export const useTemplatesStore = defineStore('Templates', {
       addHistorySnapshot()
     },
 
+    updateWorkSpace(props: Partial<Template>) {
+      const templateIndex = this.templateIndex
+      this.templates[templateIndex] = { ...this.templates[templateIndex], ...props }
+    },
+
     updateElement(data: UpdateElementData) {
       const { addHistorySnapshot } = useHistorySnapshot()
-      const { id, props, left, top } = data
-      const { centerPoint } = useCenter()
-      if (typeof props.left === 'number' && typeof props.top === 'number') {
-        props.left -= (left ? left : centerPoint.x)
-        props.top -= (top ? top : centerPoint.y)
-      }
-      if (props.clipPath && typeof props.clipPath.left === 'number' && typeof props.clipPath.top === 'number') {
-        props.clipPath.left -= (left ? left : centerPoint.x)
-        props.clipPath.top -= (top ? top : centerPoint.y)
-      }
+      const { id, props } = data
       const elementIds = typeof id === 'string' ? [id] : id
       if (!elementIds) return
       const template = this.templates[this.templateIndex]

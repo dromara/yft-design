@@ -51,7 +51,8 @@ export const Templates: Template[] = [
       {
         "layout": "fit-content",
         "subTargetCheck": true,
-        "interactive": true,
+        "interactive": false,
+        "objectCaching": false,
         "type": "group",
         "version": "6.0.0-beta1",
         "originX": "left",
@@ -90,7 +91,8 @@ export const Templates: Template[] = [
           {
             "layout": "fit-content",
             "subTargetCheck": true,
-            "interactive": true,
+            "interactive": false,
+            "objectCaching": false,
             "type": "group",
             "version": "6.0.0-beta1",
             "originX": "left",
@@ -257,7 +259,8 @@ export const Templates: Template[] = [
           {
             "layout": "fit-content",
             "subTargetCheck": true,
-            "interactive": true,
+            "interactive": false,
+            "objectCaching": false,
             "type": "group",
             "version": "6.0.0-beta1",
             "originX": "left",

@@ -2,7 +2,7 @@
   <div class="text-style-panel">    
     <el-row>
       <el-col :span="12">
-        <el-select v-model="elementFontFamily" @change="handleElementFontFamily">
+        <el-select v-model="hasFontFamily" @change="handleElementFontFamily">
           <el-option-group v-for="group in fontOptionGroups" :key="group.label" :label="group.label">
             <el-option v-for="item in group.options" :key="item" :value="item.value" :label="item.label" :style="{fontFamily: item.value}"></el-option>
           </el-option-group>
@@ -183,7 +183,6 @@ const { canvasObject, availableFonts } = storeToRefs(mainStore)
 const [ canvas ] = useCanvas()
 const handleElement = computed(() => canvasObject.value as TextboxElement)
 const hasFontFamily = computed(() => handleElement.value.fontFamily)
-const elementFontFamily = ref<string>(hasFontFamily.value)
 const hasFontWeight = computed(() => handleElement.value.fontWeight !== 'normal')
 const hasFontStyle = computed(() => handleElement.value.fontStyle !== 'normal')
 const hasUnderline = computed(() => handleElement.value.underline)

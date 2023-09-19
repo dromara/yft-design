@@ -48,7 +48,7 @@ export const WorkSpaceCommonOption = {
   name: WorkSpaceName,
 }
 
-export const toObjectFilter = [
+export const propertiesToInclude = [
   'id', 
   'name', 
   'isShow',

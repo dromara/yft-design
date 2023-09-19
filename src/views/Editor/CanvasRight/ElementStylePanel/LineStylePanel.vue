@@ -44,7 +44,7 @@
 </template>
 
 <script lang="ts" setup>
-import { toObjectFilter, WorkSpaceName } from '@/configs/canvas'
+import { propertiesToInclude, WorkSpaceName } from '@/configs/canvas'
 
 import { useMainStore, useTemplatesStore } from '@/store'
 import useCanvas from '@/views/Canvas/useCanvas'
@@ -82,7 +82,7 @@ const changeLineStyle = () => {
 }
 
 const updateTemplateElement = () => {
-  const props = handleElement.value.toObject(toObjectFilter)
+  const props = handleElement.value.toObject(propertiesToInclude)
   templatesStore.updateElement({ id: props.id,  props})
   
 }
@@ -150,7 +150,7 @@ const createCircleElement = (mode: 'start' | 'end') => {
   })
   canvas.add(circle)
   canvas.renderAll()
-  const circleElement = circle.toObject(toObjectFilter)
+  const circleElement = circle.toObject(propertiesToInclude)
  
   if (mode === 'start') {
     handleElement.value.startStyle = 'circle'

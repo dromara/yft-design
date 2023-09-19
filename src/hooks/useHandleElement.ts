@@ -4,7 +4,7 @@ import { storeToRefs } from "pinia"
 import { KEYS } from '@/configs/hotkey'
 import { ElementNames } from "@/types/elements"
 import { Pattern, util, Gradient, classRegistry } from "fabric"
-import { toObjectFilter, WorkSpaceName } from "@/configs/canvas"
+import { propertiesToInclude, WorkSpaceName } from "@/configs/canvas"
 import { useFabricStore, useMainStore, useTemplatesStore } from "@/store"
 import { 
   CanvasOption, 
@@ -211,13 +211,13 @@ export default () => {
 
   const copyElement = async () => {
     if (!canvasObject.value) return
-    clonedObject.value = await canvasObject.value.clone(toObjectFilter)
+    clonedObject.value = await canvasObject.value.clone(propertiesToInclude)
   }
 
   const patseEelement = async () => {
     const [ canvas ] = useCanvas()
     if (!clonedObject.value) return
-    const clonedObj = await clonedObject.value.clone(toObjectFilter) as CanvasElement
+    const clonedObj = await clonedObject.value.clone(propertiesToInclude) as CanvasElement
     let left = clonedObject.value.left + 10, top = clonedObject.value.top + 10
     if (currentPoint.value) {
       left = currentPoint.value.x, top = currentPoint.value.y
@@ -318,7 +318,7 @@ export default () => {
         break
       default: break
     }
-    templatesStore.updateElement({ id: activeObject.id, props: activeObject.toObject(toObjectFilter as any[]) })
+    templatesStore.updateElement({ id: activeObject.id, props: activeObject.toObject(propertiesToInclude as any[]) })
   }
 
   const cutElement = () => {
@@ -336,12 +336,12 @@ export default () => {
     const groupElement = new fabric.Group(activeObjects, { 
       id: nanoid(10),
       name: ElementNames.GROUP, 
-      interactive: true, 
+      interactive: false, 
       subTargetCheck: true,
     })
     canvas.add(groupElement)
     templatesStore.deleteElement(activeObjects.map(item => item.id))
-    templatesStore.addElement(groupElement.toObject(toObjectFilter as (keyof fabric.Group)[]) as GroupOption)
+    templatesStore.addElement(groupElement.toObject(propertiesToInclude as any[]) as GroupOption)
     templatesStore.renderElement()
     canvas.remove(...activeObjects)
     setZindex(canvas)
