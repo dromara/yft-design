@@ -215,6 +215,7 @@ import { useMainStore } from '@/store'
 import { filters } from 'fabric'
 import { ImageElement } from '@/types/canvas'
 import { ElementNames } from '@/types/elements'
+import { SharpenMatrix, EmbossMatrix } from '@/configs/images'
 import useCanvas from '@/views/Canvas/useCanvas'
 
 const [ canvas ] = useCanvas()
@@ -252,8 +253,28 @@ interface GammaColorOption {
   blue: number
 }
 
-const elementFilters = ref<string[]>([])
+// const elementFilters = ref<string[]>([])
+const imageFilters = computed(() => {
+  let filters: string[] = []
+  handleElement.value.filters.forEach(item => {
+    if (item.type === 'Convolute') {
+      const itemMatrix = (item as filters.Convolute).matrix
+      if (itemMatrix.length === SharpenMatrix.length && itemMatrix.every((v, i) => v === SharpenMatrix[i])) {
+        filters.push('Sharpen')
+      }
+      if (itemMatrix.length === EmbossMatrix.length && itemMatrix.every((v, i) => v === EmbossMatrix[i])) {
+        filters.push('Emboss')
+      }
+    } 
+    else {
+      filters.push(item.type)
+    }
+  })
+  console.log('filters:', filters)
+  return filters
+})
 
+const elementFilters = ref<string[]>(imageFilters.value)
 
 // 灰度
 const grayScaleMode = ref<string>('')  // 'average' | 'luminosity' | 'lightness' | ''
@@ -271,16 +292,16 @@ const noise = ref(0)         // 噪音
 const pixelate = ref(0)      // 像素
 const blur = ref(0)          // 模糊
 // 矩阵
-const colorMatrix = ref<string[]>(JSON.parse(JSON.stringify(defaultFilters)))
+// const colorMatrix = ref<string[]>(JSON.parse(JSON.stringify(defaultFilters)))
 // const hasFilters = ref(false)
 
 const hasFilter = computed(() => {
   if (!handleElement.value || handleElement.value.type !== ElementNames.IMAGE) return false
-    const filters = handleElement.value.filters.filter(obj => obj.type !== 'BlendColor')
-    if (filters && filters.length > 0) {
-      return true
-    }
-    return false
+  const filters = handleElement.value.filters.filter(obj => obj.type !== 'BlendColor')
+  if (filters && filters.length > 0) {
+    return true
+  }
+  return false
 })
 
 const openFilter = ref<boolean>(hasFilter.value)
@@ -342,14 +363,12 @@ const changeFilters = () => {
     }
   })
 
-  // @ts-ignore
-  handleElement.value.filters = handleElement.value.filters?.filter(obj => elementFilters.value.includes(obj.type))
+  handleElement.value.filters = handleElement.value.filters.filter(obj => elementFilters.value.includes(obj.type))
   if (elementFilters.value.includes('Sharpen')) {
-    // @ts-ignore
-    handleElement.value.filters?.push(new filters.Convolute({matrix: [ 0, -1,  0, -1,  5, -1, 0, -1,  0 ]}))
+    handleElement.value.filters.push(new filters.Convolute({matrix: SharpenMatrix}) as filters.BaseFilter)
   }
   if (elementFilters.value.includes('Emboss')) {
-    handleElement.value.filters?.push(new filters.Convolute({matrix: [ 1,   1,  1,  1, 0.7, -1, -1,  -1, -1 ]}) as filters.BaseFilter)
+    handleElement.value.filters.push(new filters.Convolute({matrix: EmbossMatrix}) as filters.BaseFilter)
   }
   handleElement.value.applyFilters()
   canvas.renderAll()
@@ -475,7 +494,9 @@ const changeColorMode = (type: string, value: number) => {
 const toggleFilters = (checked: boolean) => {
   if (!handleElement.value) return
   if (checked) {
-    handleElement.value.filters.push({})
+    defaultFilters.forEach(item => {
+      changeColorMode(item.key, item.value)
+    })
   }
   else {
     handleElement.value.filters.length = 0

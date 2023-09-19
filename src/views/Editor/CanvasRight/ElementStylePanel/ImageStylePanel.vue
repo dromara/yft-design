@@ -56,7 +56,7 @@
     <el-divider />
     
     <el-row>
-      <FileInput class="full-width-btn" @change="files => replaceImage(files)" >
+      <FileInput class="full-width-btn" @change="(files: FileList) => replaceImage(files)" >
         <el-button class="full-btn"><IconTransform class="btn-icon" /> 替换图片</el-button>
       </FileInput>
     </el-row>
@@ -89,6 +89,7 @@ import { nanoid } from 'nanoid'
 import useCanvasZindex from '@/hooks/useCanvasZindex'
 import { getImageDataURL } from '@/utils/image'
 import { propertiesToInclude, WorkSpaceName } from '@/configs/canvas'
+import { ImageOption } from '@/types/option'
 
 const shapeClipPathOptions = CLIPPATHS
 
@@ -254,8 +255,8 @@ const resetImage = () => {
   handleElement.value.filters = []
   handleElement.value.applyFilters()
   // @ts-ignore
-  const props = handleElement.value.toObject(propertiesToInclude)
-  templatesStore.updateElement({ id: props.id,  props})
+  const props = handleElement.value.toObject(propertiesToInclude) as ImageElement
+  templatesStore.updateElement({ id: props.id, props})
 
   
 }
