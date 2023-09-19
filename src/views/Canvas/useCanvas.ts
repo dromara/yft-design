@@ -120,6 +120,7 @@ const initConf = () => {
 }
 
 const initWorkSpace = (width: number, height: number) => {
+  if (!canvas) return
   const fabricStore = useFabricStore()
   const templatesStore = useTemplatesStore()
   const { scalePercentage, zoom, clip } = storeToRefs(fabricStore)
@@ -128,19 +129,6 @@ const initWorkSpace = (width: number, height: number) => {
   let zoomVal = 1
   const workWidth = currentTemplate.value.width / currentTemplate.value.zoom
   const workHeight = currentTemplate.value.height / currentTemplate.value.zoom
-
-  if (!canvas) {
-    return {
-      workWidth,
-      workHeight
-    }
-  }
-  // const canvasWidth = canvas.width ? canvas.width : fabricStore.getWidth()
-  // const canvasHeight = canvas.height ? canvas.height : fabricStore.getHeight()
-
-  // const canvasWidth = width
-  // const canvasHeight = height
-  // const viewportTransform = currentTemplate.value.viewportTransform
   
   if (width < workWidth || height < workHeight) {
     //按照宽度缩放
@@ -196,133 +184,133 @@ const setCanvasTransform = () => {
 }
 
 // 初始化工作台
-export const initWorks = () => {
-  if (!canvas) return
-  const fabricStore = useFabricStore()
-  const { zoom, clip, safe, diagonal, opacity, showClip, showSafe, wrapperRef } = storeToRefs(fabricStore)
-  const canvasWidth = canvas.width ? canvas.width : fabricStore.getWidth()
-  const canvasHeight = canvas.height ? canvas.height : fabricStore.getHeight()
-  const { workWidth, workHeight } = initWorkSpace(0, 0)
-  const left = (canvasWidth - workWidth) / 2 * zoom.value
-  const top = (canvasHeight - workHeight ) / 2 * zoom.value
-  const Padding = 50000, PaddingHalf = Padding / 2
-  const clipPX = clip.value * DefaultDPI / DefaultRatio
-  const diagonalPX = diagonal.value * DefaultDPI / DefaultRatio
-  const safePX = 2 * safe.value * DefaultDPI / DefaultRatio
+// export const initWorks = () => {
+//   if (!canvas) return
+//   const fabricStore = useFabricStore()
+//   const { zoom, clip, safe, diagonal, opacity, showClip, showSafe, wrapperRef } = storeToRefs(fabricStore)
+//   const canvasWidth = canvas.width ? canvas.width : fabricStore.getWidth()
+//   const canvasHeight = canvas.height ? canvas.height : fabricStore.getHeight()
+//   // const { workWidth, workHeight } = initWorkSpace(0, 0)
+//   const left = (canvasWidth - workWidth) / 2 * zoom.value
+//   const top = (canvasHeight - workHeight ) / 2 * zoom.value
+//   const Padding = 50000, PaddingHalf = Padding / 2
+//   const clipPX = clip.value * DefaultDPI / DefaultRatio
+//   const diagonalPX = diagonal.value * DefaultDPI / DefaultRatio
+//   const safePX = 2 * safe.value * DefaultDPI / DefaultRatio
 
-  // @ts-ignore
-  const workSpaceDraw = new Rect({
-    left: left - clipPX,
-    top: top - clipPX,
-    width: workWidth + 2 * clipPX,
-    height: workHeight + 2 * clipPX,
-    fill: WorkSpaceEditColor,
-    stroke: WorkSpaceEditColor, 
-    type: WorkSpaceDrawType,
-    ...WorkSpaceCommonOption
-  })
+//   // @ts-ignore
+//   const workSpaceDraw = new Rect({
+//     left: left - clipPX,
+//     top: top - clipPX,
+//     width: workWidth + 2 * clipPX,
+//     height: workHeight + 2 * clipPX,
+//     fill: WorkSpaceEditColor,
+//     stroke: WorkSpaceEditColor, 
+//     type: WorkSpaceDrawType,
+//     ...WorkSpaceCommonOption
+//   })
 
-  // @ts-ignore
-  const workSpaceClip = new Rect({
-    left: left,
-    top: top,
-    width: workWidth,
-    height: workHeight,
-    fill: TransparentFill,
-    stroke: WorkSpaceClipColor, // 边框颜色
-    strokeWidth: 1, // 边框大小
-    visible: showClip.value,
-    type: WorkSpaceClipType,
-    ...WorkSpaceCommonOption
-  })
+//   // @ts-ignore
+//   const workSpaceClip = new Rect({
+//     left: left,
+//     top: top,
+//     width: workWidth,
+//     height: workHeight,
+//     fill: TransparentFill,
+//     stroke: WorkSpaceClipColor, // 边框颜色
+//     strokeWidth: 1, // 边框大小
+//     visible: showClip.value,
+//     type: WorkSpaceClipType,
+//     ...WorkSpaceCommonOption
+//   })
 
-  // @ts-ignore
-  const workSpaceSafe = new Rect({
-    left: left + safePX,
-    top: top + safePX,
-    width: workWidth - 2 * safePX,
-    height: workHeight - 2 * safePX,
-    fill: TransparentFill,
-    stroke: WorkSpaceSafeColor, // 边框颜色
-    strokeWidth: 1, // 边框大小
-    visible: showSafe.value,
-    type: WorkSpaceSafeType,
-    ...WorkSpaceCommonOption
-  })
+//   // @ts-ignore
+//   const workSpaceSafe = new Rect({
+//     left: left + safePX,
+//     top: top + safePX,
+//     width: workWidth - 2 * safePX,
+//     height: workHeight - 2 * safePX,
+//     fill: TransparentFill,
+//     stroke: WorkSpaceSafeColor, // 边框颜色
+//     strokeWidth: 1, // 边框大小
+//     visible: showSafe.value,
+//     type: WorkSpaceSafeType,
+//     ...WorkSpaceCommonOption
+//   })
 
-  const maskPath = `M0 0 L${Padding} 0 L${Padding} ${Padding} L0 ${Padding} L0 0 Z 
-  M${PaddingHalf + left - clipPX} ${PaddingHalf + top - clipPX} 
-  L${PaddingHalf + left - clipPX} ${PaddingHalf + top + workHeight + clipPX} 
-  L${PaddingHalf + left + workWidth + clipPX} ${PaddingHalf + top + workHeight + clipPX} 
-  L${PaddingHalf + left + workWidth + clipPX} ${PaddingHalf + top - clipPX} 
-  L${PaddingHalf + left - clipPX} ${PaddingHalf + top - clipPX} Z`
-  // @ts-ignore
-  const workSpaceMask = new Path(maskPath, {
-    left: -PaddingHalf,
-    top: -PaddingHalf,
-    fill: WorkSpaceMaskColor,
-    opacity: opacity.value,
-    type: WorkSpaceMaskType,
-    ...WorkSpaceCommonOption
-  })
-  // [lineEnd, lineHeight, leftStart, top] 终止位置，线长，起始位置，top
-  const diagonalHalfPX = diagonalPX / 2
-  const diagonals = [
-    // 左上水平
-    [ PaddingHalf - diagonalHalfPX - clipPX, PaddingHalf + clipPX, PaddingHalf - diagonalHalfPX / 2 - clipPX, PaddingHalf + clipPX],
-    // 左上垂直
-    [ PaddingHalf, PaddingHalf - diagonalHalfPX, PaddingHalf, PaddingHalf - diagonalHalfPX / 2],
+//   const maskPath = `M0 0 L${Padding} 0 L${Padding} ${Padding} L0 ${Padding} L0 0 Z 
+//   M${PaddingHalf + left - clipPX} ${PaddingHalf + top - clipPX} 
+//   L${PaddingHalf + left - clipPX} ${PaddingHalf + top + workHeight + clipPX} 
+//   L${PaddingHalf + left + workWidth + clipPX} ${PaddingHalf + top + workHeight + clipPX} 
+//   L${PaddingHalf + left + workWidth + clipPX} ${PaddingHalf + top - clipPX} 
+//   L${PaddingHalf + left - clipPX} ${PaddingHalf + top - clipPX} Z`
+//   // @ts-ignore
+//   const workSpaceMask = new Path(maskPath, {
+//     left: -PaddingHalf,
+//     top: -PaddingHalf,
+//     fill: WorkSpaceMaskColor,
+//     opacity: opacity.value,
+//     type: WorkSpaceMaskType,
+//     ...WorkSpaceCommonOption
+//   })
+//   // [lineEnd, lineHeight, leftStart, top] 终止位置，线长，起始位置，top
+//   const diagonalHalfPX = diagonalPX / 2
+//   const diagonals = [
+//     // 左上水平
+//     [ PaddingHalf - diagonalHalfPX - clipPX, PaddingHalf + clipPX, PaddingHalf - diagonalHalfPX / 2 - clipPX, PaddingHalf + clipPX],
+//     // 左上垂直
+//     [ PaddingHalf, PaddingHalf - diagonalHalfPX, PaddingHalf, PaddingHalf - diagonalHalfPX / 2],
 
-    // 左下水平
-    [ PaddingHalf - diagonalHalfPX - clipPX, PaddingHalf + workHeight + clipPX, PaddingHalf - diagonalHalfPX / 2 - clipPX, PaddingHalf + workHeight + clipPX],
-    // 左下垂直
-    [ PaddingHalf, PaddingHalf + diagonalHalfPX + workHeight + 2 * clipPX, PaddingHalf, PaddingHalf + workHeight + diagonalHalfPX / 2 + 2 * clipPX],
+//     // 左下水平
+//     [ PaddingHalf - diagonalHalfPX - clipPX, PaddingHalf + workHeight + clipPX, PaddingHalf - diagonalHalfPX / 2 - clipPX, PaddingHalf + workHeight + clipPX],
+//     // 左下垂直
+//     [ PaddingHalf, PaddingHalf + diagonalHalfPX + workHeight + 2 * clipPX, PaddingHalf, PaddingHalf + workHeight + diagonalHalfPX / 2 + 2 * clipPX],
 
-    // 右上水平
-    [ PaddingHalf + workWidth + diagonalHalfPX + clipPX, PaddingHalf + clipPX, PaddingHalf + workWidth + diagonalHalfPX / 2 + clipPX, PaddingHalf + clipPX],
-    // 右上垂直
-    [ PaddingHalf + workWidth, PaddingHalf - diagonalHalfPX, PaddingHalf + workWidth, PaddingHalf - diagonalHalfPX / 2],
+//     // 右上水平
+//     [ PaddingHalf + workWidth + diagonalHalfPX + clipPX, PaddingHalf + clipPX, PaddingHalf + workWidth + diagonalHalfPX / 2 + clipPX, PaddingHalf + clipPX],
+//     // 右上垂直
+//     [ PaddingHalf + workWidth, PaddingHalf - diagonalHalfPX, PaddingHalf + workWidth, PaddingHalf - diagonalHalfPX / 2],
     
-    // 右下水平
-    [ PaddingHalf + workWidth + diagonalHalfPX + clipPX, PaddingHalf + workHeight + clipPX, PaddingHalf + workWidth + diagonalHalfPX / 2  + clipPX, PaddingHalf + workHeight + clipPX],
-    // 右下垂直
-    [ PaddingHalf + workWidth, PaddingHalf + diagonalHalfPX + workHeight + 2 * clipPX, PaddingHalf + workWidth, PaddingHalf + workHeight + diagonalHalfPX / 2 + 2 * clipPX]
-  ]
-  const diagonalLines: Line[] = []
-  diagonals.forEach(line => {
-    // @ts-ignore
-    const diagonalLine = new Line(line, {
-      selectable: false,
-      hoverCursor: 'default',
-      evented: false,
-      excludeFromExport: false,
-      hasBorders: false,
-      perPixelTargetFind: true,
-      strokeWidth: 1,
-      stroke: WorkSpaceClipColor
-    })
-    diagonalLines.push(diagonalLine)
-  })
+//     // 右下水平
+//     [ PaddingHalf + workWidth + diagonalHalfPX + clipPX, PaddingHalf + workHeight + clipPX, PaddingHalf + workWidth + diagonalHalfPX / 2  + clipPX, PaddingHalf + workHeight + clipPX],
+//     // 右下垂直
+//     [ PaddingHalf + workWidth, PaddingHalf + diagonalHalfPX + workHeight + 2 * clipPX, PaddingHalf + workWidth, PaddingHalf + workHeight + diagonalHalfPX / 2 + 2 * clipPX]
+//   ]
+//   const diagonalLines: Line[] = []
+//   diagonals.forEach(line => {
+//     // @ts-ignore
+//     const diagonalLine = new Line(line, {
+//       selectable: false,
+//       hoverCursor: 'default',
+//       evented: false,
+//       excludeFromExport: false,
+//       hasBorders: false,
+//       perPixelTargetFind: true,
+//       strokeWidth: 1,
+//       stroke: WorkSpaceClipColor
+//     })
+//     diagonalLines.push(diagonalLine)
+//   })
   
-  const workLineGroup = new Group([...diagonalLines], {
-    // @ts-ignore
-    type: WorkSpaceLineType, 
-    left: left - diagonalHalfPX - clipPX, 
-    top: top - diagonalHalfPX - clipPX, 
-    ...WorkSpaceCommonOption
-  })
-  canvas.add(workSpaceMask)
-  canvas.add(workSpaceDraw)
-  canvas.add(workSpaceClip)
-  canvas.add(workSpaceSafe)
-  canvas.add(workLineGroup)
-  canvas.bringObjectToFront(workSpaceMask)
-  canvas.bringObjectToFront(workLineGroup)
-  canvas.renderAll()
+//   const workLineGroup = new Group([...diagonalLines], {
+//     // @ts-ignore
+//     type: WorkSpaceLineType, 
+//     left: left - diagonalHalfPX - clipPX, 
+//     top: top - diagonalHalfPX - clipPX, 
+//     ...WorkSpaceCommonOption
+//   })
+//   canvas.add(workSpaceMask)
+//   canvas.add(workSpaceDraw)
+//   canvas.add(workSpaceClip)
+//   canvas.add(workSpaceSafe)
+//   canvas.add(workLineGroup)
+//   canvas.bringObjectToFront(workSpaceMask)
+//   canvas.bringObjectToFront(workLineGroup)
+//   canvas.renderAll()
 
   
-  setCanvasTransform()
-}
+//   setCanvasTransform()
+// }
 
 const initCanvas = () => {
   const fabricStore = useFabricStore()
@@ -351,61 +339,6 @@ const initTemplate = async () => {
   await canvas.loadFromJSON(currentTemplate.value)
   setCanvasTransform()
 }
-
-// // 初始化背景
-// const initBackground = async () => {
-//   const templatesStore = useTemplatesStore()
-//   const { getBackgroundImageOption } = useHandleBackground()
-//   if (!canvas) return
-//   const workSpaceDraw = canvas.getObjects(WorkSpaceDrawType)[0]
-//   // const left = workSpaceDraw.left, top = workSpaceDraw.top
-//   const { currentTemplate } = storeToRefs(templatesStore)
-//   const workSpaceElement = currentTemplate.value.workSpace
-//   // const workWidth = workSpaceDraw.width, workHeight = workSpaceDraw.height
-//   const { left, top, angle, scaleX, scaleY } = getBackgroundImageOption()
-//   workSpaceDraw.set({fill: TransparentFill})
-//   if (!workSpaceElement) return
-//   // 纯色 和 渐变
-//   if (workSpaceElement.fillType === 0 || workSpaceElement.fillType === 2) {
-//     workSpaceDraw.set('fill', workSpaceElement.fill)
-//   }
-//   // 图片
-//   else if (workSpaceElement.fillType === 1) {
-//     if (!workSpaceElement.imageURL) return
-//     if (workSpaceElement.imageSize === 'repeat') {
-//       workSpaceDraw.set('fill', workSpaceElement.fill)
-//     }
-//     else {
-//       // let scaleX = 1, scaleY = 1
-//       // @ts-ignore
-//       const imageElement = await Image.fromURL(workSpaceElement.imageURL)
-//       // if (workSpaceElement.imageSize === 'cover') {
-//       //   scaleX = workWidth / imageElement.width, scaleY = workHeight / imageElement.height
-//       // } 
-//       imageElement.set({left, top, angle, scaleX, scaleY})
-//       canvas.set('backgroundImage', imageElement)
-//       canvas.renderAll()
-//     }
-//   }
-//   // 网格
-//   else if (workSpaceElement.fillType === 3) {
-//     if (!workSpaceElement.gaidImageURL) return
-//     // @ts-ignore
-//     const imageElement = await Image.fromURL(workSpaceElement.gaidImageURL) 
-//     imageElement.set({left, top, angle, scaleX, scaleY})
-//     canvas.set('backgroundImage', imageElement)
-//     canvas.renderAll()
-//   }
-//   // 底纹
-//   else if (workSpaceElement.fillType === 4) {
-//     if (!workSpaceElement.shadingImageURL) return
-//     // @ts-ignore
-//     const imageElement = await Image.fromURL(workSpaceElement.shadingImageURL) 
-//     imageElement.set({left, top, angle, scaleX, scaleY})
-//     canvas.set('backgroundImage', imageElement)
-//     canvas.renderAll()
-//   }
-// }
 
 const initEditor = () => {
   const fabricStore = useFabricStore()

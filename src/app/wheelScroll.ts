@@ -3,6 +3,8 @@ import { CanvasEvents, Canvas, Point, TPointerEvent, TPointerEventInfo } from 'f
 import { useIntervalFn, useMagicKeys } from '@vueuse/core'
 import { Disposable, toDisposable } from '@/utils/lifecycle'
 import { debounce } from 'lodash'
+import { storeToRefs } from 'pinia'
+import { useFabricStore } from '@/store'
 
 /**
  * 画板默认滚动行为
@@ -21,20 +23,22 @@ export class WheelScroll extends Disposable {
    */
   private initWhellScroll() {
     const { ctrl, cmd, shift } = useMagicKeys()
-
+    const fabricStore = useFabricStore()
+    const { zoom } = storeToRefs(fabricStore)
     const mouseWheel = (e: CanvasEvents['mouse:wheel']) => {
       e.e.preventDefault()
       e.e.stopPropagation()
-      const { deltaX, deltaY, offsetX, offsetY } = e.e
+      const { deltaY, offsetX, offsetY } = e.e
       // 缩放视窗
       if (ctrl.value || cmd.value) {
         const zoomFactor = Math.abs(deltaY) < 10 ? deltaY * 2 : deltaY / 3
         const canvasZoom = this.canvas.getZoom()
-        let zoom = canvasZoom * (1 - zoomFactor / 200)
-        if (zoom > 0.97 && zoom < 1.03) {
-          zoom = 1
+        let zoomVal = canvasZoom * (1 - zoomFactor / 200)
+        if (zoomVal > 0.97 && zoomVal < 1.03) {
+          zoomVal = 1
         }
-        this.canvas.zoomToPoint(new Point(offsetX, offsetY), zoom)
+        zoom.value = zoomVal
+        this.canvas.zoomToPoint(new Point(offsetX, offsetY), zoomVal)
         this.setCoords()
         return
       }

@@ -40,11 +40,62 @@ export default () => {
     zoom.value = canvas.getZoom()
   }
 
+  const initWorkSpace = (width: number, height: number) => {
+    const [ canvas ] = useCanvas()
+    if (!canvas) return
+    const fabricStore = useFabricStore()
+    const templatesStore = useTemplatesStore()
+    const { scalePercentage, zoom, clip } = storeToRefs(fabricStore)
+    const { currentTemplate } = storeToRefs(templatesStore)
+    const scalePercentageVal = scalePercentage.value / 100
+    let zoomVal = 1
+    const workWidth = currentTemplate.value.width / currentTemplate.value.zoom
+    const workHeight = currentTemplate.value.height / currentTemplate.value.zoom
+    
+    if (width < workWidth || height < workHeight) {
+      //按照宽度缩放
+      if (workWidth / width > workHeight / height) {
+        zoomVal = workWidth / (width * scalePercentageVal)
+      } 
+      //按照高度缩放
+      else {  
+        zoomVal = workHeight / (height * scalePercentageVal)
+      }
+    }
+    zoom.value = 1 / zoomVal
+    clip.value = currentTemplate.value.clip
+    canvas.setZoom(zoom.value)
+    return {
+      workWidth,
+      workHeight
+    }
+  }
+
+  // 更新视图区长宽
+  const setCanvasTransform = () => {
+    const [ canvas ] = useCanvas()
+    if (!canvas) return
+    const { workSpaceDraw } = useCenter()
+    const fabricStore = useFabricStore()
+    const { zoom, wrapperRef } = storeToRefs(fabricStore)
+    const { width, height } = useElementBounding(wrapperRef.value)
+    initWorkSpace(width.value, height.value)
+    const workSpaceBound = workSpaceDraw.getBoundingRect()
+    const left = workSpaceDraw.left, top = workSpaceDraw.top
+    const canvasTransform = canvas.viewportTransform
+    zoom.value = canvas.getZoom()
+    canvasTransform[4] = (width.value - workSpaceBound.width) / 2 - left * zoom.value
+    canvasTransform[5] = (height.value - workSpaceBound.height) / 2 - top * zoom.value
+    canvas.setViewportTransform(canvasTransform)
+    canvas.setDimensions({width: width.value, height: height.value})
+    canvas.renderAll()
+  }
+
   /**
    * 重置画布尺寸和位置
    */
   const resetCanvas = () => {
-    templatesStore.renderTemplate()
+    setCanvasTransform()
   }
 
   const setCanvasSize = () => {
@@ -56,6 +107,7 @@ export default () => {
   return {
     canvasScalePercentage,
     setCanvasScalePercentage,
+    setCanvasTransform,
     scaleCanvas,
     resetCanvas,
     setCanvasSize
