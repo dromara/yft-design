@@ -15,7 +15,7 @@
               <template #reference>
                 <div class="color-select"></div>
               </template>
-              <ColorPicker :modelValue="item.color" @update:modelValue="value => updateColor(value, item.index)"/>
+              <ColorPicker :modelValue="item.color" @update:modelValue="(value: string) => updateColor(value, item.index)"/>
             </el-popover>
           </div>
           <el-button class="ml-5" circle @click="addColor" v-if="gridColorSelf.length < 11"><IconPlus/></el-button>

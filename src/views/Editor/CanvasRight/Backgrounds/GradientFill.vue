@@ -29,7 +29,7 @@
 
 <script lang="ts" setup>
 import { PropType } from 'vue'
-import { ColorGradient } from '@/types/elements'
+import { ColorStop } from '@/types/elements'
 
 defineProps({
   name: {
@@ -40,7 +40,7 @@ defineProps({
     type: String as PropType<'linear' | 'radial'>,
   },
   colors: {
-    type: Object as PropType<ColorGradient[]>,
+    type: Object as PropType<ColorStop[]>,
     required: true,
   },
   rotate: {

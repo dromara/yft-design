@@ -14,7 +14,7 @@
             <template #reference>
               <ColorButton :color="background.color || '#fff'"/>
             </template>
-            <ColorPicker :modelValue="background.color" @update:modelValue="color => updateBackground({color: color, fill: color})"/>
+            <ColorPicker :modelValue="background.color" @update:modelValue="(color: string) => updateBackground({color: color, fill: color})"/>
           </el-popover>
         </el-col>
 
@@ -44,7 +44,7 @@
     
     <!-- 图片填充 -->
     <div v-if="background.fillType === 1">
-      <FileInput @change="files => uploadBackgroundImage(files)" class="mb-10">
+      <FileInput @change="(files: FileList) => uploadBackgroundImage(files)" class="mb-10">
         <div class="background-image">
           <div class="content" :style="{ backgroundImage: `url(${background.imageURL})` }">
             <IconPlus />
@@ -55,15 +55,6 @@
 
     <!-- 渐变填充 -->
     <div v-if="background.fillType === 2">
-      <!-- <el-row class="mb-10">
-        <el-select class="full-row" v-model="background.gradientName" @change="changeGradientName">
-          <el-option v-for="(item, nameIndex) in GradientColorLibs" :key="nameIndex" :value="item.name">
-            <div style="display: flex">
-              <GradientFill :name="item.name" :type="background.gradientType" :colors="item.colors"></GradientFill>
-            </div>
-          </el-option>
-        </el-select>
-      </el-row> -->
       <div class="background-gradient-body">
         <div class="gradient-content" v-for="(item, nameIndex) in GradientColorLibs" :key="nameIndex" :value="item.name" @click.stop="changeGradientName(item.name)">
           <GradientFill :name="item.name" :type="background.gradientType" :colors="item.colors"></GradientFill>
@@ -103,7 +94,7 @@
             <template #reference>
               <ColorButton :color="item.color || '#fff'"/>
             </template>
-            <ColorPicker :modelValue="item.color" @update:modelValue="color => updateGradientBackground(index, color)"/>
+            <ColorPicker :modelValue="item.color" @update:modelValue="(color: string) => updateGradientBackground(index, color)"/>
           </el-popover>
         </div>
       </div>
@@ -268,7 +259,6 @@ import { ShadingBackground, ShadingColorLib } from '@/types/elements'
 import { BackgroundElement } from '@/types/canvas'
 import { getRandomNum } from '@/utils/common'
 import { getImageDataURL, getImageSize } from '@/utils/image'
-import { WorkSpaceDrawType } from '@/configs/canvas'
 import trianglify from '@/plugins/trianglify/trianglify'
 import useCanvas from '@/views/Canvas/useCanvas'
 import useCenter from '@/views/Canvas/useCenter'
@@ -276,14 +266,9 @@ import useCanvasZindex from '@/hooks/useCanvasZindex'
 import GridFill from './GridFill.vue'
 import GradientFill from './GradientFill.vue'
 
-
-
 const mainStore = useMainStore()
 const templatesStore = useTemplatesStore()
 const { canvasObject } = storeToRefs(mainStore)
-const { setZindex } = useCanvasZindex()
-const { currentTemplate } = storeToRefs(templatesStore)
-
 
 
 // 渐变偏移
