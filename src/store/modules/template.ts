@@ -74,33 +74,16 @@ export const useTemplatesStore = defineStore('Templates', {
       const mainStore = useMainStore()
       const { setCanvasSize } = useCanvasScale()
       const [ canvas ] = useCanvas()
-      
-      // const { createElement } = useHandleElement()
       canvas.discardActiveObject()
       mainStore.setCanvasObject(null)
       await canvas.loadFromJSON(this.currentTemplate)
       setCanvasSize()
-      // canvas.remove(...canvas.getObjects().filter(item => (item as CanvasElement).name !== WorkSpaceName))
-      // for (let i = 0; i < this.templates[this.templateIndex].objects.length; i++) {
-      //   const element = this.templates[this.templateIndex].objects[i] as CanvasOption
-      //   await createElement(element as CanvasOption)
-      // }
-      // this.templates[this.templateIndex].objects.forEach(element => {
-      //   
-      // })
-      // canvas.renderAll()
     },
 
     modifedElement() {
       const [ canvas ] = useCanvas()
-      // const { centerPoint } = useCenter()
       const { addHistorySnapshot } = useHistorySnapshot()
       const canvasTemplate = canvas.toObject(propertiesToInclude)
-      // for (let i = 0; i < canvasTemplate.objects.length; i++) {
-      //   const element = canvasTemplate.objects[i] as CanvasElement
-      //   element.left -= centerPoint.x
-      //   element.top -= centerPoint.y
-      // }
       this.templates[this.templateIndex].objects = canvasTemplate.objects
       this.templates[this.templateIndex].background = canvasTemplate.background
       this.templates[this.templateIndex].backgroundImage = canvasTemplate.backgroundImage

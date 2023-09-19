@@ -125,8 +125,8 @@ const { sizeMode, unitMode } = storeToRefs(mainStore)
 const { currentTemplate } = storeToRefs(templatesStore)
 const { clip, safe, zoom, opacity } = storeToRefs(fabricStore)
 
-// const canvasWidth = ref<number>(px2mm(currentTemplate.value.width / currentTemplate.value.zoom))
-// const canvasHeight = ref<number>(px2mm(currentTemplate.value.height / currentTemplate.value.zoom))
+const canvasWidth = ref<number>(px2mm(currentTemplate.value.width / currentTemplate.value.zoom))
+const canvasHeight = ref<number>(px2mm(currentTemplate.value.height / currentTemplate.value.zoom))
 
 const workSpaceWidth = computed(() => {
   let workWidth = px2mm(currentTemplate.value.width / currentTemplate.value.zoom)
@@ -150,23 +150,22 @@ const workSpaceHeight = computed(() => {
   return workHeight
 })
 
-const canvasWidth = ref<number>(workSpaceWidth.value)
-const canvasHeight = ref<number>(workSpaceHeight.value)
-// watch(currentTemplate, () => {
-//   const [ canvas ] = useCanvas()
-//   const { workSpaceDraw } = useCenter()
-//   if (!canvas) return
-//   if (!workSpaceDraw) return
-//   const workWidth = workSpaceDraw.width ? workSpaceDraw.width : 0, workHeight = workSpaceDraw.height ? workSpaceDraw.height : 0
-//   if (unitMode.value === 0) {
-//     canvasWidth.value = px2mm(workWidth)
-//     canvasHeight.value = px2mm(workHeight)
-//   } 
-//   else {
-//     canvasWidth.value = workWidth
-//     canvasHeight.value = workHeight
-//   }
-// }, { deep: true, immediate: true })
+watch(currentTemplate, () => {
+  const [ canvas ] = useCanvas()
+  if (!canvas) return
+  const { workSpaceDraw } = useCenter()
+  if (!workSpaceDraw) return
+  const workWidth = currentTemplate.value.width / currentTemplate.value.zoom
+  const workHeight = currentTemplate.value.height / currentTemplate.value.zoom
+  if (unitMode.value === 0) {
+    canvasWidth.value = px2mm(workWidth)
+    canvasHeight.value = px2mm(workHeight)
+  } 
+  else {
+    canvasWidth.value = workWidth
+    canvasHeight.value = workHeight
+  }
+}, { deep: true })
 
 // 宽高固定比例
 const isFixed = ref(false)
