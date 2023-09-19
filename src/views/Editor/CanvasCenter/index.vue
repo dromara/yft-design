@@ -1,7 +1,7 @@
 <template>
   <div 
     ref="wrapperRef" 
-    @mousedown="$event => addDrawAreaFocus($event)"
+    @mousedown="addDrawAreaFocus"
     v-contextmenu="contextmenus" 
     v-click-outside="remDrawAreaFocus"
   >
@@ -11,7 +11,7 @@
 
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia'
-import { onMounted } from 'vue'
+import { onMounted, onUnmounted } from 'vue'
 import { useFabricStore, useMainStore } from '@/store'
 import { initEvent } from '@/views/Event/index'
 
@@ -23,15 +23,24 @@ const mainStore = useMainStore()
 const [ canvas, initEditor ] = useCanvas()
 const { wrapperRef, canvasRef } = storeToRefs(fabricStore)
 const { drawAreaFocus } = storeToRefs(mainStore)
-useCanvasHotkey()
+const { keydownListener, keyupListener } = useCanvasHotkey()
 
 onMounted(() => {
   initEditor()
   initEvent()
+  document.addEventListener('keydown', keydownListener)
+  document.addEventListener('keyup', keyupListener)
+  window.addEventListener('blur', keyupListener)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('keydown', keydownListener)
+  document.removeEventListener('keyup', keyupListener)
+  window.removeEventListener('blur', keyupListener)
 })
 
 // 点击画布区域
-const addDrawAreaFocus = (e: MouseEvent) => {
+const addDrawAreaFocus = () => {
   if (!drawAreaFocus.value) mainStore.setDrawAreaFocus(true)
 }
 

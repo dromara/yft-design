@@ -290,14 +290,18 @@ export default () => {
     if (spaceKeyState.value) keyboardStore.setSpaceKeyState(false)
   }
 
-  onMounted(() => {
-    document.addEventListener('keydown', keydownListener)
-    document.addEventListener('keyup', keyupListener)
-    window.addEventListener('blur', keyupListener)
-  })
-  onUnmounted(() => {
-    document.removeEventListener('keydown', keydownListener)
-    document.removeEventListener('keyup', keyupListener)
-    window.removeEventListener('blur', keyupListener)
-  })
+  // onMounted(() => {
+  //   document.addEventListener('keydown', keydownListener)
+  //   document.addEventListener('keyup', keyupListener)
+  //   window.addEventListener('blur', keyupListener)
+  // })
+  // onUnmounted(() => {
+  //   document.removeEventListener('keydown', keydownListener)
+  //   document.removeEventListener('keyup', keyupListener)
+  //   window.removeEventListener('blur', keyupListener)
+  // })
+  return {
+    keydownListener,
+    keyupListener,
+  }
 }

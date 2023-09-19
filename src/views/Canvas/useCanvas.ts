@@ -13,6 +13,7 @@ import { CanvasElement } from '@/types/canvas'
 import { TransparentFill } from '@/configs/background'
 import { drawRotateIcon, drawAngleIcon, drawVerticalLeftLineIcon, drawVerticalRightLineIcon } from '@/utils/drawer'
 import useCanvasScale from '@/hooks/useCanvasScale'
+import useCanvasHotkey from '@/hooks/useCanvasHotkey'
 import useRotate from './useRotate'
 import { 
   WorkSpaceClipType, 
@@ -351,60 +352,60 @@ const initTemplate = async () => {
   setCanvasTransform()
 }
 
-// 初始化背景
-export const initBackground = async () => {
-  const templatesStore = useTemplatesStore()
-  const { getBackgroundImageOption } = useHandleBackground()
-  if (!canvas) return
-  const workSpaceDraw = canvas.getObjects(WorkSpaceDrawType)[0]
-  // const left = workSpaceDraw.left, top = workSpaceDraw.top
-  const { currentTemplate } = storeToRefs(templatesStore)
-  const workSpaceElement = currentTemplate.value.workSpace
-  // const workWidth = workSpaceDraw.width, workHeight = workSpaceDraw.height
-  const { left, top, angle, scaleX, scaleY } = getBackgroundImageOption()
-  workSpaceDraw.set({fill: TransparentFill})
-  if (!workSpaceElement) return
-  // 纯色 和 渐变
-  if (workSpaceElement.fillType === 0 || workSpaceElement.fillType === 2) {
-    workSpaceDraw.set('fill', workSpaceElement.fill)
-  }
-  // 图片
-  else if (workSpaceElement.fillType === 1) {
-    if (!workSpaceElement.imageURL) return
-    if (workSpaceElement.imageSize === 'repeat') {
-      workSpaceDraw.set('fill', workSpaceElement.fill)
-    }
-    else {
-      // let scaleX = 1, scaleY = 1
-      // @ts-ignore
-      const imageElement = await Image.fromURL(workSpaceElement.imageURL)
-      // if (workSpaceElement.imageSize === 'cover') {
-      //   scaleX = workWidth / imageElement.width, scaleY = workHeight / imageElement.height
-      // } 
-      imageElement.set({left, top, angle, scaleX, scaleY})
-      canvas.set('backgroundImage', imageElement)
-      canvas.renderAll()
-    }
-  }
-  // 网格
-  else if (workSpaceElement.fillType === 3) {
-    if (!workSpaceElement.gaidImageURL) return
-    // @ts-ignore
-    const imageElement = await Image.fromURL(workSpaceElement.gaidImageURL) 
-    imageElement.set({left, top, angle, scaleX, scaleY})
-    canvas.set('backgroundImage', imageElement)
-    canvas.renderAll()
-  }
-  // 底纹
-  else if (workSpaceElement.fillType === 4) {
-    if (!workSpaceElement.shadingImageURL) return
-    // @ts-ignore
-    const imageElement = await Image.fromURL(workSpaceElement.shadingImageURL) 
-    imageElement.set({left, top, angle, scaleX, scaleY})
-    canvas.set('backgroundImage', imageElement)
-    canvas.renderAll()
-  }
-}
+// // 初始化背景
+// const initBackground = async () => {
+//   const templatesStore = useTemplatesStore()
+//   const { getBackgroundImageOption } = useHandleBackground()
+//   if (!canvas) return
+//   const workSpaceDraw = canvas.getObjects(WorkSpaceDrawType)[0]
+//   // const left = workSpaceDraw.left, top = workSpaceDraw.top
+//   const { currentTemplate } = storeToRefs(templatesStore)
+//   const workSpaceElement = currentTemplate.value.workSpace
+//   // const workWidth = workSpaceDraw.width, workHeight = workSpaceDraw.height
+//   const { left, top, angle, scaleX, scaleY } = getBackgroundImageOption()
+//   workSpaceDraw.set({fill: TransparentFill})
+//   if (!workSpaceElement) return
+//   // 纯色 和 渐变
+//   if (workSpaceElement.fillType === 0 || workSpaceElement.fillType === 2) {
+//     workSpaceDraw.set('fill', workSpaceElement.fill)
+//   }
+//   // 图片
+//   else if (workSpaceElement.fillType === 1) {
+//     if (!workSpaceElement.imageURL) return
+//     if (workSpaceElement.imageSize === 'repeat') {
+//       workSpaceDraw.set('fill', workSpaceElement.fill)
+//     }
+//     else {
+//       // let scaleX = 1, scaleY = 1
+//       // @ts-ignore
+//       const imageElement = await Image.fromURL(workSpaceElement.imageURL)
+//       // if (workSpaceElement.imageSize === 'cover') {
+//       //   scaleX = workWidth / imageElement.width, scaleY = workHeight / imageElement.height
+//       // } 
+//       imageElement.set({left, top, angle, scaleX, scaleY})
+//       canvas.set('backgroundImage', imageElement)
+//       canvas.renderAll()
+//     }
+//   }
+//   // 网格
+//   else if (workSpaceElement.fillType === 3) {
+//     if (!workSpaceElement.gaidImageURL) return
+//     // @ts-ignore
+//     const imageElement = await Image.fromURL(workSpaceElement.gaidImageURL) 
+//     imageElement.set({left, top, angle, scaleX, scaleY})
+//     canvas.set('backgroundImage', imageElement)
+//     canvas.renderAll()
+//   }
+//   // 底纹
+//   else if (workSpaceElement.fillType === 4) {
+//     if (!workSpaceElement.shadingImageURL) return
+//     // @ts-ignore
+//     const imageElement = await Image.fromURL(workSpaceElement.shadingImageURL) 
+//     imageElement.set({left, top, angle, scaleX, scaleY})
+//     canvas.set('backgroundImage', imageElement)
+//     canvas.renderAll()
+//   }
+// }
 
 const initEditor = () => {
   const fabricStore = useFabricStore()

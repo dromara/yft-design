@@ -36,59 +36,59 @@ export default () => {
   const { canvasObject, clonedObject, currentPoint } = storeToRefs(mainStore)
   const { setZindex } = useCanvasZindex()
 
-  const setElementFill = async (element: CanvasElement) => {
-    const [ canvas ] = useCanvas()
-    if (!element.background) return
-    if (element.background.fillType === 0) return
-    if (element.background.fillType === 1) {
-      if (!element.background.imageURL) return
-      const source = await util.loadImage(element.background.imageURL)
-      const fill = new Pattern({source, repeat: 'repeat'})
-      element.set({fill})
-      canvas.renderAll()
-    }
-    else if (element.background.fillType === 2) {
+  // const setElementFill = async (element: CanvasElement) => {
+  //   const [ canvas ] = useCanvas()
+  //   if (!element.background) return
+  //   if (element.background.fillType === 0) return
+  //   if (element.background.fillType === 1) {
+  //     if (!element.background.imageURL) return
+  //     const source = await util.loadImage(element.background.imageURL)
+  //     const fill = new Pattern({source, repeat: 'repeat'})
+  //     element.set({fill})
+  //     canvas.renderAll()
+  //   }
+  //   else if (element.background.fillType === 2) {
 
-      const gradientFill = element.fill as Gradient<'linear' | 'radial'>
-      const fill = new Gradient({
-        type: gradientFill.type,
-        colorStops: gradientFill.colorStops,
-        coords: gradientFill.coords,
-        offsetX: gradientFill.offsetX,
-        offsetY: gradientFill.offsetY,
-        gradientTransform: gradientFill.gradientTransform ? gradientFill.gradientTransform : undefined
-      })
-      element.set({fill})
-      canvas.renderAll()
-    }
-    else if (element.background.fillType === 3) {
-      if (!element.background.gaidImageURL) return
-      const source = await util.loadImage(element.background.gaidImageURL)
-      const fill = new Pattern({source, repeat: 'repeat'})
-      element.set({fill})
-      canvas.renderAll()
-    }
-    else if (element.background.fillType === 4) {
-      if (!element.background.shadingImageURL) return
-      const source = await util.loadImage(element.background.shadingImageURL)
-      const fill = new Pattern({source, repeat: 'repeat'})
-      element.set({fill})
-      canvas.renderAll()
-    }
-  }
+  //     const gradientFill = element.fill as Gradient<'linear' | 'radial'>
+  //     const fill = new Gradient({
+  //       type: gradientFill.type,
+  //       colorStops: gradientFill.colorStops,
+  //       coords: gradientFill.coords,
+  //       offsetX: gradientFill.offsetX,
+  //       offsetY: gradientFill.offsetY,
+  //       gradientTransform: gradientFill.gradientTransform ? gradientFill.gradientTransform : undefined
+  //     })
+  //     element.set({fill})
+  //     canvas.renderAll()
+  //   }
+  //   else if (element.background.fillType === 3) {
+  //     if (!element.background.gaidImageURL) return
+  //     const source = await util.loadImage(element.background.gaidImageURL)
+  //     const fill = new Pattern({source, repeat: 'repeat'})
+  //     element.set({fill})
+  //     canvas.renderAll()
+  //   }
+  //   else if (element.background.fillType === 4) {
+  //     if (!element.background.shadingImageURL) return
+  //     const source = await util.loadImage(element.background.shadingImageURL)
+  //     const fill = new Pattern({source, repeat: 'repeat'})
+  //     element.set({fill})
+  //     canvas.renderAll()
+  //   }
+  // }
 
-  const getElementClippath = (option: CanvasOption): fabric.Path | fabric.Rect | undefined => {
-    if (!option.clipPath) return
-    const clipPathOption = option.clipPath as PathOption
-    let clipPath
-    if (clipPathOption.type === ElementNames.PATH) {
-      clipPath = new fabric.Path(clipPathOption.path, clipPathOption)
-    }
-    else if (clipPathOption.type === ElementNames.RECT) {
-      clipPath = new fabric.Rect(clipPathOption as Record<string, any>)
-    }
-    return clipPath
-  }
+  // const getElementClippath = (option: CanvasOption): fabric.Path | fabric.Rect | undefined => {
+  //   if (!option.clipPath) return
+  //   const clipPathOption = option.clipPath as PathOption
+  //   let clipPath
+  //   if (clipPathOption.type === ElementNames.PATH) {
+  //     clipPath = new fabric.Path(clipPathOption.path, clipPathOption)
+  //   }
+  //   else if (clipPathOption.type === ElementNames.RECT) {
+  //     clipPath = new fabric.Rect(clipPathOption as Record<string, any>)
+  //   }
+  //   return clipPath
+  // }
 
   // const createElement = async (element: CanvasOption) => {
   //   const [ canvas ] = useCanvas()
@@ -318,6 +318,7 @@ export default () => {
         break
       default: break
     }
+    // @ts-ignore
     templatesStore.updateElement({ id: activeObject.id, props: activeObject.toObject(propertiesToInclude as any[]) })
   }
 
@@ -334,6 +335,7 @@ export default () => {
     canvas.discardActiveObject()
     mainStore.setCanvasObject(null)
     const groupElement = new fabric.Group(activeObjects, { 
+      // @ts-ignore
       id: nanoid(10),
       name: ElementNames.GROUP, 
       interactive: false, 
