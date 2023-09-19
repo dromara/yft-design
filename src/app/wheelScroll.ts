@@ -29,15 +29,16 @@ export class WheelScroll extends Disposable {
       // 缩放视窗
       if (ctrl.value || cmd.value) {
         const zoomFactor = Math.abs(deltaY) < 10 ? deltaY * 2 : deltaY / 3
-        const currentZoom = this.canvas.getZoom()
-        let newZoom = currentZoom * (1 - zoomFactor / 200)
-        if (newZoom > 0.97 && newZoom < 1.03) {
-          newZoom = 1
+        const canvasZoom = this.canvas.getZoom()
+        let zoom = canvasZoom * (1 - zoomFactor / 200)
+        if (zoom > 0.97 && zoom < 1.03) {
+          zoom = 1
         }
-        this.canvas.zoomToPoint(new Point(offsetX, offsetY), newZoom)
+        this.canvas.zoomToPoint(new Point(offsetX, offsetY), zoom)
         this.setCoords()
         return
       }
+      
       // 滚动画布
       const deltaPoint = new Point()
       if (shift.value) {
@@ -76,8 +77,7 @@ export class WheelScroll extends Disposable {
     /** 是否需要执行setCoords */
     let needSetCoords = false
 
-    const { pause, resume } = useIntervalFn(
-      () => {
+    const { pause, resume } = useIntervalFn(() => {
         if (!event) return
 
         const A = new Point(24, 24)

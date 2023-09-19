@@ -54,7 +54,7 @@ export type HighlightRect = {
   skip?: TAxis
 } & Rect
 
-export class Ruler extends Disposable {
+export class CheckRuler extends Disposable {
   private canvasEvents
 
   /**

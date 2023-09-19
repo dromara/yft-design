@@ -6,7 +6,7 @@ import { useElementBounding } from '@vueuse/core'
 import { GuideLines } from '@/app/guideLiles'
 import { HoverBorders } from '@/app/hoverBorders'
 import { WheelScroll } from '@/app/wheelScroll'
-import { Ruler } from '@/app/ruler'
+import { CheckRuler } from '@/app/checkRuler'
 import { DefaultDPI, DefaultRatio } from '@/configs/size'
 import { useTemplatesStore } from '@/store'
 import { CanvasElement } from '@/types/canvas'
@@ -338,7 +338,7 @@ const initCanvas = () => {
   new GuideLines(canvas)
   new HoverBorders(canvas)
   new WheelScroll(canvas)
-  new Ruler(canvas)
+  new CheckRuler(canvas)
   canvas.preserveObjectStacking = true
   canvas.renderAll()
 }
