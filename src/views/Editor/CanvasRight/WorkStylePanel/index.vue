@@ -110,7 +110,7 @@ import { ElMessage } from 'element-plus'
 import { ref, watch, onMounted, computed } from 'vue'
 import { mm2px, px2mm } from '@/utils/image'
 import { useFabricStore, useMainStore, useTemplatesStore } from '@/store'
-import { WorkSpaceClipType, WorkSpaceMaskType } from '@/configs/canvas'
+import { WorkSpaceClipType, WorkSpaceDrawType, WorkSpaceMaskType } from '@/configs/canvas'
 import { DesignUnitMode, DesignSizeMode, MinSize, MaxSize } from '@/configs/background'
 import useCanvas from '@/views/Canvas/useCanvas'
 import useCenter from '@/views/Canvas/useCenter'
@@ -299,7 +299,11 @@ const changeUnitMode = () => {
 
 // 应用背景到所有页面
 const changeAllBackgroud = () => {
-  templatesStore.templates.forEach(item => item.workSpace = currentTemplate.value.workSpace)
+  templatesStore.templates.forEach(item => {
+    item.workSpace = currentTemplate.value.workSpace
+    const currentWorkSpace = currentTemplate.value.objects.filter(ele => ele.id === WorkSpaceDrawType)[0]
+    item.objects = item.objects.map(ele => ele.id === WorkSpaceDrawType ? currentWorkSpace : ele)
+  })
 }
 
 // 加载缓存最近添加的网格 
