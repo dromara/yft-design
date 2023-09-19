@@ -12,9 +12,9 @@
         <el-col :span="11" v-if="background.fillType === 0">
           <el-popover trigger="click" placement="bottom" :width="265">
             <template #reference>
-              <ColorButton :color="background.color || '#fff'"/>
+              <ColorButton :color="background.fill || '#fff'"/>
             </template>
-            <ColorPicker :modelValue="background.color" @update:modelValue="(color: string) => updateBackground({color: color, fill: color})"/>
+            <ColorPicker :modelValue="background.fill" @update:modelValue="(color: string) => updateBackground({color: color, fill: color})"/>
           </el-popover>
         </el-col>
 
@@ -249,20 +249,18 @@ import { ref, computed, watch, onMounted } from 'vue'
 import { useMainStore, useTemplatesStore } from '@/store'
 import { storeToRefs } from 'pinia'
 import { debounce } from 'lodash'
-import { Gradient, Pattern, Image, util, Group, loadSVGFromURL } from 'fabric'
+import { Gradient, Pattern, util } from 'fabric'
 import { TransparentFill, BackgroundFillMode, BackgroundFillImageMode, BackgroundFillGridMode, BackgroundFillGradientMode } from '@/configs/background'
 import { GridColorLibs } from '@/configs/gridColors'
 import { GradientColorLibs } from '@/configs/gradientColors'
 import { GradientCoords } from '@/types/elements'
 import { ShadingColorLibs, ShadingLigntColors } from '@/configs/shadingColors'
 import { ShadingBackground, ShadingColorLib } from '@/types/elements'
-import { BackgroundElement } from '@/types/canvas'
+import { BackgroundElement, CanvasElement } from '@/types/canvas'
 import { getRandomNum } from '@/utils/common'
-import { getImageDataURL, getImageSize } from '@/utils/image'
+import { getImageDataURL } from '@/utils/image'
 import trianglify from '@/plugins/trianglify/trianglify'
 import useCanvas from '@/views/Canvas/useCanvas'
-import useCenter from '@/views/Canvas/useCenter'
-import useCanvasZindex from '@/hooks/useCanvasZindex'
 import GridFill from './GridFill.vue'
 import GradientFill from './GradientFill.vue'
 
@@ -293,7 +291,7 @@ const shadingElement = ref<ShadingColorLib>(ShadingColorLibs[0])
 const shadingBackground = ref<ShadingBackground>({
   id: 1,
   colors: ShadingLigntColors,
-  colorCounts: 2,
+  colorCounts: shadingElement.value.colors,
   stroke: 1,
   scale: 1,
   spacing: [0, 0],
@@ -303,7 +301,18 @@ const shadingBackground = ref<ShadingBackground>({
   moveTop: 0
 })
 
-const handleElement = computed(() => canvasObject.value)
+// 加载缓存最近添加的网格 
+onMounted(() => {
+  const recentGridCache = localStorage.getItem(RECENT_GRIDS)
+  if (recentGridCache) gridColorRecent.value = JSON.parse(recentGridCache)
+})
+
+// 保存缓存最近添加的网格 
+watch(gridColorRecent, () => {
+  const recentGridCache = JSON.stringify(gridColorRecent.value)
+  localStorage.setItem(RECENT_GRIDS, recentGridCache)
+}, {deep: true})
+const handleElement = computed(() => canvasObject.value as CanvasElement)
 
 const background = computed(() => {
   if (!canvasObject.value) {
@@ -315,7 +324,7 @@ const background = computed(() => {
   if (!canvasObject.value.background) {
     return {
       fillType: 0,
-      fill: canvasObject.value.fill,
+      fill: handleElement.value.fill,
     } as BackgroundElement
   }
   return canvasObject.value.background
@@ -489,19 +498,6 @@ const updateGridColorRecentCache = debounce(function() {
     gridColorRecent.value = gridColorRecent.value.slice(0, maxLength) as [string[]]
   }
 }, 300, { trailing: true })
-
-
-// 加载缓存最近添加的网格 
-onMounted(() => {
-  const recentGridCache = localStorage.getItem(RECENT_GRIDS)
-  if (recentGridCache) gridColorRecent.value = JSON.parse(recentGridCache)
-})
-
-// 保存缓存最近添加的网格 
-watch(gridColorRecent, () => {
-  const recentGridCache = JSON.stringify(gridColorRecent.value)
-  localStorage.setItem(RECENT_GRIDS, recentGridCache)
-}, {deep: true})
 
 // 修改网格图片强度
 const changeGridStrength = (value: number) => {
@@ -695,11 +691,6 @@ const generateShadingBackground = async () => {
     </svg>
   `
   const imageURL = `data:image/svg+xml,${svg}`
-  // const backgroundImage = await Image.fromURL(imageURL, {
-  //   left: handleElement.value.left,
-  //   top: handleElement.value.top,
-
-  // })
   const source = await util.loadImage(imageURL)
   const elementPattern = new Pattern({source, repeat: 'no-repeat'})
   updateBackground({ shadingImageURL: imageURL, fill: elementPattern })

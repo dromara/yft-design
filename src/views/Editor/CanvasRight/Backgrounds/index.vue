@@ -269,7 +269,7 @@ import useHandleBackground from '@/hooks/useHandleBackground'
 
 
 const templatesStore = useTemplatesStore()
-const { setBackgroudImage, setWorkSpaceImage, getBackgroundImageOption } = useHandleBackground()
+const { setBackgroudImage } = useHandleBackground()
 const { currentTemplate } = storeToRefs(templatesStore)
 const { canvasObject } = storeToRefs(useMainStore())
 
@@ -295,7 +295,7 @@ const shadingElement = ref<ShadingColorLib>(ShadingColorLibs[0])
 const shadingBackground = ref<ShadingBackground>({
   id: 1,
   colors: ShadingLigntColors,
-  colorCounts: 2,
+  colorCounts: shadingElement.value.colors,
   stroke: 1,
   scale: 1,
   spacing: [0, 0],
@@ -407,6 +407,7 @@ const updateBackground = (props: Partial<WorkSpaceElement>) => {
     height: workSpaceDraw.height,
   })
   templatesStore.updateWorkSpace({ workSpace: { ...background.value, ...props } })
+  // @ts-ignore
   templatesStore.updateElement({ id: workSpaceDraw.id, props: workSpaceDraw.toObject(propertiesToInclude as any[]) })
   canvas.renderAll()
 }
