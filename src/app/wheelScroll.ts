@@ -42,7 +42,7 @@ export class WheelScroll extends Disposable {
       // 滚动画布
       const deltaPoint = new Point()
       if (shift.value) {
-        deltaPoint.x = deltaX > 0 ? -20 : 20
+        deltaPoint.x = deltaY > 0 ? -20 : 20
       } else {
         deltaPoint.y = deltaY > 0 ? -20 : 20
       }
