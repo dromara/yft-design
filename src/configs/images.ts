@@ -39,6 +39,6 @@ export const PatternImages = [
   { name: 'retina_wood', url: new URL(`/src/assets/images/retina_wood.png`, import.meta.url).href },
 ]
 
-
+export const GrayscaleType = 'Grayscale'
 export const SharpenMatrix = [ 0, -1, 0, -1, 5, -1, 0, -1, 0 ]
 export const EmbossMatrix = [ 0, -1, 0, -1, 5, -1, 0, -1, 0 ]

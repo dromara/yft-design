@@ -46,8 +46,6 @@ const maskAlpha = ref(0.3)
 const [ canvas ] = useCanvas()
 const { canvasObject } = storeToRefs(useMainStore())
 
-// const hasColorMask = ref(false)
-
 const handleElement = computed(() => canvasObject.value as ImageElement)
 const hasColorMask = computed(() => {
   if (!handleElement.value || handleElement.value.type !== ElementNames.IMAGE) return false

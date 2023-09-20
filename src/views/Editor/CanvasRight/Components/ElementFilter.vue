@@ -13,10 +13,10 @@
       <el-row class="mt-10">
         <el-col :span="2"></el-col>
         <el-col :span="22">
-          <el-radio-group class="full-ratio" v-model="grayScaleMode">
-            <el-radio-button label="average" @click.prevent="changeGrayScaleMode('average')">平均</el-radio-button>
-            <el-radio-button label="luminosity" @click.prevent="changeGrayScaleMode('luminosity')">光度</el-radio-button>
-            <el-radio-button label="lightness" @click.prevent="changeGrayScaleMode('lightness')">明亮</el-radio-button>
+          <el-radio-group class="full-ratio" v-model="elementGrayscale">
+            <el-radio-button label="average" @click.prevent="changeGrayscaleMode('average')">平均</el-radio-button>
+            <el-radio-button label="luminosity" @click.prevent="changeGrayscaleMode('luminosity')">光度</el-radio-button>
+            <el-radio-button label="lightness" @click.prevent="changeGrayscaleMode('lightness')">明亮</el-radio-button>
           </el-radio-group>
         </el-col>
       </el-row>
@@ -215,7 +215,7 @@ import { useMainStore } from '@/store'
 import { filters } from 'fabric'
 import { ImageElement } from '@/types/canvas'
 import { ElementNames } from '@/types/elements'
-import { SharpenMatrix, EmbossMatrix } from '@/configs/images'
+import { SharpenMatrix, EmbossMatrix, GrayscaleType } from '@/configs/images'
 import useCanvas from '@/views/Canvas/useCanvas'
 
 const [ canvas ] = useCanvas()
@@ -253,7 +253,6 @@ interface GammaColorOption {
   blue: number
 }
 
-// const elementFilters = ref<string[]>([])
 const imageFilters = computed(() => {
   let filters: string[] = []
   handleElement.value.filters.forEach(item => {
@@ -267,17 +266,27 @@ const imageFilters = computed(() => {
       }
     } 
     else {
-      filters.push(item.type)
+      if (!filters.includes(item.type)) filters.push(item.type)
     }
   })
-  console.log('filters:', filters)
   return filters
 })
 
+const imageGrayscale = computed(() => {
+  handleElement.value.filters.forEach(item => {
+    if (item.type === GrayscaleType) {
+      console.log('(item as filters.Grayscale).mode:', (item as filters.Grayscale).mode)
+      return (item as filters.Grayscale).mode
+    }
+  })
+  return ''
+})
+
+const elementGrayscale = ref<string>(imageGrayscale.value)
 const elementFilters = ref<string[]>(imageFilters.value)
 
 // 灰度
-const grayScaleMode = ref<string>('')  // 'average' | 'luminosity' | 'lightness' | ''
+// const grayScaleMode = ref<string>('')  // 'average' | 'luminosity' | 'lightness' | ''
 // 移除色
 const removeColor = ref<RemoveColorOption>({ distance: 0.5, color: '#fff'})
 // 伽马色
@@ -296,29 +305,29 @@ const blur = ref(0)          // 模糊
 // const hasFilters = ref(false)
 
 const hasFilter = computed(() => {
-  if (!handleElement.value || handleElement.value.type !== ElementNames.IMAGE) return false
+  if (!handleElement.value) return false
+  const elementType = handleElement.value.name ? handleElement.value.name : handleElement.value.type
+  if (elementType !== ElementNames.IMAGE) return false
   const filters = handleElement.value.filters.filter(obj => obj.type !== 'BlendColor')
-  if (filters && filters.length > 0) {
-    return true
-  }
+  if (filters && filters.length > 0) return true
   return false
 })
 
 const openFilter = ref<boolean>(hasFilter.value)
 
 // 图片灰度
-const changeGrayScaleMode = (mode: string) => {
-  const grayScaleType = 'Grayscale'
+const changeGrayscaleMode = (mode: string) => {
+  
   if (!handleElement.value) return
   if (!handleElement.value.filters) handleElement.value.filters = []
-  mode === grayScaleMode.value ? grayScaleMode.value = '' : grayScaleMode.value = mode
-  if (grayScaleMode.value) {
-    handleElement.value.filters.push(new filters.Grayscale({mode: grayScaleMode.value}) as filters.BaseFilter)
-    elementFilters.value.push(grayScaleType)
+  mode === elementGrayscale.value ? elementGrayscale.value = '' : elementGrayscale.value = mode
+  if (elementGrayscale.value) {
+    handleElement.value.filters.push(new filters.Grayscale({mode: elementGrayscale.value}) as filters.BaseFilter)
+    elementFilters.value.push(GrayscaleType)
   }
   else {
-    handleElement.value.filters = handleElement.value.filters.filter(obj => obj.type !== grayScaleType)
-    elementFilters.value = elementFilters.value.filter(obj => obj !== grayScaleType)
+    handleElement.value.filters = handleElement.value.filters.filter(obj => obj.type !== GrayscaleType)
+    elementFilters.value = elementFilters.value.filter(obj => obj !== GrayscaleType)
   }
   handleElement.value.applyFilters()
   canvas.renderAll()
@@ -338,11 +347,11 @@ const changeFilters = () => {
       }
       else if (item === 'BlackWhite') {
         // @ts-ignore
-        handleElement.value.filters?.push(new filters.BlackWhite())
+        handleElement.value.filters.push(new filters.BlackWhite())
       }
       else if (item === 'Brownie') {
         // @ts-ignore
-        handleElement.value.filters?.push(new filters.Brownie())
+        handleElement.value.filters.push(new filters.Brownie())
       }
       else if (item === 'Vintage') {
         // @ts-ignore
@@ -350,20 +359,21 @@ const changeFilters = () => {
       }
       else if (item === 'Technicolor') {
         // @ts-ignore
-        handleElement.value.filters?.push(new filters.Technicolor())
+        handleElement.value.filters.push(new filters.Technicolor())
       }
       else if (item === 'Kodachrome') {
         // @ts-ignore
-        handleElement.value.filters?.push(new filters.Kodachrome())
+        handleElement.value.filters.push(new filters.Kodachrome())
       }
       else if (item === 'Polaroid') {
         // @ts-ignore
-        handleElement.value.filters?.push(new filters.Polaroid())
+        handleElement.value.filters.push(new filters.Polaroid())
       }
     }
   })
 
   handleElement.value.filters = handleElement.value.filters.filter(obj => elementFilters.value.includes(obj.type))
+  console.log('handleElement.value.filters:', handleElement.value.filters)
   if (elementFilters.value.includes('Sharpen')) {
     handleElement.value.filters.push(new filters.Convolute({matrix: SharpenMatrix}) as filters.BaseFilter)
   }
@@ -500,6 +510,8 @@ const toggleFilters = (checked: boolean) => {
   }
   else {
     handleElement.value.filters.length = 0
+    // handleElement.value.applyFilters()
+    // canvas.renderAll()
   }
   
 }
