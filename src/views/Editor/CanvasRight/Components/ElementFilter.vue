@@ -371,9 +371,8 @@ const changeFilters = () => {
       }
     }
   })
-
   handleElement.value.filters = handleElement.value.filters.filter(obj => elementFilters.value.includes(obj.type))
-  console.log('handleElement.value.filters:', handleElement.value.filters)
+  
   if (elementFilters.value.includes('Sharpen')) {
     handleElement.value.filters.push(new filters.Convolute({matrix: SharpenMatrix}) as filters.BaseFilter)
   }
