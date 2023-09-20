@@ -116,23 +116,32 @@
     </el-row>
 
     <el-row class="mt-10">
-      <el-radio-group class="full-ratio" v-model="textAlign" @change="handleTextAlign">
-        <el-tooltip placement="top" content="左对齐" :hide-after="0">
-          <el-radio-button label="justify-left">
-            <IconAlignTextLeft />
-          </el-radio-button>
+      <el-col :span="18">
+        <el-radio-group class="full-ratio" v-model="textAlign" @change="handleTextAlign">
+          <el-tooltip placement="top" content="左对齐" :hide-after="0">
+            <el-radio-button label="justify-left">
+              <IconAlignTextLeft />
+            </el-radio-button>
+          </el-tooltip>
+          <el-tooltip placement="top" content="居中" :hide-after="0">
+            <el-radio-button label="justify-center">
+              <IconAlignTextCenter />
+            </el-radio-button>
+          </el-tooltip>
+          <el-tooltip placement="top" content="右对齐" :hide-after="0">
+            <el-radio-button label="justify-right">
+              <IconAlignTextRight />
+            </el-radio-button>
+          </el-tooltip>
+        </el-radio-group>
+      </el-col>
+      <el-col :span="6">
+        <el-tooltip placement="top" content="转曲" :hide-after="0">
+          <el-button class="full-button" @click="handleElementCurve">
+            <IconTextStyleOne />
+          </el-button>
         </el-tooltip>
-        <el-tooltip placement="top" content="居中" :hide-after="0">
-          <el-radio-button label="justify-center">
-            <IconAlignTextCenter />
-          </el-radio-button>
-        </el-tooltip>
-        <el-tooltip placement="top" content="右对齐" :hide-after="0">
-          <el-radio-button label="justify-right">
-            <IconAlignTextRight />
-          </el-radio-button>
-        </el-tooltip>
-      </el-radio-group>
+      </el-col>
     </el-row>
 
     <el-divider />
@@ -166,6 +175,7 @@
 import { computed, ref } from 'vue'
 import { useMainStore, useTemplatesStore } from '@/store'
 import { storeToRefs } from 'pinia'
+import { ElMessage } from 'element-plus'
 import ElementStroke from '../Components/ElementStroke.vue'
 import ElementShadow from '../Components/ElementShadow.vue'
 import ElementOpacity from '../Components/ElementOpacity.vue'
@@ -176,6 +186,7 @@ import { WEB_FONTS } from '@/configs/fonts'
 import { TextboxElement } from '@/types/canvas'
 import { FontGroupOption } from '@/types/elements'
 import useCanvas from '@/views/Canvas/useCanvas'
+
 
 const mainStore = useMainStore()
 const templatesStore = useTemplatesStore()
@@ -324,6 +335,12 @@ const handleElementArrange = (status: boolean) => {
   canvas.renderAll()
 }
 
+const handleElementCurve = () => {
+  // ElMessage
+  const handleElementPath = handleElement.value.toClipPathSVG()
+  console.log('handleElementPath:', handleElementPath)
+}
+
 const handleElementStyleClear = () => {
   handleElement.value.cleanStyle('fontWeight')
   templatesStore.modifedElement()
@@ -427,6 +444,9 @@ const handleElementStyleClear = () => {
 .full-checkbox {
   display: flex;
   flex: 1;
+}
+.full-button {
+  width: 100%;
 }
 
 </style>

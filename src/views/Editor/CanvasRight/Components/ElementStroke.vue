@@ -17,7 +17,7 @@
           <template #reference>
             <ColorButton :color="handleStroke.stroke" style="flex: 3;" />
           </template>
-          <ColorPicker :modelValue="handleStroke.stroke" @update:modelValue="color => updateStrokeColor(color)"/>
+          <ColorPicker :modelValue="handleStroke.stroke" @update:modelValue="(color: string) => updateStrokeColor(color)"/>
         </el-popover>
       </div>
     </template>
@@ -25,7 +25,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch, computed } from 'vue'
+import { ref, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useMainStore } from '@/store'
 import { TextboxElement } from '@/types/canvas'

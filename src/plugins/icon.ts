@@ -146,6 +146,7 @@ import {
   CheckOne,
   BarCode,
   PayCodeTwo,
+  TextStyleOne
 } from '@icon-park/vue-next'
 
 export const icons = {
@@ -293,6 +294,7 @@ export const icons = {
   IconCheckOne: CheckOne,
   IconBarCode: BarCode,
   IconPayCodeTwo: PayCodeTwo,
+  IconTextStyleOne: TextStyleOne,
 }
 
 export default {

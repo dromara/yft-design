@@ -20,7 +20,7 @@
           <template #reference>
             <ColorButton :color="handleElement.stroke" style="flex: 3;" />
           </template>
-          <ColorPicker :modelValue="handleElement.stroke" @update:modelValue="color => updateOutlineColor(color)"/>
+          <ColorPicker :modelValue="handleElement.stroke" @update:modelValue="(color: string) => updateOutlineColor(color)"/>
         </el-popover>
       </div>
       <div class="row">
