@@ -1,8 +1,8 @@
 <template>
   <div class="image-style-panel">
     <div class="title">码样式：</div>
-    <el-carousel type="card" :height="QRSize + 'px'" :autoplay="false" trigger="click" indicator-position="none" ref="carousel">
-      <el-carousel-item v-for="item in QRCodeStyleLibs" :key="item.index">
+    <el-carousel type="card" :height="QRSize + 'px'" :initial-index="initialIndex" :autoplay="false" trigger="click" indicator-position="none" ref="carousel">
+      <el-carousel-item v-for="item in QRCodeStyleLibs" :key="item.index" :name="item.name">
         <div justify="center" @click="generateQRCode(item.name)">
           <img v-if="item.name !== 'C2'" :src="`data:image/svg+xml;base64,` + Base64.encode(generateQRCodeMap[item.name](getEncodeData()))" :alt="item.name">
         </div>
@@ -51,7 +51,6 @@ import {
   rendererDSJ,
   rendererRandRect,
   rendererImage,
-  rendererResImage,
   rendererCircle,
   rendererLine,
   rendererLine2,
@@ -79,7 +78,6 @@ const generateQRCodeMap = {
   'SP3': rendererCircle,
   'B1': renderer25D,
   'C1': rendererImage,
-  'C2': rendererResImage,
   'A_a1': rendererLine,
   'A_a2': rendererLine2,
   'A_b1': rendererFuncA,
@@ -87,13 +85,11 @@ const generateQRCodeMap = {
 }
 
 const handleElement = computed(() => canvasObject.value as QRCodeElement)
-
-onMounted(() => {
-  if (!handleElement.value) return
+const initialIndex = computed(() => {
+  if (!handleElement.value) return 0
   const codeItem = QRCodeStyleLibs.filter(item => item.name === handleElement.value.codeStyle)[0]
-  if (codeItem.index) {
-    carousel.value?.setActiveItem(codeItem.index)
-  }
+  if (codeItem) return codeItem.index
+  return 0
 })
 
 // 输入二位码内容
