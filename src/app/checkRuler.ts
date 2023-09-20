@@ -13,7 +13,7 @@ type Rect = { left: number; top: number; width: number; height: number }
 export interface RulerOptions {
   /**
    * 标尺宽高
-   * @default 20
+   * @default 10
    */
   ruleSize?: number
 
@@ -50,9 +50,7 @@ export interface RulerOptions {
   highlightColor?: string
 }
 
-export type HighlightRect = {
-  skip?: TAxis
-} & Rect
+export type HighlightRect = {skip?: TAxis} & Rect
 
 export class CheckRuler extends Disposable {
   private canvasEvents
@@ -66,9 +64,9 @@ export class CheckRuler extends Disposable {
    * 选取对象矩形坐标
    */
   private objectRect: undefined | {
-        x: HighlightRect[]
-        y: HighlightRect[]
-      }
+    x: HighlightRect[],
+    y: HighlightRect[]
+  }
 
   constructor(private readonly canvas: Canvas) {
     super()
@@ -183,12 +181,7 @@ export class CheckRuler extends Disposable {
     })
   }
 
-  private draw(opt: {
-    ctx: CanvasRenderingContext2D
-    isHorizontal: boolean
-    rulerLength: number
-    startCalibration: number
-  }) {
+  private draw(opt: {ctx: CanvasRenderingContext2D, isHorizontal: boolean, rulerLength: number, startCalibration: number}) {
     const { ctx, isHorizontal, rulerLength, startCalibration } = opt
     const zoom = this.canvas.getZoom()
 
@@ -219,9 +212,7 @@ export class CheckRuler extends Disposable {
       for (let index = 0; index < 10; index++) {
         const position = Math.round((startOffset + pos + (gap * index) / 10) * zoom)
         const isMajorLine = index === 0
-        const [left, top] = isHorizontal
-          ? [position, isMajorLine ? 0 : ruleSize - 8]
-          : [isMajorLine ? 0 : ruleSize - 8, position]
+        const [left, top] = isHorizontal ? [position, isMajorLine ? 0 : ruleSize - 8] : [isMajorLine ? 0 : ruleSize - 8, position]
         const [width, height] = isHorizontal ? [0, ruleSize - top] : [ruleSize - left, 0]
         this.darwLine(ctx, {
           left,
@@ -238,13 +229,9 @@ export class CheckRuler extends Disposable {
       const axis = isHorizontal ? 'x' : 'y'
       this.objectRect[axis].forEach((rect) => {
         // 跳过指定矩形
-        if (rect.skip === axis) {
-          return
-        }
+        if (rect.skip === axis) return
 
-        const [left, top, width, height] = isHorizontal
-          ? [(rect.left - startCalibration) * zoom, 0, rect.width * zoom, ruleSize]
-          : [0, (rect.top - startCalibration) * zoom, ruleSize, rect.height * zoom]
+        const [left, top, width, height] = isHorizontal ? [(rect.left - startCalibration) * zoom, 0, rect.width * zoom, ruleSize] : [0, (rect.top - startCalibration) * zoom, ruleSize, rect.height * zoom]
 
         // 高亮遮罩
         // ctx.save()
@@ -264,9 +251,7 @@ export class CheckRuler extends Disposable {
       const position = (startOffset + pos) * zoom
       const textValue = (startValue + pos).toString()
 
-      const [left, top, angle] = isHorizontal
-        ? [position + 6, padding, 0]
-        : [padding, position - 6, -90]
+      const [left, top, angle] = isHorizontal ? [position + 6, padding, 0] : [padding, position - 6, -90]
 
       this.darwText(ctx, {
         text: textValue,
@@ -396,9 +381,6 @@ export class CheckRuler extends Disposable {
     }
     const allRect = activeObjects.reduce((rects, obj) => {
       const rect: HighlightRect = obj.getBoundingRect(true)
-      // if (obj instanceof fabric.GuideLine) {
-      //   rect.skip = obj.isHorizontal() ? 'x' : 'y'
-      // }
       rects.push(rect)
       return rects
     }, [] as HighlightRect[])
