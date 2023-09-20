@@ -40,6 +40,7 @@ const currentPanelComponent = computed(() => {
   if (!canvasObject.value) return null
   const elementName = canvasObject.value.name ? canvasObject.value.name : canvasObject.value.type
   if (elementName) {
+    // @ts-ignore
     return panelMap[elementName]
   }
   return null

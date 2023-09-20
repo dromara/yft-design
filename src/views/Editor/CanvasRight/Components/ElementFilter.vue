@@ -273,13 +273,13 @@ const imageFilters = computed(() => {
 })
 
 const imageGrayscale = computed(() => {
+  let grayscale = ''
   handleElement.value.filters.forEach(item => {
     if (item.type === GrayscaleType) {
-      console.log('(item as filters.Grayscale).mode:', (item as filters.Grayscale).mode)
-      return (item as filters.Grayscale).mode
+      grayscale = (item as filters.Grayscale).mode
     }
   })
-  return ''
+  return grayscale
 })
 
 const elementGrayscale = ref<string>(imageGrayscale.value)
@@ -510,8 +510,8 @@ const toggleFilters = (checked: boolean) => {
   }
   else {
     handleElement.value.filters.length = 0
-    // handleElement.value.applyFilters()
-    // canvas.renderAll()
+    handleElement.value.applyFilters()
+    canvas.renderAll()
   }
   
 }
