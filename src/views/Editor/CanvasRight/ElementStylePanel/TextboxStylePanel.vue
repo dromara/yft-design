@@ -2,7 +2,7 @@
   <div class="text-style-panel">    
     <el-row>
       <el-col :span="12">
-        <el-select v-model="hasFontFamily" @change="handleElementFontFamily">
+        <el-select v-model="elementFontFamily" @change="handleElementFontFamily">
           <el-option-group v-for="group in fontOptionGroups" :key="group.label" :label="group.label">
             <el-option v-for="item in group.options" :key="item" :value="item.value" :label="item.label" :style="{fontFamily: item.value}"></el-option>
           </el-option-group>
@@ -163,7 +163,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import { useMainStore, useTemplatesStore } from '@/store'
 import { storeToRefs } from 'pinia'
 import ElementStroke from '../Components/ElementStroke.vue'
@@ -189,7 +189,7 @@ const hasFontStyle = computed(() => handleElement.value.fontStyle !== 'normal')
 const hasUnderline = computed(() => handleElement.value.underline)
 const hasLinethrough = computed(() => handleElement.value.linethrough)
 const textAlign = computed(() => handleElement.value.textAlign)
-
+const elementFontFamily = ref<string>(hasFontFamily.value)
 const fontOptionGroups = ref<FontGroupOption[]>([
   {
     label: '系统字体',
@@ -234,12 +234,8 @@ const handleElementFontsize = (mode: string) => {
   if (!handleElement.value.fontSize) {
     handleElement.value.set({fontSize: 36})
   }
-  if (mode === '+') {
-    handleElement.value.fontSize += 1
-  }
-  else {
-    handleElement.value.fontSize -= 1
-  }
+  const fontSizeNum = mode === '+' ? handleElement.value.fontSize + 1 : handleElement.value.fontSize - 1
+  handleElement.value.set({fontSize: fontSizeNum})
   templatesStore.modifedElement()
   canvas.renderAll()
 }
