@@ -93,12 +93,12 @@
     <el-row class="mt-10">
       <el-button-group class="full-group">
         <el-tooltip placement="top" content="横向" :hide-after="0">
-          <el-button @click="handleElementStyleClear">
+          <el-button @click="handleElementArrange(false)" :type="!elementGrapheme ? 'primary': ''">
             <IconTextRotationNone />
           </el-button>
         </el-tooltip>
         <el-tooltip placement="top" content="纵向" :hide-after="0">
-          <el-button>
+          <el-button @click="handleElementArrange(true)" :type="elementGrapheme ? 'primary': ''">
             <IconTextRotationDown />
           </el-button>
         </el-tooltip>
@@ -182,6 +182,7 @@ const templatesStore = useTemplatesStore()
 const { canvasObject, availableFonts } = storeToRefs(mainStore)
 const [ canvas ] = useCanvas()
 const handleElement = computed(() => canvasObject.value as TextboxElement)
+const elementGrapheme = computed(() => handleElement.value.splitByGrapheme)
 const hasFontFamily = computed(() => handleElement.value.fontFamily)
 const hasFontWeight = computed(() => handleElement.value.fontWeight !== 'normal')
 const hasFontStyle = computed(() => handleElement.value.fontStyle !== 'normal')
@@ -317,6 +318,12 @@ const handleElementCharSpacing = (mode: '+' | '-') => {
   }
   const charSpacing = mode === '+' ? handleCharSpacing + 10 : handleCharSpacing - 10
   handleElement.value.set({ charSpacing })
+  templatesStore.modifedElement()
+  canvas.renderAll()
+}
+
+const handleElementArrange = (status: boolean) => {
+  handleElement.value.set({splitByGrapheme: status, width: handleElement.value.fontSize})
   templatesStore.modifedElement()
   canvas.renderAll()
 }

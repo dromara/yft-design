@@ -477,7 +477,6 @@ export const Templates: Template[] = [
         "skewX": 0,
         "skewY": 0,
         "src": "http://127.0.0.1:5173/src/assets/images/index.png",
-        "crossOrigin": "anonymous",
         "filters": []
       }
     ],
