@@ -2,6 +2,7 @@ import { CanvasElement } from '@/types/canvas'
 import { Point } from 'fabric/fabric-impl'
 import { customAlphabet } from 'nanoid'
 import NP from 'number-precision'
+NP.enableBoundaryChecking(false); // default param is true
 
 export const getRandomNum = (min: number, max: number) => {
   return Math.random() * (max - min)
@@ -26,12 +27,6 @@ export const isExternal = (path: string) => {
   return /^(https?:|mailto:|tel:)/.test(path)
 }
 
-// 校验元素坐标
-export const checkElementCoords = (element: CanvasElement) => {
-  return typeof element.left === 'number' && typeof element.top === 'number'
-}
-
-// 
 export const clamp = (value: number, minValue: number, maxValue: number) => {
   if (minValue > maxValue) {
     [minValue, maxValue] = [maxValue, minValue];
