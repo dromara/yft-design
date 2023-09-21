@@ -1,5 +1,5 @@
 import * as fabric from 'fabric';
-import { extend } from 'lodash';
+import { createTextboxDefaultControls } from '@/app/controls'
 import { fireCropImageEvent } from '../controls/cropping/cropping.controls.handlers';
 import {
   croppingControlSet,
@@ -120,7 +120,7 @@ export function canvasMouseMove({ e } = {}) {
   this.requestRenderAll();
 }
 
-function addCropImageInteractions(prototype: any) {
+export function addCropImageInteractions() {
   const cropping: any = {
     cropBorderColor: '#43b9d3',
     cropBorderScaleFactor: 2,
@@ -227,9 +227,7 @@ function addCropImageInteractions(prototype: any) {
       const lastTop = this.lastTop === undefined ? this.lastEventTop : this.lastTop;
       const lastLeft = this.lastLeft === undefined ? this.lastEventLeft : this.lastLeft;
       const changeVector = new fabric.Point(lastLeft - this.left, lastTop - this.top);
-      const correctMovement = fabric.util.transformPoint(
-        changeVector, this.moveTransformationMatrix,
-      );
+      const correctMovement = fabric.util.transformPoint(changeVector, this.moveTransformationMatrix);
       const width = this._element.naturalWidth || this._element.width;
       const height = this._element.naturalHeight || this._element.height;
       const changeX = correctMovement.x;
@@ -240,18 +238,19 @@ function addCropImageInteractions(prototype: any) {
         x: changeX,
         y: changeY,
       };
-      // verify bounds
       if (cropX < 0) {
         limitChangeVector.x = -this.cropX;
         cropX = 0;
-      } else if (cropX + this.width > width) {
+      } 
+      else if (cropX + this.width > width) {
         cropX = width - this.width;
         limitChangeVector.x = width - this.cropX - this.width;
       }
       if (cropY < 0) {
         limitChangeVector.y = -this.cropY;
         cropY = 0;
-      } else if (cropY + this.height > height) {
+      } 
+      else if (cropY + this.height > height) {
         cropY = height - this.height;
         limitChangeVector.y = height - this.cropY - this.height;
       }
@@ -263,18 +262,17 @@ function addCropImageInteractions(prototype: any) {
       this.left = this.lastEventLeft;
     },
   }
-  
-  extend(prototype, cropping);
+  return cropping
+  // extend(prototype, cropping);
 }
 
-export function extendWithCropImage(CropImage: any) {
-  const fabricStore = useFabricStore()
-  const { isCropping } = storeToRefs(fabricStore)
+export function extendWithCropImage(CropImage: fabric.Object) {
   Object.defineProperty(CropImage, 'isCropping', {
     get() {
       return !!this.__isCropping;
     },
     set(value: boolean) {
+      console.log('value:', value)
       const fabricCanvas = this.canvas;
       if (!fabricCanvas) {
         this.__isCropping = false;
@@ -283,30 +281,15 @@ export function extendWithCropImage(CropImage: any) {
       let { defaultCursor } = fabricCanvas;
       value = !!value;
       if (value === this.isCropping) return;
-      this.__isCropping = value;
-      isCropping.value = value
-      const pathWitdh = 100
-      const width = this._element.naturalWidth || this._element.width;
-      const height = this._element.naturalHeight || this._element.height;
+      this.__isCropping = value
       if (value) {
-        // this.clipPath = '';
-        // console.log('width:', this.width, width, 'height:', this.height, height)
-        // this.cropY = (height / 2 - pathWitdh / 2);
-        // this.cropX = (width/ 2 - pathWitdh / 2)
-        // this.height = height - this.cropY
-        // this.width = width - this.cropX
-        // this.top += this.cropY / 2
-        // this.left += this.cropX / 2
         defaultCursor = fabricCanvas.defaultCursor;
         fabricCanvas.defaultCursor = 'move';
-        // handle crop mode enter
         isolateObjectForEdit(this);
         this.lastEventTop = this.top;
         this.lastEventLeft = this.left;
         this.setupDragMatrix();
-        // this.cropHandler = this.cropModeHandlerMoveImage;
         this.bindCropModeHandlers();
-        // after changing padding we have to recalculate corner positions
         this.controls = croppingControlSet;
         if (this.flipX && !this.flipY) {
           this.controls = flipXCropControls;
@@ -318,23 +301,14 @@ export function extendWithCropImage(CropImage: any) {
           this.controls = flipXYCropControls;
         }
         if (this.scaleX != this.scaleY) {
-          this.setControlsVisibility({
-            tlS: false,
-            trS: false,
-            blS: false,
-            brS: false,
-          });
-        } else {
-          this.setControlsVisibility({
-            tlS: true,
-            trS: true,
-            blS: true,
-            brS: true,
-          });
+          this.setControlsVisibility({tlS: false, trS: false, blS: false, brS: false});
+        } 
+        else {
+          this.setControlsVisibility({tlS: true, trS: true, blS: true, brS: true});
         }
         this.setCoords();
-        fabricCanvas.centeredKey = 'none';
-        fabricCanvas.altActionKey = 'none';
+        fabricCanvas.centeredKey = null;
+        fabricCanvas.altActionKey = null;
         fabricCanvas.selection = false;
       } else {
         fabricCanvas.defaultCursor = defaultCursor;
@@ -345,17 +319,12 @@ export function extendWithCropImage(CropImage: any) {
         fabricCanvas.centeredKey = fabric.Canvas.prototype.centeredKey;
         fabricCanvas.altActionKey = fabric.Canvas.prototype.altActionKey;
         fabricCanvas.selection = true;
-        this.controls = standardControlSet;
+        this.controls = createTextboxDefaultControls()
         this.setCoords();
         fireCropImageEvent(this);
-        // this.clipPath = new fabric.Path('M 0 -100 A 50 50 0 1 1 0 100 A 50 50 0 1 1 0 -100 Z', {
-        //   originX: 'center',
-        //   originY: 'center',
-        //   fill: '',
-        // })
       }
     },
   });
 
-  addCropImageInteractions(CropImage);
+  // addCropImageInteractions(CropImage);
 }

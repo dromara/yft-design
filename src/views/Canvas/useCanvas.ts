@@ -7,6 +7,7 @@ import { GuideLines } from '@/app/guideLiles'
 import { HoverBorders } from '@/app/hoverBorders'
 import { WheelScroll } from '@/app/wheelScroll'
 import { CheckRuler } from '@/app/checkRuler'
+import { createObjectDefaultControls } from '@/app/controls'
 import { DefaultDPI, DefaultRatio } from '@/configs/size'
 import { useTemplatesStore } from '@/store'
 import { CanvasElement } from '@/types/canvas'
@@ -52,6 +53,7 @@ const initConf = () => {
   FabricObject.ownDefaults.rotatingPointOffset = 5
   FabricObject.ownDefaults.lockUniScaling = true
   FabricObject.ownDefaults.hasRotatingPoint = true
+  FabricObject.ownDefaults.controls = createObjectDefaultControls()
   // Object.prototype.controls.mt.visible = false
   // Object.prototype.controls.mb.visible = false
   console.log('FabricObject.ownDefaults.controls :', FabricObject.ownDefaults )

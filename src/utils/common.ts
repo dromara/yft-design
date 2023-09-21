@@ -1,6 +1,7 @@
 import { CanvasElement } from '@/types/canvas'
 import { Point } from 'fabric/fabric-impl'
 import { customAlphabet } from 'nanoid'
+import NP from 'number-precision'
 
 export const getRandomNum = (min: number, max: number) => {
   return Math.random() * (max - min)
@@ -44,3 +45,25 @@ export const isMobile = () => {
 }
 
 export const PiBy180 = Math.PI / 180
+export const halfPI = Math.PI / 2
+
+
+
+/**
+ * Clamps the given 'angle' between '-180' and '180'
+ * @param angle
+ * @returns The clamped angle
+ */
+export const clampAngle = (angle: number): number => {
+  const normalizedAngle = ((angle % 360) + 360) % 360
+  const clampedAngle = normalizedAngle > 180 ? normalizedAngle - 360 : normalizedAngle
+  return clampedAngle
+}
+
+/**
+ * Rounds a number to a specified number of decimal places.
+ * @param {number} v - The number to round.
+ * @param {number} [digits=2] - The number of decimal places to round to. Default is 2.
+ * @returns {number} - The rounded number.
+ */
+export const toFixed = (v: number, digits = 2): number => NP.round(v, digits)

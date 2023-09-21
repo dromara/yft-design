@@ -1,5 +1,5 @@
-export const PiBy180 = Math.PI / 180
-export const halfPI = Math.PI / 2;
+import type { Control } from 'fabric'
+import { PiBy180 } from '@/utils/common'
 
 interface NominalTag<T> {
   nominalTag?: T;
@@ -12,6 +12,8 @@ const enum Radian {}
 
 export type TDegree = Nominal<number, Degree>;
 export type TRadian = Nominal<number, Radian>;
+
+export type TControlSet = Record<string, Control>
 
 export type TOriginX = 'center' | 'left' | 'right' | number;
 export type TOriginY = 'center' | 'top' | 'bottom' | number;

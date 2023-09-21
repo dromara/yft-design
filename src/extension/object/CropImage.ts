@@ -1,13 +1,14 @@
 import * as fabric from 'fabric'
-import { config, classRegistry } from 'fabric'
+import { Object as FabricObject, config, classRegistry, TPointerEventInfo, TPointerEvent } from 'fabric'
 import { TClassProperties } from '@/types/typedefs'
-
+import { croppingControlSet, flipXCropControls, flipXYCropControls, flipYCropControls, standardControlSet } from '@/extension/controls/cropping/cropping.controls'
+import { addCropImageInteractions, extendWithCropImage, isolateObjectForEdit, unisolateObjectForEdit } from '@/extension/mixins/cropping.mixin'
+import { fireCropImageEvent } from '@/extension/controls/cropping/cropping.controls.handlers'
 
 type ImageSource = HTMLImageElement | HTMLVideoElement | HTMLCanvasElement;
 
 export class CropImage extends fabric.Image {
-  isCropping?: boolean;
-
+  isCropping?: boolean
   constructor(element: ImageSource, options: any = {}) {
     super(element, { filters: [], ...options });
     this.initEvent();
@@ -66,11 +67,9 @@ export class CropImage extends fabric.Image {
       noSkew = dimOptions.skewX === 0 && dimOptions.skewY === 0;
     let finalDimensions;
     if (noSkew) {
-      finalDimensions = new fabric.Point(
-        dimX * dimOptions.scaleX,
-        dimY * dimOptions.scaleY
-      );
-    } else {
+      finalDimensions = new fabric.Point(dimX * dimOptions.scaleX, dimY * dimOptions.scaleY);
+    } 
+    else {
       finalDimensions = fabric.util.sizeAfterTransform(dimX, dimY, dimOptions);
     }
 
@@ -87,15 +86,12 @@ export class CropImage extends fabric.Image {
     const elementToDraw = this._element;
     ctx.save();
     if (this.isCropping) {
-      // this.strokeWidth = 0;
-      // @ts-ignore
       this._removeShadow(ctx); // main context
       ctx.globalAlpha = 0.5;
       const elWidth = this.getElementWidth();
       const elHeight = this.getElementHeight();
       const imageCopyX = -(this.cropX || 0) - width / 2;
       const imageCopyY = -(this.cropY || 0) - height / 2;
-      // console.log('imageCropX:', imageCopyX, 'this.cropX:', this.cropX, 'width:', width, 'elWidth:', elWidth, 'imageCopyY:', imageCopyY, 'this.cropY:', this.cropY, 'height:', height, 'elHeight:', elHeight)
       ctx.drawImage(
         elementToDraw,
         imageCopyX,
@@ -106,9 +102,7 @@ export class CropImage extends fabric.Image {
       ctx.globalAlpha = 1;
     }
     super._render(ctx);
-    // @ts-ignore
     this._drawCroppingLines(ctx);
-    // @ts-ignore
     // this._drawCroppingPath(ctx);
     ctx.restore();
     // this.strokeWidth = originalstrokeWidth;
@@ -116,13 +110,11 @@ export class CropImage extends fabric.Image {
   }
 
   _drawCroppingLines(ctx: CanvasRenderingContext2D) {
-    // @ts-ignore
-    if (!this.isCropping || (this.canvas && (this.canvas.isCropping))) {
+    if (!this.isCropping || !this.canvas) {
       return;
     }
     const w = this.width;
     const h = this.height;
-    // @ts-ignore
     const zoom = this.canvas.getZoom() * config.devicePixelRatio;
     ctx.save();
     ctx.lineWidth = 1;
@@ -144,10 +136,7 @@ export class CropImage extends fabric.Image {
   }
 
   _drawCroppingPath(ctx: CanvasRenderingContext2D) {
-    // @ts-ignore
-    if (!this.isCropping || (this.canvas && (this.canvas.isCropping))) {
-      return;
-    }
+    if (!this.isCropping) return
     const w = this.width;
     const h = this.height;
     // @ts-ignore
@@ -157,16 +146,6 @@ export class CropImage extends fabric.Image {
     ctx.globalAlpha = 1;
     // @ts-ignore
     ctx.strokeStyle = this.cropLinesColor;
-    // this.clipPath = clippath
-    // ctx.beginPath();
-    // ctx.moveTo(w / 2, 0);
-    // A rx ry x-axis-rotation large-arc-flag sweep-flag x y
-    // rx: x轴半径 ry: y轴半径   
-    // x-axis-rotation：指椭圆的X轴与水平方向顺时针方向夹角，可以想像成一个水平的椭圆绕中心点顺时针旋转的角度
-    // large-arc-flag：1表示大角度弧线，0为小角度弧线
-    // sweep-flag：1为顺时针方向，0为逆时针方向
-    // x：结束点x坐标
-    // y：结束点y坐标
     ctx.stroke(new Path2D('M 0 -100 A 50 50 0 1 1 0 100 A 50 50 0 1 1 0 -100 Z'));
     ctx.scale(1 / (this.scaleX * zoom), 1 / (this.scaleY * zoom));
     ctx.restore();
@@ -204,10 +183,7 @@ export class CropImage extends fabric.Image {
     return fabric.util.loadImage(url, options).then((img) => new this(img, options));
   }
 
-  static fromObject(
-    { filters: f, resizeFilter: rf, src, crossOrigin, ...object }: any,
-    options: { signal: AbortSignal }
-  ): Promise<CropImage> {
+  static fromObject({ filters: f, resizeFilter: rf, src, crossOrigin, ...object }: any, options: { signal: AbortSignal }): Promise<CropImage> {
     return Promise.all([
       fabric.util.loadImage(src, { ...options, crossOrigin }),
       f && fabric.util.enlivenObjects(f, options),
@@ -239,11 +215,11 @@ const imageDefaultValues: Partial<TClassProperties<CropImage>> = {
 Object.assign(CropImage.prototype, {
   ...imageDefaultValues,
   cacheProperties: [...fabric.Object.cacheProperties, 'cropX', 'cropY'],
-});
+  ...addCropImageInteractions()
+})
 
-classRegistry.setClass(CropImage, 'cropimage');
-classRegistry.setSVGClass(CropImage, 'cropimage');
+// extendWithCropImage(CropImage.prototype)
 
-// if (typeof CropImage.prototype.isCropping === 'undefined') {
-//   extendWithCropping(CropImage);
-// }
+classRegistry.setClass(CropImage, 'cropimage')
+
+
