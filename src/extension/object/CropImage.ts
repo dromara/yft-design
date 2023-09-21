@@ -4,6 +4,7 @@ import { TClassProperties } from '@/types/typedefs'
 import { croppingControlSet, flipXCropControls, flipXYCropControls, flipYCropControls, standardControlSet } from '@/extension/controls/cropping/cropping.controls'
 import { addCropImageInteractions, extendWithCropImage, isolateObjectForEdit, unisolateObjectForEdit } from '@/extension/mixins/cropping.mixin'
 import { fireCropImageEvent } from '@/extension/controls/cropping/cropping.controls.handlers'
+import { createTextboxDefaultControls } from '@/app/controls'
 
 type ImageSource = HTMLImageElement | HTMLVideoElement | HTMLCanvasElement;
 
@@ -15,12 +16,93 @@ export class CropImage extends fabric.Image {
   }
 
   initEvent() {
-    this.on('mousedblclick', () => {
-      if (!this.canvas) return;
-      this.isCropping = true;
-      this.canvas.setActiveObject(<fabric.Object>this);
-      this.canvas.renderAll();
-    });
+    // this.on('mousedblclick', () => {
+    //   if (!this.canvas) return;
+    //   this.isCropping = true;
+    //   this.canvas.setActiveObject(<fabric.Object>this);
+    //   this.canvas.renderAll();
+    // });
+    this.on('mousedblclick', this.doubleClickHandler.bind(this))
+  }
+
+  public doubleClickHandler(e: TPointerEventInfo<TPointerEvent>) {
+    if (!this.canvas || !e.target || e.target !== this || this.isCropping) return
+
+    // 启用
+    this.set({isCropping: true})
+    this.onMousedbclickEvent()
+    // 绑定事件
+    this.addDeselectedEvent(this)
+
+    // 搜索被双击的目标并激活
+    this.canvas.setActiveObject(e.target)
+
+    this.canvas.requestRenderAll()
+  }
+
+  onMousedbclickEvent() {
+    const fabricCanvas = this.canvas
+    if (!fabricCanvas) return
+    // defaultCursor = fabricCanvas.defaultCursor;
+    fabricCanvas.defaultCursor = 'move';
+    isolateObjectForEdit(this);
+    this.lastEventTop = this.top;
+    this.lastEventLeft = this.left;
+    this.setupDragMatrix();
+    this.bindCropModeHandlers();
+    this.controls = croppingControlSet;
+    if (this.flipX && !this.flipY) {
+      this.controls = flipXCropControls;
+    }
+    if (this.flipY && !this.flipX) {
+      this.controls = flipYCropControls;
+    }
+    if (this.flipX && this.flipY) {
+      this.controls = flipXYCropControls;
+    }
+    if (this.scaleX != this.scaleY) {
+      this.setControlsVisibility({tlS: false, trS: false, blS: false, brS: false});
+    } 
+    else {
+      this.setControlsVisibility({tlS: true, trS: true, blS: true, brS: true});
+    }
+    this.setCoords();
+    fabricCanvas.centeredKey = null;
+    fabricCanvas.altActionKey = null;
+    fabricCanvas.selection = false;
+  }
+
+  public addDeselectedEvent(target: FabricObject) {
+    target.once('deselected', () => {
+      console.log('once1:')
+      this.onDeselectEvent()
+      const activeObject = this.canvas?.getActiveObject()
+      if (!activeObject) {
+        // 关闭
+        this.set({isCropping: false})
+        this.onDeselectEvent()
+      } else {
+        // 事件传递
+        this.addDeselectedEvent(activeObject)
+      }
+    })
+  }
+
+  public onDeselectEvent() {
+    console.log('unbindCropModeHandlers:')
+    const fabricCanvas = this.canvas
+    if (!fabricCanvas) return
+    // fabricCanvas.defaultCursor = defaultCursor;
+    unisolateObjectForEdit(this);
+    delete this.lastEventTop;
+    delete this.lastEventLeft;
+    this.unbindCropModeHandlers();
+    fabricCanvas.centeredKey = fabric.Canvas.prototype.centeredKey;
+    fabricCanvas.altActionKey = fabric.Canvas.prototype.altActionKey;
+    fabricCanvas.selection = true;
+    this.controls = createTextboxDefaultControls()
+    this.setCoords();
+    fireCropImageEvent(this);
   }
 
   getOriginalElementWidth() {
