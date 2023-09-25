@@ -180,6 +180,8 @@ import { FontSizeLibs, LineHeightLibs, CharSpaceLibs } from '@/configs/texts'
 import { WEB_FONTS } from '@/configs/fonts'
 import { TextboxElement } from '@/types/canvas'
 import { FontGroupOption } from '@/types/elements'
+import useCreateElement from "@/hooks/useCreateElement"
+import fontfile from '@/assets/fonts/得意黑.ttf'
 import opentype from "opentype.js";
 import ElementStroke from '../Components/ElementStroke.vue'
 import ElementShadow from '../Components/ElementShadow.vue'
@@ -192,6 +194,7 @@ import useCanvas from '@/views/Canvas/useCanvas'
 const mainStore = useMainStore()
 const templatesStore = useTemplatesStore()
 const { canvasObject, systemFonts } = storeToRefs(mainStore)
+const { createPathElement } = useCreateElement()
 const [ canvas ] = useCanvas()
 const handleElement = computed(() => canvasObject.value as TextboxElement)
 const elementGrapheme = computed(() => handleElement.value.splitByGrapheme)
@@ -340,10 +343,11 @@ const handleElementCurve = async () => {
   // ElMessage
   // const text2svg = new Text2svg(handleElement.value.fontFamily);
   // const svg = text2svg.toSVG('something', {});
-  const font = await opentype.load(`${handleElement.value.fontFamily}.ttf`);
+  const font = await opentype.load(fontfile);
   console.log('font:', font)
-  const path = font.getPath('Hello, World!', 0, 150, 72);
+  const path = font.getPath(handleElement.value.text, 0, 150, 72).toPathData(2);
   console.log(path);
+  createPathElement(path, [])
   const handleElementPath = handleElement.value
   console.log('handleElementPath:', handleElementPath)
 }
