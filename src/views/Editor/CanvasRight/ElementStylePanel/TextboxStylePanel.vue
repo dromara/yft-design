@@ -176,21 +176,22 @@ import { computed, ref } from 'vue'
 import { useMainStore, useTemplatesStore } from '@/store'
 import { storeToRefs } from 'pinia'
 import { ElMessage } from 'element-plus'
+import { FontSizeLibs, LineHeightLibs, CharSpaceLibs } from '@/configs/texts'
+import { WEB_FONTS } from '@/configs/fonts'
+import { TextboxElement } from '@/types/canvas'
+import { FontGroupOption } from '@/types/elements'
+import opentype from "opentype.js";
 import ElementStroke from '../Components/ElementStroke.vue'
 import ElementShadow from '../Components/ElementShadow.vue'
 import ElementOpacity from '../Components/ElementOpacity.vue'
 import ElementPatterns from '../Components/ElementPatterns.vue'
 import ElementFill from '../Backgrounds/ElementFill.vue'
-import { FontSizeLibs, LineHeightLibs, CharSpaceLibs } from '@/configs/texts'
-import { WEB_FONTS } from '@/configs/fonts'
-import { TextboxElement } from '@/types/canvas'
-import { FontGroupOption } from '@/types/elements'
 import useCanvas from '@/views/Canvas/useCanvas'
 
 
 const mainStore = useMainStore()
 const templatesStore = useTemplatesStore()
-const { canvasObject, availableFonts } = storeToRefs(mainStore)
+const { canvasObject, systemFonts } = storeToRefs(mainStore)
 const [ canvas ] = useCanvas()
 const handleElement = computed(() => canvasObject.value as TextboxElement)
 const elementGrapheme = computed(() => handleElement.value.splitByGrapheme)
@@ -204,7 +205,7 @@ const elementFontFamily = ref<string>(hasFontFamily.value)
 const fontOptionGroups = ref<FontGroupOption[]>([
   {
     label: '系统字体',
-    options: availableFonts.value
+    options: systemFonts.value
   },
   {
     label: '在线字体',
@@ -335,9 +336,15 @@ const handleElementArrange = (status: boolean) => {
   canvas.renderAll()
 }
 
-const handleElementCurve = () => {
+const handleElementCurve = async () => {
   // ElMessage
-  const handleElementPath = handleElement.value.toClipPathSVG()
+  // const text2svg = new Text2svg(handleElement.value.fontFamily);
+  // const svg = text2svg.toSVG('something', {});
+  const font = await opentype.load(`${handleElement.value.fontFamily}.ttf`);
+  console.log('font:', font)
+  const path = font.getPath('Hello, World!', 0, 150, 72);
+  console.log(path);
+  const handleElementPath = handleElement.value
   console.log('handleElementPath:', handleElementPath)
 }
 

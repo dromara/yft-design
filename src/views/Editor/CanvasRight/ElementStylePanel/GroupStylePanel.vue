@@ -6,7 +6,7 @@
         <template #reference>
           <ColorButton :color="fillColor" style="flex: 3;" />
         </template>
-        <ColorPicker :modelValue="fillColor" @update:modelValue="value => updateFillColor(value)"/>
+        <ColorPicker :modelValue="fillColor" @update:modelValue="(value: string) => updateFillColor(value)"/>
       </el-popover>
     </div>
 
@@ -25,7 +25,7 @@
         <template #reference>
           <ColorButton :color="outlineColor || '#000'" style="flex: 3;" />
         </template>
-        <ColorPicker :modelValue="outlineColor" @update:modelValue="value => updateOutlineColor(value)"/>
+        <ColorPicker :modelValue="outlineColor" @update:modelValue="(value: string) => updateOutlineColor(value)"/>
       </el-popover>
     </div>
     <div class="row">
@@ -63,7 +63,7 @@
                     </TextColorButton>
                   </el-button>
                 </template>
-                <ColorPicker :modelValue="fillColor" @update:modelValue="color => updateFontColor(color)"/>
+                <ColorPicker :modelValue="fillColor" @update:modelValue="(color: string) => updateFontColor(color)"/>
               </el-popover>
             </div>
           </el-tooltip>
@@ -79,7 +79,7 @@
                     </TextColorButton>
                   </el-button>
                 </template>
-                <ColorPicker :modelValue="backgroundColor" @update:modelValue="color => updateBackgroundColor(color)"/>
+                <ColorPicker :modelValue="backgroundColor" @update:modelValue="(color: string) => updateBackgroundColor(color)"/>
               </el-popover>
             </div>
           </el-tooltip>
@@ -136,7 +136,7 @@ import useCanvas from '@/views/Canvas/useCanvas'
 // 组合元素编辑
 // http://jsfiddle.net/crandellws/1cad3e4o/
 const [ canvas ] = useCanvas()
-const { activeElementList, canvasObject, availableFonts } = storeToRefs(useMainStore())
+const { activeElementList, canvasObject, systemFonts } = storeToRefs(useMainStore())
 
 const handleGroupElement = computed(() => canvasObject.value as GroupElement)
 const handleTextboxElement = computed(() => {
@@ -179,7 +179,7 @@ const computedFillColor = computed(() => {
 const fontOptionGroups = ref<FontGroupOption[]>([
   {
     label: '系统字体',
-    options: availableFonts.value
+    options: systemFonts.value
   },
   {
     label: '在线字体',

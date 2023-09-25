@@ -22,7 +22,7 @@ export interface MainState {
   selectedTemplatesIndex: number[]
   thumbnailsFocus: boolean
   drawAreaFocus: boolean
-  availableFonts: typeof SYS_FONTS
+  systemFonts: typeof SYS_FONTS
   disableHotkeys: boolean
   exportType: ExportTypes
   poolType: PoolType
@@ -48,7 +48,7 @@ export const useMainStore = defineStore('main', {
     selectedTemplatesIndex: [],
     thumbnailsFocus: false, // 左侧导航缩略图区域聚焦
     drawAreaFocus: false, // 编辑区聚焦
-    availableFonts: SYS_FONTS, // 系统字体
+    systemFonts: SYS_FONTS, // 系统字体
     disableHotkeys: false, // 禁用快捷键
     exportType: 'image', // 导出面板
     poolType: 'editor', // 左边栏
@@ -116,8 +116,8 @@ export const useMainStore = defineStore('main', {
       this.thumbnailsFocus = isFocus
     },
 
-    setAvailableFonts() {
-      this.availableFonts = SYS_FONTS.filter(font => isSupportFont(font.value))
+    setSystemFonts() {
+      this.systemFonts = SYS_FONTS.filter(font => isSupportFont(font.value))
     },
     
     setExportType(type: ExportTypes) {
