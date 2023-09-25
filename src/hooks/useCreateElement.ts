@@ -57,13 +57,13 @@ export default () => {
     setZindex(canvas)
   }
 
-  const createPathElement = (path: string, viewBox: number[]) => {
+  const createPathElement = (path: string, left?: number, top?: number) => {
     const { centerPoint } = useCenter()
     const [ canvas ] = useCanvas()
     const pathElement = new fabric.Path(path, {
       id: nanoid(10),
-      left: centerPoint.x,
-      top: centerPoint.y,
+      left: left ? left : centerPoint.x,
+      top: top ? top : centerPoint.y,
       hasControls: true,
       hasBorders: true,
       opacity: 1,

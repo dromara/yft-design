@@ -345,9 +345,9 @@ const handleElementCurve = async () => {
   // const svg = text2svg.toSVG('something', {});
   const font = await opentype.load(fontfile);
   console.log('font:', font)
-  const path = font.getPath(handleElement.value.text, 0, 150, 72).toPathData(2);
-  console.log(path);
-  createPathElement(path, [])
+  const path = font.getPath(handleElement.value.text, 0, 0, handleElement.value.fontSize).toPathData(2);
+  console.log(handleElement.value.left, handleElement.value.top);
+  createPathElement(path, handleElement.value.left, handleElement.value.top)
   const handleElementPath = handleElement.value
   console.log('handleElementPath:', handleElementPath)
 }
