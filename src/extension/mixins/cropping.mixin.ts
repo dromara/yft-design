@@ -49,7 +49,7 @@ function canvasMouseUp() {
   delete this.__defaultCursor;
 }
 
-// @ts-ignore
+
 function canvasMouseDown(e: any) {
   const target = e.target;
   // @ts-ignore
@@ -83,13 +83,14 @@ function canvasMouseDown(e: any) {
       this.selectable = false;
       // @ts-ignore
       this.evented = false;
-      return;
+      return
     }
-    activeObject.isCropping = false;
+    activeObject.onDeselectEvent()
+    activeObject.isCropping = false
     // @ts-ignore
-    this.defaultCursor = 'default';
+    this.defaultCursor = 'default'
     // @ts-ignore
-    this.renderAll();
+    this.renderAll()
   }
 }
 
@@ -148,6 +149,22 @@ export function addCropImageInteractions() {
       this.canvas.off('mouse:down', canvasMouseDown);
       this.canvas.off('mouse:move', canvasMouseMove);
       // window.removeEventListener('mousedown', this.eventListener);
+    },
+
+    onDeselectEvent() {
+      const fabricCanvas = this.canvas
+      if (!fabricCanvas) return
+      // fabricCanvas.defaultCursor = defaultCursor;
+      unisolateObjectForEdit(this);
+      delete this.lastEventTop;
+      delete this.lastEventLeft;
+      this.unbindCropModeHandlers();
+      fabricCanvas.centeredKey = fabric.Canvas.prototype.centeredKey;
+      fabricCanvas.altActionKey = fabric.Canvas.prototype.altActionKey;
+      fabricCanvas.selection = true;
+      this.controls = createTextboxDefaultControls()
+      this.setCoords();
+      fireCropImageEvent(this);
     },
 
     _drawDarkLayer(ctx: CanvasRenderingContext2D) {
@@ -234,10 +251,7 @@ export function addCropImageInteractions() {
       const changeY = correctMovement.y;
       let cropX = this.cropX + changeX;
       let cropY = this.cropY + changeY;
-      const limitChangeVector = {
-        x: changeX,
-        y: changeY,
-      };
+      const limitChangeVector = { x: changeX, y: changeY };
       if (cropX < 0) {
         limitChangeVector.x = -this.cropX;
         cropX = 0;
