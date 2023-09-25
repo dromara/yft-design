@@ -12,23 +12,15 @@ export class CropImage extends fabric.Image {
   isCropping?: boolean
   constructor(element: ImageSource, options: any = {}) {
     super(element, { filters: [], ...options });
-    this.initEvent();
-  }
-
-  initEvent() {
-    // this.on('mousedblclick', () => {
-    //   if (!this.canvas) return;
-    //   this.isCropping = true;
-    //   this.canvas.setActiveObject(<fabric.Object>this);
-    //   this.canvas.renderAll();
-    // });
     this.on('mousedblclick', this.doubleClickHandler.bind(this))
   }
 
+  // initEvent() {
+  //   this.on('mousedblclick', this.doubleClickHandler.bind(this))
+  // }
+
   public doubleClickHandler(e: TPointerEventInfo<TPointerEvent>) {
     if (!this.canvas || !e.target || e.target !== this) return
-
-    // 启用
     this.set({isCropping: true})
     this.onMousedbclickEvent()
     this.canvas.setActiveObject(this)
@@ -146,10 +138,7 @@ export class CropImage extends fabric.Image {
     }
     super._render(ctx);
     this._drawCroppingLines(ctx);
-    // this._drawCroppingPath(ctx);
     ctx.restore();
-    // this.strokeWidth = originalstrokeWidth;
-
   }
 
   _drawCroppingLines(ctx: CanvasRenderingContext2D) {
