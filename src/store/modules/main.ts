@@ -3,8 +3,8 @@ import { customAlphabet } from 'nanoid'
 import { defineStore } from 'pinia'
 import { RightStates, PointElement } from '@/types/elements'
 import { SYS_FONTS } from '@/configs/fonts'
-import { isSupportFont } from '@/utils/fonts'
-import { ExportTypes, PoolType } from '@/types/common'
+import { getSupportFont } from '@/utils/fonts'
+import { ExportTypes, PoolType, SystemFont } from '@/types/common'
 import { CanvasElement } from '@/types/canvas'
 import useCanvas from '@/views/Canvas/useCanvas'
 
@@ -22,7 +22,7 @@ export interface MainState {
   selectedTemplatesIndex: number[]
   thumbnailsFocus: boolean
   drawAreaFocus: boolean
-  systemFonts: typeof SYS_FONTS
+  systemFonts: SystemFont[]
   disableHotkeys: boolean
   exportType: ExportTypes
   poolType: PoolType
@@ -117,7 +117,7 @@ export const useMainStore = defineStore('main', {
     },
 
     setSystemFonts() {
-      this.systemFonts = SYS_FONTS.filter(font => isSupportFont(font.value))
+      this.systemFonts = getSupportFont(SYS_FONTS)
     },
     
     setExportType(type: ExportTypes) {

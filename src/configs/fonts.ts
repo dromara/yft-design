@@ -1,4 +1,6 @@
-export const SYS_FONTS = [
+import { SystemFont } from "@/types/common"
+
+export const SYS_FONTS: SystemFont[] = [
   { label: 'Arial', value: 'Arial' },
   { label: '微软雅黑', value: 'Microsoft Yahei' },
   { label: '宋体', value: 'SimSun' },
