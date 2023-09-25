@@ -7,6 +7,7 @@ import { GuideLines } from '@/app/guideLiles'
 import { HoverBorders } from '@/app/hoverBorders'
 import { WheelScroll } from '@/app/wheelScroll'
 import { CheckRuler } from '@/app/checkRuler'
+import { FabricCanvas } from '@/app/fabricCanvas'
 import { createObjectDefaultControls } from '@/app/controls'
 import { DefaultDPI, DefaultRatio } from '@/configs/size'
 import { useTemplatesStore } from '@/store'
@@ -56,7 +57,7 @@ const initConf = () => {
   FabricObject.ownDefaults.controls = createObjectDefaultControls()
   // Object.prototype.controls.mt.visible = false
   // Object.prototype.controls.mb.visible = false
-  console.log('FabricObject.ownDefaults.controls :', FabricObject.ownDefaults )
+  // console.log('FabricObject.ownDefaults.controls :', FabricObject.ownDefaults )
   // Object.prototype.controls.mtr = new Control({
   //   x: 0,
   //   y: -0.5,
@@ -320,11 +321,7 @@ const initCanvas = () => {
   const fabricWidth = fabricStore.getWidth()
   const fabricHeight = fabricStore.getHeight()
   if (!canvasRef.value) return
-  canvas = new Canvas(canvasRef.value, {
-    width: fabricWidth,
-    height: fabricHeight,
-    backgroundColor: WorkSpaceEditColor,
-  })
+  canvas = new FabricCanvas(canvasRef.value)
   new GuideLines(canvas)
   new HoverBorders(canvas)
   new WheelScroll(canvas)
@@ -365,4 +362,4 @@ export const toggleSelection = (selection?: boolean) => {
   canvas.getObjects().filter(obj => (obj as CanvasElement).name !== WorkSpaceName).map(item => item.set({selection}))
 }
 
-export default (): [Canvas, typeof initEditor] => [canvas as Canvas, initEditor]
+export default (): [FabricCanvas, typeof initEditor] => [canvas as FabricCanvas, initEditor]
