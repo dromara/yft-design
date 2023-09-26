@@ -47,7 +47,7 @@ export interface WorkSpaceElement {
   scaleY: number
   color?: string
   opacity?: number
-  imageURL: string
+  imageURL?: string
   imageSize?: 'cover' | 'contain' | 'repeat'
   gaidImageURL?: string
   gaidImageMode?: string

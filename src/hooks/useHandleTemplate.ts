@@ -8,8 +8,10 @@ import { copyText, readClipboard } from "@/utils/clipboard"
 import { encrypt } from "@/utils/crypto"
 import { ElMessage } from 'element-plus'
 import { KEYS } from '@/configs/hotkey'
-import usePasteTextClipboardData from '@/hooks/usePasteTextClipboardData'
+import { WorkSpaceDrawType } from "@/configs/canvas"
 import useCanvas from "@/views/Canvas/useCanvas"
+import usePasteTextClipboardData from '@/hooks/usePasteTextClipboardData'
+
 
 
 export default () => {
@@ -35,7 +37,7 @@ export default () => {
       width: currentTemplate.value.width,
       height: currentTemplate.value.height,
       clip: currentTemplate.value.clip,
-      objects: [],
+      objects: currentTemplate.value.objects.filter(item => item.id === WorkSpaceDrawType),
       workSpace: {
         fillType: 0,
         left: 0,
@@ -98,9 +100,6 @@ export default () => {
 
   // 创建一页空白页并添加到下一页
   const createTemplate = () => {
-    const [ canvas ] = useCanvas()
-    canvas.clear()
-    canvas.renderAll()
     mainStore.setActiveElementIdList([])
     templatesStore.addTemplate(getEmptyTemplate())
     templatesStore.setTemplateIndex(templateIndex.value)
