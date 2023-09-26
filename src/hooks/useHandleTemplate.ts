@@ -1,6 +1,6 @@
 import { computed } from "vue"
 import { DefaultVersion } from "@/configs/size"
-import { useFabricStore, useMainStore, useTemplatesStore } from "@/store"
+import { useMainStore, useTemplatesStore } from "@/store"
 import { Template } from "@/types/canvas"
 import { nanoid } from "nanoid"
 import { storeToRefs } from "pinia"
@@ -8,7 +8,7 @@ import { copyText, readClipboard } from "@/utils/clipboard"
 import { encrypt } from "@/utils/crypto"
 import { ElMessage } from 'element-plus'
 import { KEYS } from '@/configs/hotkey'
-import { WorkSpaceDrawType } from "@/configs/canvas"
+import { WorkSpaceDrawType, WorkSpaceMaskColor } from "@/configs/canvas"
 import useCanvas from "@/views/Canvas/useCanvas"
 import usePasteTextClipboardData from '@/hooks/usePasteTextClipboardData'
 
@@ -45,7 +45,8 @@ export default () => {
         angle: 0,
         scaleX: 1,
         scaleY: 1,
-      }
+      },
+      background: WorkSpaceMaskColor
     }
     return emptyTemplate
   }
