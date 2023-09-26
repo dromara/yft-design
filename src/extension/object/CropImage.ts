@@ -13,10 +13,6 @@ export class CropImage extends fabric.Image {
     this.on('mousedblclick', this.doubleClickHandler.bind(this))
   }
 
-  // initEvent() {
-  //   this.on('mousedblclick', this.doubleClickHandler.bind(this))
-  // }
-
   public doubleClickHandler(e: TPointerEventInfo<TPointerEvent>) {
     if (!this.canvas || !e.target || e.target !== this) return
     this.set({isCropping: true})

@@ -3,7 +3,7 @@ import { customAlphabet } from 'nanoid'
 import { defineStore } from 'pinia'
 import { RightStates, PointElement } from '@/types/elements'
 import { SYS_FONTS } from '@/configs/fonts'
-import { getSupportFont } from '@/utils/fonts'
+import { getSupportFonts, getLocalFonts } from '@/utils/fonts'
 import { ExportTypes, PoolType, SystemFont } from '@/types/common'
 import { CanvasElement } from '@/types/canvas'
 import useCanvas from '@/views/Canvas/useCanvas'
@@ -117,7 +117,7 @@ export const useMainStore = defineStore('main', {
     },
 
     setSystemFonts() {
-      this.systemFonts = getSupportFont(SYS_FONTS)
+      this.systemFonts = getSupportFonts(SYS_FONTS)
     },
     
     setExportType(type: ExportTypes) {
