@@ -40,15 +40,33 @@
 import { computed, ref, watch } from 'vue'
 import { PathShapeLibs } from '@/configs/shape'
 import { PathPoolItem } from '@/types/elements'
+import { useMainStore } from '@/store'
+import { storeToRefs } from 'pinia'
+import { Path } from 'fabric'
+import { nanoid } from 'nanoid'
+import { PathElement } from '@/types/canvas'
+import useCanvas from '@/views/Canvas/useCanvas'
+const mainStore = useMainStore()
+const { canvasObject } = storeToRefs(mainStore)
+
+const handleElement = computed(() => canvasObject.value as PathElement)
 const fontColor = ref('#000')
 const hasClippath = ref(true)
 
 const toggleStroke = () => {
-
+  
 }
 
 const selectShape = (shape: PathPoolItem) => {
-
+  const [ canvas ] = useCanvas()
+  const clipPath = new Path(shape.path, {
+    id: nanoid(10),
+    left: handleElement.value.left,
+    top: handleElement.value.top,
+    absolutePositioned: true
+  })
+  handleElement.value.set({clipPath})
+  canvas.renderAll()
 }
 </script>
 

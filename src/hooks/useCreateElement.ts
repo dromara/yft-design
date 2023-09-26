@@ -8,7 +8,6 @@ import { getImageSize } from '@/utils/image'
 import { classRegistry } from 'fabric'
 import JsBarcode from 'jsbarcode'
 import * as fabric from "fabric"
-import { extendWithCropImage } from '@/extension/mixins/cropping.mixin'
 import useCenter from '@/views/Canvas/useCenter'
 import useCanvas from '@/views/Canvas/useCanvas'
 import useCanvasZindex from './useCanvasZindex'
@@ -161,9 +160,9 @@ export default () => {
         borderColor: '#ff8d23',
         name: ElementNames.IMAGE
       })
-      if (typeof imageElement.isCropping === 'undefined') {
-        extendWithCropImage(imageElement)
-      }
+      // if (typeof imageElement.isCropping === 'undefined') {
+      //   extendWithCropImage(imageElement)
+      // }
       canvas.add(imageElement)
       canvas.setActiveObject(imageElement)
       rightState.value = RightStates.ELEMENT_STYLE
