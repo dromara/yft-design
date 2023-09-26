@@ -5,14 +5,8 @@
       <div class="shape-list">
         <div class="shape-item" v-for="(shape, index) in item.children" :key="index">
           <div class="shape-content" @click="selectShape(shape)">
-            <svg 
-              overflow="visible" 
-              width="20"
-              height="20"
-            >
-              <g 
-                :transform="`scale(${20 / shape.viewBox[0]}, ${20 / shape.viewBox[1]}) translate(0,0) matrix(1,0,0,1,0,0)`"
-              >
+            <svg overflow="visible" width="20" height="20">
+              <g :transform="`scale(${20 / shape.viewBox[0]}, ${20 / shape.viewBox[1]}) translate(0,0) matrix(1,0,0,1,0,0)`">
                 <path 
                   class="shape-path"
                   :class="{ 'outlined': shape.outlined }"
