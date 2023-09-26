@@ -1,10 +1,8 @@
 import * as fabric from 'fabric'
-import { Object as FabricObject, config, classRegistry, TPointerEventInfo, TPointerEvent } from 'fabric'
+import { config, classRegistry, TPointerEventInfo, TPointerEvent } from 'fabric'
 import { TClassProperties } from '@/types/typedefs'
-import { croppingControlSet, flipXCropControls, flipXYCropControls, flipYCropControls, standardControlSet } from '@/extension/controls/cropping/cropping.controls'
-import { addCropImageInteractions, extendWithCropImage, isolateObjectForEdit, unisolateObjectForEdit } from '@/extension/mixins/cropping.mixin'
-import { fireCropImageEvent } from '@/extension/controls/cropping/cropping.controls.handlers'
-import { createTextboxDefaultControls } from '@/app/controls'
+import { croppingControlSet, flipXCropControls, flipXYCropControls, flipYCropControls } from '@/extension/controls/cropping/cropping.controls'
+import { addCropImageInteractions, isolateObjectForEdit } from '@/extension/mixins/cropping.mixin'
 
 type ImageSource = HTMLImageElement | HTMLVideoElement | HTMLCanvasElement;
 
