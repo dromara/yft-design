@@ -22,6 +22,7 @@ import { ElementNames } from '@/types/elements'
 export default () => {
   const mainStore = useMainStore()
   const keyboardStore = useKeyboardStore()
+  const templatesStore = useTemplatesStore()
   const {
     activeElementIdList,
     disableHotkeys,
@@ -31,7 +32,7 @@ export default () => {
     thumbnailsFocus,
     drawAreaFocus,
   } = storeToRefs(mainStore)
-  const { currentTemplate } = storeToRefs(useTemplatesStore())
+  const { currentTemplate, templateIndex } = storeToRefs(templatesStore)
   const { ctrlKeyState, shiftKeyState, spaceKeyState } = storeToRefs(keyboardStore)
 
   const {

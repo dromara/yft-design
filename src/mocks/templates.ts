@@ -7,7 +7,7 @@ export const Templates: Template[] = [
     "width": 456.97508743145806,
     "height": 274.18505245887485,
     "clip": 1,
-    "id": "1",
+    "id": "0",
     "version": "String",
     "objects": [
       {
@@ -29026,7 +29026,7 @@ export const Templates: Template[] = [
     "width": 456.97508743145806,
     "height": 274.18505245887485,
     "clip": 1,
-    "id": "1",
+    "id": "2",
     "version": "String",
     "objects": [
       {

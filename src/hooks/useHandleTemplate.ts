@@ -53,9 +53,6 @@ export default () => {
 
   // // 重置页面
   const resetTemplate = () => {
-    const [ canvas ] = useCanvas()
-    canvas.clear()
-    canvas.renderAll()
     templatesStore.setTemplateIndex(0)
     mainStore.setActiveElementIdList([])
     templatesStore.setTemplates([getEmptyTemplate()])

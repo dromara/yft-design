@@ -130,6 +130,7 @@ export const useTemplatesStore = defineStore('Templates', {
     },
 
     deleteTemplate(templateId: string | string[]) {
+      console.log('templateId:', templateId)
       const { addHistorySnapshot } = useHistorySnapshot()
       const templateIds = Array.isArray(templateId) ? templateId : [templateId]
   
@@ -145,6 +146,7 @@ export const useTemplatesStore = defineStore('Templates', {
   
       this.templateIndex = newIndex
       this.templates = this.templates.filter(item => !templateIds.includes(item.id))
+      console.log('this.templates:', this.templates)
       addHistorySnapshot()
     },
 

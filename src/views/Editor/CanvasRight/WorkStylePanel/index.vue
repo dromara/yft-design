@@ -128,33 +128,11 @@ const { clip, safe, zoom, opacity } = storeToRefs(fabricStore)
 const canvasWidth = ref<number>(px2mm(currentTemplate.value.width / currentTemplate.value.zoom))
 const canvasHeight = ref<number>(px2mm(currentTemplate.value.height / currentTemplate.value.zoom))
 
-const workSpaceWidth = computed(() => {
-  let workWidth = px2mm(currentTemplate.value.width / currentTemplate.value.zoom)
-  const [ canvas ] = useCanvas()
-  if (!canvas) return workWidth
-  const { workSpaceDraw } = useCenter()
-  if (!workSpaceDraw) return workWidth
-  workWidth = workSpaceDraw.width
-  if (unitMode.value === 0) return px2mm(workWidth)
-  return workWidth
-})
-
-const workSpaceHeight = computed(() => {
-  let workHeight = px2mm(currentTemplate.value.height / currentTemplate.value.zoom)
-  const [ canvas ] = useCanvas()
-  if (!canvas) return workHeight
-  const { workSpaceDraw } = useCenter()
-  if (!workSpaceDraw) return workHeight 
-  workHeight = workSpaceDraw.height
-  if (unitMode.value === 0) return px2mm(workHeight)
-  return workHeight
-})
-
 watch(currentTemplate, () => {
   const [ canvas ] = useCanvas()
   if (!canvas) return
   const { workSpaceDraw } = useCenter()
-  if (!workSpaceDraw) return
+  if (!workSpaceDraw || !currentTemplate.value) return
   const workWidth = currentTemplate.value.width / currentTemplate.value.zoom
   const workHeight = currentTemplate.value.height / currentTemplate.value.zoom
   if (unitMode.value === 0) {
