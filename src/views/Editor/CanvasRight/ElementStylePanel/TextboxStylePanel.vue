@@ -181,7 +181,7 @@ import { WEB_FONTS } from '@/configs/fonts'
 import { TextboxElement } from '@/types/canvas'
 import { FontGroupOption } from '@/types/elements'
 import useCreateElement from "@/hooks/useCreateElement"
-import fontfile from '@/assets/fonts/得意黑.ttf'
+import * as localFonts from '@/utils/localFonts'
 import opentype from "opentype.js";
 import ElementStroke from '../Components/ElementStroke.vue'
 import ElementShadow from '../Components/ElementShadow.vue'
@@ -195,6 +195,7 @@ const mainStore = useMainStore()
 const templatesStore = useTemplatesStore()
 const { canvasObject, systemFonts } = storeToRefs(mainStore)
 const { createPathElement } = useCreateElement()
+const { loadFontData } = localFonts
 const [ canvas ] = useCanvas()
 const handleElement = computed(() => canvasObject.value as TextboxElement)
 const elementGrapheme = computed(() => handleElement.value.splitByGrapheme)
@@ -341,15 +342,21 @@ const handleElementArrange = (status: boolean) => {
 
 const handleElementCurve = async () => {
   // ElMessage
-  // const text2svg = new Text2svg(handleElement.value.fontFamily);
-  // const svg = text2svg.toSVG('something', {});
-  const font = await opentype.load(fontfile);
-  console.log('font:', font)
-  const path = font.getPath(handleElement.value.text, 0, 0, handleElement.value.fontSize).toPathData(2);
-  console.log(handleElement.value.left, handleElement.value.top);
+  let fontElement: opentype.Font | undefined
+  if (WEB_FONTS.filter(item => item.value === hasFontFamily.value)[0]) {
+    fontElement = await opentype.load(`/src/assets/fonts/${hasFontFamily.value}.ttf`)
+  } else {
+    const fontData = await loadFontData(hasFontFamily.value)
+    if (!fontData) return
+    const fontBlob = await fontData.blob()
+    const fontBuffer = await fontBlob.arrayBuffer()
+    fontElement = opentype.parse(fontBuffer)
+  }
+  if (!fontElement) return
+  const path = fontElement.getPath(handleElement.value.text, 0, 0, handleElement.value.fontSize).toPathData(2);
   createPathElement(path, handleElement.value.left, handleElement.value.top)
-  const handleElementPath = handleElement.value
-  console.log('handleElementPath:', handleElementPath)
+  canvas.remove(handleElement.value)
+  canvas.renderAll()
 }
 
 const handleElementStyleClear = () => {

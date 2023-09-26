@@ -34,37 +34,15 @@ export async function showStatus() {
   // elemStatus.innerText = statusMessage;
 }
 
-export async function loadFonts() {
-  if (!enabled)
-    return;
-  
+export async function loadFontData(fontFamily) {
+  let font
   try {
-    reset();
-    
-    // Query fonts, with optional postsscript name filter.
-    const optionalFilterArr = elemFilterInput.value.split(',').map(str => str.trim()).filter(str => str !== '');
-    let fonts;
-    if (optionalFilterArr.length > 0) {
-      fonts = await self.queryLocalFonts({postscriptNames: optionalFilterArr});
-    } else {
-      fonts = await self.queryLocalFonts();
-    }
-    
-    // Processed response.     
-    if (fonts.length === 0) {
-      elemErrorMessage.innerText = 'No fonts returned.';
-      return;
-    }
-    elemResult.style.display = 'block';
-    elemFontsSelect[0] = new Option('-- select a font --', '');
-    fonts.forEach((font, index) => {
-      fontMap.set(font.postscriptName, font);
-      elemFontsSelect[index + 1] = new Option(font.fullName, font.postscriptName);
-    });
+    const fonts = await window.queryLocalFonts();
+    font = fonts.filter(item => item.family === fontFamily)[0]
   } catch(e) {
-    elemErrorMessage.innerText = `Cannot query fonts: ${e.message}`;
+    console.log(`Cannot query fonts: ${e.message}`)
   } finally {
-    showStatus();
+    return font
   }
 }
 
