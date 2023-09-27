@@ -3,7 +3,7 @@ import { nanoid } from "nanoid"
 import { storeToRefs } from "pinia"
 import { KEYS } from '@/configs/hotkey'
 import { ElementNames } from "@/types/elements"
-import { getElementPathPoints } from '@/utils/parsePath'
+import { getPathPoints, paths2str } from '@/utils/parsePath'
 import { propertiesToInclude, WorkSpaceName } from "@/configs/canvas"
 import { useFabricStore, useMainStore, useTemplatesStore } from "@/store"
 import { 
@@ -23,159 +23,18 @@ import {
   RectElement,
   GroupElement
 } from "@/types/canvas"
+import useCreateElement from './useCreateElement'
 import useCanvas from "@/views/Canvas/useCanvas"
 import useCanvasZindex from "./useCanvasZindex"
 
 export default () => {
   const templatesStore = useTemplatesStore()
   const mainStore = useMainStore()
-  // const { ClipperLib } = clipper
   const { currentTemplate } = storeToRefs(templatesStore)
+  const { createPathElement } = useCreateElement()
   const { elementCoords, elementHover, isChecked } = storeToRefs(useFabricStore())
   const { canvasObject, clonedObject, currentPoint } = storeToRefs(mainStore)
   const { setZindex } = useCanvasZindex()
-
-  // const setElementFill = async (element: CanvasElement) => {
-  //   const [ canvas ] = useCanvas()
-  //   if (!element.background) return
-  //   if (element.background.fillType === 0) return
-  //   if (element.background.fillType === 1) {
-  //     if (!element.background.imageURL) return
-  //     const source = await util.loadImage(element.background.imageURL)
-  //     const fill = new Pattern({source, repeat: 'repeat'})
-  //     element.set({fill})
-  //     canvas.renderAll()
-  //   }
-  //   else if (element.background.fillType === 2) {
-
-  //     const gradientFill = element.fill as Gradient<'linear' | 'radial'>
-  //     const fill = new Gradient({
-  //       type: gradientFill.type,
-  //       colorStops: gradientFill.colorStops,
-  //       coords: gradientFill.coords,
-  //       offsetX: gradientFill.offsetX,
-  //       offsetY: gradientFill.offsetY,
-  //       gradientTransform: gradientFill.gradientTransform ? gradientFill.gradientTransform : undefined
-  //     })
-  //     element.set({fill})
-  //     canvas.renderAll()
-  //   }
-  //   else if (element.background.fillType === 3) {
-  //     if (!element.background.gaidImageURL) return
-  //     const source = await util.loadImage(element.background.gaidImageURL)
-  //     const fill = new Pattern({source, repeat: 'repeat'})
-  //     element.set({fill})
-  //     canvas.renderAll()
-  //   }
-  //   else if (element.background.fillType === 4) {
-  //     if (!element.background.shadingImageURL) return
-  //     const source = await util.loadImage(element.background.shadingImageURL)
-  //     const fill = new Pattern({source, repeat: 'repeat'})
-  //     element.set({fill})
-  //     canvas.renderAll()
-  //   }
-  // }
-
-  // const getElementClippath = (option: CanvasOption): fabric.Path | fabric.Rect | undefined => {
-  //   if (!option.clipPath) return
-  //   const clipPathOption = option.clipPath as PathOption
-  //   let clipPath
-  //   if (clipPathOption.type === ElementNames.PATH) {
-  //     clipPath = new fabric.Path(clipPathOption.path, clipPathOption)
-  //   }
-  //   else if (clipPathOption.type === ElementNames.RECT) {
-  //     clipPath = new fabric.Rect(clipPathOption as Record<string, any>)
-  //   }
-  //   return clipPath
-  // }
-
-  // const createElement = async (element: CanvasOption) => {
-  //   const [ canvas ] = useCanvas()
-  //   const { centerPoint } = useCenter()
-  //   if (!element.left || !element.top) return
-  //   const elementLeft = element.left + centerPoint.x
-  //   const elementTop = element.top + centerPoint.y
-  //   if (element.type === ElementNames.IMAGE) {
-  //     const imageOption = element as ImageOption
-  //     const CropImage = classRegistry.getClass('cropimage')
-  //     const imageElement = await CropImage.fromURL(imageOption.src)
-  //     if (typeof imageElement.isCropping === 'undefined') {
-  //       extendWithCropImage(imageElement)
-  //     }
-  //     imageElement.set(imageOption)
-  //     imageElement.left = elementLeft 
-  //     imageElement.top = elementTop
-  //     canvas.add(imageElement)
-  //     setZindex(canvas)
-  //   }
-  //   else if (element.type === ElementNames.TEXTBOX) {
-  //     const textboxElementOption = element as TextboxOption
-  //     const textContent = textboxElementOption.text
-  //     const textboxElement = new fabric.Textbox(textContent, textboxElementOption) as TextboxElement
-  //     textboxElement.left = elementLeft
-  //     textboxElement.top = elementTop
-  //     setElementFill(textboxElement)
-  //     canvas.add(textboxElement)
-  //     setZindex(canvas)
-  //   }
-  //   else if (element.type === ElementNames.TEXT) {
-  //     const textboxElementOption = element as TextboxOption
-  //     const textContent = textboxElementOption.text
-  //     const textboxElement = new fabric.Text(textContent, textboxElementOption) as TextboxElement
-  //     textboxElement.left = elementLeft
-  //     textboxElement.top = elementTop
-  //     setElementFill(textboxElement)
-  //     canvas.add(textboxElement)
-  //     setZindex(canvas)
-  //   }
-  //   else if (element.type === ElementNames.PATH) {
-  //     const pathOption = element as PathOption
-  //     const clipPath = getElementClippath(pathOption)
-  //     if (clipPath) pathOption.clipPath = clipPath
-  //     const pathElement = new fabric.Path(pathOption.path, pathOption) as PathElement
-  //     pathElement.left = elementLeft
-  //     pathElement.top = elementTop
-  //     setElementFill(pathElement)
-  //     canvas.add(pathElement)
-  //     setZindex(canvas)
-  //   }
-  //   else if (element.type === ElementNames.RECT) {
-  //     const rectOption = element as RectOption
-  //     const clipPath = getElementClippath(rectOption)
-  //     if (clipPath) rectOption.clipPath = clipPath
-  //     const rectElement = new fabric.Rect(rectOption as Record<string, any>) as RectElement
-  //     rectElement.left = elementLeft
-  //     rectElement.top = elementTop
-  //     setElementFill(rectElement)
-  //     canvas.add(rectElement)
-  //     setZindex(canvas)
-  //   }
-  //   else if (element.type === ElementNames.POLYGON) {
-  //     const polygonElementOption = element as PolygonOption
-  //     const polygonElement = new fabric.Polygon(polygonElementOption.points, polygonElementOption) as PolygonElement
-  //     polygonElement.left = elementLeft
-  //     polygonElement.top = elementTop
-  //     setElementFill(polygonElement)
-  //     canvas.add(polygonElement)
-  //     setZindex(canvas)
-  //   }
-  //   else if (element.type === ElementNames.GROUP) {
-  //     const groupOption = element as GroupOption
-  //     const groupOptionIds: string[] = []
-  //     groupOption.objects.forEach(item => {
-  //       createElement(item)
-  //       groupOptionIds.push(item.id)
-  //     })
-  //     const groupObjects = canvas.getObjects().filter(item => groupOptionIds.includes((item as CanvasElement).id)) as CanvasElement[]
-  //     const groupElement = new fabric.Group([], groupOption)
-  //     groupElement.add(...groupObjects)
-  //     canvas.remove(...groupObjects)
-  //     groupElement.left = elementLeft
-  //     groupElement.top = elementTop
-  //     canvas.add(groupElement)
-  //     setZindex(canvas)
-  //   }
-  // } 
 
   const sortElement = async (newIndex: number, oldIndex: number, option: CanvasOption) => {
     if (oldIndex === newIndex) return
@@ -360,8 +219,8 @@ export default () => {
     const clipTargetElement = activeObjects[1]
     const subTargetElementPath = subTargetElement.path
     const clipTargetElementPath = clipTargetElement.path
-    const subPathPoints = getElementPathPoints(subTargetElementPath)
-    const clipPathPoints = getElementPathPoints(clipTargetElementPath)
+    const subPathPoints = getPathPoints(subTargetElementPath)
+    const clipPathPoints = getPathPoints(clipTargetElementPath)
     console.log('clipperPath:', subPathPoints)
     console.log('clipPathPoints:', clipPathPoints)
     const cpr = new ClipperLib.Clipper();
@@ -376,6 +235,8 @@ export default () => {
     const solution_paths = new ClipperLib.Paths();
     const succeeded = cpr.Execute(ClipperLib.ClipType.ctUnion, solution_paths, ClipperLib.PolyFillType.pftNonZero, ClipperLib.PolyFillType.pftNonZero);
     console.log('solution_paths:', solution_paths)
+    const intersectPath = paths2str(solution_paths, scale)
+    createPathElement(intersectPath)
     canvas.renderAll()
   }
 
