@@ -14,12 +14,12 @@
         <IconGroup class="handler-item" :class="{ 'disable': !canGroup }" @click="group()"/>
       </el-tooltip>
       <el-tooltip placement="top" :hide-after="0">
-        <template #content>取消组合</template>
+        <template #content>解组</template>
         <IconUngroup class="handler-item" :class="{ 'disable': !canUnGroup }" @click="ungroup()"/>
       </el-tooltip>
       <el-tooltip placement="top" :hide-after="0">
-        <template #content>取消组合</template>
-        <IconIntersection class="handler-item" @click="intersection()"/>
+        <template #content>交叉</template>
+        <IconIntersection class="handler-item" :class="{ 'disable': !canGroup }" @click="intersection()"/>
       </el-tooltip>
     </div>
 
@@ -140,7 +140,7 @@ const templatesStore = useTemplatesStore()
 const [ canvas ] = useCanvas()
 const { setCanvasScalePercentage, scaleCanvas, resetCanvas } = useCanvasScale()
 const { setZindex } = useCanvasZindex()
-const { combineElements, uncombineElements, frontElement, backElement, forwardElement, backwardElement, sortElement } = useHandleElement()
+const { combineElements, uncombineElements, intersectElements, backElement, forwardElement, backwardElement, sortElement } = useHandleElement()
 const { zoom } = storeToRefs(fabricStore)
 const { canvasObject } = storeToRefs(mainStore)
 const { currentTemplate } = storeToRefs(templatesStore)
@@ -199,7 +199,8 @@ const ungroup = () => {
 }
 
 const intersection = () => {
-  
+  if (!handleElement.value || handleElement.value.type !== ElementNames.ACTIVE) return
+  intersectElements()
   // const s = Snap('#snap')
   // s.clear()
   // var bigCircle = s.circle(150, 150, 100);

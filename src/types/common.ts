@@ -4,3 +4,8 @@ export type SystemFont = {
     label: string
     value: string
 }
+
+export interface PathPoint {
+    X: number
+    Y: number
+}

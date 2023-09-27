@@ -3,7 +3,7 @@ import { nanoid } from "nanoid"
 import { storeToRefs } from "pinia"
 import { KEYS } from '@/configs/hotkey'
 import { ElementNames } from "@/types/elements"
-import { Pattern, util, Gradient, classRegistry } from "fabric"
+import { getElementPathPoints } from '@/utils/parsePath'
 import { propertiesToInclude, WorkSpaceName } from "@/configs/canvas"
 import { useFabricStore, useMainStore, useTemplatesStore } from "@/store"
 import { 
@@ -25,12 +25,11 @@ import {
 } from "@/types/canvas"
 import useCanvas from "@/views/Canvas/useCanvas"
 import useCanvasZindex from "./useCanvasZindex"
-import useCenter from "@/views/Canvas/useCenter"
-import { extendWithCropImage } from '@/extension/mixins/cropping.mixin'
 
 export default () => {
   const templatesStore = useTemplatesStore()
   const mainStore = useMainStore()
+  // const { ClipperLib } = clipper
   const { currentTemplate } = storeToRefs(templatesStore)
   const { elementCoords, elementHover, isChecked } = storeToRefs(useFabricStore())
   const { canvasObject, clonedObject, currentPoint } = storeToRefs(mainStore)
@@ -338,7 +337,7 @@ export default () => {
       // @ts-ignore
       id: nanoid(10),
       name: ElementNames.GROUP, 
-      interactive: false, 
+      interactive: true, 
       subTargetCheck: true,
     })
     canvas.add(groupElement)
@@ -347,6 +346,36 @@ export default () => {
     templatesStore.renderElement()
     canvas.remove(...activeObjects)
     setZindex(canvas)
+    canvas.renderAll()
+  }
+
+  const intersectElements = () => {
+    const [ canvas ] = useCanvas()
+    const activeObjects = canvas.getActiveObjects() as PathElement[]
+    if (!activeObjects) return
+    canvas.discardActiveObject()
+    mainStore.setCanvasObject(null)
+    if (activeObjects.length !== 2) return
+    const subTargetElement = activeObjects[0]
+    const clipTargetElement = activeObjects[1]
+    const subTargetElementPath = subTargetElement.path
+    const clipTargetElementPath = clipTargetElement.path
+    const subPathPoints = getElementPathPoints(subTargetElementPath)
+    const clipPathPoints = getElementPathPoints(clipTargetElementPath)
+    console.log('clipperPath:', subPathPoints)
+    console.log('clipPathPoints:', clipPathPoints)
+    const cpr = new ClipperLib.Clipper();
+
+    const scale = 100;
+    ClipperLib.JS.ScaleUpPaths(subPathPoints, scale);
+    ClipperLib.JS.ScaleUpPaths(clipPathPoints, scale);
+
+    cpr.AddPaths(subPathPoints, ClipperLib.PolyType.ptSubject, true);  // true意味着闭合路径
+    cpr.AddPaths(clipPathPoints, ClipperLib.PolyType.ptClip, true);
+
+    const solution_paths = new ClipperLib.Paths();
+    const succeeded = cpr.Execute(ClipperLib.ClipType.ctUnion, solution_paths, ClipperLib.PolyFillType.pftNonZero, ClipperLib.PolyFillType.pftNonZero);
+    console.log('solution_paths:', solution_paths)
     canvas.renderAll()
   }
 
@@ -556,6 +585,7 @@ export default () => {
     backElement,
     forwardElement,
     backwardElement,
-    checkElement
+    checkElement,
+    intersectElements
   }
 }
