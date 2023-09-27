@@ -11,10 +11,11 @@
         <CanvasAffix class="center-affix"/>
       </div>
       <CanvasRight class="layout-content-right" />
+      <CanvasDom class="layout-content-dom"/>
     </div>
-    <div class="layout-barcode">
+    <!-- <div class="layout-barcode">
       <svg id="barcode"></svg>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -27,6 +28,7 @@ import CanvasCenter from './CanvasCenter/index.vue'
 import CanvasRight from './CanvasRight/index.vue'
 import CanvasFooter from './CanvasFooter/index.vue'
 import CanvasAffix from './CanvasAffix/index.vue'
+import CanvasDom from './CanvasDom/index.vue'
 
 </script>
 
@@ -97,8 +99,11 @@ import CanvasAffix from './CanvasAffix/index.vue'
   display: flex;
   flex-direction: column;
 }
-.layout-barcode {
+.layout-content-dom {
+  // background: pink;
   position: absolute;
-  top: -200px;
+  z-index: -200;
+  // height: 100%;
+  // top: -200px;
 }
 </style>

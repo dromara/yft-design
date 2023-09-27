@@ -1,12 +1,3 @@
-/*
- * @Author: June
- * @Description:
- * @Date: 2023-05-25 18:41:35
- * @LastEditors: June
- * @LastEditTime: 2023-05-26 08:43:28
- */
-
-
 import { VitePWA } from "vite-plugin-pwa";
 import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
 import { createHtmlPlugin } from "vite-plugin-html";

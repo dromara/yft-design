@@ -17,6 +17,10 @@
         <template #content>取消组合</template>
         <IconUngroup class="handler-item" :class="{ 'disable': !canUnGroup }" @click="ungroup()"/>
       </el-tooltip>
+      <el-tooltip placement="top" :hide-after="0">
+        <template #content>取消组合</template>
+        <IconIntersection class="handler-item" @click="intersection()"/>
+      </el-tooltip>
     </div>
 
     <div class="center-handler">
@@ -192,6 +196,29 @@ const group = () => {
 const ungroup = () => {
   if (!handleElement.value || handleElement.value.type !== ElementNames.GROUP) return
   uncombineElements()
+}
+
+const intersection = () => {
+  
+  // const s = Snap('#snap')
+  // s.clear()
+  // var bigCircle = s.circle(150, 150, 100);
+  // bigCircle.attr({
+  //   fill: "#bada55",
+  //   stroke: "#000",
+  //   strokeWidth: 5
+  // });
+  // // Now lets create another small circle:
+  // var smallCircle = s.circle(100, 150, 70);
+  // // Lets put this small circle and another one into a group:
+  // var discs = s.group(smallCircle, s.circle(200, 150, 70));
+  
+  // // Now we can change attributes for the whole group
+  // discs.attr({
+  //   fill: ""
+  // });
+  // const res = Snap.path.intersection('M 0 0 L 200 0 L 200 200 L 0 200 Z', 'M 50 0 L 150 0 Q 200 0 200 50 L 200 150 Q 200 200 150 200 L 50 200 Q 0 200 0 150 L 0 50 Q 0 0 50 0 Z')
+  // console.log('ress:', res)
 }
 
 // 置顶

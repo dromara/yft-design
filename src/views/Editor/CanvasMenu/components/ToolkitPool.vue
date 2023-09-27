@@ -25,9 +25,6 @@
         </div>
       </div>
     </el-row>
-    <!-- <el-row>
-      <svg id="barcode"></svg>
-    </el-row> -->
   </div>
 </template>
 
