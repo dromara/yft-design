@@ -25,9 +25,9 @@
 
     <div class="center-handler">
       <el-tooltip placement="top" content="图层">
-        <IconLayers class="handler-item" ref="layerRef"/>
+        <IconLayers class="handler-item" ref="layerRef" :class="{ 'disable': !handleElement }"/>
       </el-tooltip>
-      <el-popover ref="layerPopoverRef" :virtual-ref="layerRef" trigger="click" virtual-triggering width="240">
+      <el-popover ref="layerPopoverRef" :virtual-ref="layerRef" trigger="click" virtual-triggering width="240" :disabled="!handleElement">
         <el-row class="handler-icon-row">
           <el-button-group>
             <el-tooltip placement="top" :hide-after="0" content="置顶">
@@ -47,9 +47,9 @@
       </el-popover>
 
       <el-tooltip placement="top" content="对齐">
-        <IconAlignTextCenter class="handler-item" ref="alignRef"/>
+        <IconAlignTextCenter class="handler-item" ref="alignRef" :class="{ 'disable': !handleElement }"/>
       </el-tooltip>
-      <el-popover ref="alignPopoverRef" :virtual-ref="alignRef" trigger="click" :width="300" virtual-triggering>
+      <el-popover ref="alignPopoverRef" :virtual-ref="alignRef" trigger="click" :width="300" virtual-triggering :disabled="!handleElement">
         <el-row class="handler-icon-row">
           <el-button-group>
             <el-tooltip placement="top" :hide-after="0" content="左对齐">
@@ -77,9 +77,9 @@
       </el-popover>
 
       <el-tooltip placement="top" content="旋转">
-        <IconScreenRotation class="handler-item" ref="rotateRef"/>
+        <IconScreenRotation class="handler-item" ref="rotateRef" :class="{ 'disable': !handleElement }"/>
       </el-tooltip>
-      <el-popover ref="rotatePopoverRef" :virtual-ref="rotateRef" trigger="click" :width="360" virtual-triggering>
+      <el-popover ref="rotatePopoverRef" :virtual-ref="rotateRef" trigger="click" :width="360" virtual-triggering :disabled="!handleElement">
         <el-row>
           <el-col :span="4" class="position-text">旋转:</el-col>
           <el-col :span="7" class="position-input">
@@ -94,8 +94,8 @@
       </el-popover>
 
       <el-tooltip placement="top" content="锁定">
-        <IconLock class="handler-item" @click="changeElementLock(false)" v-if="lock"/>
-        <IconUnlock class="handler-item" @click="changeElementLock(true)" v-else/>
+        <IconLock class="handler-item" @click="changeElementLock(false)" v-if="lock" :class="{ 'disable': !handleElement }"/>
+        <IconUnlock class="handler-item" @click="changeElementLock(true)" v-else :class="{ 'disable': !handleElement }"/>
       </el-tooltip>
     </div>
     <div class="right-handler">
