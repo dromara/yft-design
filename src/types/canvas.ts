@@ -5,11 +5,6 @@ import { ColorStop } from "./elements"
 
 export type TPatternRepeat = 'repeat' | 'repeat-x' | 'repeat-y' | 'no-repeat'
 
-export const enum ImageFormat {
-  jpeg = "jpeg",
-  jpg = "jpeg",
-  png = "png"
-}
 export interface CommenElement {
   id: string
   name: string

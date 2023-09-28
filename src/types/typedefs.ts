@@ -1,9 +1,5 @@
-// https://www.typescriptlang.org/docs/handbook/utility-types.html
-import { BaseFabricObject } from './EventTypeDefs';
-import type { Gradient } from 'fabric';
-import type { Pattern } from 'fabric';
-import type { Point } from 'fabric';
-import type { Object as FabricObject } from 'fabric';
+import { BaseFabricObject } from './EventTypeDefs'
+import type { Gradient, Pattern, Point, ImageFormat } from 'fabric'
 
 interface NominalTag<T> {
   nominalTag?: T;
@@ -44,11 +40,6 @@ export type TBBox = {
 
 export type Percent = `${number}%`;
 
-export const enum ImageFormat {
-  jpeg = 'jpeg',
-  jpg = 'jpeg',
-  png = 'png',
-}
 
 export const enum SVGElementName {
   linearGradient = 'linearGradient',

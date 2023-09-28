@@ -14,9 +14,4 @@ const originOffset = {
  * @returns number
  */
 
-export const resolveOrigin = (
-  originValue: TOriginX | TOriginY | number
-): number =>
-  typeof originValue === 'string'
-    ? originOffset[originValue]
-    : originValue - 0.5;
+export const resolveOrigin = (originValue: TOriginX | TOriginY | number): number => typeof originValue === 'string' ? originOffset[originValue] : originValue - 0.5;

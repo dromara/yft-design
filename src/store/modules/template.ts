@@ -9,8 +9,6 @@ import useHistorySnapshot from '@/hooks/useHistorySnapshot'
 import useCenter from '@/views/Canvas/useCenter'
 import { CanvasOption } from '@/types/option'
 import { useMainStore } from './main'
-import { useFabricStore } from './fabric'
-import { useElementBounding } from '@vueuse/core'
 
 interface UpdateElementData {
   id: string | string[]

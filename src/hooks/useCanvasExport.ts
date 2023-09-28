@@ -6,10 +6,12 @@ import { useFabricStore, useTemplatesStore } from '@/store'
 import { WorkSpaceClipColor, WorkSpaceClipType, WorkSpaceSafeColor, WorkSpaceSafeType, propertiesToInclude } from '@/configs/canvas'
 import { changeDataURLDPI } from '@/utils/changdpi'
 import { TransparentFill } from '@/configs/background'
-import jsPDF from 'jspdf'
+import { ImageFormat } from 'fabric'
 import { mm2px } from '@/utils/image'
 import { downloadSVGFile } from '@/utils/download'
+import jsPDF from 'jspdf'
 import useCenter from '@/views/Canvas/useCenter'
+import { CanvasElement } from '@/types/canvas'
 
 export default () => {
   
@@ -17,7 +19,7 @@ export default () => {
   const { templates } = storeToRefs(useTemplatesStore())
 
   // 导出图片
-  const exportImage = (format: string, quality: number, dpi: number, ignoreClip = true) => {
+  const exportImage = (format: ImageFormat, quality: number, dpi: number, ignoreClip = true) => {
     Exporting.value = true
     const [ canvas ] = useCanvas()
     const { workSpaceDraw } = useCenter()
@@ -26,16 +28,15 @@ export default () => {
     const left = workSpaceDraw.left, top = workSpaceDraw.top
     const viewportTransform = canvas.viewportTransform
     const activeObject = canvas.getActiveObject()
+    const ignoreElementIds = [WorkSpaceClipType, WorkSpaceSafeType]
     if (ignoreClip) {
-      canvas.getObjects().filter(obj => obj.type === WorkSpaceClipType).map(item => {item.stroke = TransparentFill})
-      canvas.getObjects().filter(obj => obj.type === WorkSpaceSafeType).map(item => {item.stroke = TransparentFill})
+      canvas.getObjects().filter(obj => ignoreElementIds.includes((obj as CanvasElement).id)).map(item => item.set({visible: false}))
       canvas.renderAll()
     }
     if (activeObject) canvas.discardActiveObject()
     const result = canvas.toDataURL({
       multiplier: 1 / zoom,
       quality: quality,
-      // @ts-ignore
       format: format,
       width: width * zoom,
       height: height * zoom,
@@ -45,8 +46,7 @@ export default () => {
     const data = changeDataURLDPI(result, dpi)
     saveAs(data, `yft-design-${Date.now()}.${format}`)
     Exporting.value = false
-    canvas.getObjects().filter(obj => obj.type === WorkSpaceClipType).map(item => {item.stroke = WorkSpaceClipColor})
-    canvas.getObjects().filter(obj => obj.type === WorkSpaceSafeType).map(item => {item.stroke = WorkSpaceSafeColor})
+    canvas.getObjects().filter(obj => ignoreElementIds.includes((obj as CanvasElement).id)).map(item => item.set({visible: true}))
     if (activeObject) canvas.setActiveObject(activeObject)
     canvas.renderAll()
   }
@@ -56,8 +56,8 @@ export default () => {
     const { originPoint } = useCenter()
     const { workSpaceDraw } = useCenter()
     const width = workSpaceDraw.width, height = workSpaceDraw.height
-    canvas.getObjects().filter(obj => obj.type === WorkSpaceClipType).map(item => {item.stroke = TransparentFill})
-    canvas.getObjects().filter(obj => obj.type === WorkSpaceSafeType).map(item => {item.stroke = TransparentFill})
+    const ignoreElementIds = [WorkSpaceClipType, WorkSpaceSafeType]
+    canvas.getObjects().filter(obj => ignoreElementIds.includes((obj as CanvasElement).id)).map(item => item.set({visible: false}))
     canvas.renderAll()
     const data = canvas.toSVG({
       viewBox: {
@@ -70,8 +70,7 @@ export default () => {
       height: height + 'px'
     }, () => '')
     downloadSVGFile(data, `yft-design-${Date.now()}.svg`)
-    canvas.getObjects().filter(obj => obj.type === WorkSpaceClipType).map(item => {item.stroke = WorkSpaceClipColor})
-    canvas.getObjects().filter(obj => obj.type === WorkSpaceSafeType).map(item => {item.stroke = WorkSpaceSafeColor})
+    canvas.getObjects().filter(obj => ignoreElementIds.includes((obj as CanvasElement).id)).map(item => item.set({visible: true}))
     canvas.renderAll()
   }
 

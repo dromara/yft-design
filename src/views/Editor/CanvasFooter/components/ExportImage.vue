@@ -67,8 +67,8 @@
 import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useTemplatesStore } from '@/store'
+import { ImageFormat } from 'fabric'
 import useCanvasExport from '@/hooks/useCanvasExport'
-import { ImageFormat } from 'jspdf'
 
 const emit = defineEmits<{
   (event: 'close'): void
@@ -81,7 +81,7 @@ const { Exporting, exportImage } = useCanvasExport()
 const rangeType = ref<'all' | 'current' | 'custom'>('current')
 const dpiType = ref<number>(300)
 const range = ref<[number, number]>([1, templates.value.length])
-const format = ref<'jpeg' | 'png' | 'jpg'>('jpeg')
+const format = ref<ImageFormat>("jpeg")
 const quality = ref(1)
 const ignoreWebfont = ref(false)
 const ignoreClip = ref(true)
