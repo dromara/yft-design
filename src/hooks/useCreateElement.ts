@@ -53,7 +53,6 @@ export default () => {
     canvas.add(textBoxElement)
     canvas.setActiveObject(textBoxElement)
     rightState.value = RightStates.ELEMENT_STYLE
-    mainStore.setCanvasObject(textBoxElement as CanvasElement)
     templatesStore.modifedElement()
     setZindex(canvas)
   }
@@ -76,7 +75,6 @@ export default () => {
     canvas.add(pathElement)
     canvas.setActiveObject(pathElement)
     rightState.value = RightStates.ELEMENT_STYLE
-    mainStore.setCanvasObject(pathElement as CanvasElement)
     templatesStore.modifedElement()
     setZindex(canvas)
   }
@@ -127,7 +125,6 @@ export default () => {
     canvas.add(polygonElement)
     canvas.setActiveObject(polygonElement)
     rightState.value = RightStates.ELEMENT_STYLE
-    mainStore.setCanvasObject(polygonElement)
     templatesStore.modifedElement()
     setZindex(canvas)
   }
@@ -168,7 +165,6 @@ export default () => {
       canvas.add(imageElement)
       canvas.setActiveObject(imageElement)
       rightState.value = RightStates.ELEMENT_STYLE
-      mainStore.setCanvasObject(imageElement as ImageElement)
       templatesStore.modifedElement()
       setZindex(canvas)
     })
@@ -199,7 +195,6 @@ export default () => {
     templatesStore.modifedElement()
     canvas.setActiveObject(codeObject)
     rightState.value = RightStates.ELEMENT_STYLE
-    mainStore.setCanvasObject(codeObject)
     setZindex(canvas)
   }
 
@@ -226,7 +221,6 @@ export default () => {
     templatesStore.modifedElement()
     canvas.setActiveObject(barcodeObject)
     rightState.value = RightStates.ELEMENT_STYLE
-    mainStore.setCanvasObject(barcodeObject)
     setZindex(canvas)
   }
 
