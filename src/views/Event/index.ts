@@ -28,7 +28,7 @@ export const initEvent = () => {
   // canvas.on('before:render', useBeforeRender)
   // canvas.on('after:render', useAfterRender)
   // canvas.on('object:moving', useObjectMoving)
-  canvas.on('object:modified', useObjectModifed)
+  // canvas.on('object:modified', useObjectModifed)
   // canvas.on('selection:cleared', useSelectionCleared)
   // canvas.on('selection:updated', useSelectionUpdated)
   // canvas.on('text:editing:exited', useTextEditingExited)

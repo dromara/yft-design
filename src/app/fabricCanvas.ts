@@ -1,4 +1,4 @@
-import { useMainStore } from '@/store'
+import { useMainStore, useTemplatesStore } from '@/store'
 import { CanvasElement } from '@/types/canvas'
 import { Canvas, Object, CanvasOptions } from 'fabric'
 import { shallowRef } from 'vue'
@@ -10,6 +10,11 @@ export class FabricCanvas extends Canvas {
 
   constructor(el: string | HTMLCanvasElement, options?: CanvasOptions) {
     super(el, options)
+  }
+
+  public onObjectModified() {
+    const templatesStore = useTemplatesStore()
+    this.on('object:modified', () => templatesStore.modifedElement())
   }
 
   // @ts-ignore

@@ -30,7 +30,7 @@
 <script lang="ts" setup>
 import { nextTick, ref, watch } from 'vue'
 import trianglify from '@/plugins/trianglify/trianglify'
-import { GridColorSelf } from '@/configs/gridColors'
+import { GridColorSelf } from '@/configs/colorGrid'
 
 const props = defineProps({
   visible: {

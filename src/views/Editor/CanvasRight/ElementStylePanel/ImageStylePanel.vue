@@ -74,7 +74,7 @@
 import { computed, watch, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useMainStore, useTemplatesStore, useFabricStore } from '@/store'
-import { CLIPPATHS } from '@/configs/imageClip'
+import { CLIPPATHS } from '@/configs/images'
 import { ImageElement, CropElement, CanvasElement, RectElement } from '@/types/canvas'
 import ElementOutline from '../Components/ElementOutline.vue'
 import ElementShadow from '../Components/ElementShadow.vue'
