@@ -3,12 +3,9 @@ import { ref } from 'vue'
 import { saveAs } from 'file-saver'
 import { storeToRefs } from 'pinia'
 import { useFabricStore, useTemplatesStore } from '@/store'
-import { ImageFormat } from '@/types/canvas'
-import { WorkSpaceClipColor, WorkSpaceClipType, WorkSpaceDrawType, WorkSpaceName, WorkSpaceSafeColor, WorkSpaceSafeType } from '@/configs/canvas'
-import { DefaultDPI, DefaultRatio } from '@/configs/size'
+import { WorkSpaceClipColor, WorkSpaceClipType, WorkSpaceSafeColor, WorkSpaceSafeType, propertiesToInclude } from '@/configs/canvas'
 import { changeDataURLDPI } from '@/utils/changdpi'
 import { TransparentFill } from '@/configs/background'
-// import { fabric } from 'fabric'
 import jsPDF from 'jspdf'
 import { mm2px } from '@/utils/image'
 import { downloadSVGFile } from '@/utils/download'
@@ -62,7 +59,6 @@ export default () => {
     canvas.getObjects().filter(obj => obj.type === WorkSpaceClipType).map(item => {item.stroke = TransparentFill})
     canvas.getObjects().filter(obj => obj.type === WorkSpaceSafeType).map(item => {item.stroke = TransparentFill})
     canvas.renderAll()
-    // @ts-ignore
     const data = canvas.toSVG({
       viewBox: {
         x: originPoint.x,
@@ -72,14 +68,11 @@ export default () => {
       },
       width: width + 'px',
       height: height + 'px'
-    })
+    }, () => '')
     downloadSVGFile(data, `yft-design-${Date.now()}.svg`)
     canvas.getObjects().filter(obj => obj.type === WorkSpaceClipType).map(item => {item.stroke = WorkSpaceClipColor})
     canvas.getObjects().filter(obj => obj.type === WorkSpaceSafeType).map(item => {item.stroke = WorkSpaceSafeColor})
     canvas.renderAll()
-    if (import.meta.env.MODE === 'development') {
-      exportJSON()
-    }
   }
 
   // 导出PDF
@@ -113,11 +106,7 @@ export default () => {
   // 导出json
   const exportJSON = () => {
     const [ canvas ] = useCanvas()
-    console.log('canvas.getObjects():', canvas.getObjects())
-    const objects = canvas.getObjects()
-    
-    console.log('canvas.toObject():', canvas.toObject())
-    const blob = new Blob(canvas.toObject(), { type: '' })
+    const blob = new Blob([JSON.stringify(canvas.toObject(propertiesToInclude))])
     saveAs(blob, `yft-design-${Date.now()}.json`)
   }
 
