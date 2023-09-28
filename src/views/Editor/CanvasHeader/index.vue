@@ -49,7 +49,7 @@
       <el-tooltip placement="top" content="对齐">
         <IconAlignTextCenter class="handler-item" ref="alignRef"/>
       </el-tooltip>
-      <el-popover ref="alignPopoverRef" :virtual-ref="alignRef" trigger="click" :width="200" virtual-triggering>
+      <el-popover ref="alignPopoverRef" :virtual-ref="alignRef" trigger="click" :width="300" virtual-triggering>
         <el-row class="handler-icon-row">
           <el-button-group>
             <el-tooltip placement="top" :hide-after="0" content="左对齐">
@@ -62,8 +62,6 @@
               <el-button @click="rightAlign"><IconAlignRight/></el-button>
             </el-tooltip>
           </el-button-group>
-        </el-row>
-        <el-row class="handler-icon-row mt-10">
           <el-button-group>
             <el-tooltip placement="top" :hide-after="0" content="上对齐">
               <el-button @click="topAlign"><IconAlignTop/></el-button>
@@ -102,7 +100,6 @@
     </div>
     <div class="right-handler">
       <IconMinus class="handler-item" @click="scaleCanvas('-')" />
-      <!-- <span class="text" ref="scaleRef">{{canvasZoom}}</span> -->
       <el-popover placement="bottom" trigger="click" width="100" popper-class="viewport-size">
         <template #reference>
           <span class="text" ref="scaleRef">{{canvasZoom}}</span>
@@ -121,7 +118,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed } from 'vue'
 import { ElementNames } from '@/types/elements'
 import { storeToRefs } from 'pinia'
 import { CanvasOption } from '@/types/option'
@@ -201,25 +198,6 @@ const ungroup = () => {
 const intersection = () => {
   if (!handleElement.value || handleElement.value.type !== ElementNames.ACTIVE) return
   intersectElements()
-  // const s = Snap('#snap')
-  // s.clear()
-  // var bigCircle = s.circle(150, 150, 100);
-  // bigCircle.attr({
-  //   fill: "#bada55",
-  //   stroke: "#000",
-  //   strokeWidth: 5
-  // });
-  // // Now lets create another small circle:
-  // var smallCircle = s.circle(100, 150, 70);
-  // // Lets put this small circle and another one into a group:
-  // var discs = s.group(smallCircle, s.circle(200, 150, 70));
-  
-  // // Now we can change attributes for the whole group
-  // discs.attr({
-  //   fill: ""
-  // });
-  // const res = Snap.path.intersection('M 0 0 L 200 0 L 200 200 L 0 200 Z', 'M 50 0 L 150 0 Q 200 0 200 50 L 200 150 Q 200 200 150 200 L 50 200 Q 0 200 0 150 L 0 50 Q 0 0 50 0 Z')
-  // console.log('ress:', res)
 }
 
 // 置顶
@@ -266,30 +244,43 @@ const sendBackwards = () => {
 // 左对齐
 const leftAlign = () => {
   if (!handleElement.value) return
+  const [ canvas ] = useCanvas()
   const { workSpaceDraw } = useCenter()
   if (!workSpaceDraw.left || !workSpaceDraw.width || !handleElement.value.width) return
-  handleElement.value.left = workSpaceDraw.left + handleElement.value.width / 2 
+  handleElement.value.set({left: workSpaceDraw.left + handleElement.value.width / 2 }) 
+  canvas.renderAll()
+  templatesStore.modifedElement()
 }
 // 水平居中
 const verticallyAlign = () => {
   if (!handleElement.value) return
+  const [ canvas ] = useCanvas()
   const { workSpaceDraw } = useCenter()
   if (!workSpaceDraw.left || !workSpaceDraw.width || !handleElement.value.width) return
-  handleElement.value.left = workSpaceDraw.getCenterPoint().x
+  handleElement.value.set({left : workSpaceDraw.getCenterPoint().x})
+  canvas.renderAll()
+  templatesStore.modifedElement()
+  
 }
 // 右对齐
 const rightAlign = () => {
   if (!handleElement.value) return
+  const [ canvas ] = useCanvas()
   const { workSpaceDraw } = useCenter()
   if (!workSpaceDraw.left || !workSpaceDraw.width || !handleElement.value.width) return
-  handleElement.value.left = workSpaceDraw.left + workSpaceDraw.width - handleElement.value.width / 2
+  handleElement.value.set({left: workSpaceDraw.left + workSpaceDraw.width - handleElement.value.width / 2})
+  canvas.renderAll()
+  templatesStore.modifedElement()
 }
 // 上对齐
 const topAlign = () => {
   if (!handleElement.value) return
+  const [ canvas ] = useCanvas()
   const { workSpaceDraw } = useCenter()
   if (!workSpaceDraw.top || !workSpaceDraw.height || !handleElement.value.height) return
   handleElement.value.top = workSpaceDraw.top + handleElement.value.height / 2 
+  canvas.renderAll()
+  templatesStore.modifedElement()
 }
 // 垂直居中
 const horizontallyAlign = () => {
@@ -298,6 +289,8 @@ const horizontallyAlign = () => {
   const { workSpaceDraw } = useCenter()
   if (!workSpaceDraw.top || !workSpaceDraw.height || !handleElement.value.height) return
   handleElement.value.top = workSpaceDraw.getCenterPoint().y
+  canvas.renderAll()
+  templatesStore.modifedElement()
 }
 // 下对齐
 const bottomAlign = () => {
@@ -306,13 +299,15 @@ const bottomAlign = () => {
   const { workSpaceDraw } = useCenter()
   if (!workSpaceDraw.top || !workSpaceDraw.height || !handleElement.value.height) return
   handleElement.value.top = workSpaceDraw.top + workSpaceDraw.height - handleElement.value.height / 2
+  canvas.renderAll()
+  templatesStore.modifedElement()
 }
 
 // 修改旋转
 const changeRotate = (value: number) => {
   const [ canvas ] = useCanvas()
   if (!handleElement.value || !canvas) return
-  handleElement.value.angle = value
+  handleElement.value.set({angle: value})
   canvas.renderAll()
   templatesStore.modifedElement()
 }
