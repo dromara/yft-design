@@ -215,28 +215,20 @@ export default () => {
     canvas.discardActiveObject()
     mainStore.setCanvasObject(null)
     if (activeObjects.length !== 2) return
-    const subTargetElement = activeObjects[0]
-    const clipTargetElement = activeObjects[1]
-    const subTargetElementPath = subTargetElement.path
-    const clipTargetElementPath = clipTargetElement.path
-    const subPathPoints = getPathPoints(subTargetElementPath)
-    const clipPathPoints = getPathPoints(clipTargetElementPath)
-    console.log('clipperPath:', subPathPoints)
-    console.log('clipPathPoints:', clipPathPoints)
-    const cpr = new ClipperLib.Clipper();
-
-    const scale = 100;
-    ClipperLib.JS.ScaleUpPaths(subPathPoints, scale);
-    ClipperLib.JS.ScaleUpPaths(clipPathPoints, scale);
-
-    cpr.AddPaths(subPathPoints, ClipperLib.PolyType.ptSubject, true);  // true意味着闭合路径
-    cpr.AddPaths(clipPathPoints, ClipperLib.PolyType.ptClip, true);
-
-    const solution_paths = new ClipperLib.Paths();
-    const succeeded = cpr.Execute(ClipperLib.ClipType.ctUnion, solution_paths, ClipperLib.PolyFillType.pftNonZero, ClipperLib.PolyFillType.pftNonZero);
-    console.log('solution_paths:', solution_paths)
-    const intersectPath = paths2str(solution_paths, scale)
-    createPathElement(intersectPath)
+    canvas.discardActiveObject()
+    mainStore.setCanvasObject(null)
+    activeObjects[1].set({globalCompositeOperation: 'xor'})
+    const groupElement = new fabric.Group(activeObjects, { 
+      // @ts-ignore
+      id: nanoid(10),
+      name: ElementNames.GROUP,
+    })
+    canvas.add(groupElement)
+    templatesStore.deleteElement(activeObjects.map(item => item.id))
+    templatesStore.addElement(groupElement.toObject(propertiesToInclude as any[]) as GroupOption)
+    templatesStore.renderElement()
+    canvas.remove(...activeObjects)
+    setZindex(canvas)
     canvas.renderAll()
   }
 
