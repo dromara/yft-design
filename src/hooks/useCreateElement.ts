@@ -1,7 +1,7 @@
 import { storeToRefs } from 'pinia'
 import { useFabricStore, useTemplatesStore } from "@/store"
 import { useMainStore } from '@/store/modules/main'
-import { RightStates, ElementNames, BarCodeOption } from '@/types/elements'
+import { RightStates, ElementNames } from '@/types/elements'
 import { nanoid } from 'nanoid'
 import { QRCodeElement, BarCodeElement, ImageElement, LineElement, PolygonElement, PathElement, TextboxElement, CanvasElement } from '@/types/canvas'
 import { getImageSize } from '@/utils/image'
@@ -11,6 +11,7 @@ import * as fabric from "fabric"
 import useCenter from '@/views/Canvas/useCenter'
 import useCanvas from '@/views/Canvas/useCanvas'
 import useCanvasZindex from './useCanvasZindex'
+import { WEB_FONTS } from '@/configs/fonts'
 
 
 
@@ -30,6 +31,7 @@ export default () => {
       left: centerPoint.x,
       top: centerPoint.y,
       fontSize,
+      fontFamily: WEB_FONTS[0].value,
       fillType: 0,
       hasControls: true,
       hasBorders: true,
