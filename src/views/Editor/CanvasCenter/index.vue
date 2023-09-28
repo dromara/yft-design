@@ -13,7 +13,6 @@
 import { storeToRefs } from 'pinia'
 import { onMounted, onUnmounted } from 'vue'
 import { useFabricStore, useMainStore } from '@/store'
-import { initEvent } from '@/views/Event/index'
 
 import { contextmenus } from '@/configs/contextMenu'
 import useCanvas from '@/views/Canvas/useCanvas'
@@ -27,7 +26,6 @@ const { keydownListener, keyupListener } = useCanvasHotkey()
 
 onMounted(() => {
   initEditor()
-  initEvent()
   document.addEventListener('keydown', keydownListener)
   document.addEventListener('keyup', keyupListener)
   window.addEventListener('blur', keyupListener)

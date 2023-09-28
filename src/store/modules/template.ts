@@ -1,7 +1,7 @@
 import { defineStore, storeToRefs } from 'pinia'
 import { Templates } from '@/mocks/templates'
 import { Template, CanvasElement } from '@/types/canvas'
-import { propertiesToInclude } from '@/configs/canvas'
+import { WorkSpaceDrawType, propertiesToInclude } from '@/configs/canvas'
 import useCanvasScale from '@/hooks/useCanvasScale'
 import useCanvas from '@/views/Canvas/useCanvas'
 import useHistorySnapshot from '@/hooks/useHistorySnapshot'
@@ -101,6 +101,10 @@ export const useTemplatesStore = defineStore('Templates', {
         template.width = width
         template.height = height
         template.zoom = zoom
+        template.objects.filter(item => item.id === WorkSpaceDrawType).map(ele => {
+          ele.width = width / zoom
+          ele.height = height / zoom
+        })
       })
       addHistorySnapshot()
     },
