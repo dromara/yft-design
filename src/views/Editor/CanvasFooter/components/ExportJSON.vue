@@ -1,27 +1,26 @@
 <template>
-  <div class="export-svg-dialog">
-    <div class="preview" v-html="svgHtml"></div>
+  <div class="export-json-dialog">
+    <div class="preview">
+      <pre>{{ getJSONData() }}</pre>
+    </div>
     <div class="btns">
-      <el-button class="btn export" type="primary" @click="exportSVG()">导出 SVG</el-button>
+      <el-button class="btn export" type="primary" @click="exportJSON()">导出 JSON</el-button>
       <el-button class="btn close" @click="emit('close')">关闭</el-button>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
 import useCanvasExport from '@/hooks/useCanvasExport'
 
 const emit = defineEmits<{(event: 'close'): void}>()
 
-const { exportSVG, getSVGData } = useCanvasExport()
-
-const svgHtml = computed(() => getSVGData())
+const { exportJSON, getJSONData } = useCanvasExport()
 
 </script>
 
 <style lang="scss" scoped>
-.export-svg-dialog {
+.export-json-dialog {
   height: 100%;
   display: flex;
   justify-content: center;
@@ -38,10 +37,9 @@ const svgHtml = computed(() => getSVGData())
   justify-content: center;
   background-color: #f9f9f9;
   color: #0451a5;
-  // svg {
-  //   width: 100%;
-  //   height: 100%;
-  // }
+  pre {
+    margin: 0;
+  }
 }
 .btns {
   width: 300px;

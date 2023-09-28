@@ -3,21 +3,21 @@ import { ref } from 'vue'
 import { saveAs } from 'file-saver'
 import { storeToRefs } from 'pinia'
 import { useFabricStore, useTemplatesStore } from '@/store'
-import { WorkSpaceClipColor, WorkSpaceClipType, WorkSpaceSafeColor, WorkSpaceSafeType, propertiesToInclude } from '@/configs/canvas'
+import { WorkSpaceClipType, WorkSpaceSafeType, propertiesToInclude } from '@/configs/canvas'
 import { changeDataURLDPI } from '@/utils/changdpi'
-import { TransparentFill } from '@/configs/background'
 import { ImageFormat } from 'fabric'
 import { mm2px } from '@/utils/image'
 import { downloadSVGFile } from '@/utils/download'
+import { CanvasElement } from '@/types/canvas'
 import jsPDF from 'jspdf'
 import useCenter from '@/views/Canvas/useCenter'
-import { CanvasElement } from '@/types/canvas'
+
 
 export default () => {
   
   const Exporting = ref(false)
   const { templates } = storeToRefs(useTemplatesStore())
-
+  const ignoreElementIds = [WorkSpaceClipType, WorkSpaceSafeType]
   // 导出图片
   const exportImage = (format: ImageFormat, quality: number, dpi: number, ignoreClip = true) => {
     Exporting.value = true
@@ -28,7 +28,6 @@ export default () => {
     const left = workSpaceDraw.left, top = workSpaceDraw.top
     const viewportTransform = canvas.viewportTransform
     const activeObject = canvas.getActiveObject()
-    const ignoreElementIds = [WorkSpaceClipType, WorkSpaceSafeType]
     if (ignoreClip) {
       canvas.getObjects().filter(obj => ignoreElementIds.includes((obj as CanvasElement).id)).map(item => item.set({visible: false}))
       canvas.renderAll()
@@ -51,12 +50,11 @@ export default () => {
     canvas.renderAll()
   }
 
-  const exportSVG = () => {
+  const getSVGData = () => {
     const [ canvas ] = useCanvas()
     const { originPoint } = useCenter()
     const { workSpaceDraw } = useCenter()
     const width = workSpaceDraw.width, height = workSpaceDraw.height
-    const ignoreElementIds = [WorkSpaceClipType, WorkSpaceSafeType]
     canvas.getObjects().filter(obj => ignoreElementIds.includes((obj as CanvasElement).id)).map(item => item.set({visible: false}))
     canvas.renderAll()
     const data = canvas.toSVG({
@@ -68,7 +66,18 @@ export default () => {
       },
       width: width + 'px',
       height: height + 'px'
-    }, () => '')
+    }, (element) => element)
+    return data
+  }
+
+  const getJSONData = () => {
+    const [ canvas ] = useCanvas()
+    return canvas.toObject(propertiesToInclude)
+  }
+
+  const exportSVG = () => {
+    const [ canvas ] = useCanvas()
+    const data = getSVGData()
     downloadSVGFile(data, `yft-design-${Date.now()}.svg`)
     canvas.getObjects().filter(obj => ignoreElementIds.includes((obj as CanvasElement).id)).map(item => item.set({visible: true}))
     canvas.renderAll()
@@ -114,6 +123,8 @@ export default () => {
     exportPDF,
     exportJSON,
     exportSVG,
+    getJSONData,
+    getSVGData,
     Exporting
   }
 }

@@ -21,11 +21,12 @@
 import { computed, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useMainStore } from '@/store'
-import { ExportTypes } from '@/types/export'
+import { ExportTypes } from '@/types/common'
 
 import ExportImage from './ExportImage.vue'
 import ExportSVG from './ExportSVG.vue'
 import ExportPDF from './ExportPDF.vue'
+import ExportJSON from './ExportJSON.vue'
 
 const mainStore = useMainStore()
 const { exportType } = storeToRefs(mainStore)
@@ -53,11 +54,11 @@ interface TabItem {
   label: string
 }
 
-
 const tabs: TabItem[] = [
   { key: 'image', label: '导出图片' },
   { key: 'svg', label: '导出SVG' },
   { key: 'pdf', label: '导出PDF' },
+  { key: 'json', label: '导出JSON' },
 ]
 
 const currentDialogComponent = computed(() => {
@@ -65,6 +66,8 @@ const currentDialogComponent = computed(() => {
     'image': ExportImage,
     'svg': ExportSVG,
     'pdf': ExportPDF,
+    'json': ExportJSON,
+    '': '',
   }
   return dialogMap[exportType.value] || null
 })
