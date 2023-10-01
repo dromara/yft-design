@@ -1,5 +1,5 @@
 import { storeToRefs } from 'pinia'
-import { Canvas, Rect, Object as FabricObject, Control, Textbox, controlsUtils, Path, Line, Group, Image } from 'fabric'
+import { Canvas, Object as FabricObject, CanvasOptions } from 'fabric'
 import { useFabricStore } from '@/store/modules/fabric'
 import { watch } from 'vue'
 import { useElementBounding } from '@vueuse/core'
@@ -132,8 +132,7 @@ const initWorkSpace = (width: number, height: number) => {
   let zoomVal = 1
   const workWidth = currentTemplate.value.width / currentTemplate.value.zoom
   const workHeight = currentTemplate.value.height / currentTemplate.value.zoom
-  
-  if (width < workWidth || height < workHeight) {
+  if (width < workWidth / scalePercentageVal || height < workHeight / scalePercentageVal) {
     //按照宽度缩放
     if (workWidth / width > workHeight / height) {
       zoomVal = workWidth / (width * scalePercentageVal)
@@ -172,7 +171,6 @@ const setCanvasTransform = () => {
   const { width, height } = useElementBounding(wrapperRef.value)
   initWorkSpace(width.value, height.value)
   const WorkSpaceDraw = canvas.getObjects().filter(item => (item as CanvasElement).id === WorkSpaceDrawType)[0]
-  // const WorkSpaceClip = canvas.getObjects(WorkSpaceClipType)[0]
   if (!WorkSpaceDraw) return
   const workSpaceBound = WorkSpaceDraw.getBoundingRect()
   const left = WorkSpaceDraw.left, top = WorkSpaceDraw.top
@@ -321,7 +319,10 @@ const initCanvas = () => {
   const fabricWidth = fabricStore.getWidth()
   const fabricHeight = fabricStore.getHeight()
   if (!canvasRef.value) return
-  canvas = new FabricCanvas(canvasRef.value)
+  canvas = new FabricCanvas(canvasRef.value, {
+    width: fabricWidth,
+    height: fabricHeight
+  } as CanvasOptions)
   new GuideLines(canvas)
   new HoverBorders(canvas)
   new WheelScroll(canvas)
