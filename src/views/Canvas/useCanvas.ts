@@ -46,8 +46,8 @@ const initConf = () => {
   FabricObject.ownDefaults.cornerStrokeColor = '#c0c0c0'
   FabricObject.ownDefaults.borderOpacityWhenMoving = 1
   FabricObject.ownDefaults.borderScaleFactor = 1
-  FabricObject.ownDefaults.cornerSize = 10
-  FabricObject.ownDefaults.cornerStyle = 'circle'
+  FabricObject.ownDefaults.cornerSize = 6
+  FabricObject.ownDefaults.cornerStyle = 'rect'
   FabricObject.ownDefaults.centeredScaling = false
   FabricObject.ownDefaults.centeredRotation = true
   FabricObject.ownDefaults.transparentCorners = false
@@ -151,16 +151,6 @@ const initWorkSpace = (width: number, height: number) => {
   }
 }
 
-// // 更新画布尺寸
-// const setCanvasSize = (width: number, height: number) => {
-//   if (!canvas) return
-//   const fabricStore = useFabricStore()
-//   const { zoom } = storeToRefs(fabricStore)
-//   zoom.value = canvas.getZoom()
-//   canvas.setDimensions({width, height})
-//   canvas.renderAll()
-// }
-
 // 更新视图区长宽
 const setCanvasTransform = () => {
   
@@ -187,19 +177,21 @@ const setCanvasTransform = () => {
 // 初始化工作台
 export const initWorks = () => {
   if (!canvas) return
+  const workSpaceDraw = canvas.getObjects().filter(ele => (ele as CanvasElement).id === WorkSpaceDrawType)[0]
+  if (!workSpaceDraw) return
   const fabricStore = useFabricStore()
   const templatesStore = useTemplatesStore()
   const { currentTemplate } = storeToRefs(templatesStore)
-  const { zoom, clip, safe, diagonal, opacity, showClip, showSafe, wrapperRef } = storeToRefs(fabricStore)
-  const canvasWidth = canvas.width, canvasHeight = canvas.height
+  const { clip, safe, diagonal, opacity, showClip, showSafe } = storeToRefs(fabricStore)
+  
   const workWidth = currentTemplate.value.width / currentTemplate.value.zoom
   const workHeight = currentTemplate.value.height / currentTemplate.value.zoom
-  const left = (canvasWidth - workWidth) / 2 * zoom.value
-  const top = (canvasHeight - workHeight ) / 2 * zoom.value
+  
   const Padding = 50000, PaddingHalf = Padding / 2
   const clipPX = clip.value * DefaultDPI / DefaultRatio
   const diagonalPX = diagonal.value * DefaultDPI / DefaultRatio
   const safePX = 2 * safe.value * DefaultDPI / DefaultRatio
+  const left = workSpaceDraw.left + clipPX, top = workSpaceDraw.top + clipPX
 
   const workSpaceClip = new Rect({
     left: left,
@@ -239,7 +231,9 @@ export const initWorks = () => {
     top: -PaddingHalf,
     fill: WorkSpaceMaskColor,
     opacity: opacity.value,
-    type: WorkSpaceMaskType,
+    id: WorkSpaceMaskType,
+    originX: 'left',
+    originY: 'top',
     ...WorkSpaceCommonOption
   })
   // [lineEnd, lineHeight, leftStart, top] 终止位置，线长，起始位置，top
@@ -287,12 +281,12 @@ export const initWorks = () => {
     top: top - diagonalHalfPX - clipPX, 
     ...WorkSpaceCommonOption
   })
-  canvas.add(workSpaceMask)
   canvas.add(workSpaceClip)
   canvas.add(workSpaceSafe)
+  // canvas.add(workSpaceMask)
   canvas.add(workLineGroup)
-  canvas.bringObjectToFront(workSpaceMask)
-  canvas.bringObjectToFront(workLineGroup)
+  // canvas.bringObjectToFront(workSpaceMask)
+  // canvas.bringObjectToFront(workLineGroup)
   canvas.renderAll()
 }
 
@@ -321,15 +315,15 @@ const initTemplate = async () => {
   const { currentTemplate } = storeToRefs(templatesStore)
   await canvas.loadFromJSON(currentTemplate.value)
   setCanvasTransform()
+  initWorks()
 }
 
-const initEditor = () => {
+const initEditor = async () => {
   const fabricStore = useFabricStore()
   const { wrapperRef } = storeToRefs(fabricStore)
   initConf()
   initCanvas()
   initTemplate()
-  initWorks()
   const { width, height } = useElementBounding(wrapperRef.value)
   watch([width, height], () => {
     setCanvasTransform()
