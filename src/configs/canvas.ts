@@ -28,8 +28,8 @@ export const WorkSpaceSafeColor = 'yellow'
 
 // 画布公共参数
 export const WorkSpaceCommonOption = {
-  originX: 'left',
-  originY: 'top',
+  // originX: 'left',
+  // originY: 'top',
   selectable: false,
   transparentCorners: false,
   evented: false,

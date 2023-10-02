@@ -1,5 +1,5 @@
 import { storeToRefs } from 'pinia'
-import { Canvas, Object as FabricObject, CanvasOptions } from 'fabric'
+import { Canvas, Object as FabricObject, CanvasOptions, Line, Group, Rect, Path } from 'fabric'
 import { useFabricStore } from '@/store/modules/fabric'
 import { watch } from 'vue'
 import { useElementBounding } from '@vueuse/core'
@@ -11,7 +11,7 @@ import { FabricCanvas } from '@/app/fabricCanvas'
 import { createObjectDefaultControls } from '@/app/controls'
 import { DefaultDPI, DefaultRatio } from '@/configs/size'
 import { useTemplatesStore } from '@/store'
-import { CanvasElement } from '@/types/canvas'
+import { CanvasElement, LineOption } from '@/types/canvas'
 import { TransparentFill } from '@/configs/background'
 import { drawRotateIcon, drawAngleIcon, drawVerticalLeftLineIcon, drawVerticalRightLineIcon } from '@/utils/drawer'
 import useCanvasScale from '@/hooks/useCanvasScale'
@@ -185,133 +185,116 @@ const setCanvasTransform = () => {
 }
 
 // 初始化工作台
-// export const initWorks = () => {
-//   if (!canvas) return
-//   const fabricStore = useFabricStore()
-//   const { zoom, clip, safe, diagonal, opacity, showClip, showSafe, wrapperRef } = storeToRefs(fabricStore)
-//   const canvasWidth = canvas.width ? canvas.width : fabricStore.getWidth()
-//   const canvasHeight = canvas.height ? canvas.height : fabricStore.getHeight()
-//   // const { workWidth, workHeight } = initWorkSpace(0, 0)
-//   const left = (canvasWidth - workWidth) / 2 * zoom.value
-//   const top = (canvasHeight - workHeight ) / 2 * zoom.value
-//   const Padding = 50000, PaddingHalf = Padding / 2
-//   const clipPX = clip.value * DefaultDPI / DefaultRatio
-//   const diagonalPX = diagonal.value * DefaultDPI / DefaultRatio
-//   const safePX = 2 * safe.value * DefaultDPI / DefaultRatio
+export const initWorks = () => {
+  if (!canvas) return
+  const fabricStore = useFabricStore()
+  const templatesStore = useTemplatesStore()
+  const { currentTemplate } = storeToRefs(templatesStore)
+  const { zoom, clip, safe, diagonal, opacity, showClip, showSafe, wrapperRef } = storeToRefs(fabricStore)
+  const canvasWidth = canvas.width, canvasHeight = canvas.height
+  const workWidth = currentTemplate.value.width / currentTemplate.value.zoom
+  const workHeight = currentTemplate.value.height / currentTemplate.value.zoom
+  const left = (canvasWidth - workWidth) / 2 * zoom.value
+  const top = (canvasHeight - workHeight ) / 2 * zoom.value
+  const Padding = 50000, PaddingHalf = Padding / 2
+  const clipPX = clip.value * DefaultDPI / DefaultRatio
+  const diagonalPX = diagonal.value * DefaultDPI / DefaultRatio
+  const safePX = 2 * safe.value * DefaultDPI / DefaultRatio
 
-//   // @ts-ignore
-//   const workSpaceDraw = new Rect({
-//     left: left - clipPX,
-//     top: top - clipPX,
-//     width: workWidth + 2 * clipPX,
-//     height: workHeight + 2 * clipPX,
-//     fill: WorkSpaceEditColor,
-//     stroke: WorkSpaceEditColor, 
-//     type: WorkSpaceDrawType,
-//     ...WorkSpaceCommonOption
-//   })
+  const workSpaceClip = new Rect({
+    left: left,
+    top: top,
+    width: workWidth,
+    height: workHeight,
+    fill: TransparentFill,
+    stroke: WorkSpaceClipColor, // 边框颜色
+    strokeWidth: 1, // 边框大小
+    visible: showClip.value,
+    id: WorkSpaceClipType,
+    ...WorkSpaceCommonOption
+  })
 
-//   // @ts-ignore
-//   const workSpaceClip = new Rect({
-//     left: left,
-//     top: top,
-//     width: workWidth,
-//     height: workHeight,
-//     fill: TransparentFill,
-//     stroke: WorkSpaceClipColor, // 边框颜色
-//     strokeWidth: 1, // 边框大小
-//     visible: showClip.value,
-//     type: WorkSpaceClipType,
-//     ...WorkSpaceCommonOption
-//   })
+  const workSpaceSafe = new Rect({
+    left: left + safePX,
+    top: top + safePX,
+    width: workWidth - 2 * safePX,
+    height: workHeight - 2 * safePX,
+    fill: TransparentFill,
+    stroke: WorkSpaceSafeColor, // 边框颜色
+    strokeWidth: 1, // 边框大小
+    visible: showSafe.value,
+    id: WorkSpaceSafeType,
+    ...WorkSpaceCommonOption
+  })
 
-//   // @ts-ignore
-//   const workSpaceSafe = new Rect({
-//     left: left + safePX,
-//     top: top + safePX,
-//     width: workWidth - 2 * safePX,
-//     height: workHeight - 2 * safePX,
-//     fill: TransparentFill,
-//     stroke: WorkSpaceSafeColor, // 边框颜色
-//     strokeWidth: 1, // 边框大小
-//     visible: showSafe.value,
-//     type: WorkSpaceSafeType,
-//     ...WorkSpaceCommonOption
-//   })
+  const maskPath = `M0 0 L${Padding} 0 L${Padding} ${Padding} L0 ${Padding} L0 0 Z 
+  M${PaddingHalf + left - clipPX} ${PaddingHalf + top - clipPX} 
+  L${PaddingHalf + left - clipPX} ${PaddingHalf + top + workHeight + clipPX} 
+  L${PaddingHalf + left + workWidth + clipPX} ${PaddingHalf + top + workHeight + clipPX} 
+  L${PaddingHalf + left + workWidth + clipPX} ${PaddingHalf + top - clipPX} 
+  L${PaddingHalf + left - clipPX} ${PaddingHalf + top - clipPX} Z`
 
-//   const maskPath = `M0 0 L${Padding} 0 L${Padding} ${Padding} L0 ${Padding} L0 0 Z 
-//   M${PaddingHalf + left - clipPX} ${PaddingHalf + top - clipPX} 
-//   L${PaddingHalf + left - clipPX} ${PaddingHalf + top + workHeight + clipPX} 
-//   L${PaddingHalf + left + workWidth + clipPX} ${PaddingHalf + top + workHeight + clipPX} 
-//   L${PaddingHalf + left + workWidth + clipPX} ${PaddingHalf + top - clipPX} 
-//   L${PaddingHalf + left - clipPX} ${PaddingHalf + top - clipPX} Z`
-//   // @ts-ignore
-//   const workSpaceMask = new Path(maskPath, {
-//     left: -PaddingHalf,
-//     top: -PaddingHalf,
-//     fill: WorkSpaceMaskColor,
-//     opacity: opacity.value,
-//     type: WorkSpaceMaskType,
-//     ...WorkSpaceCommonOption
-//   })
-//   // [lineEnd, lineHeight, leftStart, top] 终止位置，线长，起始位置，top
-//   const diagonalHalfPX = diagonalPX / 2
-//   const diagonals = [
-//     // 左上水平
-//     [ PaddingHalf - diagonalHalfPX - clipPX, PaddingHalf + clipPX, PaddingHalf - diagonalHalfPX / 2 - clipPX, PaddingHalf + clipPX],
-//     // 左上垂直
-//     [ PaddingHalf, PaddingHalf - diagonalHalfPX, PaddingHalf, PaddingHalf - diagonalHalfPX / 2],
+  const workSpaceMask = new Path(maskPath, {
+    left: -PaddingHalf,
+    top: -PaddingHalf,
+    fill: WorkSpaceMaskColor,
+    opacity: opacity.value,
+    type: WorkSpaceMaskType,
+    ...WorkSpaceCommonOption
+  })
+  // [lineEnd, lineHeight, leftStart, top] 终止位置，线长，起始位置，top
+  const diagonalHalfPX = diagonalPX / 2
+  const diagonals: LineOption[] = [
+    // 左上水平
+    [ PaddingHalf - diagonalHalfPX - clipPX, PaddingHalf + clipPX, PaddingHalf - diagonalHalfPX / 2 - clipPX, PaddingHalf + clipPX],
+    // 左上垂直
+    [ PaddingHalf, PaddingHalf - diagonalHalfPX, PaddingHalf, PaddingHalf - diagonalHalfPX / 2],
 
-//     // 左下水平
-//     [ PaddingHalf - diagonalHalfPX - clipPX, PaddingHalf + workHeight + clipPX, PaddingHalf - diagonalHalfPX / 2 - clipPX, PaddingHalf + workHeight + clipPX],
-//     // 左下垂直
-//     [ PaddingHalf, PaddingHalf + diagonalHalfPX + workHeight + 2 * clipPX, PaddingHalf, PaddingHalf + workHeight + diagonalHalfPX / 2 + 2 * clipPX],
+    // 左下水平
+    [ PaddingHalf - diagonalHalfPX - clipPX, PaddingHalf + workHeight + clipPX, PaddingHalf - diagonalHalfPX / 2 - clipPX, PaddingHalf + workHeight + clipPX],
+    // 左下垂直
+    [ PaddingHalf, PaddingHalf + diagonalHalfPX + workHeight + 2 * clipPX, PaddingHalf, PaddingHalf + workHeight + diagonalHalfPX / 2 + 2 * clipPX],
 
-//     // 右上水平
-//     [ PaddingHalf + workWidth + diagonalHalfPX + clipPX, PaddingHalf + clipPX, PaddingHalf + workWidth + diagonalHalfPX / 2 + clipPX, PaddingHalf + clipPX],
-//     // 右上垂直
-//     [ PaddingHalf + workWidth, PaddingHalf - diagonalHalfPX, PaddingHalf + workWidth, PaddingHalf - diagonalHalfPX / 2],
+    // 右上水平
+    [ PaddingHalf + workWidth + diagonalHalfPX + clipPX, PaddingHalf + clipPX, PaddingHalf + workWidth + diagonalHalfPX / 2 + clipPX, PaddingHalf + clipPX],
+    // 右上垂直
+    [ PaddingHalf + workWidth, PaddingHalf - diagonalHalfPX, PaddingHalf + workWidth, PaddingHalf - diagonalHalfPX / 2],
     
-//     // 右下水平
-//     [ PaddingHalf + workWidth + diagonalHalfPX + clipPX, PaddingHalf + workHeight + clipPX, PaddingHalf + workWidth + diagonalHalfPX / 2  + clipPX, PaddingHalf + workHeight + clipPX],
-//     // 右下垂直
-//     [ PaddingHalf + workWidth, PaddingHalf + diagonalHalfPX + workHeight + 2 * clipPX, PaddingHalf + workWidth, PaddingHalf + workHeight + diagonalHalfPX / 2 + 2 * clipPX]
-//   ]
-//   const diagonalLines: Line[] = []
-//   diagonals.forEach(line => {
-//     // @ts-ignore
-//     const diagonalLine = new Line(line, {
-//       selectable: false,
-//       hoverCursor: 'default',
-//       evented: false,
-//       excludeFromExport: false,
-//       hasBorders: false,
-//       perPixelTargetFind: true,
-//       strokeWidth: 1,
-//       stroke: WorkSpaceClipColor
-//     })
-//     diagonalLines.push(diagonalLine)
-//   })
+    // 右下水平
+    [ PaddingHalf + workWidth + diagonalHalfPX + clipPX, PaddingHalf + workHeight + clipPX, PaddingHalf + workWidth + diagonalHalfPX / 2  + clipPX, PaddingHalf + workHeight + clipPX],
+    // 右下垂直
+    [ PaddingHalf + workWidth, PaddingHalf + diagonalHalfPX + workHeight + 2 * clipPX, PaddingHalf + workWidth, PaddingHalf + workHeight + diagonalHalfPX / 2 + 2 * clipPX]
+  ]
+  const diagonalLines: Line[] = []
+  diagonals.forEach(line => {
+    const diagonalLine = new Line(line, {
+      selectable: false,
+      hoverCursor: 'default',
+      evented: false,
+      excludeFromExport: false,
+      hasBorders: false,
+      perPixelTargetFind: true,
+      strokeWidth: 1,
+      stroke: WorkSpaceClipColor
+    })
+    diagonalLines.push(diagonalLine)
+  })
   
-//   const workLineGroup = new Group([...diagonalLines], {
-//     // @ts-ignore
-//     type: WorkSpaceLineType, 
-//     left: left - diagonalHalfPX - clipPX, 
-//     top: top - diagonalHalfPX - clipPX, 
-//     ...WorkSpaceCommonOption
-//   })
-//   canvas.add(workSpaceMask)
-//   canvas.add(workSpaceDraw)
-//   canvas.add(workSpaceClip)
-//   canvas.add(workSpaceSafe)
-//   canvas.add(workLineGroup)
-//   canvas.bringObjectToFront(workSpaceMask)
-//   canvas.bringObjectToFront(workLineGroup)
-//   canvas.renderAll()
-
-  
-//   setCanvasTransform()
-// }
+  const workLineGroup = new Group([...diagonalLines], {
+    // @ts-ignore
+    id: WorkSpaceLineType, 
+    left: left - diagonalHalfPX - clipPX, 
+    top: top - diagonalHalfPX - clipPX, 
+    ...WorkSpaceCommonOption
+  })
+  canvas.add(workSpaceMask)
+  canvas.add(workSpaceClip)
+  canvas.add(workSpaceSafe)
+  canvas.add(workLineGroup)
+  canvas.bringObjectToFront(workSpaceMask)
+  canvas.bringObjectToFront(workLineGroup)
+  canvas.renderAll()
+}
 
 const initCanvas = () => {
   const fabricStore = useFabricStore()
@@ -345,8 +328,8 @@ const initEditor = () => {
   const { wrapperRef } = storeToRefs(fabricStore)
   initConf()
   initCanvas()
-  // initWorks()
   initTemplate()
+  initWorks()
   const { width, height } = useElementBounding(wrapperRef.value)
   watch([width, height], () => {
     setCanvasTransform()

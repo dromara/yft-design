@@ -24,9 +24,9 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
+import { storeToRefs } from 'pinia'
 import { WorkSpaceClipType, WorkSpaceSafeType } from '@/configs/canvas'
 import { useFabricStore, useKeyboardStore, useMainStore } from '@/store'
-import { storeToRefs } from 'pinia'
 import useCanvas from '@/views/Canvas/useCanvas'
 
 const fabricStore = useFabricStore()

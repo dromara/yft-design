@@ -2,7 +2,7 @@ import fabric from "fabric"
 import JsBarcode from "jsbarcode"
 import { CanvasOption } from "./option"
 import { ColorStop } from "./elements"
-
+export type LineOption = [number, number, number, number]
 export type TPatternRepeat = 'repeat' | 'repeat-x' | 'repeat-y' | 'no-repeat'
 
 export interface CommenElement {
