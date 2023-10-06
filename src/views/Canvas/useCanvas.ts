@@ -12,7 +12,6 @@ import { createObjectDefaultControls } from '@/app/controls'
 import { useTemplatesStore } from '@/store'
 import { CanvasElement } from '@/types/canvas'
 import { WorkSpaceDrawType, WorkSpaceEditTolls } from '@/configs/canvas'
-import useRotate from './useRotate'
 import useCommon from './useCommon'
 
 
@@ -21,7 +20,6 @@ let canvas: null | Canvas = null
 
 // 初始化配置
 const initConf = () => {
-  const { rotateElement, unrotateElement } = useRotate()
   FabricObject.prototype.objectCaching = false
   FabricObject.ownDefaults.borderColor = 'blue'
   FabricObject.ownDefaults.cornerColor = 'white'
@@ -204,7 +202,6 @@ export const toggleSelection = (selection?: boolean) => {
   FabricObject.prototype.selectable = canvas.selection
   // 补充这个方法，禁止选中所有元素
   canvas.getObjects().filter(obj => !WorkSpaceEditTolls.includes((obj as CanvasElement).id)).map(item => item.set({selection}))
-  console.log('canvas.getObjects:', canvas.getObjects())
 }
 
 export default (): [FabricCanvas, typeof initEditor] => [canvas as FabricCanvas, initEditor]

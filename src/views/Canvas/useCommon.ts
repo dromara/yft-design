@@ -9,7 +9,6 @@ import {
   WorkSpaceSafeType,
   WorkSpaceClipColor,
   WorkSpaceSafeColor,
-  WorkSpaceLineType,
   WorkSpaceMaskColor,
 } from '@/configs/canvas'
 import { Line, Group, Rect, Path } from 'fabric'
@@ -114,16 +113,16 @@ export default () => {
         perPixelTargetFind: true,
         strokeWidth: 1,
         stroke: WorkSpaceClipColor,
-        visible: showClip.value,
       })
       diagonalLines.push(diagonalLine)
     })
 
     const workLineGroup = new Group([...diagonalLines], {
       // @ts-ignore
-      id: WorkSpaceLineType,
+      id: WorkSpaceClipType,
       left: left - diagonalHalfPX - clipPX,
       top: top - diagonalHalfPX - clipPX,
+      visible: showClip.value,
       ...WorkSpaceCommonOption
     })
     canvas.add(workSpaceClip)

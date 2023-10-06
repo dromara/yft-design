@@ -25,9 +25,11 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
+import { CanvasElement } from '@/types/canvas'
 import { WorkSpaceClipType, WorkSpaceSafeType } from '@/configs/canvas'
 import { useFabricStore, useKeyboardStore, useMainStore } from '@/store'
 import useCanvas from '@/views/Canvas/useCanvas'
+
 
 const fabricStore = useFabricStore()
 const mainStore = useMainStore()
@@ -43,11 +45,12 @@ const changeWorkLines = () => {
   isDrag.value = showWorkLines.value.filter(item => item === 'drag').length > 0
   keyboardStore.setSpaceKeyState(isDrag.value)
   const [ canvas ] = useCanvas()
-  const WorkSpaceClip = canvas.getObjects(WorkSpaceClipType)[0]
-  const WorkSpaceSafe = canvas.getObjects(WorkSpaceSafeType)[0]
+  const WorkSpaceClip = canvas.getObjects().filter(ele => (ele as CanvasElement).id === WorkSpaceClipType)
+  const WorkSpaceSafe = canvas.getObjects().filter(ele => (ele as CanvasElement).id === WorkSpaceSafeType)
   if (!WorkSpaceClip && !WorkSpaceSafe) return
-  WorkSpaceClip.visible = showClip.value
-  WorkSpaceSafe.visible = showSafe.value
+  console.log('WorkSpaceClip:', WorkSpaceClip)
+  WorkSpaceClip.map(item => item.set({visible: showClip.value}))
+  WorkSpaceSafe.map(item => item.set({visible: showSafe.value}))
   canvas.renderAll()
 }
 
