@@ -48,7 +48,6 @@ const changeWorkLines = () => {
   const WorkSpaceClip = canvas.getObjects().filter(ele => (ele as CanvasElement).id === WorkSpaceClipType)
   const WorkSpaceSafe = canvas.getObjects().filter(ele => (ele as CanvasElement).id === WorkSpaceSafeType)
   if (!WorkSpaceClip && !WorkSpaceSafe) return
-  console.log('WorkSpaceClip:', WorkSpaceClip)
   WorkSpaceClip.map(item => item.set({visible: showClip.value}))
   WorkSpaceSafe.map(item => item.set({visible: showSafe.value}))
   canvas.renderAll()

@@ -7,6 +7,7 @@ import useCanvas from '@/views/Canvas/useCanvas'
 import useHistorySnapshot from '@/hooks/useHistorySnapshot'
 
 import useCenter from '@/views/Canvas/useCenter'
+import useCommon from '@/views/Canvas/useCommon'
 import { CanvasOption } from '@/types/option'
 import { useMainStore } from './main'
 
@@ -60,19 +61,23 @@ export const useTemplatesStore = defineStore('Templates', {
   actions: {
     async renderTemplate() {
       const [ canvas ] = useCanvas()
+      const { initCommon } = useCommon()
       const { setCanvasSize } = useCanvasScale()
       await canvas.loadFromJSON(this.currentTemplate)
       setCanvasSize()
+      initCommon()
     },
 
     async renderElement() {
       const mainStore = useMainStore()
       const { setCanvasSize } = useCanvasScale()
       const [ canvas ] = useCanvas()
+      const { initCommon } = useCommon()
       canvas.discardActiveObject()
       mainStore.setCanvasObject(null)
       await canvas.loadFromJSON(this.currentTemplate)
       setCanvasSize()
+      initCommon()
     },
 
     modifedElement() {
