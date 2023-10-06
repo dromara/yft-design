@@ -13,8 +13,8 @@ export interface IFabricState {
   round: number      // 圆角尺寸
   diagonal: number   // 角线
   opacity: number    // 蒙版透明度 0-1
-  showClip: boolean
-  showSafe: boolean
+  showClip: boolean  // 显示裁切线
+  showSafe: boolean  // 显示安全线
   isDragging: boolean
   isDrawing: boolean
   isCropping: boolean
@@ -42,8 +42,8 @@ export const useFabricStore = defineStore({
       round: 0,
       diagonal: 18,
       opacity: 1,
-      showClip: true,
-      showSafe: true,
+      showClip: false,
+      showSafe: false,
       isDragging: false,
       isDrawing: false,
       isTexting: false,
