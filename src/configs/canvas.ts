@@ -4,7 +4,7 @@ export const WorkSpaceSafeType = 'WorkSpaceSafeType'
 export const WorkSpaceMaskType = 'WorkSpaceMaskType'
 export const WorkSpaceLineType = 'WorkSpaceLineType'
 
-export const WorkSpaceEditTolls = [
+export const WorkSpaceCommonType = [
   WorkSpaceDrawType, WorkSpaceClipType, WorkSpaceSafeType, WorkSpaceMaskType, WorkSpaceLineType
 ]
 

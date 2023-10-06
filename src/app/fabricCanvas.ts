@@ -10,6 +10,7 @@ export class FabricCanvas extends Canvas {
 
   constructor(el: string | HTMLCanvasElement, options?: CanvasOptions) {
     super(el, options)
+    this.onObjectModified()
   }
 
   public onObjectModified() {

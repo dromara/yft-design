@@ -4,12 +4,12 @@ import { storeToRefs } from "pinia"
 import {
   WorkSpaceClipType,
   WorkSpaceDrawType,
-  WorkSpaceCommonOption,
   WorkSpaceMaskType,
   WorkSpaceSafeType,
   WorkSpaceClipColor,
   WorkSpaceSafeColor,
   WorkSpaceMaskColor,
+  WorkSpaceCommonOption,
 } from '@/configs/canvas'
 import { Line, Group, Rect, Path } from 'fabric'
 import { CanvasElement, LineOption } from '@/types/canvas'

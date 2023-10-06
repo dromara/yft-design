@@ -11,7 +11,7 @@ import { FabricCanvas } from '@/app/fabricCanvas'
 import { createObjectDefaultControls } from '@/app/controls'
 import { useTemplatesStore } from '@/store'
 import { CanvasElement } from '@/types/canvas'
-import { WorkSpaceDrawType, WorkSpaceEditTolls } from '@/configs/canvas'
+import { WorkSpaceDrawType, WorkSpaceCommonType } from '@/configs/canvas'
 import useCommon from './useCommon'
 
 
@@ -201,7 +201,7 @@ export const toggleSelection = (selection?: boolean) => {
   // 补充使用这个让其画布上的元素禁止选中
   FabricObject.prototype.selectable = canvas.selection
   // 补充这个方法，禁止选中所有元素
-  canvas.getObjects().filter(obj => !WorkSpaceEditTolls.includes((obj as CanvasElement).id)).map(item => item.set({selection}))
+  canvas.getObjects().filter(obj => !WorkSpaceCommonType.includes((obj as CanvasElement).id)).map(item => item.set({selection}))
 }
 
 export default (): [FabricCanvas, typeof initEditor] => [canvas as FabricCanvas, initEditor]

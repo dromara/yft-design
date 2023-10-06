@@ -49,7 +49,7 @@ export class GuideLines extends Disposable {
     const mouseUp = () => {
       if (this.horizontalLines.length || this.verticalLines.length) {
         this.clearGuideline()
-        this.clearLinesMeta()
+        this.clearStretLine()
       }
     }
 
@@ -64,7 +64,7 @@ export class GuideLines extends Disposable {
   }
 
   private objectMoving({ target }: any) {
-    this.clearLinesMeta()
+    this.clearStretLine()
 
     const transform = this.canvas._currentTransform
     if (!transform) return
@@ -126,7 +126,7 @@ export class GuideLines extends Disposable {
     this.traversAllObjects(target, canvasObjects)
   }
 
-  private clearLinesMeta() {
+  private clearStretLine() {
     this.verticalLines.length = this.horizontalLines.length = 0
   }
 
