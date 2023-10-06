@@ -41,13 +41,13 @@ const changeWorkLines = () => {
   showClip.value = showWorkLines.value.filter(item => item === 'clip').length > 0
   showSafe.value = showWorkLines.value.filter(item => item === 'safe').length > 0
   isDrag.value = showWorkLines.value.filter(item => item === 'drag').length > 0
+  keyboardStore.setSpaceKeyState(isDrag.value)
   const [ canvas ] = useCanvas()
   const WorkSpaceClip = canvas.getObjects(WorkSpaceClipType)[0]
   const WorkSpaceSafe = canvas.getObjects(WorkSpaceSafeType)[0]
   if (!WorkSpaceClip && !WorkSpaceSafe) return
   WorkSpaceClip.visible = showClip.value
   WorkSpaceSafe.visible = showSafe.value
-  keyboardStore.setSpaceKeyState(isDrag.value)
   canvas.renderAll()
 }
 

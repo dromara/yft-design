@@ -28,7 +28,8 @@ import {
   WorkSpaceClipColor, 
   WorkSpaceSafeColor, 
   WorkSpaceLineType, 
-  WorkSpaceMaskColor
+  WorkSpaceMaskColor,
+  WorkSpaceEditTolls
 } from '@/configs/canvas'
 import useHandleBackground from '@/hooks/useHandleBackground'
 
@@ -337,7 +338,8 @@ export const toggleSelection = (selection?: boolean) => {
   // 补充使用这个让其画布上的元素禁止选中
   FabricObject.prototype.selectable = canvas.selection
   // 补充这个方法，禁止选中所有元素
-  canvas.getObjects().filter(obj => (obj as CanvasElement).name !== WorkSpaceName).map(item => item.set({selection}))
+  canvas.getObjects().filter(obj => !WorkSpaceEditTolls.includes((obj as CanvasElement).id)).map(item => item.set({selection}))
+  console.log('canvas.getObjects:', canvas.getObjects())
 }
 
 export default (): [FabricCanvas, typeof initEditor] => [canvas as FabricCanvas, initEditor]

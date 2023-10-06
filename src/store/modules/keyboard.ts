@@ -37,17 +37,17 @@ export const useKeyboardStore = defineStore('keyboard', {
       if (activeObject && activeObject.type === ElementNames.TEXTBOX && (activeObject as TextboxElement).isEditing) return
       this.spaceKeyState = active
       
-      // canvas.defaultCursor = 'default'
+      canvas.defaultCursor = 'default'
       toggleSelection(!active)
       if (active) {
         mainStore.setCanvasObject(null)
         canvas.discardActiveObject()
-        // canvas.defaultCursor = 'pointer'
-        // canvas.setCursor('pointer')
+        canvas.defaultCursor = 'pointer'
+        canvas.setCursor('pointer')
       } 
-      // else {
-      //   canvas.setCursor('default')
-      // }
+      else {
+        canvas.setCursor('default')
+      }
       canvas.renderAll()
     }
   },
