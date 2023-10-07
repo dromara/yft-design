@@ -82,10 +82,11 @@ export class GuideLines extends Disposable {
         if (this.pickObjTypes.length) {
           return this.pickObjTypes.some((item) => obj.get(item.key) === item.value)
         }
-        if (
-          // 排除 自己 和 激活选区内的元素
-          activeObjects.includes(obj)
-        ) {
+        // 排除 自己 和 激活选区内的元素
+        if (activeObjects.includes(obj)) {
+          return false
+        }
+        if (!obj.visible) {
           return false
         }
         // 元素为组，把组内元素加入，同时排除组本身
