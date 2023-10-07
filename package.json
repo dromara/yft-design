@@ -17,7 +17,7 @@
     "@element-plus/icons-vue": "^2.0.10",
     "@icon-park/vue-next": "^1.4.2",
     "@svgdotjs/svg.js": "^3.1.2",
-    "@vueuse/core": "^9.10.0",
+    "@vueuse/core": "^10.2.1",
     "beautify-qrcode": "^1.0.3",
     "chroma-js": "^2.4.2",
     "clipboard": "^2.0.11",

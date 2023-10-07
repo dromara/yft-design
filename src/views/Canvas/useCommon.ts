@@ -6,12 +6,13 @@ import {
   WorkSpaceDrawType,
   WorkSpaceMaskType,
   WorkSpaceSafeType,
+  WorkSpaceCommonType,
   WorkSpaceClipColor,
   WorkSpaceSafeColor,
   WorkSpaceMaskColor,
   WorkSpaceCommonOption,
 } from '@/configs/canvas'
-import { Line, Group, Rect, Path } from 'fabric'
+import { Line, Group, Rect, Path, Object as FabricObject } from 'fabric'
 import { CanvasElement, LineOption } from '@/types/canvas'
 import { TransparentFill } from '@/configs/background'
 import useCanvas from "./useCanvas"
@@ -131,8 +132,20 @@ export default () => {
     canvas.renderAll()
   }
 
+  const toggleSelection = (selection?: boolean) => {
+    const [ canvas ] = useCanvas()
+    if (!canvas) return
+    // 这个禁止选中方法没有生效
+    canvas.selection = selection !== undefined ? selection : !canvas.selection
+    // 补充使用这个让其画布上的元素禁止选中
+    FabricObject.prototype.selectable = canvas.selection
+    // 补充这个方法，禁止选中所有元素
+    canvas.getObjects().filter(obj => !WorkSpaceCommonType.includes((obj as CanvasElement).id)).map(item => item.set({selection}))
+  }
+
 
   return {
-    initCommon
+    initCommon,
+    toggleSelection
   }
 }

@@ -1,6 +1,6 @@
 import { CanvasElement, TextboxElement } from '@/types/canvas'
 import { ElementNames } from '@/types/elements'
-import useCanvas, { toggleSelection } from '@/views/Canvas/useCanvas'
+import useCommon from '@/views/Canvas/useCommon'
 import { defineStore } from 'pinia'
 import { useMainStore } from './main'
 
@@ -31,24 +31,7 @@ export const useKeyboardStore = defineStore('keyboard', {
       this.shiftKeyState = active
     },
     setSpaceKeyState(active: boolean) {
-      const [ canvas ] = useCanvas()
-      const mainStore = useMainStore()
-      const activeObject = canvas.getActiveObject() as CanvasElement
-      if (activeObject && activeObject.type === ElementNames.TEXTBOX && (activeObject as TextboxElement).isEditing) return
       this.spaceKeyState = active
-      
-      canvas.defaultCursor = 'default'
-      toggleSelection(!active)
-      if (active) {
-        mainStore.setCanvasObject(null)
-        canvas.discardActiveObject()
-        canvas.defaultCursor = 'pointer'
-        canvas.setCursor('pointer')
-      } 
-      else {
-        canvas.setCursor('default')
-      }
-      canvas.renderAll()
     }
   },
 })

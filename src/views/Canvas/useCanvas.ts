@@ -3,10 +3,12 @@ import { Canvas, Object as FabricObject, CanvasOptions } from 'fabric'
 import { useFabricStore } from '@/store/modules/fabric'
 import { watch } from 'vue'
 import { useElementBounding } from '@vueuse/core'
+import { PressKey } from '@/app/pressKey'
 import { GuideLines } from '@/app/guideLiles'
 import { HoverBorders } from '@/app/hoverBorders'
 import { WheelScroll } from '@/app/wheelScroll'
 import { CheckRuler } from '@/app/checkRuler'
+
 import { FabricCanvas } from '@/app/fabricCanvas'
 import { createObjectDefaultControls } from '@/app/controls'
 import { useTemplatesStore } from '@/store'
@@ -163,6 +165,7 @@ const initCanvas = () => {
     width: fabricWidth,
     height: fabricHeight
   } as CanvasOptions)
+  new PressKey(canvas)
   new GuideLines(canvas)
   new HoverBorders(canvas)
   new WheelScroll(canvas)
@@ -192,16 +195,6 @@ export const initEditor = async () => {
   watch([width, height], () => {
     setCanvasTransform()
   })
-}
-
-export const toggleSelection = (selection?: boolean) => {
-  if (!canvas) return
-  // 这个禁止选中方法没有生效
-  canvas.selection = selection !== undefined ? selection : !canvas.selection
-  // 补充使用这个让其画布上的元素禁止选中
-  FabricObject.prototype.selectable = canvas.selection
-  // 补充这个方法，禁止选中所有元素
-  canvas.getObjects().filter(obj => !WorkSpaceCommonType.includes((obj as CanvasElement).id)).map(item => item.set({selection}))
 }
 
 export default (): [FabricCanvas] => [canvas as FabricCanvas]

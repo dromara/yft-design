@@ -1,6 +1,5 @@
 import { defineStore } from "pinia"
 import {  Point } from "fabric/fabric-impl"
-import { toggleSelection } from "@/views/Canvas/useCanvas"
 import { verticalLine, horizontalLine } from "@/types/elements"
 
 
