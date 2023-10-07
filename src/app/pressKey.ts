@@ -19,8 +19,6 @@ type ToolType = 'move' | 'handMove' | 'shape'
 
 
 export class PressKey extends Disposable {
-  
-//   private space = spaceKeyState
 
   private options: Record<ToolType, ToolOption> = {
     move: {
@@ -120,7 +118,6 @@ export class PressKey extends Disposable {
     watch(
       computed(() => [spaceKeyState.value, activeElementHasInput.value].every((i) => toValue(i))),
       (space) => {
-        console.log('space:', space)
         if (isSwiping.value) return
 
         this.handMoveActivate = space
