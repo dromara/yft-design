@@ -32,11 +32,11 @@
 
 <script lang="ts" setup>
 import { PropType } from 'vue'
-import { ContextmenuItem } from './types'
+import { ContextMenu } from './types'
 
 defineProps({
   menus: {
-    type: Array as PropType<ContextmenuItem[]>,
+    type: Array as PropType<ContextMenu[]>,
     required: true,
   },
   handleClickMenuItem: {

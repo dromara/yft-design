@@ -2,7 +2,7 @@
   <div 
     ref="wrapperRef" 
     @mousedown="addDrawAreaFocus"
-    v-contextmenu="contextmenus" 
+    v-contextmenu="contextMenus" 
     v-click-outside="remDrawAreaFocus"
   >
     <canvas ref="canvasRef"></canvas>
@@ -14,7 +14,7 @@ import { storeToRefs } from 'pinia'
 import { onMounted, onUnmounted } from 'vue'
 import { useFabricStore, useMainStore } from '@/store'
 
-import { contextmenus } from '@/configs/contextMenu'
+import { contextMenus } from '@/configs/contextMenu'
 import { initEditor } from '@/views/Canvas/useCanvas'
 import useCanvasHotkey from '@/hooks/useCanvasHotkey'
 const fabricStore = useFabricStore()

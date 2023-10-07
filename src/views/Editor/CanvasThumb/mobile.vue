@@ -27,7 +27,7 @@
             'selected': selectedTemplatesIndex.includes(index),
           }"
           @mousedown="$event => handleClickTemplateThumbnail($event, index)"
-          v-contextmenu="contextmenusThumbnailItem"
+          v-contextmenu="contextMenusThumbnails"
         >
           <div class="label" :class="{ 'offset-left': index >= 99 }">{{ fillDigit(index + 1, 2) }}</div>
           <ThumbnailTemplate class="thumbnail" :template="element" :size="120" :visible="index < templatesLoadLimit" />
@@ -50,9 +50,9 @@ import useLoadTemplates from '@/hooks/useLoadTemplates'
 import useHandleTemplate from '@/hooks/useHandleTemplate'
 import ThumbnailTemplate from '@/views/Editor/CanvasThumb/ThumbnailTemplate.vue'
 import Draggable from 'vuedraggable'
-import { contextmenusThumbnails } from '@/configs/contextMenu'
+import { contextMenusThumbnails } from '@/configs/contextMenu'
 import { useMainStore, useTemplatesStore, useKeyboardStore } from '@/store'
-import { ContextmenuItem } from '@/components/Contextmenu/types'
+import { ContextMenu } from '@/components/ContextMenu/types'
 import { storeToRefs } from 'pinia'
 import { computed, ref } from 'vue'
 import { fillDigit } from '@/utils/common/common'
@@ -67,52 +67,6 @@ const { createTemplate, deleteTemplate, sortTemplates, cutTemplate, pasteTemplat
 
 const selectedTemplatesIndex = computed(() => [..._selectedTemplatesIndex.value, templateIndex.value])
 const thumbShow = ref(false)
-const contextmenusThumbnailItem = (): ContextmenuItem[] => {
-  return [
-    {
-      text: '剪切',
-      subText: 'Ctrl + X',
-      handler: cutTemplate,
-    },
-    {
-      text: '复制',
-      subText: 'Ctrl + C',
-      // handler: copySlide,
-    },
-    {
-      text: '粘贴',
-      subText: 'Ctrl + V',
-      handler: pasteTemplate,
-    },
-    {
-      text: '全选',
-      subText: 'Ctrl + A',
-      // handler: selectAllSlide,
-    },
-    { divider: true },
-    {
-      text: '新建页面',
-      subText: 'Enter',
-      handler: createTemplate,
-    },
-    {
-      text: '复制页面',
-      subText: 'Ctrl + D',
-      // handler: copyAndPasteSlide,
-    },
-    {
-      text: '删除页面',
-      subText: 'Delete',
-      handler: () => deleteTemplate(),
-    },
-    { divider: true },
-    {
-      text: '从当前预览',
-      subText: 'Shift + F5',
-      // handler: enterScreening,
-    },
-  ]
-}
 
 // 设置缩略图工具栏聚焦状态（只有聚焦状态下，该部分的快捷键才能生效）
 const setThumbnailsFocus = (focus: boolean) => {

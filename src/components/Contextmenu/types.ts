@@ -1,10 +1,10 @@
-export interface ContextmenuItem {
+export interface ContextMenu {
   text?: string
   subText?: string
   divider?: boolean
   disable?: boolean
   hide?: boolean
-  children?: ContextmenuItem[]
+  children?: ContextMenu[]
   handler?: (el: HTMLElement) => void
 }
 

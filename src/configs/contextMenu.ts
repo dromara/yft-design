@@ -1,14 +1,15 @@
-import { ContextmenuItem } from '@/components/Contextmenu/types'
+import { ContextMenu } from '@/components/ContextMenu/types'
 import { CanvasElement } from '@/types/canvas'
-import { ElementNames } from '@/types/elements'
+import { ElementNames, AlignCommand } from '@/types/elements'
 
 import { storeToRefs } from 'pinia'
 import { useMainStore } from '@/store'
 import useHandleElement from '@/hooks/useHandleElement'
+import useHandleAlign from '@/hooks/useHandleAlign'
 
 
 
-export const contextmenusThumbnails = (): ContextmenuItem[] => {
+export const contextMenuThumbnails = (): ContextMenu[] => {
   return [
     {
       text: '粘贴',
@@ -33,8 +34,9 @@ export const contextmenusThumbnails = (): ContextmenuItem[] => {
   ]
 }
 
-export const contextmenus = (): ContextmenuItem[] => {
+export const contextMenus = (): ContextMenu[] => {
   const { lockElement, deleteElement } = useHandleElement()
+  const { alignElement } = useHandleAlign()
   const { canvasObject } = storeToRefs(useMainStore())
   const element = canvasObject.value as CanvasElement
   if (!canvasObject.value) {
@@ -89,22 +91,22 @@ export const contextmenus = (): ContextmenuItem[] => {
     { divider: true },
     {
       text: '水平居中',
-      // handler: () => alignElementToCanvas(ElementAlignCommands.HORIZONTAL),
+      handler: () => alignElement(AlignCommand.HORIZONTAL),
       children: [
-        // { text: '垂直居中', handler: () => alignElementToCanvas(ElementAlignCommands.CENTER), },
-        // { text: '水平居中', handler: () => alignElementToCanvas(ElementAlignCommands.HORIZONTAL) },
-        // { text: '左对齐', handler: () => alignElementToCanvas(ElementAlignCommands.LEFT) },
-        // { text: '右对齐', handler: () => alignElementToCanvas(ElementAlignCommands.RIGHT) },
+        { text: '垂直居中', handler: () => alignElement(AlignCommand.CENTER), },
+        { text: '水平居中', handler: () => alignElement(AlignCommand.HORIZONTAL) },
+        { text: '左对齐', handler: () => alignElement(AlignCommand.LEFT) },
+        { text: '右对齐', handler: () => alignElement(AlignCommand.RIGHT) },
       ],
     },
     {
       text: '垂直居中',
-      // handler: () => alignElementToCanvas(ElementAlignCommands.VERTICAL),
+      handler: () => alignElement(AlignCommand.VERTICAL),
       children: [
-        // { text: '水平居中', handler: () => alignElementToCanvas(ElementAlignCommands.CENTER) },
-        // { text: '垂直居中', handler: () => alignElementToCanvas(ElementAlignCommands.VERTICAL) },
-        // { text: '顶部对齐', handler: () => alignElementToCanvas(ElementAlignCommands.TOP) },
-        // { text: '底部对齐', handler: () => alignElementToCanvas(ElementAlignCommands.BOTTOM) },
+        { text: '水平居中', handler: () => alignElement(AlignCommand.CENTER) },
+        { text: '垂直居中', handler: () => alignElement(AlignCommand.VERTICAL) },
+        { text: '顶部对齐', handler: () => alignElement(AlignCommand.TOP) },
+        { text: '底部对齐', handler: () => alignElement(AlignCommand.BOTTOM) },
       ],
     },
     { divider: true },
@@ -151,7 +153,7 @@ export const contextmenus = (): ContextmenuItem[] => {
   ]
 }
 
-export const contextmenusThumbnailItem = (): ContextmenuItem[] => {
+export const contextMenusThumbnails = (): ContextMenu[] => {
   return [
     {
       text: '剪切',

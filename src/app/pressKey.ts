@@ -4,7 +4,7 @@ import { storeToRefs } from 'pinia'
 import { Disposable } from '@/utils/lifecycle'
 import { useFabricSwipe } from '@/hooks/useCanvasSwipe'
 import { useKeyboardStore } from '@/store'
-import { useMagicKeys, useActiveElement, toValue } from '@vueuse/core'
+import { useActiveElement, toValue } from '@vueuse/core'
 
 
 
