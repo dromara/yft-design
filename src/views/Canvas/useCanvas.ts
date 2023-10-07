@@ -26,7 +26,7 @@ const initConf = () => {
   FabricObject.ownDefaults.cornerStrokeColor = '#c0c0c0'
   FabricObject.ownDefaults.borderOpacityWhenMoving = 1
   FabricObject.ownDefaults.borderScaleFactor = 1
-  FabricObject.ownDefaults.cornerSize = 6
+  FabricObject.ownDefaults.cornerSize = 8
   FabricObject.ownDefaults.cornerStyle = 'rect'
   FabricObject.ownDefaults.centeredScaling = false
   FabricObject.ownDefaults.centeredRotation = true
@@ -182,7 +182,7 @@ const initTemplate = async () => {
   initCommon()
 }
 
-const initEditor = async () => {
+export const initEditor = async () => {
   const fabricStore = useFabricStore()
   const { wrapperRef } = storeToRefs(fabricStore)
   initConf()
@@ -204,4 +204,4 @@ export const toggleSelection = (selection?: boolean) => {
   canvas.getObjects().filter(obj => !WorkSpaceCommonType.includes((obj as CanvasElement).id)).map(item => item.set({selection}))
 }
 
-export default (): [FabricCanvas, typeof initEditor] => [canvas as FabricCanvas, initEditor]
+export default (): [FabricCanvas] => [canvas as FabricCanvas]

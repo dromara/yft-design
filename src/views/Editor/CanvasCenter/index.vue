@@ -15,11 +15,10 @@ import { onMounted, onUnmounted } from 'vue'
 import { useFabricStore, useMainStore } from '@/store'
 
 import { contextmenus } from '@/configs/contextMenu'
-import useCanvas from '@/views/Canvas/useCanvas'
+import { initEditor } from '@/views/Canvas/useCanvas'
 import useCanvasHotkey from '@/hooks/useCanvasHotkey'
 const fabricStore = useFabricStore()
 const mainStore = useMainStore()
-const [ canvas, initEditor ] = useCanvas()
 const { wrapperRef, canvasRef } = storeToRefs(fabricStore)
 const { drawAreaFocus } = storeToRefs(mainStore)
 const { keydownListener, keyupListener } = useCanvasHotkey()
