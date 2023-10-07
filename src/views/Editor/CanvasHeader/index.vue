@@ -53,24 +53,24 @@
         <el-row class="handler-icon-row">
           <el-button-group>
             <el-tooltip placement="top" :hide-after="0" content="左对齐">
-              <el-button @click="leftAlign"><IconAlignLeft/></el-button>
+              <el-button @click="alignElement(AlignCommand.LEFT)"><IconAlignLeft/></el-button>
             </el-tooltip>
             <el-tooltip placement="top" :hide-after="0" content="水平居中">
-              <el-button @click="verticallyAlign"><IconAlignVertically/></el-button>
+              <el-button @click="alignElement(AlignCommand.HORIZONTAL)"><IconAlignVertically/></el-button>
             </el-tooltip>
             <el-tooltip placement="top" :hide-after="0" content="右对齐">
-              <el-button @click="rightAlign"><IconAlignRight/></el-button>
+              <el-button @click="alignElement(AlignCommand.RIGHT)"><IconAlignRight/></el-button>
             </el-tooltip>
           </el-button-group>
           <el-button-group>
             <el-tooltip placement="top" :hide-after="0" content="上对齐">
-              <el-button @click="topAlign"><IconAlignTop/></el-button>
+              <el-button @click="alignElement(AlignCommand.TOP)"><IconAlignTop/></el-button>
             </el-tooltip>
             <el-tooltip placement="top" :hide-after="0" content="垂直居中">
-              <el-button @click="horizontallyAlign"><IconAlignHorizontally/></el-button>
+              <el-button @click="alignElement(AlignCommand.VERTICAL)"><IconAlignHorizontally/></el-button>
             </el-tooltip>
             <el-tooltip placement="top" :hide-after="0" content="下对齐">
-              <el-button @click="bottomAlign"><IconAlignBottom/></el-button>
+              <el-button @click="alignElement(AlignCommand.BOTTOM)"><IconAlignBottom/></el-button>
             </el-tooltip>
           </el-button-group>
         </el-row>
@@ -119,14 +119,14 @@
 
 <script lang="ts" setup>
 import { ref, computed } from 'vue'
-import { ElementNames } from '@/types/elements'
+import { ElementNames, AlignCommand } from '@/types/elements'
 import { storeToRefs } from 'pinia'
 import { CanvasOption } from '@/types/option'
 import { CanvasElement } from '@/types/canvas'
 import { useFabricStore, useMainStore, useSnapshotStore, useTemplatesStore } from "@/store"
 import useCanvas from '@/views/Canvas/useCanvas'
 import useCenter from '@/views/Canvas/useCenter'
-import useCanvasZindex from '@/hooks/useCanvasZindex'
+import useHandleAlign from '@/hooks/useHandleAlign'
 import useCanvasScale from '@/hooks/useCanvasScale'
 import useHandleElement from '@/hooks/useHandleElement'
 import useHistorySnapshot from '@/hooks/useHistorySnapshot'
@@ -134,9 +134,8 @@ import useHistorySnapshot from '@/hooks/useHistorySnapshot'
 const fabricStore = useFabricStore()
 const mainStore = useMainStore()
 const templatesStore = useTemplatesStore()
-const [ canvas ] = useCanvas()
+const { alignElement } = useHandleAlign()
 const { setCanvasScalePercentage, scaleCanvas, resetCanvas } = useCanvasScale()
-const { setZindex } = useCanvasZindex()
 const { combineElements, uncombineElements, intersectElements, backElement, forwardElement, backwardElement, sortElement } = useHandleElement()
 const { zoom } = storeToRefs(fabricStore)
 const { canvasObject } = storeToRefs(mainStore)
@@ -239,68 +238,6 @@ const bringForward = () => {
 const sendBackwards = () => {
   if (!handleElement.value) return
   backwardElement()
-}
-
-// 左对齐
-const leftAlign = () => {
-  if (!handleElement.value) return
-  const [ canvas ] = useCanvas()
-  const { workSpaceDraw } = useCenter()
-  if (!workSpaceDraw.left || !workSpaceDraw.width || !handleElement.value.width) return
-  handleElement.value.set({left: workSpaceDraw.left + handleElement.value.width / 2 }) 
-  canvas.renderAll()
-  templatesStore.modifedElement()
-}
-// 水平居中
-const verticallyAlign = () => {
-  if (!handleElement.value) return
-  const [ canvas ] = useCanvas()
-  const { workSpaceDraw } = useCenter()
-  if (!workSpaceDraw.left || !workSpaceDraw.width || !handleElement.value.width) return
-  handleElement.value.set({left : workSpaceDraw.getCenterPoint().x})
-  canvas.renderAll()
-  templatesStore.modifedElement()
-  
-}
-// 右对齐
-const rightAlign = () => {
-  if (!handleElement.value) return
-  const [ canvas ] = useCanvas()
-  const { workSpaceDraw } = useCenter()
-  if (!workSpaceDraw.left || !workSpaceDraw.width || !handleElement.value.width) return
-  handleElement.value.set({left: workSpaceDraw.left + workSpaceDraw.width - handleElement.value.width / 2})
-  canvas.renderAll()
-  templatesStore.modifedElement()
-}
-// 上对齐
-const topAlign = () => {
-  if (!handleElement.value) return
-  const [ canvas ] = useCanvas()
-  const { workSpaceDraw } = useCenter()
-  if (!workSpaceDraw.top || !workSpaceDraw.height || !handleElement.value.height) return
-  handleElement.value.top = workSpaceDraw.top + handleElement.value.height / 2 
-  canvas.renderAll()
-  templatesStore.modifedElement()
-}
-// 垂直居中
-const horizontallyAlign = () => {
-  if (!handleElement.value) return
-  const [ canvas ] = useCanvas()
-  const { workSpaceDraw } = useCenter()
-  if (!workSpaceDraw.top || !workSpaceDraw.height || !handleElement.value.height) return
-  handleElement.value.top = workSpaceDraw.getCenterPoint().y
-  canvas.renderAll()
-  templatesStore.modifedElement()
-}
-// 下对齐
-const bottomAlign = () => {
-  if (!handleElement.value) return
-  const [ canvas ] = useCanvas()
-  const { workSpaceDraw } = useCenter()
-  if (!workSpaceDraw.top || !workSpaceDraw.height || !handleElement.value.height) return
-  handleElement.value.top = workSpaceDraw.top + workSpaceDraw.height - handleElement.value.height / 2
-  canvas.renderAll()
-  templatesStore.modifedElement()
 }
 
 // 修改旋转

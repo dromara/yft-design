@@ -201,3 +201,13 @@ export interface BarCodeOption {
   marginLeft?: number      
   marginRight?: number    
 }
+
+export const enum AlignCommand {
+  LEFT = 'left',
+  RIGHT = 'right',
+  HORIZONTAL = 'horizontal',
+  VERTICAL = 'vertical',
+  CENTER = 'center',
+  TOP = 'top',
+  BOTTOM = 'bottom',
+}

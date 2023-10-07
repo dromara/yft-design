@@ -34,7 +34,7 @@ export const contextmenusThumbnails = (): ContextmenuItem[] => {
 }
 
 export const contextmenus = (): ContextmenuItem[] => {
-  const { lockElement } = useHandleElement()
+  const { lockElement, deleteElement } = useHandleElement()
   const { canvasObject } = storeToRefs(useMainStore())
   const element = canvasObject.value as CanvasElement
   if (!canvasObject.value) {
@@ -146,7 +146,7 @@ export const contextmenus = (): ContextmenuItem[] => {
     {
       text: '删除',
       subText: 'Delete',
-      // handler: deleteElement,
+      handler: () => deleteElement(element.id),
     },
   ]
 }

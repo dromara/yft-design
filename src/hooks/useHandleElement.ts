@@ -193,7 +193,6 @@ export default () => {
     canvas.discardActiveObject()
     mainStore.setCanvasObject(null)
     const groupElement = new fabric.Group(activeObjects, { 
-      // @ts-ignore
       id: nanoid(10),
       name: ElementNames.GROUP, 
       interactive: true, 
@@ -219,7 +218,6 @@ export default () => {
     mainStore.setCanvasObject(null)
     activeObjects[1].set({globalCompositeOperation: 'xor'})
     const groupElement = new fabric.Group(activeObjects, { 
-      // @ts-ignore
       id: nanoid(10),
       name: ElementNames.GROUP,
     })
