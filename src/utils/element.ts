@@ -2,7 +2,6 @@ import tinycolor from 'tinycolor2'
 import { nanoid } from 'nanoid'
 import { Template, CanvasElement } from '@/types/canvas'
 import { ElementNames } from '@/types/elements'
-import { CanvasOption } from '@/types/option'
 // import { PPTElement, PPTLineElement, Slide } from '@/types/slides'
 
 interface RotatedElementData {

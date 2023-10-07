@@ -4,7 +4,6 @@ import { useTemplatesStore, useMainStore } from '@/store'
 import { createTemplateIdMap, createElementIdMap } from '@/utils/element'
 import { CanvasElement, Template } from '@/types/canvas'
 import { ElementNames } from '@/types/elements'
-import { CanvasOption } from '@/types/option'
 
 export default () => {
   const mainStore = useMainStore()

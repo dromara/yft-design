@@ -48,7 +48,6 @@
 
 <script lang="ts" setup>
 import { computed, PropType } from 'vue'
-import { CanvasOption } from '@/types/option'
 import { CanvasElement, TextboxElement } from '@/types/canvas'
 import { ElementNames } from '@/types/elements'
 

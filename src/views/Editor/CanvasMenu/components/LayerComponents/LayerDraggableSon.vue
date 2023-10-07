@@ -10,7 +10,7 @@
     itemKey="id"
   >
     <template #item="{ element }">
-      <div v-contextmenu="contextmenusThumbnailItem">
+      <div v-contextmenu="contextMenusThumbnails">
         <LayerDraggableCom :index="props.index" :element="element" />
         <LayerDraggableSelf v-if="element.type === ElementNames.GROUP && element.objects" v-show="element.isShow" :elements="element.objects" :index="props.index + 1"/>
       </div>
@@ -20,9 +20,9 @@
 
 <script lang="ts" setup>
 import { PropType } from 'vue'
-import { ContextmenuItem } from '@/components/Contextmenu/types'
-import { CanvasOption } from '@/types/option'
+import { ContextMenu } from '@/components/ContextMenu/types'
 import { ElementNames } from '@/types/elements'
+import { contextMenusThumbnails } from '@/configs/contextMenu'
 import Draggable from 'vuedraggable'
 import useHandleElement from '@/hooks/useHandleElement'
 import LayerDraggableSelf from './LayerDraggableSelf.vue'
@@ -41,52 +41,7 @@ const props = defineProps({
   }
 })
 
-const contextmenusThumbnailItem = (): ContextmenuItem[] => {
-  return [
-    {
-      text: '剪切',
-      subText: 'Ctrl + X',
-      // handler: cutTemplate,
-    },
-    {
-      text: '复制',
-      subText: 'Ctrl + C',
-      // handler: copySlide,
-    },
-    {
-      text: '粘贴',
-      subText: 'Ctrl + V',
-      // handler: pasteTemplate,
-    },
-    {
-      text: '全选',
-      subText: 'Ctrl + A',
-      // handler: selectAllSlide,
-    },
-    { divider: true },
-    {
-      text: '新建页面',
-      subText: 'Enter',
-      // handler: createTemplate,
-    },
-    {
-      text: '复制页面',
-      subText: 'Ctrl + D',
-      // handler: copyAndPasteSlide,
-    },
-    {
-      text: '删除页面',
-      subText: 'Delete',
-      // handler: () => deleteTemplate(),
-    },
-    { divider: true },
-    {
-      text: '从当前预览',
-      subText: 'Shift + F5',
-      // handler: enterScreening,
-    },
-  ]
-}
+
 
 // 拖拽调整顺序后进行数据的同步
 const handleDragMoved = (eventData: { moved: { newIndex: number, oldIndex: number, element: CanvasOption} }) => {

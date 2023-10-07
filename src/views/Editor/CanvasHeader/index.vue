@@ -121,7 +121,6 @@
 import { ref, computed } from 'vue'
 import { ElementNames, AlignCommand } from '@/types/elements'
 import { storeToRefs } from 'pinia'
-import { CanvasOption } from '@/types/option'
 import { CanvasElement } from '@/types/canvas'
 import { useFabricStore, useMainStore, useSnapshotStore, useTemplatesStore } from "@/store"
 import useCanvas from '@/views/Canvas/useCanvas'

@@ -1,29 +1,11 @@
-import * as fabric from 'fabric'
+import { Object as FabricObject, Group } from 'fabric'
 import { nanoid } from "nanoid"
 import { storeToRefs } from "pinia"
 import { KEYS } from '@/configs/hotkey'
 import { ElementNames } from "@/types/elements"
-import { getPathPoints, paths2str } from '@/utils/parsePath'
 import { propertiesToInclude, WorkSpaceName } from "@/configs/canvas"
 import { useFabricStore, useMainStore, useTemplatesStore } from "@/store"
-import { 
-  CanvasOption, 
-  GroupOption, 
-  ImageOption, 
-  TextboxOption, 
-  PathOption, 
-  RectOption, 
-  PolygonOption 
-} from "@/types/option"
-import { 
-  TextboxElement, 
-  PolygonElement,
-  CanvasElement,
-  PathElement,
-  RectElement,
-  GroupElement
-} from "@/types/canvas"
-import useCreateElement from './useCreateElement'
+import { TextboxElement, CanvasElement, PathElement, GroupElement } from "@/types/canvas"
 import useCanvas from "@/views/Canvas/useCanvas"
 import useCanvasZindex from "./useCanvasZindex"
 
@@ -31,17 +13,17 @@ export default () => {
   const templatesStore = useTemplatesStore()
   const mainStore = useMainStore()
   const { currentTemplate } = storeToRefs(templatesStore)
-  const { createPathElement } = useCreateElement()
   const { elementCoords, elementHover, isChecked } = storeToRefs(useFabricStore())
   const { canvasObject, clonedObject, currentPoint } = storeToRefs(mainStore)
   const { setZindex } = useCanvasZindex()
 
-  const sortElement = async (newIndex: number, oldIndex: number, option: CanvasOption) => {
+  const sortElement = async (newIndex: number, oldIndex: number, option: FabricObject) => {
     if (oldIndex === newIndex) return
     const element = queryElement(option.id)
     if (!element) return
     if (element.group) {
-      const elementGroup = queryOption((element.group as GroupElement).id) as GroupOption
+      const elementGroup = queryOption((element.group as GroupElement).id) as Group
+      if (!elementGroup) return
       const _element = elementGroup.objects[oldIndex]
       elementGroup.objects.splice(oldIndex, 1)
       elementGroup.objects.splice(newIndex, 0, _element)
@@ -192,7 +174,7 @@ export default () => {
     if (!activeObjects) return
     canvas.discardActiveObject()
     mainStore.setCanvasObject(null)
-    const groupElement = new fabric.Group(activeObjects, { 
+    const groupElement = new Group(activeObjects, { 
       id: nanoid(10),
       name: ElementNames.GROUP, 
       interactive: true, 
@@ -200,7 +182,7 @@ export default () => {
     })
     canvas.add(groupElement)
     templatesStore.deleteElement(activeObjects.map(item => item.id))
-    templatesStore.addElement(groupElement.toObject(propertiesToInclude as any[]) as GroupOption)
+    templatesStore.addElement(groupElement.toObject(propertiesToInclude as any[]))
     templatesStore.renderElement()
     canvas.remove(...activeObjects)
     setZindex(canvas)
@@ -217,13 +199,13 @@ export default () => {
     canvas.discardActiveObject()
     mainStore.setCanvasObject(null)
     activeObjects[1].set({globalCompositeOperation: 'xor'})
-    const groupElement = new fabric.Group(activeObjects, { 
+    const groupElement = new Group(activeObjects, { 
       id: nanoid(10),
       name: ElementNames.GROUP,
     })
     canvas.add(groupElement)
     templatesStore.deleteElement(activeObjects.map(item => item.id))
-    templatesStore.addElement(groupElement.toObject(propertiesToInclude as any[]) as GroupOption)
+    templatesStore.addElement(groupElement.toObject(propertiesToInclude as any[]))
     templatesStore.renderElement()
     canvas.remove(...activeObjects)
     setZindex(canvas)
@@ -234,7 +216,7 @@ export default () => {
     const [ canvas ] = useCanvas()
     const activeObject = canvas.getActiveObject() as GroupElement
     if (!activeObject) return
-    const objects = activeObject.removeAll() as fabric.Object[]
+    const objects = activeObject.removeAll() as FabricObject[]
     canvas.discardActiveObject()
     mainStore.setCanvasObject(null)
     if (activeObject.group) {
@@ -276,24 +258,24 @@ export default () => {
     return element
   }
 
-  const findOption = (eid: string, options: CanvasOption[]): CanvasOption | undefined => {
+  const findOption = (eid: string, options: FabricObject[]): FabricObject | undefined => {
     for (let i = 0; i < options.length; i++) {
-      const item = options[i] as CanvasOption
+      const item = options[i] as FabricObject | Group
       if (item.id === eid) {
         return item
       }
-      if (item.type === ElementNames.GROUP) {
-        const option = findOption(eid, (item as GroupOption).objects)
+      if (item.isType('Group')) {
+        const option = findOption(eid, (item as Group)._objects)
         if (option) return option
       }
     }
     return
   }
 
-  const queryOption = (eid: string): CanvasOption | undefined => {
+  const queryOption = (eid: string): FabricObject | undefined => {
     const options = currentTemplate.value.objects
     let option = undefined
-    option = options.filter(obj => obj.id === eid)[0] as CanvasOption
+    option = options.filter(obj => obj.id === eid)[0] as FabricObject
     if (option) return option
     return findOption(eid, options)
   }

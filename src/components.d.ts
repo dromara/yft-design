@@ -1,3 +1,4 @@
+import { Object as FabricObject } from "fabric"
 export declare module 'fabric' {
   export declare type ObjectRef = Pick<
     FabricObject,
@@ -109,19 +110,12 @@ export declare module 'fabric' {
     ): void
   }
 
-  declare type AlignFunction = {
-    [K in AlignMethod]: () => void
-  }
-
-  export declare interface Object extends AlignFunction {
-    align(method: AlignMethod): void
-  }
-
   export declare class Group {
     id: string
     name: string
     canvas: Canvas | undefined
     group: this | undefined
+    objects: FabricObject[]
     _objects: FabricObject[]
     setDirty(): void
     updateLayout(): void

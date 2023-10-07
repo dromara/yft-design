@@ -1,7 +1,6 @@
-import fabric from "fabric"
-import JsBarcode from "jsbarcode"
-import { CanvasOption } from "./option"
+import { Gradient, Pattern, Textbox, Path, Rect, Image, Point, Polygon, Group, Line, Object as FabricObject } from "fabric"
 import { ColorStop } from "./elements"
+import JsBarcode from "jsbarcode"
 export type LineOption = [number, number, number, number]
 export type TPatternRepeat = 'repeat' | 'repeat-x' | 'repeat-y' | 'no-repeat'
 
@@ -15,7 +14,7 @@ export interface CommenElement {
   background?: BackgroundElement
   isRotate?: boolean
 }
-export interface GradientElement extends fabric.Gradient<'linear' | 'radial'> {
+export interface GradientElement extends Gradient<'linear' | 'radial'> {
   gradientName: string
 }
 
@@ -29,11 +28,11 @@ export interface Template {
   width: number
   height: number
   clip: number,
-  objects: CanvasOption[]
+  objects: []
 }
 
 export interface WorkSpaceElement {
-  fill?: string | fabric.Gradient<'linear' | 'radial'> | fabric.Pattern
+  fill?: string | Gradient<'linear' | 'radial'> | Pattern
   left: number
   top: number
   fillType: number
@@ -55,7 +54,7 @@ export interface WorkSpaceElement {
 }
 
 export interface BackgroundElement {
-  fill: string | fabric.Gradient<'linear' | 'radial'> | fabric.Pattern
+  fill: string | Gradient<'linear' | 'radial'> | Pattern
   color: string
   fillType: number
   opacity: number
@@ -73,7 +72,7 @@ export interface BackgroundElement {
   backgroundColor?: string
 }
 
-export interface TextboxElement extends fabric.Textbox, CommenElement {
+export interface TextboxElement extends Textbox, CommenElement {
   fontFamily: string
   color: string
   fillRepeat: TPatternRepeat
@@ -81,54 +80,54 @@ export interface TextboxElement extends fabric.Textbox, CommenElement {
   isCheck?: boolean
 }
 
-export interface PathElement extends fabric.Path, CommenElement {
-  fill: string | fabric.Gradient<'linear'> | fabric.Gradient<'radial'>
+export interface PathElement extends Path, CommenElement {
+  fill: string | Gradient<'linear'> | Gradient<'radial'>
 }
 
-export interface RectElement extends fabric.Rect, CommenElement {
+export interface RectElement extends Rect, CommenElement {
 
 }
 
-export interface LineElement extends fabric.Line, CommenElement {
+export interface LineElement extends Line, CommenElement {
   startStyle?: string | null
   endStyle?: string | null
 }
 
-export interface PolygonElement extends fabric.Polygon, CommenElement {
+export interface PolygonElement extends Polygon, CommenElement {
 
-  points: fabric.Point[]
+  points: Point[]
 }
 
-export interface QRCodeElement extends fabric.Image, CommenElement {
+export interface QRCodeElement extends Image, CommenElement {
   codeStyle: string
   codeContent?: string
   codeSpace?: boolean
   codeError?: number
 }
 
-export interface BarCodeElement extends fabric.Image, CommenElement {
+export interface BarCodeElement extends Image, CommenElement {
   codeContent: string
   codeOption: JsBarcode.BaseOptions     
 }
 
-export interface ImageElement extends fabric.Image, CommenElement {
+export interface ImageElement extends Image, CommenElement {
   isCropping?: boolean
   originId?: string
-  cropPath?: fabric.Object
+  cropPath?: FabricObject
   originLeft?: number
   originTop?: number
   originCropX?: number
   originCropY?: number
 }
 
-export interface CropElement extends fabric.Rect, CommenElement {
+export interface CropElement extends Rect, CommenElement {
   imageId: string
 }
 
-export interface GroupElement extends fabric.Group, CommenElement {
+export interface GroupElement extends Group, CommenElement {
   isShow?: boolean
-  objects: CanvasOption[]
-  _objects: CanvasElement[]
+  objects: FabricObject[]
+  _objects: FabricObject[]
 }
 
 export type CanvasElement = TextboxElement | LineElement | QRCodeElement | BarCodeElement | ImageElement | PathElement | GroupElement | CropElement | PolygonElement | RectElement

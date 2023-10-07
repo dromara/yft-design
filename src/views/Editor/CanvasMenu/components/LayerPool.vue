@@ -3,7 +3,7 @@
     <el-row class="layout-search">
       <el-input :prefix-icon="Search" placeholder="搜索图层"></el-input>
     </el-row>
-    <LayerDraggableSelf :elements="currentTemplate.objects" :index="0"></LayerDraggableSelf>
+    <LayerDraggableSelf :elements="currentTemplate.objects.filter(item => !WorkSpaceCommonType.includes(item.id))" :index="0"></LayerDraggableSelf>
   </div>
 </template>
 
@@ -11,6 +11,7 @@
 import { Search } from '@element-plus/icons-vue'
 import { storeToRefs } from 'pinia'
 import { useTemplatesStore } from '@/store'
+import { WorkSpaceCommonType } from '@/configs/canvas'
 import LayerDraggableSelf from './LayerComponents/LayerDraggableSelf.vue'
 import useHandleElement from '@/hooks/useHandleElement'
 
