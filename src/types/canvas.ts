@@ -28,7 +28,7 @@ export interface Template {
   width: number
   height: number
   clip: number,
-  objects: []
+  objects: FabricObject[]
 }
 
 export interface WorkSpaceElement {

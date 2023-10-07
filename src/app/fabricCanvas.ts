@@ -36,7 +36,7 @@ export class FabricCanvas extends Canvas {
     return super.add(
       ...objects.map((obj) => {
         this.setDefaultAttr(obj)
-        return toRef(obj)
+        return obj
       }),
     )
   }
@@ -46,7 +46,7 @@ export class FabricCanvas extends Canvas {
       index,
       ...objects.map((obj) => {
         this.setDefaultAttr(obj)
-        return toRef(obj)
+        return obj
       }),
     )
   }

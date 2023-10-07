@@ -3,7 +3,7 @@ import { nanoid } from "nanoid"
 import { storeToRefs } from "pinia"
 import { KEYS } from '@/configs/hotkey'
 import { ElementNames } from "@/types/elements"
-import { propertiesToInclude, WorkSpaceName } from "@/configs/canvas"
+import { propertiesToInclude, WorkSpaceCommonType } from "@/configs/canvas"
 import { useFabricStore, useMainStore, useTemplatesStore } from "@/store"
 import { TextboxElement, CanvasElement, PathElement, GroupElement } from "@/types/canvas"
 import useCanvas from "@/views/Canvas/useCanvas"
@@ -232,15 +232,15 @@ export default () => {
     canvas.renderAll()
   }
 
-  const findElement = (eid: string, elements: CanvasElement[]): CanvasElement | undefined => {
+  const findElement = (eid: string, elements: FabricObject[] | undefined): CanvasElement | undefined => {
+    if (!elements) return
     for (let i = 0; i < elements.length; i++) {
       const item = elements[i] as CanvasElement
       if (item.id === eid) {
         return item
       }
       if (item.type === ElementNames.GROUP) {
-        const element = findElement(eid, (item as GroupElement)._objects)
-        if (element) return element
+        return findElement(eid, (item as GroupElement).objects)
       }
     }
     return
@@ -248,22 +248,18 @@ export default () => {
 
   const queryElement = (eid: string): CanvasElement | undefined => {
     const [ canvas ] = useCanvas()
-    const elements = canvas.getObjects().filter(item => (item as CanvasElement).name !== WorkSpaceName)
-    let element = undefined
-    element = elements.filter(obj => (obj as CanvasElement).id === eid)[0] as CanvasElement
-    if (element) {
-      return element
+    const elements = canvas.getObjects().filter(item => !WorkSpaceCommonType.includes((item as CanvasElement).id))
+    let element = elements.filter(obj => (obj as CanvasElement).id === eid)[0] as CanvasElement
+    if (!element) {
+      return findElement(eid, elements as CanvasElement[])
     }
-    element = findElement(eid, elements as CanvasElement[])
     return element
   }
 
   const findOption = (eid: string, options: FabricObject[]): FabricObject | undefined => {
     for (let i = 0; i < options.length; i++) {
       const item = options[i] as FabricObject | Group
-      if (item.id === eid) {
-        return item
-      }
+      if (item.id === eid) return item
       if (item.isType('Group')) {
         const option = findOption(eid, (item as Group)._objects)
         if (option) return option
@@ -274,8 +270,7 @@ export default () => {
 
   const queryOption = (eid: string): FabricObject | undefined => {
     const options = currentTemplate.value.objects
-    let option = undefined
-    option = options.filter(obj => obj.id === eid)[0] as FabricObject
+    let option = options.filter(obj => obj.id === eid)[0] as FabricObject
     if (option) return option
     return findOption(eid, options)
   }
@@ -283,10 +278,7 @@ export default () => {
   const selectElement = (eid: string) => {
     const [ canvas ] = useCanvas()
     const element = queryElement(eid)
-    elementCoords.value.length = 0
-    elementHover.value = ''
     if (!element) return
-    canvasObject.value = element
     canvas.setActiveObject(element as CanvasElement)
   }
 
@@ -313,15 +305,16 @@ export default () => {
     if (activeObject && activeObject.id === eid) return
     const element = queryElement(eid)
     if (!element) return
-    elementCoords.value = element.getCoords()
-    elementHover.value = element.id
-    if (element.group) {
-      if (!element.group.subTargetCheck || !element.group.interactive) {
-        elementCoords.value.length = 0
-        return
-      }
-      elementCoords.value = [element.oCoords.bl, element.oCoords.br, element.oCoords.tr, element.oCoords.tl]
-    }
+    console.log('element:', element)
+    // elementCoords.value = element.getCoords()
+    // elementHover.value = element.id
+    // if (element.group) {
+    //   if (!element.group.subTargetCheck || !element.group.interactive) {
+    //     elementCoords.value.length = 0
+    //     return
+    //   }
+    //   elementCoords.value = [element.oCoords.bl, element.oCoords.br, element.oCoords.tr, element.oCoords.tl]
+    // }
   }
 
   const mouseleaveElement = () => {
@@ -379,7 +372,7 @@ export default () => {
       }
       if (element.type === ElementNames.GROUP) {
         const group = element as GroupElement
-        const isChecked = queryTextboxChecked(group._objects)
+        const isChecked = queryTextboxChecked(group.objects)
         if (isChecked) return true
       }
     }
@@ -392,7 +385,7 @@ export default () => {
     element.isCheck = status
     canvas.renderAll()
     templatesStore.modifedElement()
-    const elements = canvas.getObjects().filter(obj => (obj as CanvasElement).name !== WorkSpaceName) as CanvasElement[]
+    const elements = canvas.getObjects().filter(item => !WorkSpaceCommonType.includes((item as CanvasElement).id)) as CanvasElement[]
     isChecked.value = queryTextboxChecked(elements)
   }
 
