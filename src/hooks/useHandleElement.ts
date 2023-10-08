@@ -14,7 +14,7 @@ export default () => {
   const mainStore = useMainStore()
   const { currentTemplate } = storeToRefs(templatesStore)
   const { elementCoords, elementHover, isChecked } = storeToRefs(useFabricStore())
-  const { canvasObject, clonedObject, currentPoint } = storeToRefs(mainStore)
+  const { canvasObject, clonedObject, hoveredObject, currentPoint } = storeToRefs(mainStore)
   const { setZindex } = useCanvasZindex()
 
   const sortElement = async (newIndex: number, oldIndex: number, option: FabricObject) => {
@@ -306,20 +306,16 @@ export default () => {
     if (activeObject && activeObject.id === eid) return
     const element = queryElement(eid)
     if (!element) return
-    console.log('element:', element)
-    // elementCoords.value = element.getCoords()
-    // elementHover.value = element.id
-    // if (element.group) {
-    //   if (!element.group.subTargetCheck || !element.group.interactive) {
-    //     elementCoords.value.length = 0
-    //     return
-    //   }
-    //   elementCoords.value = [element.oCoords.bl, element.oCoords.br, element.oCoords.tr, element.oCoords.tl]
-    // }
+    mainStore.setHoveredObject(element)
   }
 
-  const mouseleaveElement = () => {
-    elementCoords.value.length = 0
+  const mouseleaveElement = (eid: string) => {
+    mainStore.setHoveredObject(undefined)
+    const activeObject = canvasObject.value as CanvasElement
+    if (activeObject && activeObject.id === eid) return
+    const element = queryElement(eid)
+    if (!element) return
+    mainStore.setLeaveddObject(element)
   }
 
   const cancelElement = () => {

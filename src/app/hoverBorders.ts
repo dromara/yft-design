@@ -4,6 +4,9 @@ import { clone } from 'lodash'
 import { check } from '@/utils/check'
 import { Disposable } from '@/utils/lifecycle'
 import { addDisposableListener } from '@/utils/dom'
+import { useMainStore } from '@/store'
+import { storeToRefs } from 'pinia'
+import { computed, watch } from 'vue'
 
 /**
  * 对象获得焦点后在外围显示一个边框
@@ -32,6 +35,7 @@ export class HoverBorders extends Disposable {
         }
       }),
     )
+    this.initWatch()
   }
 
   private clearContextTop(target: FabricObject, restoreManually = false) {
@@ -56,6 +60,11 @@ export class HoverBorders extends Disposable {
 
     if (!target || target === this.canvas._activeObject) return
 
+    this.clearBorderByObject(target)
+  }
+
+  private clearBorderByObject(target: FabricObject) {
+
     if (this.canvas.contextTopDirty) {
       this.clearContextTop(target)
     }
@@ -65,6 +74,11 @@ export class HoverBorders extends Disposable {
     const target = e.target
 
     if (!target || target === this.canvas._activeObject) return
+
+    this.drawBorderByObject(target)
+  }
+
+  private drawBorderByObject(target: FabricObject) {
 
     this.hoveredTarget = target
 
@@ -133,6 +147,17 @@ export class HoverBorders extends Disposable {
 
     ctx.restore()
     this.canvas.contextTopDirty = true
+  }
+
+  public initWatch() {
+    const mainStore = useMainStore()
+    const { hoveredObject, leavedObject } = storeToRefs(mainStore)
+    // this.hoveredTarget = hoveredObject.value as FabricObject
+    
+    watch(computed(() => hoveredObject.value), (hover) => {
+      if (hover) this.drawBorderByObject(hover as FabricObject)
+      else this.clearBorderByObject(leavedObject.value as FabricObject)
+    })
   }
 
   public dispose(): void {

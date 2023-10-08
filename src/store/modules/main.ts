@@ -1,4 +1,4 @@
-import fabric from 'fabric'
+import { Object as FabricObject } from 'fabric'
 import { customAlphabet } from 'nanoid'
 import { defineStore } from 'pinia'
 import { RightStates, PointElement } from '@/types/elements'
@@ -9,8 +9,10 @@ import { CanvasElement } from '@/types/canvas'
 import useCanvas from '@/views/Canvas/useCanvas'
 
 export interface MainState {
-  canvasObject: CanvasElement | null
-  clonedObject: CanvasElement | null
+  canvasObject: FabricObject | null
+  hoveredObject: FabricObject | undefined 
+  leavedObject: FabricObject | undefined 
+  clonedObject: FabricObject | null
   currentPoint: PointElement | null
   rightState: RightStates
   activeElementIdList: string[]
@@ -37,6 +39,8 @@ export const useMainStore = defineStore('main', {
   state: (): MainState => ({
     canvasObject: null,
     clonedObject: null,
+    hoveredObject: undefined,
+    leavedObject: undefined,
     currentPoint: null,
     rightState: RightStates.ELEMENT_WORKER,
     activeElementIdList: [], // 被选中的元素ID集合，包含 handleElementId
@@ -79,8 +83,16 @@ export const useMainStore = defineStore('main', {
       this.activeElementIdList = activeElementIdList
     },
     
-    async setCanvasObject(canvasObject: CanvasElement | null) {
+    setCanvasObject(canvasObject: FabricObject | null) {
       this.canvasObject = canvasObject
+    },
+
+    setHoveredObject(hoveredObject: FabricObject | undefined) {
+      this.hoveredObject = hoveredObject
+    },
+
+    setLeaveddObject(leavedObject: FabricObject | undefined) {
+      this.leavedObject = leavedObject
     },
 
     setActiveObject() {

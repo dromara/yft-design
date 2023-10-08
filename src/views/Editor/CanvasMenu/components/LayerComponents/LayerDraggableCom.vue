@@ -5,7 +5,7 @@
       :class="handleElement && handleElement.id === element.id ? 'layer-active' : ''" 
       @click.stop="selectElement(element.id)"
       @mousemove.stop="mouseoverElement(element.id)"
-      @mouseleave.stop="mouseleaveElement"
+      @mouseleave.stop="mouseleaveElement(element.id)"
       :style="{ marginLeft: `${props.index * 10}px` }"
       >
       <div class="element-info">
