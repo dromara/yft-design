@@ -3,8 +3,8 @@
     <el-row class="layout-search">
       <el-input :prefix-icon="Search" placeholder="搜索图层"></el-input>
     </el-row>
-    <!-- <LayerDraggableSelf :elements="currentTemplate.objects.filter(item => !WorkSpaceCommonType.includes(item.id))" :index="0"></LayerDraggableSelf> -->
-    <LayerDraggableSelf :elements="elements" :index="0"></LayerDraggableSelf>
+    <LayerDraggableSelf :elements="currentTemplate.objects.filter(item => !WorkSpaceCommonType.includes(item.id))" :index="0"></LayerDraggableSelf>
+    <!-- <LayerDraggableSelf :elements="elements" :index="0"></LayerDraggableSelf> -->
   </div>
 </template>
 
@@ -16,15 +16,14 @@ import { useTemplatesStore } from '@/store'
 import { WorkSpaceCommonType } from '@/configs/canvas'
 import LayerDraggableSelf from './LayerComponents/LayerDraggableSelf.vue'
 import useHandleElement from '@/hooks/useHandleElement'
-import useCanvas from '@/views/Canvas/useCanvas'
 
 const templatesStore = useTemplatesStore()
-const [ canvas ] = useCanvas()
 const { currentTemplate } = storeToRefs(templatesStore)
 const { cancelElement } = useHandleElement()
-const elements = computed(() => {
-  return canvas.getObjects().filter(item => !WorkSpaceCommonType.includes(item.id))
-})
+// const elements = computed(() => {
+//   const [ canvas ] = useCanvas()
+//   return canvas.getObjects().filter(item => !WorkSpaceCommonType.includes(item.id))
+// })
 </script>
 
 <style lang="scss" scoped>
