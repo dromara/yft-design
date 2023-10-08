@@ -239,13 +239,13 @@ const imageDefaultValues: Partial<TClassProperties<CropImage>> = {
 };
 
 Object.assign(CropImage.prototype, {
-  ...imageDefaultValues,
   cacheProperties: [...fabric.Object.cacheProperties, 'cropX', 'cropY'],
+  ...imageDefaultValues,
   ...addCropImageInteractions()
 })
 
 // extendWithCropImage(CropImage.prototype)
 
-classRegistry.setClass(CropImage, 'cropimage')
+classRegistry.setClass(CropImage, 'Image')
 
 
