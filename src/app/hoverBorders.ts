@@ -1,5 +1,5 @@
 
-import { Object as FabricObject, util, CanvasEvents, Canvas, Rect, Textbox } from 'fabric'
+import { Object as FabricObject, CanvasEvents, Canvas, Rect, Textbox } from 'fabric'
 import { clone } from 'lodash'
 import { check } from '@/utils/check'
 import { Disposable } from '@/utils/lifecycle'

@@ -279,7 +279,8 @@ export default () => {
     const [ canvas ] = useCanvas()
     const element = queryElement(eid)
     if (!element) return
-    canvas.setActiveObject(element as CanvasElement)
+    canvas.setActiveObject(element)
+    canvas.renderAll()
   }
 
   const visibleElement = (eid: string, status: boolean) => {
@@ -287,10 +288,10 @@ export default () => {
     const element = queryElement(eid)
     if (!element) return
     element.visible = status
-    templatesStore.modifedElement()
+    
     canvas.discardActiveObject()
-    mainStore.setCanvasObject(null)
     canvas.renderAll()
+    templatesStore.modifedElement()
   }
 
   const showElement = (item: GroupElement) => {
@@ -364,7 +365,7 @@ export default () => {
     templatesStore.modifedElement()
   }
 
-  const queryTextboxChecked = (elements: CanvasElement[]): boolean => {
+  const queryTextboxChecked = (elements: FabricObject[]): boolean => {
     for (let i = 0; i < elements.length; i++) {
       const element = elements[i]
       if (element.type === ElementNames.TEXTBOX && (element as TextboxElement).isCheck) {
