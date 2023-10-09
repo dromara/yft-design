@@ -145,7 +145,6 @@ export class CropImage extends fabric.Image {
     ctx.save();
     ctx.lineWidth = 1;
     ctx.globalAlpha = 1;
-    // @ts-ignore
     ctx.strokeStyle = this.cropLinesColor;
     ctx.beginPath();
     ctx.moveTo(-w / 2 + w / 3, -h / 2);
