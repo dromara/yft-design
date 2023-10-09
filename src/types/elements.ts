@@ -211,3 +211,10 @@ export const enum AlignCommand {
   TOP = 'top',
   BOTTOM = 'bottom',
 }
+
+export const enum LayerCommand {
+  UP = 'left',
+  DOWN = 'right',
+  TOP = 'top',
+  BOTTOM = 'bottom',
+}

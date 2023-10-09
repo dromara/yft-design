@@ -5,10 +5,9 @@
       <CanvasMenu class="layout-content-menu" />-->
       <MobileThumb class="layout-mobile-thumb" /> 
       <div class="layout-mobile-center">
-        <MobileHeader class="center-header" />
+        <CanvasHeader class="center-header" />
         <CanvasCenter class="center-body"/>
         <CanvasFooter class="center-footer"/>
-        <!-- <CanvasAffix class="center-affix"/> -->
       </div>
       <!-- <CanvasRight class="layout-content-right" /> -->
     </div>
@@ -22,7 +21,7 @@
 import CanvasLeft from './CanvasLeft/index.vue'
 import CanvasMenu from './CanvasMenu/index.vue'
 import MobileThumb from './CanvasThumb/mobile.vue'
-import MobileHeader from './CanvasHeader/mobile.vue'
+import CanvasHeader from './CanvasHeader/index.vue'
 import CanvasCenter from './CanvasCenter/index.vue'
 import CanvasRight from './CanvasRight/index.vue'
 import CanvasFooter from './CanvasFooter/index.vue'

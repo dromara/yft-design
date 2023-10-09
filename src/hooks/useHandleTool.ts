@@ -1,6 +1,7 @@
 import useCanvas from "@/views/Canvas/useCanvas"
 import useCenter from "@/views/Canvas/useCenter"
-import { AlignCommand } from "@/types/elements"
+import useCanvasZindex from "./useCanvasZindex"
+import { AlignCommand, LayerCommand } from "@/types/elements"
 import { useTemplatesStore } from "@/store"
 
 export default () => {
@@ -40,7 +41,34 @@ export default () => {
     templatesStore.modifedElement()
   }
 
+  const layerElement = (command: LayerCommand) => {
+    const [ canvas ] = useCanvas()
+    const { setZindex } = useCanvasZindex()
+    const handleElement = canvas.getActiveObject()
+    const templatesStore = useTemplatesStore()
+    if (!handleElement) return
+    switch (command) {
+      case LayerCommand.UP: 
+        canvas.bringObjectForward(handleElement)
+        break
+      case LayerCommand.DOWN: 
+        canvas.sendObjectBackwards(handleElement)
+        break
+      case LayerCommand.TOP: 
+        canvas.bringObjectToFront(handleElement)
+        break
+      case LayerCommand.BOTTOM: 
+        canvas.sendObjectToBack(handleElement)
+        break
+      default: break
+    }
+    setZindex(canvas)
+    canvas.renderAll()
+    templatesStore.modifedElement()
+  }
+
   return {
-    alignElement
+    alignElement,
+    layerElement
   }
 }

@@ -5,7 +5,7 @@ import { ElementNames, AlignCommand } from '@/types/elements'
 import { storeToRefs } from 'pinia'
 import { useMainStore } from '@/store'
 import useHandleElement from '@/hooks/useHandleElement'
-import useHandleAlign from '@/hooks/useHandleAlign'
+import useHandleTool from '@/hooks/useHandleTool'
 
 
 
@@ -36,7 +36,7 @@ export const contextMenuThumbnails = (): ContextMenu[] => {
 
 export const contextMenus = (): ContextMenu[] => {
   const { lockElement, deleteElement } = useHandleElement()
-  const { alignElement } = useHandleAlign()
+  const { alignElement } = useHandleTool()
   const { canvasObject } = storeToRefs(useMainStore())
   const element = canvasObject.value as CanvasElement
   if (!canvasObject.value) {

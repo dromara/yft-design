@@ -31,16 +31,16 @@
         <el-row class="handler-icon-row">
           <el-button-group>
             <el-tooltip placement="top" :hide-after="0" content="置顶">
-              <el-button @click="bringToFront"><IconSendToBack/></el-button>
+              <el-button @click="layerElement(LayerCommand.TOP)"><IconSendToBack/></el-button>
             </el-tooltip>
             <el-tooltip placement="top" :hide-after="0" content="置底">
-              <el-button @click="sendToBack"><IconBringToFrontOne/></el-button>
+              <el-button @click="layerElement(LayerCommand.BOTTOM)"><IconBringToFrontOne/></el-button>
             </el-tooltip>
             <el-tooltip placement="top" :hide-after="0" content="下移">
-              <el-button @click="sendBackwards"><IconSentToBack/></el-button>
+              <el-button @click="layerElement(LayerCommand.DOWN)"><IconSentToBack/></el-button>
             </el-tooltip>
             <el-tooltip placement="top" :hide-after="0" content="上移">
-              <el-button @click="bringForward"><IconBringToFront/></el-button>
+              <el-button @click="layerElement(LayerCommand.UP)"><IconBringToFront/></el-button>
             </el-tooltip>
           </el-button-group>
         </el-row>
@@ -119,12 +119,12 @@
 
 <script lang="ts" setup>
 import { ref, computed } from 'vue'
-import { ElementNames, AlignCommand } from '@/types/elements'
+import { ElementNames, AlignCommand, LayerCommand } from '@/types/elements'
 import { storeToRefs } from 'pinia'
 import { CanvasElement } from '@/types/canvas'
 import { useFabricStore, useMainStore, useSnapshotStore, useTemplatesStore } from "@/store"
 import useCanvas from '@/views/Canvas/useCanvas'
-import useHandleAlign from '@/hooks/useHandleAlign'
+import useHandleTool from '@/hooks/useHandleTool'
 import useCanvasScale from '@/hooks/useCanvasScale'
 import useHandleElement from '@/hooks/useHandleElement'
 import useHistorySnapshot from '@/hooks/useHistorySnapshot'
@@ -132,7 +132,7 @@ import useHistorySnapshot from '@/hooks/useHistorySnapshot'
 const fabricStore = useFabricStore()
 const mainStore = useMainStore()
 const templatesStore = useTemplatesStore()
-const { alignElement } = useHandleAlign()
+const { alignElement, layerElement } = useHandleTool()
 const { setCanvasScalePercentage, scaleCanvas, resetCanvas } = useCanvasScale()
 const { combineElements, uncombineElements, intersectElements, backElement, forwardElement, backwardElement, sortElement } = useHandleElement()
 const { zoom } = storeToRefs(fabricStore)
@@ -227,16 +227,16 @@ const sendToBack = () => {
   }
   sortElement(0, oldIndex, handleElement.value)
 }
-// 上移
-const bringForward = () => {
-  if (!handleElement.value) return
-  forwardElement()
-}
-// 下移
-const sendBackwards = () => {
-  if (!handleElement.value) return
-  backwardElement()
-}
+// // 上移
+// const bringForward = () => {
+//   if (!handleElement.value) return
+//   forwardElement()
+// }
+// // 下移
+// const sendBackwards = () => {
+//   if (!handleElement.value) return
+//   backwardElement()
+// }
 
 // 修改旋转
 const changeRotate = (value: number) => {
