@@ -243,16 +243,11 @@ const changeFixedRatio = (fixedStatus: boolean) => {
 // 修改直角圆角
 const changeWorkRound = (roundStatus: boolean) => {
   const [ canvas ] = useCanvas()
-  const workSpaceclip = canvas.getObjects(WorkSpaceClipType)[0] as Rect
+  const workSpaceclip = canvas.getObjects().filter(item => WorkSpaceClipType === item.id && item.isType('Rect'))[0] as Rect
+  let rx = 0, ry = 0
   isRound.value = roundStatus
-  if (isRound.value) {
-    workSpaceclip.rx = 10
-    workSpaceclip.ry = 10
-  } 
-  else {
-    workSpaceclip.rx = 0
-    workSpaceclip.ry = 0
-  }
+  if (isRound.value) rx = ry = 10
+  workSpaceclip.set({rx, ry})
   canvas.renderAll()
 }
 
