@@ -246,6 +246,6 @@ Object.assign(CropImage.prototype, {
 
 // extendWithCropImage(CropImage.prototype)
 
-classRegistry.setClass(CropImage, 'Image')
+classRegistry.setClass(CropImage, 'CropImage')
 
 

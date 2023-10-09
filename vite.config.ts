@@ -133,13 +133,23 @@ export default ({ command }: ConfigEnv): UserConfigExport => {
           drop_debugger: true,
         },
       },
+      // 关闭文件计算
+      reportCompressedSize: false,
+      // 关闭生成map文件
+      sourcemap: false,
       rollupOptions: {
         output: {
+          chunkFileNames: 'js/[name]-[hash].js',  // 引入文件名的名称
+          entryFileNames: 'js/[name]-[hash].js',  // 包的入口文件名称
+          assetFileNames: '[ext]/[name]-[hash].[ext]', // 资源文件像 字体，图片等
           manualChunks: {
             vue: ['vue'],
             fabric: ['fabric'],
             'element-plus': ['element-plus']
-          }
+          },
+          // manualChunks(id, any): string {
+          //   return id
+          // }
         }
       }
     },

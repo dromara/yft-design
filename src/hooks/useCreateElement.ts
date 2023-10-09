@@ -3,7 +3,7 @@ import { useFabricStore, useTemplatesStore } from "@/store"
 import { useMainStore } from '@/store/modules/main'
 import { RightStates, ElementNames } from '@/types/elements'
 import { nanoid } from 'nanoid'
-import { QRCodeElement, BarCodeElement, ImageElement, LineElement, PolygonElement, PathElement, TextboxElement, CanvasElement } from '@/types/canvas'
+import { QRCodeElement, BarCodeElement, PolygonElement } from '@/types/canvas'
 import { getImageSize } from '@/utils/image'
 import { classRegistry } from 'fabric'
 import JsBarcode from 'jsbarcode'
@@ -143,7 +143,7 @@ export default () => {
       else if (height > currentTemplateHeight.value) {
         imageScale = currentTemplateHeight.value / height
       }
-      const CropImage = classRegistry.getClass('cropimage')
+      const CropImage = classRegistry.getClass('CropImage')
       const imageElement = await CropImage.fromURL(url, {
         id: nanoid(10),
         angle: 0,
@@ -157,6 +157,7 @@ export default () => {
         originX: 'center',
         originY: 'center',
         borderColor: '#ff8d23',
+        type: 'CropImage',
         name: ElementNames.IMAGE
       })
       // if (typeof imageElement.isCropping === 'undefined') {
