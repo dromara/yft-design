@@ -124,7 +124,6 @@ import { storeToRefs } from 'pinia'
 import { CanvasElement } from '@/types/canvas'
 import { useFabricStore, useMainStore, useSnapshotStore, useTemplatesStore } from "@/store"
 import useCanvas from '@/views/Canvas/useCanvas'
-import useCenter from '@/views/Canvas/useCenter'
 import useHandleAlign from '@/hooks/useHandleAlign'
 import useCanvasScale from '@/hooks/useCanvasScale'
 import useHandleElement from '@/hooks/useHandleElement'
@@ -203,7 +202,7 @@ const bringToFront = () => {
   if (!handleElement.value) return
   let objects = currentTemplate.value.objects
   if (handleElement.value.group) {
-    objects = handleElement.value.group._objects as CanvasOption[]
+    objects = handleElement.value.group._objects
   } 
   let oldIndex = 0
   for (let i = 0; i < objects.length; i++) {
@@ -218,7 +217,7 @@ const sendToBack = () => {
   if (!handleElement.value) return
   let objects = currentTemplate.value.objects
   if (handleElement.value.group) {
-    objects = handleElement.value.group._objects as CanvasOption[]
+    objects = handleElement.value.group._objects
   } 
   let oldIndex = 0
   for (let i = 0; i < objects.length; i++) {
