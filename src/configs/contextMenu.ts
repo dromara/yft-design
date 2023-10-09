@@ -1,6 +1,6 @@
 import { ContextMenu } from '@/components/ContextMenu/types'
 import { CanvasElement } from '@/types/canvas'
-import { ElementNames, AlignCommand } from '@/types/elements'
+import { ElementNames, AlignCommand, LayerCommand } from '@/types/elements'
 
 import { storeToRefs } from 'pinia'
 import { useMainStore } from '@/store'
@@ -36,7 +36,7 @@ export const contextMenuThumbnails = (): ContextMenu[] => {
 
 export const contextMenus = (): ContextMenu[] => {
   const { lockElement, deleteElement } = useHandleElement()
-  const { alignElement } = useHandleTool()
+  const { alignElement, layerElement } = useHandleTool()
   const { canvasObject } = storeToRefs(useMainStore())
   const element = canvasObject.value as CanvasElement
   if (!canvasObject.value) {
@@ -113,20 +113,20 @@ export const contextMenus = (): ContextMenu[] => {
     {
       text: '置于顶层',
       // disable: props.isMultiSelect && !props.elementInfo.groupId,
-      // handler: () => orderElement(props.elementInfo, ElementOrderCommands.TOP),
+      handler: () => layerElement(LayerCommand.TOP),
       children: [
-        // { text: '置于顶层', handler: () => orderElement(props.elementInfo, ElementOrderCommands.TOP) },
-        // { text: '上移一层', handler: () => orderElement(props.elementInfo, ElementOrderCommands.UP) },
+        { text: '置于顶层', handler: () => layerElement(LayerCommand.TOP) },
+        { text: '上移一层', handler: () => layerElement(LayerCommand.UP) },
       ],
     },
     {
       text: '置于底层',
       // disable: props.isMultiSelect && !props.elementInfo.groupId,
-      // handler: () => orderElement(props.elementInfo, ElementOrderCommands.BOTTOM),
-      // children: [
-      //   { text: '置于底层', handler: () => orderElement(props.elementInfo, ElementOrderCommands.BOTTOM) },
-      //   { text: '下移一层', handler: () => orderElement(props.elementInfo, ElementOrderCommands.DOWN) },
-      // ],
+      handler: () => layerElement(LayerCommand.BOTTOM),
+      children: [
+        { text: '置于底层', handler: () => layerElement(LayerCommand.BOTTOM) },
+        { text: '下移一层', handler: () => layerElement(LayerCommand.DOWN) },
+      ],
     },
     { divider: true },
     {
