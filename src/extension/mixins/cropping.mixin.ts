@@ -73,7 +73,7 @@ function canvasMouseDown(e: TPointerEventInfo<TPointerEvent>) {
       return
     }
     if (activeObject.cropPath) {
-      const clipPath = new Path('M 0 -100 A 50 50 0 1 1 0 100 A 50 50 0 1 1 0 -100 Z', {
+      const clipPath = new Path(activeObject.cropPath, {
         left: activeObject.cropX,
         top: activeObject.cropY,
       })

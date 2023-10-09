@@ -178,6 +178,7 @@ export class CropImage extends Image {
   }
 
   _drawCroppingPath(ctx: CanvasRenderingContext2D, path?: string) {
+    console.log('path:', path)
     if (!this.__isCropping || !this.canvas || !path) return
     const zoom = this.canvas.getZoom() * config.devicePixelRatio;
     ctx.save();

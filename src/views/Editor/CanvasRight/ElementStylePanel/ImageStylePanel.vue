@@ -73,11 +73,10 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useMainStore, useTemplatesStore, useFabricStore } from '@/store'
+import { useMainStore, useTemplatesStore } from '@/store'
 import { CLIPPATHS } from '@/configs/images'
 import { ImageElement } from '@/types/canvas'
 import { ratioClipOptions } from '@/configs/images'
-import { ElementNames } from '@/types/elements'
 import { getImageDataURL } from '@/utils/image'
 import { propertiesToInclude } from '@/configs/canvas'
 import ElementOutline from '../Components/ElementOutline.vue'
@@ -88,7 +87,6 @@ import ElementMask from '../Components/ElementMask.vue'
 import useCanvas from '@/views/Canvas/useCanvas'
 
 const mainStore = useMainStore()
-const fabricStore = useFabricStore()
 const templatesStore = useTemplatesStore()
 const [ canvas ] = useCanvas()
 const { canvasObject } = storeToRefs(mainStore)
@@ -97,15 +95,14 @@ const handleElement = computed(() => canvasObject.value as ImageElement)
 
 // 打开自由裁剪
 const clipImage = () => {
-  console.log(handleElement.value)
   if (!handleElement.value) return
   handleElement.value.set({__isCropping: true})
   canvas.renderAll()
 }
 
 // 预设裁剪
-const presetImageClip = (shape: string, ratio = 0) => {
-  const _handleElement = handleElement.value
+const presetImageClip = (key: string, ratio = 0) => {
+  if (!handleElement.value) return
 
   // 纵横比裁剪（形状固定为矩形）
   if (ratio) {
@@ -136,6 +133,10 @@ const presetImageClip = (shape: string, ratio = 0) => {
   }
   // 形状裁剪（保持当前裁剪范围）
   else {
+    // @ts-ignore
+    const path = CLIPPATHS.key.createPath(100, 100)
+    handleElement.value.set({__isCropping: true, cropPath: path})
+    canvas.renderAll()
     // ({
     //   id: handleElementId.value,
     //   props: {
@@ -143,8 +144,6 @@ const presetImageClip = (shape: string, ratio = 0) => {
     //   },
     // })
   }
-  // clipImage()
-  // 
 }
 
 // 替换图片（保持当前的样式）
