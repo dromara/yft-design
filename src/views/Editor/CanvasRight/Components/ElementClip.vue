@@ -60,10 +60,8 @@ const toggleStroke = () => {
 const selectShape = (shape: PathPoolItem) => {
   const [ canvas ] = useCanvas()
   const clipPath = new Path(shape.path, {
-    id: nanoid(10),
-    left: handleElement.value.left,
-    top: handleElement.value.top,
-    absolutePositioned: true
+    left: -handleElement.value.width / 2,
+    top: -handleElement.value.height / 2,
   })
   handleElement.value.set({clipPath})
   canvas.renderAll()

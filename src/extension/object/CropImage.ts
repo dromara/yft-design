@@ -7,6 +7,7 @@ type ImageSource = HTMLImageElement | HTMLVideoElement | HTMLCanvasElement;
 
 export class CropImage extends Image {
   isCropping?: boolean
+  cropPath?: string
   constructor(element: ImageSource, options: any = {}) {
     super(element, { filters: [], ...options });
     this.on('mousedblclick', this.doubleClickHandler.bind(this))
@@ -14,7 +15,7 @@ export class CropImage extends Image {
 
   public doubleClickHandler(e: TPointerEventInfo<TPointerEvent>) {
     if (!this.canvas || !e.target || e.target !== this) return
-    this.set({isCropping: true})
+    this.set({isCropping: true, clipPath: undefined})
     this.onMousedbclickEvent()
     this.canvas.setActiveObject(this)
     this.canvas.requestRenderAll()
@@ -25,9 +26,13 @@ export class CropImage extends Image {
     if (!fabricCanvas) return
     fabricCanvas.defaultCursor = 'move';
     isolateObjectForEdit(this);
+    // @ts-ignore
     this.lastEventTop = this.top;
+    // @ts-ignore
     this.lastEventLeft = this.left;
+    // @ts-ignore
     this.setupDragMatrix();
+    // @ts-ignore
     this.bindCropModeHandlers();
     this.controls = croppingControlSet;
     if (this.flipX && !this.flipY) {
@@ -130,8 +135,8 @@ export class CropImage extends Image {
       ctx.globalAlpha = 1;
     }
     super._render(ctx);
-    this._drawCroppingLines(ctx);
-    this._drawCroppingPath(ctx);
+    this._drawCroppingLines(ctx)
+    if (this.cropPath) this._drawCroppingPath(ctx, this.cropPath)
     ctx.restore();
   }
 
@@ -145,6 +150,7 @@ export class CropImage extends Image {
     ctx.save();
     ctx.lineWidth = 1;
     ctx.globalAlpha = 1;
+    // @ts-ignore
     ctx.strokeStyle = this.cropLinesColor;
     ctx.beginPath();
     ctx.moveTo(-w / 2 + w / 3, -h / 2);
@@ -160,17 +166,15 @@ export class CropImage extends Image {
     ctx.restore();
   }
 
-  _drawCroppingPath(ctx: CanvasRenderingContext2D) {
+  _drawCroppingPath(ctx: CanvasRenderingContext2D, path: string) {
     if (!this.isCropping || !this.canvas) return
-    const w = this.width;
-    const h = this.height;
     const zoom = this.canvas.getZoom() * config.devicePixelRatio;
     ctx.save();
     ctx.lineWidth = 1;
     ctx.globalAlpha = 1;
     // @ts-ignore
     ctx.strokeStyle = this.cropLinesColor;
-    ctx.stroke(new Path2D('M 0 -100 A 50 50 0 1 1 0 100 A 50 50 0 1 1 0 -100 Z'));
+    ctx.stroke(new Path2D(path));
     ctx.scale(1 / (this.scaleX * zoom), 1 / (this.scaleY * zoom));
     ctx.restore();
   }

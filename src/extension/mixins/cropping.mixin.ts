@@ -1,14 +1,14 @@
-import * as fabric from 'fabric'
+// import * as fabric from 'fabric'
 import { createTextboxDefaultControls } from '@/app/controls'
 import { fireCropImageEvent } from '../controls/cropping/cropping.controls.handlers'
 import { containsPoint } from '@/utils/utility'
-import { config } from 'fabric'
+import { config, Object as FabricObject, Path, util, Canvas, Point, TPointerEventInfo, TPointerEvent } from 'fabric'
 
 
-export function isolateObjectForEdit(context: fabric.Object) {
+export function isolateObjectForEdit(context: FabricObject) {
   const { canvas } = context;
   if (!canvas) return
-  context.hoverCursor = fabric.Object.prototype.hoverCursor;
+  context.hoverCursor = FabricObject.prototype.hoverCursor;
   canvas.requestRenderAll();
   const deselect = context.onDeselect;
   // eslint-disable-next-line func-names
@@ -20,7 +20,7 @@ export function isolateObjectForEdit(context: fabric.Object) {
 }
   
 
-export function unisolateObjectForEdit(context: fabric.Object) {
+export function unisolateObjectForEdit(context: FabricObject) {
   const { canvas } = context
   if (!canvas) return
   canvas.requestRenderAll();
@@ -41,10 +41,10 @@ function canvasMouseUp() {
 }
 
 
-function canvasMouseDown(e: any) {
+function canvasMouseDown(e: TPointerEventInfo<TPointerEvent>) {
   const target = e.target;
   // @ts-ignore
-  const activeObject = this.getActiveObject();
+  const activeObject = this.getActiveObject()
   if (!activeObject) return;
 
   if ((!target || (activeObject.id !== target.id)) && activeObject.isCropping) {
@@ -74,7 +74,15 @@ function canvasMouseDown(e: any) {
       this.evented = false;
       return
     }
-    activeObject.clippath = 
+    if (activeObject.cropPath) {
+      const clipPath = new Path('M 0 -100 A 50 50 0 1 1 0 100 A 50 50 0 1 1 0 -100 Z', {
+        left: activeObject.cropX,
+        top: activeObject.cropY,
+      })
+      console.log('clipPath:', clipPath)
+      activeObject.set({clipPath, width: clipPath.width, height: clipPath.height})
+    }
+    
     activeObject.onDeselectEvent()
     activeObject.isCropping = false
     // @ts-ignore
@@ -84,8 +92,8 @@ function canvasMouseDown(e: any) {
   }
 }
 
- // @ts-ignore
-export function canvasMouseMove({ e } = {}) {
+ 
+export function canvasMouseMove({ e }: TPointerEventInfo<MouseEvent>) {
    // @ts-ignore
   const fabricObject = this.getActiveObject();
    // @ts-ignore
@@ -99,11 +107,10 @@ export function canvasMouseMove({ e } = {}) {
   const objM = fabricObject.calcTransformMatrix();
    // @ts-ignore
   const canvasM = this.viewportTransform;
-  const totalM = fabric.util.invertTransform(fabric.util.multiplyTransformMatrices(canvasM, objM));
+  const totalM = util.invertTransform(util.multiplyTransformMatrices(canvasM, objM));
   totalM[4] = 0;
   totalM[5] = 0;
-   // @ts-ignore
-  const transformedMovement = fabric.util.transformPoint(point, totalM);
+  const transformedMovement = util.transformPoint(point, totalM);
   fabricObject.cropX -= transformedMovement.x;
   fabricObject.cropY -= transformedMovement.y;
   fabricObject.fire('moving');
@@ -148,8 +155,8 @@ export function addCropImageInteractions() {
       delete this.lastEventTop;
       delete this.lastEventLeft;
       this.unbindCropModeHandlers();
-      fabricCanvas.centeredKey = fabric.Canvas.prototype.centeredKey;
-      fabricCanvas.altActionKey = fabric.Canvas.prototype.altActionKey;
+      fabricCanvas.centeredKey = Canvas.prototype.centeredKey;
+      fabricCanvas.altActionKey = Canvas.prototype.altActionKey;
       fabricCanvas.selection = true;
       this.controls = createTextboxDefaultControls()
       this.setCoords();
@@ -198,7 +205,7 @@ export function addCropImageInteractions() {
     },
 
     setupDragMatrix() {
-      this.moveTransformationMatrix = fabric.util.invertTransform(this.calcTransformMatrix());
+      this.moveTransformationMatrix = util.invertTransform(this.calcTransformMatrix());
       this.changeToPositionMatrix = this.calcTransformMatrix().concat();
       this.moveTransformationMatrix[4] = 0;
       this.moveTransformationMatrix[5] = 0;
@@ -228,8 +235,8 @@ export function addCropImageInteractions() {
       }
       const lastTop = this.lastTop === undefined ? this.lastEventTop : this.lastTop;
       const lastLeft = this.lastLeft === undefined ? this.lastEventLeft : this.lastLeft;
-      const changeVector = new fabric.Point(lastLeft - this.left, lastTop - this.top);
-      const correctMovement = fabric.util.transformPoint(changeVector, this.moveTransformationMatrix);
+      const changeVector = new Point(lastLeft - this.left, lastTop - this.top);
+      const correctMovement = util.transformPoint(changeVector, this.moveTransformationMatrix);
       const width = this._element.naturalWidth || this._element.width;
       const height = this._element.naturalHeight || this._element.height;
       const changeX = correctMovement.x;
