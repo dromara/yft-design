@@ -4,7 +4,7 @@
     :class="{ 'thumb-close': thumbShow !== true }"
     @mousedown="() => setThumbnailsFocus(true)"
     v-click-outside="() => setThumbnailsFocus(false)"
-    v-contextmenu="contextmenusThumbnails"  
+    v-contextmenu="contextMenusThumbnails"  
   >
     <div class="thumb-handle">
       <div class="btn" @click="createTemplate()"><IconPlus class="icon" />添加页面</div>
@@ -52,7 +52,6 @@ import ThumbnailTemplate from '@/views/Editor/CanvasThumb/ThumbnailTemplate.vue'
 import Draggable from 'vuedraggable'
 import { contextMenusThumbnails } from '@/configs/contextMenu'
 import { useMainStore, useTemplatesStore, useKeyboardStore } from '@/store'
-import { ContextMenu } from '@/components/ContextMenu/types'
 import { storeToRefs } from 'pinia'
 import { computed, ref } from 'vue'
 import { fillDigit } from '@/utils/common/common'

@@ -181,7 +181,7 @@ const bringToFront = () => {
   if (!handleElement.value) return
   let objects = currentTemplate.value.objects
   if (handleElement.value.group) {
-    objects = handleElement.value.group._objects as CanvasOption[]
+    objects = handleElement.value.group._objects
   } 
   let oldIndex = 0
   for (let i = 0; i < objects.length; i++) {
@@ -196,7 +196,7 @@ const sendToBack = () => {
   if (!handleElement.value) return
   let objects = currentTemplate.value.objects
   if (handleElement.value.group) {
-    objects = handleElement.value.group._objects as CanvasOption[]
+    objects = handleElement.value.group._objects
   } 
   let oldIndex = 0
   for (let i = 0; i < objects.length; i++) {

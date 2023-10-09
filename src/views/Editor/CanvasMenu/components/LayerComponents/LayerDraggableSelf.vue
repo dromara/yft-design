@@ -20,9 +20,9 @@
 
 <script lang="ts" setup>
 import { PropType } from 'vue'
+import { Object as FabricObject } from 'fabric'
 import { ElementNames } from '@/types/elements'
 import { contextMenusThumbnails } from '@/configs/contextMenu'
-import { ContextMenu } from '@/components/ContextMenu/types'
 import Draggable from 'vuedraggable'
 import useHandleElement from '@/hooks/useHandleElement'
 import LayerDraggableSon from './LayerDraggableSon.vue'
@@ -33,7 +33,7 @@ const {  sortElement } = useHandleElement()
 
 const props = defineProps({
   elements: {
-    type: Object as PropType<CanvasOption[]>,
+    type: Object as PropType<FabricObject[]>,
     required: true,
   },
   index: {
@@ -43,7 +43,7 @@ const props = defineProps({
 })
 
 // 拖拽调整顺序后进行数据的同步
-const handleDragMoved = (eventData: { moved: { newIndex: number, oldIndex: number, element: CanvasOption} }) => {
+const handleDragMoved = (eventData: { moved: { newIndex: number, oldIndex: number, element: FabricObject} }) => {
   sortElement(eventData.moved.newIndex, eventData.moved.oldIndex, eventData.moved.element)
 }
 </script>
