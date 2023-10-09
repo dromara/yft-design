@@ -1,41 +1,32 @@
-import * as fabric from 'fabric';
+import * as fabric from 'fabric'
 import { createTextboxDefaultControls } from '@/app/controls'
-import { fireCropImageEvent } from '../controls/cropping/cropping.controls.handlers';
-import {
-  croppingControlSet,
-  flipXCropControls,
-  flipXYCropControls,
-  flipYCropControls,
-  standardControlSet
-} from '../controls/cropping/cropping.controls';
-import { containsPoint } from '@/utils/utility';
-import { config } from 'fabric';
-import { useFabricStore } from '@/store';
-import { storeToRefs } from 'pinia';
+import { fireCropImageEvent } from '../controls/cropping/cropping.controls.handlers'
+import { containsPoint } from '@/utils/utility'
+import { config } from 'fabric'
 
-// @ts-ignore
-export function isolateObjectForEdit(context) {
+
+export function isolateObjectForEdit(context: fabric.Object) {
   const { canvas } = context;
+  if (!canvas) return
   context.hoverCursor = fabric.Object.prototype.hoverCursor;
   canvas.requestRenderAll();
   const deselect = context.onDeselect;
   // eslint-disable-next-line func-names
-  context.onDeselect = function (...args: any) {
-    const index = canvas.getObjects().indexOf(context);
-    deselect.call(context, ...args);
+  context.onDeselect = (...args: any) => {
+    // const index = canvas.getObjects().indexOf(context);
+    deselect.call(context, ...args)
     return true;
   };
 }
   
-// @ts-ignore
-export function unisolateObjectForEdit(context) {
-  const fabricCanvas = context.canvas;
-  fabricCanvas.requestRenderAll();
-  const deselect = context.onDeselect;
-  // eslint-disable-next-line func-names
-  context.onDeselect = function (...args: any) {
-    // @ts-ignore
-    deselect.call(context, ...args);
+
+export function unisolateObjectForEdit(context: fabric.Object) {
+  const { canvas } = context
+  if (!canvas) return
+  canvas.requestRenderAll();
+  const deselect = context.onDeselect
+  context.onDeselect = (...args: any) => {
+    deselect.call(context, ...args)
     return false;
   };
 }
@@ -54,9 +45,7 @@ function canvasMouseDown(e: any) {
   const target = e.target;
   // @ts-ignore
   const activeObject = this.getActiveObject();
-  if (!activeObject) {
-    return;
-  }
+  if (!activeObject) return;
 
   if ((!target || (activeObject.id !== target.id)) && activeObject.isCropping) {
 
@@ -85,6 +74,7 @@ function canvasMouseDown(e: any) {
       this.evented = false;
       return
     }
+    activeObject.clippath = 
     activeObject.onDeselectEvent()
     activeObject.isCropping = false
     // @ts-ignore
@@ -154,7 +144,6 @@ export function addCropImageInteractions() {
     onDeselectEvent() {
       const fabricCanvas = this.canvas
       if (!fabricCanvas) return
-      // fabricCanvas.defaultCursor = defaultCursor;
       unisolateObjectForEdit(this);
       delete this.lastEventTop;
       delete this.lastEventLeft;
@@ -168,10 +157,8 @@ export function addCropImageInteractions() {
     },
 
     _drawDarkLayer(ctx: CanvasRenderingContext2D) {
-      const shouldNotDraw = !this.isCropping && !this.isInPerspectiveMode;
-      if (shouldNotDraw || this === this.canvas.backgroundImage) {
-        return;
-      }
+      const shouldNotDraw = !this.isCropping && !this.isInPerspectiveMode
+      if (shouldNotDraw || this === this.canvas.backgroundImage) return
       ctx.save();
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.globalAlpha = 0.5;
@@ -181,9 +168,7 @@ export function addCropImageInteractions() {
     },
 
     _drawCroppingLines(ctx: CanvasRenderingContext2D) {
-      if (!this.isCropping || (this.canvas && (this.canvas.isCropping))) {
-        return;
-      }
+      if (!this.isCropping || (this.canvas && (this.canvas.isCropping))) return
       const w = this.width;
       const h = this.height;
       const zoom = this.canvas.getZoom() * config.devicePixelRatio;
@@ -280,65 +265,65 @@ export function addCropImageInteractions() {
   // extend(prototype, cropping);
 }
 
-export function extendWithCropImage(CropImage: fabric.Object) {
-  Object.defineProperty(CropImage, 'isCropping', {
-    get() {
-      return !!this.__isCropping;
-    },
-    set(value: boolean) {
-      console.log('value:', value)
-      const fabricCanvas = this.canvas;
-      if (!fabricCanvas) {
-        this.__isCropping = false;
-        return;
-      }
-      let { defaultCursor } = fabricCanvas;
-      value = !!value;
-      if (value === this.isCropping) return;
-      this.__isCropping = value
-      if (value) {
-        defaultCursor = fabricCanvas.defaultCursor;
-        fabricCanvas.defaultCursor = 'move';
-        isolateObjectForEdit(this);
-        this.lastEventTop = this.top;
-        this.lastEventLeft = this.left;
-        this.setupDragMatrix();
-        this.bindCropModeHandlers();
-        this.controls = croppingControlSet;
-        if (this.flipX && !this.flipY) {
-          this.controls = flipXCropControls;
-        }
-        if (this.flipY && !this.flipX) {
-          this.controls = flipYCropControls;
-        }
-        if (this.flipX && this.flipY) {
-          this.controls = flipXYCropControls;
-        }
-        if (this.scaleX != this.scaleY) {
-          this.setControlsVisibility({tlS: false, trS: false, blS: false, brS: false});
-        } 
-        else {
-          this.setControlsVisibility({tlS: true, trS: true, blS: true, brS: true});
-        }
-        this.setCoords();
-        fabricCanvas.centeredKey = null;
-        fabricCanvas.altActionKey = null;
-        fabricCanvas.selection = false;
-      } else {
-        fabricCanvas.defaultCursor = defaultCursor;
-        unisolateObjectForEdit(this);
-        delete this.lastEventTop;
-        delete this.lastEventLeft;
-        this.unbindCropModeHandlers();
-        fabricCanvas.centeredKey = fabric.Canvas.prototype.centeredKey;
-        fabricCanvas.altActionKey = fabric.Canvas.prototype.altActionKey;
-        fabricCanvas.selection = true;
-        this.controls = createTextboxDefaultControls()
-        this.setCoords();
-        fireCropImageEvent(this);
-      }
-    },
-  });
+// export function extendWithCropImage(CropImage: fabric.Object) {
+//   Object.defineProperty(CropImage, 'isCropping', {
+//     get() {
+//       return !!this.__isCropping;
+//     },
+//     set(value: boolean) {
+//       console.log('value:', value)
+//       const fabricCanvas = this.canvas;
+//       if (!fabricCanvas) {
+//         this.__isCropping = false;
+//         return;
+//       }
+//       let { defaultCursor } = fabricCanvas;
+//       value = !!value;
+//       if (value === this.isCropping) return;
+//       this.__isCropping = value
+//       if (value) {
+//         defaultCursor = fabricCanvas.defaultCursor;
+//         fabricCanvas.defaultCursor = 'move';
+//         isolateObjectForEdit(this);
+//         this.lastEventTop = this.top;
+//         this.lastEventLeft = this.left;
+//         this.setupDragMatrix();
+//         this.bindCropModeHandlers();
+//         this.controls = croppingControlSet;
+//         if (this.flipX && !this.flipY) {
+//           this.controls = flipXCropControls;
+//         }
+//         if (this.flipY && !this.flipX) {
+//           this.controls = flipYCropControls;
+//         }
+//         if (this.flipX && this.flipY) {
+//           this.controls = flipXYCropControls;
+//         }
+//         if (this.scaleX != this.scaleY) {
+//           this.setControlsVisibility({tlS: false, trS: false, blS: false, brS: false});
+//         } 
+//         else {
+//           this.setControlsVisibility({tlS: true, trS: true, blS: true, brS: true});
+//         }
+//         this.setCoords();
+//         fabricCanvas.centeredKey = null;
+//         fabricCanvas.altActionKey = null;
+//         fabricCanvas.selection = false;
+//       } else {
+//         fabricCanvas.defaultCursor = defaultCursor;
+//         unisolateObjectForEdit(this);
+//         delete this.lastEventTop;
+//         delete this.lastEventLeft;
+//         this.unbindCropModeHandlers();
+//         fabricCanvas.centeredKey = fabric.Canvas.prototype.centeredKey;
+//         fabricCanvas.altActionKey = fabric.Canvas.prototype.altActionKey;
+//         fabricCanvas.selection = true;
+//         this.controls = createTextboxDefaultControls()
+//         this.setCoords();
+//         fireCropImageEvent(this);
+//       }
+//     },
+//   });
 
-  // addCropImageInteractions(CropImage);
-}
+//   // addCropImageInteractions(CropImage);
+// }

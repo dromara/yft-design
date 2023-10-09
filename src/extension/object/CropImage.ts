@@ -1,12 +1,11 @@
-import * as fabric from 'fabric'
-import { config, classRegistry, TPointerEventInfo, TPointerEvent } from 'fabric'
+import { Image, Point, Object as FabricObject, config, util, classRegistry, TPointerEventInfo, TPointerEvent } from 'fabric'
 import { TClassProperties } from '@/types/typedefs'
 import { croppingControlSet, flipXCropControls, flipXYCropControls, flipYCropControls } from '@/extension/controls/cropping/cropping.controls'
 import { addCropImageInteractions, isolateObjectForEdit } from '@/extension/mixins/cropping.mixin'
 
 type ImageSource = HTMLImageElement | HTMLVideoElement | HTMLCanvasElement;
 
-export class CropImage extends fabric.Image {
+export class CropImage extends Image {
   isCropping?: boolean
   constructor(element: ImageSource, options: any = {}) {
     super(element, { filters: [], ...options });
@@ -72,7 +71,7 @@ export class CropImage extends fabric.Image {
     return this._element ? this._element.naturalHeight || this._element.height : 0;
   }
 
-  _getOriginalTransformedDimensions(options: any = {}): fabric.Point {
+  _getOriginalTransformedDimensions(options: any = {}): Point {
     const dimOptions = {
       scaleX: this.scaleX,
       scaleY: this.scaleY,
@@ -96,10 +95,10 @@ export class CropImage extends fabric.Image {
       noSkew = dimOptions.skewX === 0 && dimOptions.skewY === 0;
     let finalDimensions;
     if (noSkew) {
-      finalDimensions = new fabric.Point(dimX * dimOptions.scaleX, dimY * dimOptions.scaleY);
+      finalDimensions = new Point(dimX * dimOptions.scaleX, dimY * dimOptions.scaleY);
     } 
     else {
-      finalDimensions = fabric.util.sizeAfterTransform(dimX, dimY, dimOptions);
+      finalDimensions = util.sizeAfterTransform(dimX, dimY, dimOptions);
     }
 
     return finalDimensions.scalarAdd(postScalingStrokeValue);
@@ -132,6 +131,7 @@ export class CropImage extends fabric.Image {
     }
     super._render(ctx);
     this._drawCroppingLines(ctx);
+    this._drawCroppingPath(ctx);
     ctx.restore();
   }
 
@@ -161,10 +161,9 @@ export class CropImage extends fabric.Image {
   }
 
   _drawCroppingPath(ctx: CanvasRenderingContext2D) {
-    if (!this.isCropping) return
+    if (!this.isCropping || !this.canvas) return
     const w = this.width;
     const h = this.height;
-    // @ts-ignore
     const zoom = this.canvas.getZoom() * config.devicePixelRatio;
     ctx.save();
     ctx.lineWidth = 1;
@@ -198,22 +197,22 @@ export class CropImage extends fabric.Image {
       const { width, height } = this;
       const imageCopyX = (-this.cropX - width / 2) * multX * scaling.x;
       const imageCopyY = (-this.cropY - height / 2) * multY * scaling.y;
-      ctx.strokeStyle = fabric.Object.prototype.borderColor;
+      ctx.strokeStyle = FabricObject.prototype.borderColor;
       ctx.strokeRect(imageCopyX, imageCopyY, elWidth, elHeight);
       ctx.restore();
     }
   }
   
   static fromURL(url: string, options: any = {}): Promise<CropImage> {
-    return fabric.util.loadImage(url, options).then((img) => new this(img, options));
+    return util.loadImage(url, options).then((img) => new this(img, options));
   }
 
   static fromObject({ filters: f, resizeFilter: rf, src, crossOrigin, ...object }: any, options: { signal: AbortSignal }): Promise<CropImage> {
     return Promise.all([
-      fabric.util.loadImage(src, { ...options, crossOrigin }),
-      f && fabric.util.enlivenObjects(f, options),
-      rf && fabric.util.enlivenObjects([rf], options),
-      fabric.util.enlivenObjectEnlivables(object, options),
+      util.loadImage(src, { ...options, crossOrigin }),
+      f && util.enlivenObjects(f, options),
+      rf && util.enlivenObjects([rf], options),
+      util.enlivenObjectEnlivables(object, options),
     ]).then(([el, filters = [], [resizeFilter] = [], hydratedProps = {}]) => {
       return new this(el, {
         ...object,
@@ -238,7 +237,7 @@ const imageDefaultValues: Partial<TClassProperties<CropImage>> = {
 };
 
 Object.assign(CropImage.prototype, {
-  cacheProperties: [...fabric.Object.cacheProperties, 'cropX', 'cropY'],
+  cacheProperties: [...FabricObject.cacheProperties, 'cropX', 'cropY'],
   ...imageDefaultValues,
   ...addCropImageInteractions()
 })
