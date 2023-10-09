@@ -1,27 +1,38 @@
-import { Image, Point, Object as FabricObject, config, util, classRegistry, TPointerEventInfo, TPointerEvent } from 'fabric'
 import { TClassProperties } from '@/types/typedefs'
 import { croppingControlSet, flipXCropControls, flipXYCropControls, flipYCropControls } from '@/extension/controls/cropping/cropping.controls'
 import { addCropImageInteractions, isolateObjectForEdit } from '@/extension/mixins/cropping.mixin'
+import { Image, Point, Object as FabricObject, config, util, classRegistry, TPointerEventInfo, TPointerEvent, ImageProps } from 'fabric'
 
-type ImageSource = HTMLImageElement | HTMLVideoElement | HTMLCanvasElement;
+type ImageSource = HTMLImageElement | HTMLVideoElement | HTMLCanvasElement
 
 export class CropImage extends Image {
-  isCropping?: boolean
-  cropPath?: string
-  constructor(element: ImageSource, options: any = {}) {
+  public isCropping?: false
+  public cropPath?: string
+  
+  constructor(element: ImageSource, options?: FabricObject<ImageProps>) {
     super(element, { filters: [], ...options });
     this.on('mousedblclick', this.doubleClickHandler.bind(this))
   }
 
   public doubleClickHandler(e: TPointerEventInfo<TPointerEvent>) {
     if (!this.canvas || !e.target || e.target !== this) return
-    this.set({isCropping: true, clipPath: undefined})
-    this.onMousedbclickEvent()
+    this.set({__isCropping: true, clipPath: undefined})
     this.canvas.setActiveObject(this)
     this.canvas.requestRenderAll()
   }
 
-  onMousedbclickEvent() {
+  public get __isCropping() {
+    return this.isCropping
+  }
+
+  public set __isCropping(value) {
+    this.isCropping = value
+    if (this.__isCropping) {
+      this.onMousedbclickEvent()
+    }
+  }
+
+  public onMousedbclickEvent() {
     const fabricCanvas = this.canvas
     if (!fabricCanvas) return
     fabricCanvas.defaultCursor = 'move';
@@ -118,7 +129,7 @@ export class CropImage extends Image {
     const height = this.height || 0;
     const elementToDraw = this._element;
     ctx.save();
-    if (this.isCropping) {
+    if (this.__isCropping) {
       this._removeShadow(ctx); // main context
       ctx.globalAlpha = 0.5;
       const elWidth = this.getElementWidth();
@@ -136,12 +147,12 @@ export class CropImage extends Image {
     }
     super._render(ctx);
     this._drawCroppingLines(ctx)
-    if (this.cropPath) this._drawCroppingPath(ctx, this.cropPath)
+    this._drawCroppingPath(ctx, this.cropPath)
     ctx.restore();
   }
 
   _drawCroppingLines(ctx: CanvasRenderingContext2D) {
-    if (!this.isCropping || !this.canvas) {
+    if (!this.__isCropping || !this.canvas) {
       return;
     }
     const w = this.width;
@@ -166,8 +177,8 @@ export class CropImage extends Image {
     ctx.restore();
   }
 
-  _drawCroppingPath(ctx: CanvasRenderingContext2D, path: string) {
-    if (!this.isCropping || !this.canvas) return
+  _drawCroppingPath(ctx: CanvasRenderingContext2D, path?: string) {
+    if (!this.__isCropping || !this.canvas || !path) return
     const zoom = this.canvas.getZoom() * config.devicePixelRatio;
     ctx.save();
     ctx.lineWidth = 1;
@@ -185,7 +196,7 @@ export class CropImage extends Image {
   }
 
   _renderCroppingBorders(ctx: CanvasRenderingContext2D) {
-    if (this.isCropping) {
+    if (this.__isCropping) {
       ctx.save();
       const multX = this.canvas?.viewportTransform[0] || 1;
       const multY = this.canvas?.viewportTransform[3] || 1;
@@ -231,7 +242,7 @@ export class CropImage extends Image {
 }
 
 const imageDefaultValues: Partial<TClassProperties<CropImage>> = {
-  type: 'image',
+  type: 'CropImage',
   strokeWidth: 0,
   srcFromAttribute: false,
   minimumScaleTrigger: 0.5,
@@ -245,8 +256,6 @@ Object.assign(CropImage.prototype, {
   ...imageDefaultValues,
   ...addCropImageInteractions()
 })
-
-// extendWithCropImage(CropImage.prototype)
 
 classRegistry.setClass(CropImage, 'CropImage')
 

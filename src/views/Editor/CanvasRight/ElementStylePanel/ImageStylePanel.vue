@@ -21,7 +21,7 @@
             <div class="shape-clip">
               <div 
                 class="shape-clip-item" 
-                v-for="(item, key) in shapeClipPathOptions" 
+                v-for="(item, key) in CLIPPATHS" 
                 :key="key"
                 @click="presetImageClip(key)"
               >
@@ -71,127 +71,37 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, watch, ref } from 'vue'
+import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useMainStore, useTemplatesStore, useFabricStore } from '@/store'
 import { CLIPPATHS } from '@/configs/images'
-import { ImageElement, CropElement, CanvasElement, RectElement } from '@/types/canvas'
+import { ImageElement } from '@/types/canvas'
+import { ratioClipOptions } from '@/configs/images'
+import { ElementNames } from '@/types/elements'
+import { getImageDataURL } from '@/utils/image'
+import { propertiesToInclude } from '@/configs/canvas'
 import ElementOutline from '../Components/ElementOutline.vue'
 import ElementShadow from '../Components/ElementShadow.vue'
 import ElementFlip from '../Components/ElementFlip.vue'
 import ElementFilter from '../Components/ElementFilter.vue'
 import ElementMask from '../Components/ElementMask.vue'
-import * as fabric from 'fabric'
-import { ratioClipOptions } from '@/configs/images'
 import useCanvas from '@/views/Canvas/useCanvas'
-import { ElementNames } from '@/types/elements'
-import { nanoid } from 'nanoid'
-import useCanvasZindex from '@/hooks/useCanvasZindex'
-import { getImageDataURL } from '@/utils/image'
-import { propertiesToInclude, WorkSpaceName } from '@/configs/canvas'
-import { ImageOption } from '@/types/option'
-
-const shapeClipPathOptions = CLIPPATHS
 
 const mainStore = useMainStore()
 const fabricStore = useFabricStore()
 const templatesStore = useTemplatesStore()
 const [ canvas ] = useCanvas()
 const { canvasObject } = storeToRefs(mainStore)
-const { isCropping } = storeToRefs(fabricStore)
-const { setZindex } = useCanvasZindex()
 const handleElement = computed(() => canvasObject.value as ImageElement)
 
 
 // 打开自由裁剪
 const clipImage = () => {
-  if (!handleElement.value || handleElement.value.type !== ElementNames.IMAGE || isCropping.value) return
-  handleElement.value.isCropping = true
-  // canvas.discardActiveObject()
-  // mainStore.setCanvasObject(null)
-  // const scaleX = handleElement.value.scaleX ? handleElement.value.scaleX : 1, scaleY = handleElement.value.scaleY ? handleElement.value.scaleY : 1
-  // const elementLeft = handleElement.value.left ? handleElement.value.left : 0, elementTop = handleElement.value.top ? handleElement.value.top : 0
-  // const elementWidth = handleElement.value.width ? handleElement.value.width : 0, elementHeight = handleElement.value.height ? handleElement.value.height : 0
-  // let _handleElement = handleElement.value, left = elementLeft - elementWidth / 2 * scaleX, top = elementTop - elementHeight / 2 * scaleY
-
-  // if (handleElement.value.isCrop) {
-  //   handleElement.value.visible = false
-  //   _handleElement = (canvas.getObjects().filter(obj => (obj as RectElement).id === handleElement.value.originId)[0]) as ImageElement
-  //   _handleElement.setCoords()
-  //   _handleElement.visible = true
-  //   left = elementLeft, top = elementTop
-  //   // @ts-ignore
-  //   templatesStore.updateElement({id: _handleElement.id, props: _handleElement.toObject(propertiesToInclude)})
-  // }
-  
-  // isCroping.value = true
-  // canvas.selection = false
-  // const cropElement = new fabric.Rect({
-  //   // @ts-ignore
-  //   id: nanoid(15),
-  //   imageId: _handleElement.id,
-  //   name: ElementNames.CROP,
-  //   width: elementWidth,
-  //   height: elementHeight,
-  //   left,
-  //   top,
-  //   cornerColor: 'black',
-  //   fill: '',
-  //   scaleX: scaleX,
-  //   scaleY: scaleY,
-  //   stroke: '#555',
-  //   strokeWidth: 1,
-  //   evented: true,
-  //   selectable: true,
-  // })
-  // cropElement.controls.mt.visible = true
-  // cropElement.controls.mb.visible = true
-  // canvas.add(cropElement)
-  // canvas.setActiveObject(cropElement)
-  // mainStore.setCanvasObject(cropElement as RectElement)
-  // canvas.renderAll()
-  // fabricStore.handleChangeIsCroping(isCroping.value)
-  // cropElement.setCoords()
-  // setZindex(canvas)
-  // addMask(_handleElement, cropElement as CropElement)
+  console.log(handleElement.value)
+  if (!handleElement.value) return
+  handleElement.value.set({__isCropping: true})
+  canvas.renderAll()
 }
-
-// const addImageMask = (imageElement: ImageElement, cropElement: CropElement) => {
-//   const imageLeft = imageElement.left ? imageElement.left : 0, imageTop = imageElement.top ? imageElement.top : 0
-//   const imageWidth = imageElement.width ? imageElement.width : 0, imageHeight = imageElement.height ? imageElement.height : 0
-//   const innerLeftPoint = cropElement.getPointByOrigin('left', 'top')
-//   const interRIghtPoint = cropElement.getPointByOrigin('right', 'bottom')
-
-//   const outerLeftPoint = imageElement.getPointByOrigin('left', 'top')
-//   const outerRightPoint = imageElement.getPointByOrigin('right', 'bottom')
-
-//   const maskPath = `
-//   M${outerLeftPoint.x} ${outerLeftPoint.y} 
-//   L${outerRightPoint.x} ${outerLeftPoint.y} 
-//   L${outerRightPoint.x} ${outerRightPoint.y} 
-//   L${outerLeftPoint.x} ${outerRightPoint.y} 
-//   L${outerLeftPoint.x} ${outerLeftPoint.y} Z 
-
-//   M${innerLeftPoint.x} ${innerLeftPoint.y} 
-//   L${interRIghtPoint.x} ${innerLeftPoint.y} 
-//   L${interRIghtPoint.x} ${interRIghtPoint.y} 
-//   L${innerLeftPoint.x} ${interRIghtPoint.y} 
-//   L${innerLeftPoint.x} ${innerLeftPoint.y} Z`
-//   const cropMask = new fabric.Path(maskPath, {
-//     left: imageLeft - imageWidth / 2,
-//     top: imageTop - imageHeight / 2,
-//     name: 'mask',
-//     fill: 'pink',
-//     opacity: 0.9,
-//     selectable: false,
-//     evented: false,
-//     originX: 'left',
-//     originY: 'top',
-//   })
-//   canvas.add(cropMask)
-//   canvas.renderAll()
-//   setZindex(canvas)
-// }
 
 // 预设裁剪
 const presetImageClip = (shape: string, ratio = 0) => {

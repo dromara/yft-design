@@ -7,7 +7,6 @@ import { check } from '@/utils/check'
 import { nonid } from '@/utils/common'
 
 export class FabricCanvas extends Canvas {
-  declare readonly _serviceBrand: undefined
 
   public activeObject = shallowRef<Object>()
 

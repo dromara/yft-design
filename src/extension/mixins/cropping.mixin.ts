@@ -6,16 +6,14 @@ import { config, Object as FabricObject, Path, util, Canvas, Point, TPointerEven
 
 
 export function isolateObjectForEdit(context: FabricObject) {
-  const { canvas } = context;
+  const { canvas } = context
   if (!canvas) return
-  context.hoverCursor = FabricObject.prototype.hoverCursor;
+  context.hoverCursor = FabricObject.prototype.hoverCursor
   canvas.requestRenderAll();
-  const deselect = context.onDeselect;
-  // eslint-disable-next-line func-names
+  const deselect = context.onDeselect
   context.onDeselect = (...args: any) => {
-    // const index = canvas.getObjects().indexOf(context);
     deselect.call(context, ...args)
-    return true;
+    return true
   };
 }
   
