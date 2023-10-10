@@ -47,6 +47,7 @@ export const enum ClipPaths {
   STAR = 'star',
 }
 
+// M ${-width/2} ${-height/2} L ${width/2} ${-height/2} L ${width/2} ${height/2} L ${width/2} ${height/2} L ${-width/2} ${height/2} Z
 export const CLIPPATHS = {
   rect: {
     name: '矩形',

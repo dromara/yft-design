@@ -3,6 +3,7 @@ import { createTextboxDefaultControls } from '@/app/controls'
 import { fireCropImageEvent } from '../controls/cropping/cropping.controls.handlers'
 import { containsPoint } from '@/utils/utility'
 import { config, Object as FabricObject, Path, util, Canvas, Point, TPointerEventInfo, TPointerEvent } from 'fabric'
+import { CropImage } from '../object/CropImage'
 
 
 export function isolateObjectForEdit(context: FabricObject) {
@@ -74,8 +75,8 @@ function canvasMouseDown(e: TPointerEventInfo<TPointerEvent>) {
     }
     if (activeObject.cropPath) {
       const clipPath = new Path(activeObject.cropPath, {
-        left: -activeObject.width / 2,
-        top: -activeObject.height / 2,
+        left: -activeObject.width,
+        top: -activeObject.height,
       })
       console.log('clipPath:', clipPath)
       activeObject.set({clipPath, width: clipPath.width, height: clipPath.height})
@@ -267,68 +268,4 @@ export function addCropImageInteractions() {
     },
   }
   return cropping
-  // extend(prototype, cropping);
 }
-
-// export function extendWithCropImage(CropImage: fabric.Object) {
-//   Object.defineProperty(CropImage, 'isCropping', {
-//     get() {
-//       return !!this.__isCropping;
-//     },
-//     set(value: boolean) {
-//       console.log('value:', value)
-//       const fabricCanvas = this.canvas;
-//       if (!fabricCanvas) {
-//         this.__isCropping = false;
-//         return;
-//       }
-//       let { defaultCursor } = fabricCanvas;
-//       value = !!value;
-//       if (value === this.isCropping) return;
-//       this.__isCropping = value
-//       if (value) {
-//         defaultCursor = fabricCanvas.defaultCursor;
-//         fabricCanvas.defaultCursor = 'move';
-//         isolateObjectForEdit(this);
-//         this.lastEventTop = this.top;
-//         this.lastEventLeft = this.left;
-//         this.setupDragMatrix();
-//         this.bindCropModeHandlers();
-//         this.controls = croppingControlSet;
-//         if (this.flipX && !this.flipY) {
-//           this.controls = flipXCropControls;
-//         }
-//         if (this.flipY && !this.flipX) {
-//           this.controls = flipYCropControls;
-//         }
-//         if (this.flipX && this.flipY) {
-//           this.controls = flipXYCropControls;
-//         }
-//         if (this.scaleX != this.scaleY) {
-//           this.setControlsVisibility({tlS: false, trS: false, blS: false, brS: false});
-//         } 
-//         else {
-//           this.setControlsVisibility({tlS: true, trS: true, blS: true, brS: true});
-//         }
-//         this.setCoords();
-//         fabricCanvas.centeredKey = null;
-//         fabricCanvas.altActionKey = null;
-//         fabricCanvas.selection = false;
-//       } else {
-//         fabricCanvas.defaultCursor = defaultCursor;
-//         unisolateObjectForEdit(this);
-//         delete this.lastEventTop;
-//         delete this.lastEventLeft;
-//         this.unbindCropModeHandlers();
-//         fabricCanvas.centeredKey = fabric.Canvas.prototype.centeredKey;
-//         fabricCanvas.altActionKey = fabric.Canvas.prototype.altActionKey;
-//         fabricCanvas.selection = true;
-//         this.controls = createTextboxDefaultControls()
-//         this.setCoords();
-//         fireCropImageEvent(this);
-//       }
-//     },
-//   });
-
-//   // addCropImageInteractions(CropImage);
-// }

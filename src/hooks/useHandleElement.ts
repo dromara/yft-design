@@ -170,35 +170,44 @@ export default () => {
 
   const combineElements = () => {
     const [ canvas ] = useCanvas()
-    const activeObjects = canvas.getActiveObjects() as CanvasElement[]
+    const activeObjects = canvas.getActiveObjects()
     if (!activeObjects) return
     canvas.discardActiveObject()
-    mainStore.setCanvasObject(null)
-    const groupElement = new Group(activeObjects, { 
-      id: nanoid(10),
-      name: ElementNames.GROUP, 
-      interactive: true, 
-      subTargetCheck: true,
-    })
-    canvas.add(groupElement)
-    templatesStore.deleteElement(activeObjects.map(item => item.id))
-    templatesStore.addElement(groupElement.toObject(propertiesToInclude as any[]))
-    templatesStore.renderElement()
+    // 获取要插入的分组，在deleteLayer前获取，不然获取不到
+    // const insertGroup = activeObjects[0].getParent()
+    // const index = insertGroup._objects.indexOf(activeObjects[0])
+    // discardActiveObject 修复选中一个组内元素一个组外元素，打组位置偏移
+    canvas.discardActiveObject()
+    // 创建组
+    const group = new Group(
+      activeObjects.filter((obj, index, array) => {
+        const parent = obj.getParent(true)
+        return !parent || !array.includes(parent)
+      }).reverse(), {
+        id: nanoid(10),
+        name: ElementNames.GROUP, 
+        interactive: false, 
+        subTargetCheck: true,
+      }
+    )
+    // insertGroup.insertAt(index, group)
+    canvas.add(group)
     canvas.remove(...activeObjects)
     setZindex(canvas)
     canvas.renderAll()
+    templatesStore.modifedElement()
   }
 
   const intersectElements = () => {
     const [ canvas ] = useCanvas()
-    const activeObjects = canvas.getActiveObjects() as PathElement[]
+    const activeObjects = canvas.getActiveObjects()
     if (!activeObjects) return
     canvas.discardActiveObject()
     mainStore.setCanvasObject(null)
     if (activeObjects.length !== 2) return
     canvas.discardActiveObject()
     mainStore.setCanvasObject(null)
-    activeObjects[1].set({globalCompositeOperation: 'xor'})
+    activeObjects.map(item => item.set({globalCompositeOperation: 'xor'}))
     const groupElement = new Group(activeObjects, { 
       id: nanoid(10),
       name: ElementNames.GROUP,
