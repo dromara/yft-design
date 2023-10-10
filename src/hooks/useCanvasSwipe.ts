@@ -1,6 +1,6 @@
 import { tryOnScopeDispose } from '@vueuse/shared'
 import { reactive, ref, computed } from 'vue'
-import { useFabricEvent } from './useCanvasEvent'
+import { useCanvasEvent } from './useCanvasEvent'
 import type { TPointerEventInfo, TPointerEvent, Point } from 'fabric'
 
 
@@ -52,7 +52,7 @@ export function useFabricSwipe(options: UseSwipeOptions = {}) {
     isSwiping.value = false
   }
 
-  const stop = useFabricEvent({
+  const stop = useCanvasEvent({
     'mouse:down': mouseDown,
     'mouse:move': mouseMove,
     'mouse:up': mouseUp,

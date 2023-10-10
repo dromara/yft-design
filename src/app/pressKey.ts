@@ -7,8 +7,6 @@ import { useKeyboardStore } from '@/store'
 import { useActiveElement, toValue } from '@vueuse/core'
 
 
-
-
 type ToolOption = {
   defaultCursor: string
   skipTargetFind: boolean
@@ -78,8 +76,8 @@ export class PressKey extends Disposable {
           isSwiping.value = true
           vpt = canvas.viewportTransform
           this.handMoveActivate = true
-          this.applyOption('handMove')
-          canvas.setCursor('grab')
+          // this.applyOption('handMove')
+          // canvas.setCursor('grab')
         }
       },
       onSwipe: () => {
@@ -93,16 +91,9 @@ export class PressKey extends Disposable {
         })
       },
       onSwipeEnd: () => {
-        if (!this.handMoveActivate) return
-
         // 恢复鼠标指针
-        if (spaceKeyState.value) {
-          this.applyOption('handMove')
-        } 
-        else {
-          this.applyOption('move')
-        }
-
+        this.applyOption(spaceKeyState.value ? 'handMove' : 'move')
+        if (!this.handMoveActivate) return
         // 关闭 handMove
         if (!spaceKeyState.value) {
           this.handMoveActivate = false
@@ -118,17 +109,9 @@ export class PressKey extends Disposable {
     watch(
       computed(() => [spaceKeyState.value, activeElementHasInput.value].every((i) => toValue(i))),
       (space) => {
+        this.applyOption(space ? 'handMove' : 'move')
         if (isSwiping.value) return
-
         this.handMoveActivate = space
-
-        // 恢复鼠标指针
-        if (space) {
-          this.applyOption('handMove')
-        } 
-        else {
-          this.applyOption('move')
-        }
       },
     )
   }
