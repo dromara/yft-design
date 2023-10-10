@@ -74,7 +74,7 @@
 import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useMainStore, useTemplatesStore } from '@/store'
-import { CLIPPATHS } from '@/configs/images'
+import { CLIPPATHS, ClipPathType } from '@/configs/images'
 import { ImageElement } from '@/types/canvas'
 import { ratioClipOptions } from '@/configs/images'
 import { getImageDataURL } from '@/utils/image'
@@ -96,12 +96,12 @@ const handleElement = computed(() => canvasObject.value as ImageElement)
 // 打开自由裁剪
 const clipImage = () => {
   if (!handleElement.value) return
-  handleElement.value.set({__isCropping: true})
+  handleElement.value.set({__isCropping: true, clipPath: undefined, cropPath: undefined})
   canvas.renderAll()
 }
 
 // 预设裁剪
-const presetImageClip = (key: string, ratio = 0) => {
+const presetImageClip = (key: ClipPathType, ratio = 0) => {
   if (!handleElement.value) return
 
   // 纵横比裁剪（形状固定为矩形）
@@ -133,16 +133,9 @@ const presetImageClip = (key: string, ratio = 0) => {
   }
   // 形状裁剪（保持当前裁剪范围）
   else {
-    // @ts-ignore
-    const path = CLIPPATHS.key.createPath(100, 100)
-    handleElement.value.set({__isCropping: true, cropPath: path})
+    const path = CLIPPATHS[key].createPath(200, 200)
+    handleElement.value.set({__isCropping: true, cropPath: path, clipPath: undefined})
     canvas.renderAll()
-    // ({
-    //   id: handleElementId.value,
-    //   props: {
-    //     clip: { ..._handleElement.clip, shape, range: originClipRange }
-    //   },
-    // })
   }
 }
 

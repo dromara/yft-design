@@ -212,6 +212,27 @@ export const CLIPPATHS = {
   },
 }
 
+export type ClipPathType = 'rect' 
+| 'rect2' 
+| 'rect3' 
+| 'roundRect' 
+| 'ellipse' 
+| 'triangle' 
+| 'triangle2' 
+| 'triangle3' 
+| 'rhombus' 
+| 'pentagon'
+| 'hexagon'
+| 'heptagon'
+| 'octagon'
+| 'chevron'
+| 'point'
+| 'arrow'
+| 'parallelogram'
+| 'parallelogram2'
+| 'trapezoid'
+| 'trapezoid2'
+
 export const PatternImages = [
   { name: 'escheresque', url: new URL(`/src/assets/images/escheresque.png`, import.meta.url).href },
   { name: 'greyfloral', url: new URL(`/src/assets/images/greyfloral.png`, import.meta.url).href },
