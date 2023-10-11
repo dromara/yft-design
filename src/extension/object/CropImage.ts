@@ -66,14 +66,16 @@ export class CropImage extends Image {
   }
 
   setCropCoords() {
-    const left = this.left + this.width / 2 - 100
-    const top = this.top + this.height / 2 - 100
-    this.cropX = left - this.left
-    this.cropY = top - this.top
-    this.left = left - this.cropX
-    this.top = top - this.cropY
-    this.width = 200
-    this.height = 200
+    if (!this.clipPath) {
+      const left = this.left + this.width / 2 - 100
+      const top = this.top + this.height / 2 - 100
+      this.cropX = left - this.left
+      this.cropY = top - this.top
+      this.left = left - this.cropX
+      this.top = top - this.cropY
+      this.width = 200
+      this.height = 200
+    }
   }
 
   getOriginalElementWidth() {
