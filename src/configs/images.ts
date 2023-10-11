@@ -78,16 +78,28 @@ export const CLIPPATHS = {
     type: ClipPathTypes.RECT,
     radius: '10px',
     style: 'inset(0 0 0 0 round 10px 10px 10px 10px)',
-    createPath: (width: number, height: number) => {
-      return `M 50 0 L 150 0 Q 200 0 200 50 L 200 150 Q 200 200 150 200 L 50 200 Q 0 200 0 150 L 0 50 Q 0 0 50 0 Z`
+    createPath: (width: number, height: number, radius=50) => {
+      return `M ${-width/2 + radius} ${-height/2}
+              Q ${-width/2} ${-height/2} ${-width/2} ${-height/2 + radius}
+              L ${-width/2} ${height/2 - radius}
+              Q ${-width/2} ${height/2} ${-width/2 + radius} ${height/2}
+              L ${width/2 - radius} ${height/2}
+              Q ${width/2} ${height/2} ${width/2} ${height/2 - radius}
+              L ${width/2} ${-height/2 + radius}
+              Q ${width/2} ${-height/2} ${width/2 - radius} ${-height/2}
+              L ${-width/2 + radius} ${-height/2}
+              Z`
     },
   },
   ellipse: {
     name: '圆形',
     type: ClipPathTypes.ELLIPSE,
     style: 'ellipse(50% 50% at 50% 50%)',
-    createPath: (width: number, height: number) => {
-      return `M 100 0 A 50 50 0 1 1 100 200 A 50 50 0 1 1 100 0 Z`
+    createPath: (width: number, height: number, radius=100) => {
+      return `M ${radius} 0
+      A ${radius} ${radius} 0 1 0 ${-radius} 0
+      A ${radius} ${radius} 0 1 0 ${radius} 0
+      Z`
     },
   },
   triangle: {
