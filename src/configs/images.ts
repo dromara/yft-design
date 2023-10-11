@@ -55,7 +55,7 @@ export const CLIPPATHS = {
     radius: '0',
     style: '',
     createPath: (width: number, height: number) => {
-      return `M 0 0 L ${width * 0.8} 0 L ${width} ${height * 0.2} L ${width} ${height} L 0 ${height} Z`
+      return `M ${-width/2} ${-height/2} L ${width*0.3} ${-height/2} L ${width/2} ${-height*0.3} L ${width/2} ${height/2} L  ${-width/2} ${height/2} Z`
     },
   },
   rect2: {

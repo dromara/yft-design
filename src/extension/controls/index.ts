@@ -1,8 +1,9 @@
 import { ImageElement, LineElement, PolygonElement } from '@/types/canvas'
+import type { Transform, TOriginX, TOriginY } from 'fabric'
 import * as fabric from 'fabric'
 
 
-const getLocalPoint = ({ target, corner }: any, originX: string, originY: string, x: number, y: number) => {
+const getLocalPoint = ({ target, corner }: any, originX: TOriginX, originY: TOriginY, x: number, y: number) => {
   const control = target.controls[corner]
   const zoom = target.canvas?.getZoom() || 1
   const padding = (target.padding ? target.padding: 0) / zoom
@@ -59,7 +60,7 @@ export const changeCropY = (eventData: MouseEvent, transform: any, x: number, y:
   return false
 }
 
-export const changeWidth = (eventData: MouseEvent, transform: any, x: number, y: number) => {
+export const changeWidth = (eventData: MouseEvent, transform: Transform, x: number, y: number) => {
   const localPoint = getLocalPoint(transform, transform.originX, transform.originY, x, y);
   
   const { target } = transform
@@ -76,7 +77,7 @@ export const changeWidth = (eventData: MouseEvent, transform: any, x: number, y:
   return false;
 }
 
-export const changeHeight = (eventData: MouseEvent, transform: any, x: number, y: number) => {
+export const changeHeight = (eventData: MouseEvent, transform: Transform, x: number, y: number) => {
   const localPoint = getLocalPoint(transform, transform.originX, transform.originY, x, y);
   
   //  make sure the control changes width ONLY from it's side of target
@@ -94,7 +95,7 @@ export const changeHeight = (eventData: MouseEvent, transform: any, x: number, y
   return false;
 };
 
-export const changePoint = (eventData: MouseEvent, transform: any, x: number, y: number) => {
+export const changePoint = (eventData: MouseEvent, transform: Transform, x: number, y: number) => {
   const localPoint = getLocalPoint(transform, transform.originX, transform.originY, x, y);
   
   //  make sure the control changes width ONLY from it's side of target
@@ -112,9 +113,9 @@ export const changePoint = (eventData: MouseEvent, transform: any, x: number, y:
   return false;
 };
 
-function wrapWithFixedAnchor(actionHandler: any) {
+function wrapWithFixedAnchor(actionHandler: Function) {
 
-  return function(eventData: MouseEvent, transform: any, x: number, y: number) {
+  return function(eventData: MouseEvent, transform: Transform, x: number, y: number) {
     const target = transform.target
     const centerPoint = target.getCenterPoint()
     const constraint = target.translateToOriginPoint(centerPoint, transform.originX, transform.originY)
@@ -124,7 +125,7 @@ function wrapWithFixedAnchor(actionHandler: any) {
   };
 }
 
-function commonEventInfo(eventData: MouseEvent, transform: any, x: number, y: number) {
+function commonEventInfo(eventData: MouseEvent, transform: Transform, x: number, y: number) {
   return {
     e: eventData,
     transform: transform,
@@ -146,9 +147,9 @@ function fireEvent(eventName: string, options: any) {
   target.fire(eventName, options);
 }
 
-export const wrapWithFireEvent = (actionName: string,  actionHandler: any) : any => {
+export const wrapWithFireEvent = (actionName: string,  actionHandler: Function) : any => {
 
-  return function(eventData: MouseEvent, transform: any, x: number, y: number) {
+  return function(eventData: MouseEvent, transform: Transform, x: number, y: number) {
     const actionPerformed = actionHandler(eventData, transform, x, y);
     if (actionPerformed) {
       fireEvent(actionName, commonEventInfo(eventData, transform, x, y));

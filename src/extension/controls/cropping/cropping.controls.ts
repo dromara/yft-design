@@ -45,8 +45,7 @@ import {
   export const croppingControlSet = {
     tlS: new fabric.Control({
       x: -0.5, y: -0.5,
-      // @ts-ignore
-      name: 'tlS',
+      actionName: 'tlS',
       cursorStyleHandler: scaleCursorStyleHandler,
       positionHandler: imageCornerTL,
       actionHandler: scaleEquallyCropTL,
@@ -54,8 +53,7 @@ import {
     }),
     trS: new fabric.Control({
       x: 0.5, y: -0.5,
-      // @ts-ignore
-      name: 'trS',
+      actionName: 'trS',
       cursorStyleHandler: scaleCursorStyleHandler,
       positionHandler: imageCornerTR,
       actionHandler: scaleEquallyCropTR,
@@ -63,8 +61,7 @@ import {
     }),
     blS: new fabric.Control({
       x: -0.5, y: 0.5,
-      // @ts-ignore
-      name: 'blS',
+      actionName: 'blS',
       cursorStyleHandler: scaleCursorStyleHandler,
       positionHandler: imageCornerBL,
       actionHandler: scaleEquallyCropBL,
@@ -72,8 +69,7 @@ import {
     }),
     brS: new fabric.Control({
       x: 0.5, y: 0.5,
-      // @ts-ignore
-      name: 'brS',
+      actionName: 'brS',
       cursorStyleHandler: scaleCursorStyleHandler,
       positionHandler: imageCornerBR,
       actionHandler: scaleEquallyCropBR,
@@ -81,77 +77,68 @@ import {
     }),
     cropLeft: new fabric.Control({
       x: -0.5, y: 0,
-      // @ts-ignore
-      name: 'cropLeft',
+      actionName: 'cropLeft',
       render: renderCropML,
       actionHandler: cropFromLeft,
       angle: 90,
     }),
     cropRight: new fabric.Control({
       x: 0.5, y: 0,
-      // @ts-ignore
-      name: 'cropRight',
+      actionName: 'cropRight',
       render: renderCropMR,
       actionHandler: cropFromRight,
       angle: 90,
     }),
     cropTop: new fabric.Control({
       x: 0, y: -0.5,
-      // @ts-ignore
-      name: 'cropTop',
+      actionName: 'cropTop',
       render: renderCropMT,
       actionHandler: cropFromTop,
     }),
     cropBottom: new fabric.Control({
       x: 0, y: 0.5,
-      // @ts-ignore
-      name: 'cropBottom',
+      actionName: 'cropBottom',
       render: renderCropMB,
       actionHandler: cropFromBottom,
     }),
     cropCornerTL: new fabric.Control({
       x: -0.5, y: -0.5,
-      // @ts-ignore
-      name: 'cropCornerTL',
+      actionName: 'cropCornerTL',
       render: renderCropTL,
       actionHandler: cropFromTopLeft,
     }),
     cropCornerBL: new fabric.Control({
       x: -0.5, y: 0.5,
-      // @ts-ignore
-      name: 'cropCornerBL',
+      actionName: 'cropCornerBL',
       render: renderCropBL,
       angle: 270,
       actionHandler: cropFromBottomLeft,
     }),
     cropCornerBR: new fabric.Control({
       x: 0.5, y: 0.5,
-      // @ts-ignore
-      name: 'cropCornerBR',
+      actionName: 'cropCornerBR',
       render: renderCropBR,
       angle: 180,
       actionHandler: cropFromBottomRight,
     }),
     cropCornerTR: new fabric.Control({
       x: 0.5, y: -0.5,
-      // @ts-ignore
-      name: 'cropCornerTR',
+      actionName: 'cropCornerTR',
       render: renderCropTR,
       angle: 90,
       actionHandler: cropFromTopRight,
     }),
   };
   
-  const fabricObjectControls = fabric.Object.prototype.controls;
+  // const fabricObjectControls = fabric.Object.prototype.controls;
   
-  export const standardControlSet = fabricObjectControls;
+  export const standardControlSet = fabric.Object.prototype.controls;
   
   export const flipXCropControls = {
     tlS: new fabric.Control({
       x: -0.5,
       y: -0.5,
-      // @ts-ignore
-      name: 'tlS',
+      actionName: 'tlS',
       cursorStyleHandler: scaleCursorStyleHandler,
       positionHandler: imageCornerTR,
       actionHandler: scaleEquallyCropTR,
@@ -160,8 +147,7 @@ import {
     trS: new fabric.Control({
       x: 0.5,
       y: -0.5,
-      // @ts-ignore
-      name: 'trS',
+      actionName: 'trS',
       cursorStyleHandler: scaleCursorStyleHandler,
       positionHandler: imageCornerTL,
       actionHandler: scaleEquallyCropTL,
@@ -170,8 +156,7 @@ import {
     blS: new fabric.Control({
       x: -0.5,
       y: 0.5,
-      // @ts-ignore
-      name: 'blS',
+      actionName: 'blS',
       cursorStyleHandler: scaleCursorStyleHandler,
       positionHandler: imageCornerBR,
       actionHandler: scaleEquallyCropBR,
@@ -180,8 +165,7 @@ import {
     brS: new fabric.Control({
       x: 0.5,
       y: 0.5,
-      // @ts-ignore
-      name: 'brS',
+      actionName: 'brS',
       cursorStyleHandler: scaleCursorStyleHandler,
       positionHandler: imageCornerBL,
       actionHandler: scaleEquallyCropBL,
@@ -189,61 +173,53 @@ import {
     }),
     cropLeft: new fabric.Control({
       x: -0.5, y: 0,
-      // @ts-ignore
-      name: 'cropLeft',
+      actionName: 'cropLeft',
       render: renderCropML,
       actionHandler: cropFromLeftFlig,
       angle: 90,
     }),
     cropRight: new fabric.Control({
       x: 0.5, y: 0,
-      // @ts-ignore
-      name: 'cropRight',
+      actionName: 'cropRight',
       render: renderCropMR,
       actionHandler: cropFromRightFlig,
       angle: 90,
     }),
     cropTop: new fabric.Control({
       x: 0, y: -0.5,
-      // @ts-ignore
-      name: 'cropTop',
+      actionName: 'cropTop',
       render: renderCropMT,
       actionHandler: cropFromTop,
     }),
     cropBottom: new fabric.Control({
       x: 0, y: 0.5,
-      // @ts-ignore
-      name: 'cropBottom',
+      actionName: 'cropBottom',
       render: renderCropMB,
       actionHandler: cropFromBottom,
     }),
     cropCornerTL: new fabric.Control({
       x: -0.5, y: -0.5,
-      // @ts-ignore
-      name: 'cropCornerTL',
+      actionName: 'cropCornerTL',
       render: renderCropTL,
       actionHandler: cropFromTopLeft,
     }),
     cropCornerBL: new fabric.Control({
       x: -0.5, y: 0.5,
-      // @ts-ignore
-      name: 'cropCornerBL',
+      actionName: 'cropCornerBL',
       render: renderCropBL,
       angle: 270,
       actionHandler: cropFromBottomLeft,
     }),
     cropCornerBR: new fabric.Control({
       x: 0.5, y: 0.5,
-      // @ts-ignore
-      name: 'cropCornerBR',
+      actionName: 'cropCornerBR',
       render: renderCropBR,
       angle: 180,
       actionHandler: cropFromBottomRight,
     }),
     cropCornerTR: new fabric.Control({
       x: 0.5, y: -0.5,
-      // @ts-ignore
-      name: 'cropCornerTR',
+      actionName: 'cropCornerTR',
       render: renderCropTR,
       angle: 90,
       actionHandler: cropFromTopRight,
@@ -254,8 +230,7 @@ import {
     tlS: new fabric.Control({
       x: -0.5,
       y: -0.5,
-      // @ts-ignore
-      name: 'tlS',
+      actionName: 'tlS',
       cursorStyleHandler: scaleCursorStyleHandler,
       positionHandler: imageCornerBL,
       actionHandler: scaleEquallyCropBL,
@@ -264,8 +239,7 @@ import {
     trS: new fabric.Control({
       x: 0.5,
       y: -0.5,
-      // @ts-ignore
-      name: 'trS',
+      actionName: 'trS',
       cursorStyleHandler: scaleCursorStyleHandler,
       positionHandler: imageCornerBR,
       actionHandler: scaleEquallyCropBR,
@@ -274,8 +248,7 @@ import {
     blS: new fabric.Control({
       x: -0.5,
       y: 0.5,
-      // @ts-ignore
-      name: 'blS',
+      actionName: 'blS',
       cursorStyleHandler: scaleCursorStyleHandler,
       positionHandler: imageCornerTL,
       actionHandler: scaleEquallyCropTL,
@@ -284,8 +257,7 @@ import {
     brS: new fabric.Control({
       x: 0.5,
       y: 0.5,
-      // @ts-ignore
-      name: 'brS',
+      actionName: 'brS',
       cursorStyleHandler: scaleCursorStyleHandler,
       positionHandler: imageCornerTR,
       actionHandler: scaleEquallyCropTR,
@@ -293,61 +265,53 @@ import {
     }),
     cropLeft: new fabric.Control({
       x: -0.5, y: 0,
-      // @ts-ignore
-      name: 'cropLeft',
+      actionName: 'cropLeft',
       render: renderCropML,
       actionHandler: cropFromLeft,
       angle: 90,
     }),
     cropRight: new fabric.Control({
       x: 0.5, y: 0,
-      // @ts-ignore
-      name: 'cropRight',
+      actionName: 'cropRight',
       render: renderCropMR,
       actionHandler: cropFromRight,
       angle: 90,
     }),
     cropTop: new fabric.Control({
       x: 0, y: -0.5,
-      // @ts-ignore
-      name: 'cropTop',
+      actionName: 'cropTop',
       render: renderCropMT,
       actionHandler: cropFromTopFlig,
     }),
     cropBottom: new fabric.Control({
       x: 0, y: 0.5,
-      // @ts-ignore
-      name: 'cropBottom',
+      actionName: 'cropBottom',
       render: renderCropMB,
       actionHandler: cropFromBottomFlig,
     }),
     cropCornerTL: new fabric.Control({
       x: -0.5, y: -0.5,
-      // @ts-ignore
-      name: 'cropCornerTL',
+      actionName: 'cropCornerTL',
       render: renderCropTL,
       actionHandler: cropFromTopLeft,
     }),
     cropCornerBL: new fabric.Control({
       x: -0.5, y: 0.5,
-      // @ts-ignore
-      name: 'cropCornerBL',
+      actionName: 'cropCornerBL',
       render: renderCropBL,
       angle: 270,
       actionHandler: cropFromBottomLeft,
     }),
     cropCornerBR: new fabric.Control({
       x: 0.5, y: 0.5,
-      // @ts-ignore
-      name: 'cropCornerBR',
+      actionName: 'cropCornerBR',
       render: renderCropBR,
       angle: 180,
       actionHandler: cropFromBottomRight,
     }),
     cropCornerTR: new fabric.Control({
       x: 0.5, y: -0.5,
-      // @ts-ignore
-      name: 'cropCornerTR',
+      actionName: 'cropCornerTR',
       render: renderCropTR,
       angle: 90,
       actionHandler: cropFromTopRight,
@@ -358,8 +322,7 @@ import {
     tlS: new fabric.Control({
       x: -0.5,
       y: -0.5,
-      // @ts-ignore
-      name: 'tlS',
+      actionName: 'tlS',
       cursorStyleHandler: scaleCursorStyleHandler,
       positionHandler: imageCornerBR,
       actionHandler: scaleEquallyCropTLFlig,
@@ -368,8 +331,7 @@ import {
     trS: new fabric.Control({
       x: 0.5,
       y: -0.5,
-      // @ts-ignore
-      name: 'trS',
+      actionName: 'trS',
       cursorStyleHandler: scaleCursorStyleHandler,
       positionHandler: imageCornerBL,
       actionHandler: scaleEquallyCropTRFlig,
@@ -378,8 +340,7 @@ import {
     blS: new fabric.Control({
       x: -0.5,
       y: 0.5,
-      // @ts-ignore
-      name: 'blS',
+      actionName: 'blS',
       cursorStyleHandler: scaleCursorStyleHandler,
       positionHandler: imageCornerTR,
       actionHandler: scaleEquallyCropBLFlig,
@@ -388,8 +349,7 @@ import {
     brS: new fabric.Control({
       x: 0.5,
       y: 0.5,
-      // @ts-ignore
-      name: 'brS',
+      actionName: 'brS',
       cursorStyleHandler: scaleCursorStyleHandler,
       positionHandler: imageCornerTL,
       actionHandler: scaleEquallyCropBRFlig,
@@ -397,61 +357,53 @@ import {
     }),
     cropLeft: new fabric.Control({
       x: -0.5, y: 0,
-      // @ts-ignore
-      name: 'cropLeft',
+      actionName: 'cropLeft',
       render: renderCropML,
       actionHandler: cropFromLeftFlig,
       angle: 90,
     }),
     cropRight: new fabric.Control({
       x: 0.5, y: 0,
-      // @ts-ignore
-      name: 'cropRight',
+      actionName: 'cropRight',
       render: renderCropMR,
       actionHandler: cropFromRightFlig,
       angle: 90,
     }),
     cropTop: new fabric.Control({
       x: 0, y: -0.5,
-      // @ts-ignore
-      name: 'cropTop',
+      actionName: 'cropTop',
       render: renderCropMT,
       actionHandler: cropFromTopFlig,
     }),
     cropBottom: new fabric.Control({
       x: 0, y: 0.5,
-      // @ts-ignore
-      name: 'cropBottom',
+      actionName: 'cropBottom',
       render: renderCropMB,
       actionHandler: cropFromBottomFlig,
     }),
     cropCornerTL: new fabric.Control({
       x: -0.5, y: -0.5,
-      // @ts-ignore
-      name: 'cropCornerTL',
+      actionName: 'cropCornerTL',
       render: renderCropTL,
       actionHandler: cropFromTopLeft,
     }),
     cropCornerBL: new fabric.Control({
       x: -0.5, y: 0.5,
-      // @ts-ignore
-      name: 'cropCornerBL',
+      actionName: 'cropCornerBL',
       render: renderCropBL,
       angle: 270,
       actionHandler: cropFromBottomLeft,
     }),
     cropCornerBR: new fabric.Control({
       x: 0.5, y: 0.5,
-      // @ts-ignore
-      name: 'cropCornerBR',
+      actionName: 'cropCornerBR',
       render: renderCropBR,
       angle: 180,
       actionHandler: cropFromBottomRight,
     }),
     cropCornerTR: new fabric.Control({
       x: 0.5, y: -0.5,
-      // @ts-ignore
-      name: 'cropCornerTR',
+      actionName: 'cropCornerTR',
       render: renderCropTR,
       angle: 90,
       actionHandler: cropFromTopRight,

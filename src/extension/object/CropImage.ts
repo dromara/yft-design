@@ -1,7 +1,8 @@
-import { TClassProperties } from '@/types/typedefs'
-import { croppingControlSet, flipXCropControls, flipXYCropControls, flipYCropControls } from '@/extension/controls/cropping/cropping.controls'
+import { CropLinesColor } from '@/configs/canvas'
 import { addCropImageInteractions, isolateObjectForEdit } from '@/extension/mixins/cropping.mixin'
-import { Image, Point, Object as FabricObject, config, util, classRegistry, TPointerEventInfo, TPointerEvent, ImageProps } from 'fabric'
+import { croppingControlSet, flipXCropControls, flipXYCropControls, flipYCropControls } from '@/extension/controls/cropping/cropping.controls'
+import { Image, Point, Object as FabricObject, config, util, classRegistry, TPointerEventInfo, TPointerEvent, ImageProps, TClassProperties } from 'fabric'
+
 
 type ImageSource = HTMLImageElement | HTMLVideoElement | HTMLCanvasElement
 
@@ -34,16 +35,18 @@ export class CropImage extends Image {
 
   public onMousedbclickEvent() {
     const fabricCanvas = this.canvas
+    // this.left = 507.6300286964581
+    // this.top = 291.04788846390625
+    // this.cropX = 240.3292078406276
+    // this.cropY = 118.19736712300316
+    // this.width = 220.08444171166116
+    // this.height = 130.6164426818055
     if (!fabricCanvas) return
     fabricCanvas.defaultCursor = 'move';
-    isolateObjectForEdit(this);
-    // @ts-ignore
-    this.lastEventTop = this.top;
-    // @ts-ignore
+    isolateObjectForEdit(this)
+    this.lastEventTop = this.top
     this.lastEventLeft = this.left;
-    // @ts-ignore
     this.setupDragMatrix();
-    // @ts-ignore
     this.bindCropModeHandlers();
     this.controls = croppingControlSet;
     if (this.flipX && !this.flipY) {
@@ -147,7 +150,7 @@ export class CropImage extends Image {
     }
     super._render(ctx);
     this._drawCroppingLines(ctx)
-    this._drawCroppingPath(ctx, this.cropPath)
+    this._drawCroppingPath(ctx)
     ctx.restore();
   }
 
@@ -161,8 +164,7 @@ export class CropImage extends Image {
     ctx.save();
     ctx.lineWidth = 1;
     ctx.globalAlpha = 1;
-    // @ts-ignore
-    ctx.strokeStyle = this.cropLinesColor;
+    ctx.strokeStyle = CropLinesColor;
     ctx.beginPath();
     ctx.moveTo(-w / 2 + w / 3, -h / 2);
     ctx.lineTo(-w / 2 + w / 3, h / 2);
@@ -177,15 +179,14 @@ export class CropImage extends Image {
     ctx.restore();
   }
 
-  _drawCroppingPath(ctx: CanvasRenderingContext2D, path?: string) {
-    if (!this.__isCropping || !this.canvas || !path) return
+  _drawCroppingPath(ctx: CanvasRenderingContext2D) {
+    if (!this.__isCropping || !this.canvas || !this.cropPath) return
     const zoom = this.canvas.getZoom() * config.devicePixelRatio;
     ctx.save();
     ctx.lineWidth = 1;
     ctx.globalAlpha = 1;
-    // @ts-ignore
-    ctx.strokeStyle = this.cropLinesColor;
-    ctx.stroke(new Path2D(path));
+    ctx.strokeStyle = CropLinesColor;
+    ctx.stroke(new Path2D(this.cropPath));
     ctx.scale(1 / (this.scaleX * zoom), 1 / (this.scaleY * zoom));
     ctx.restore();
   }

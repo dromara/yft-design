@@ -1,8 +1,7 @@
 import * as fabric from 'fabric';
-import type { Object as FabricObject, Canvas } from 'fabric';
+import type { Object as FabricObject, Canvas, TPointerEvent, Transform, TransformActionHandler, TAxis } from 'fabric';
 
-import { TAxis } from '@/types/typedefs';
-import { TPointerEvent, Transform, TransformActionHandler } from '@/types/EventTypeDefs';
+// import { TAxis } from '@/types/typedefs';
 import { invertOrigin, isLocked, isTransformCentered } from './util';
 
 type ScaleTransform = Transform & {
@@ -70,13 +69,7 @@ export const scaleObjectFromCorner: TransformActionHandler<ScaleTransform> = (
   return scaleObject(eventData, transform, x, y);
 };
 
-function scaleObject(
-  eventData: TPointerEvent,
-  transform: ScaleTransform,
-  x: number,
-  y: number,
-  options: { by?: ScaleBy } = {}
-) {
+function scaleObject(eventData: TPointerEvent, transform: ScaleTransform, x: number, y: number, options: { by?: ScaleBy } = {}) {
   const target = transform.target,
     by = options.by,
     scaleProportionally = scaleIsProportional(eventData, target),

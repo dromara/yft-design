@@ -88,6 +88,7 @@ export declare module 'fabric' {
     Pick<Rect, 'rx' | 'ry'>
 
   export declare class Canvas {
+    __targetlessCanvasDrag?: boolean
     _objects: FabricObject[]
     ref: {
       zoom: Ref<number>
@@ -150,6 +151,13 @@ export declare module 'fabric' {
     type: string
     isType<T = boolean>(...types: string[]): this is T
     hideOnLayer: boolean /** 在图层上隐藏 */
+  }
+
+  export declare class Image {
+    lastEventTop: number
+    lastEventLeft: number
+    setupDragMatrix(): void
+    bindCropModeHandlers(): void
   }
 
   type ExportedKeys =

@@ -14,6 +14,9 @@ export const Separator = '.'
 // 固定元素
 export const WorkSpaceName = 'YFT-DRAW'
 
+// 
+export const CropLinesColor = '#f6f7fa'
+
 // 数据库id
 export const LocalStorageDiscardedKey = 'YFT_DISCARD_DB'
 

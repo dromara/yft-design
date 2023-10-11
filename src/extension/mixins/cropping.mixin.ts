@@ -1,7 +1,7 @@
+import { containsPoint } from '@/utils/utility'
 import { createTextboxDefaultControls } from '@/app/controls'
 import { fireCropImageEvent } from '../controls/cropping/cropping.controls.handlers'
-import { containsPoint } from '@/utils/utility'
-import { config, Object as FabricObject, Path, util, Canvas, Point, TPointerEventInfo, TPointerEvent } from 'fabric'
+import { config, Object as FabricObject, Path, util, Canvas, Point, TPointerEventInfo, TPointerEvent, Image, } from 'fabric'
 
 
 export function isolateObjectForEdit(context: FabricObject) {
@@ -27,6 +27,7 @@ export function unisolateObjectForEdit(context: FabricObject) {
     return false;
   };
 }
+
 
 function canvasMouseUp() {
   // @ts-ignore
@@ -66,10 +67,8 @@ function canvasMouseDown(e: TPointerEventInfo<TPointerEvent>) {
       return
     }
     if (activeObject.cropPath) {
-      const clipPath = new Path(activeObject.cropPath, {
-        left: -100,
-        top: -100,
-      })
+      const clipPath = new Path(activeObject.cropPath)
+      clipPath.set({left: -clipPath.width/2, top: -clipPath.height/2})
       console.log('clipPath:', clipPath)
       activeObject.set({clipPath, width: clipPath.width, height: clipPath.height})
     }
@@ -84,8 +83,8 @@ function canvasMouseDown(e: TPointerEventInfo<TPointerEvent>) {
  
 export function canvasMouseMove({ e }: TPointerEventInfo<MouseEvent>) {
    // @ts-ignore
-  const activeObject = this.getActiveObject()
-  if (!activeObject.canvas.__targetlessCanvasDrag || e.type !== 'mousemove' || !activeObject) {
+  const activeObject = this.getActiveObject() as Image
+  if (!activeObject.canvas?.__targetlessCanvasDrag || e.type !== 'mousemove' || !activeObject) {
     return;
   }
   const point = {
@@ -101,8 +100,9 @@ export function canvasMouseMove({ e }: TPointerEventInfo<MouseEvent>) {
   activeObject.cropX -= transformedMovement.x;
   activeObject.cropY -= transformedMovement.y;
   activeObject.fire('moving');
-   activeObject.canvas.requestRenderAll();
+  activeObject.canvas.requestRenderAll();
 }
+
 
 export function addCropImageInteractions() {
   const cropping: any = {
@@ -200,8 +200,7 @@ export function addCropImageInteractions() {
     },
 
     // this is a canvas level event. so `THIS` is the canvas
-    // @ts-ignore
-    cropBeforeHelper({ transform }) {
+    cropBeforeHelper({ transform }: any) {
       // the idea here is to see how the image is positioned
       // and fix the corner that should not move.
       const { action, target } = transform;
@@ -219,6 +218,7 @@ export function addCropImageInteractions() {
       if (!this.isCropping) {
         return;
       }
+      console.log('this.lastTop:', this.lastTop)
       const lastTop = this.lastTop === undefined ? this.lastEventTop : this.lastTop;
       const lastLeft = this.lastLeft === undefined ? this.lastEventLeft : this.lastLeft;
       const changeVector = new Point(lastLeft - this.left, lastTop - this.top);

@@ -2,6 +2,7 @@ import { util } from 'fabric';
 
 const degreesToRadians = util.degreesToRadians;
 
+// 绘制裁切control 左上，左下，右上，右下
 // @ts-ignore
 function renderCropCorner(ctx, left, top, styleOverride, fabricObject) {
   // @ts-ignore
@@ -51,8 +52,8 @@ function renderCropMiddle(ctx, left, top, styleOverride, fabricObject) {
   ctx.restore();
 }
 
-// @ts-ignore
-function renderWithShadows(x, y, fn) {
+
+function renderWithShadows(x: number, y: number, fn: Function) {
   // @ts-ignore
   return function (ctx, left, top, styleOverride, fabricObject) {
     ctx.save();
