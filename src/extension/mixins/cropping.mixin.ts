@@ -1,9 +1,7 @@
-// import * as fabric from 'fabric'
 import { createTextboxDefaultControls } from '@/app/controls'
 import { fireCropImageEvent } from '../controls/cropping/cropping.controls.handlers'
 import { containsPoint } from '@/utils/utility'
 import { config, Object as FabricObject, Path, util, Canvas, Point, TPointerEventInfo, TPointerEvent } from 'fabric'
-import { CropImage } from '../object/CropImage'
 
 
 export function isolateObjectForEdit(context: FabricObject) {
@@ -56,27 +54,21 @@ function canvasMouseDown(e: TPointerEventInfo<TPointerEvent>) {
       { x: blS.x, y: blS.y }
     ];
     if (activeObject.__corner) return
-    // @ts-ignore
-    const pointer = this.getPointer(e, true);
+    const pointer = activeObject.canvas.getPointer(e, true);
     const checkClickInside = containsPoint(pointer, vs)
     if (checkClickInside) {
       activeObject.resetCropModeAnchors();
-      // @ts-ignore
-      this.__targetlessCanvasDrag = true;
-      // @ts-ignore
-      this.__defaultCursor = this.defaultCursor;
-      // @ts-ignore
-      this.defaultCursor = 'move';
-      // @ts-ignore
-      this.selectable = false;
-      // @ts-ignore
-      this.evented = false;
+      activeObject.canvas.__targetlessCanvasDrag = true;
+      activeObject.canvas.__defaultCursor = activeObject.canvas.defaultCursor;
+      activeObject.canvas.defaultCursor = 'move';
+      activeObject.canvas.selectable = false;
+      activeObject.canvas.evented = false;
       return
     }
     if (activeObject.cropPath) {
       const clipPath = new Path(activeObject.cropPath, {
-        left: -activeObject.width,
-        top: -activeObject.height,
+        left: -100,
+        top: -100,
       })
       console.log('clipPath:', clipPath)
       activeObject.set({clipPath, width: clipPath.width, height: clipPath.height})
@@ -84,37 +76,32 @@ function canvasMouseDown(e: TPointerEventInfo<TPointerEvent>) {
     
     activeObject.onDeselectEvent()
     activeObject.isCropping = false
-    // @ts-ignore
-    this.defaultCursor = 'default'
-    // @ts-ignore
-    this.renderAll()
+    activeObject.canvas.defaultCursor = 'default'
+    activeObject.canvas.renderAll()
   }
 }
 
  
 export function canvasMouseMove({ e }: TPointerEventInfo<MouseEvent>) {
    // @ts-ignore
-  const fabricObject = this.getActiveObject();
-   // @ts-ignore
-  if (!this.__targetlessCanvasDrag || e.type !== 'mousemove' || !fabricObject) {
+  const activeObject = this.getActiveObject()
+  if (!activeObject.canvas.__targetlessCanvasDrag || e.type !== 'mousemove' || !activeObject) {
     return;
   }
   const point = {
     x: e.movementX,
     y: e.movementY,
   };
-  const objM = fabricObject.calcTransformMatrix();
-   // @ts-ignore
-  const canvasM = this.viewportTransform;
+  const objM = activeObject.calcTransformMatrix();
+  const canvasM = activeObject.canvas.viewportTransform;
   const totalM = util.invertTransform(util.multiplyTransformMatrices(canvasM, objM));
   totalM[4] = 0;
   totalM[5] = 0;
   const transformedMovement = util.transformPoint(point, totalM);
-  fabricObject.cropX -= transformedMovement.x;
-  fabricObject.cropY -= transformedMovement.y;
-  fabricObject.fire('moving');
-   // @ts-ignore
-  this.requestRenderAll();
+  activeObject.cropX -= transformedMovement.x;
+  activeObject.cropY -= transformedMovement.y;
+  activeObject.fire('moving');
+   activeObject.canvas.requestRenderAll();
 }
 
 export function addCropImageInteractions() {

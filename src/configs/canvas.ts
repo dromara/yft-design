@@ -14,7 +14,6 @@ export const Separator = '.'
 // 固定元素
 export const WorkSpaceName = 'YFT-DRAW'
 
-
 // 数据库id
 export const LocalStorageDiscardedKey = 'YFT_DISCARD_DB'
 
@@ -32,8 +31,6 @@ export const WorkSpaceSafeColor = 'yellow'
 
 // 画布公共参数
 export const WorkSpaceCommonOption = {
-  // originX: 'left',
-  // originY: 'top',
   selectable: false,
   transparentCorners: false,
   evented: false,

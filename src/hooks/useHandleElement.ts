@@ -132,7 +132,7 @@ export default () => {
 
   const moveElement = (command: string, step = 2) => {
     const [ canvas ] = useCanvas()
-    const activeObject = canvas.getActiveObject() as CanvasElement
+    const activeObject = canvas.getActiveObject() as FabricObject
     if (!activeObject || !activeObject.left || !activeObject.top) return
     const left = activeObject.left, top = activeObject.top
     switch (command) {
@@ -158,7 +158,6 @@ export default () => {
         break
       default: break
     }
-    // @ts-ignore
     templatesStore.updateElement({ id: activeObject.id, props: activeObject.toObject(propertiesToInclude as any[]) })
   }
 
