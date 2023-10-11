@@ -35,12 +35,6 @@ export class CropImage extends Image {
 
   public onMousedbclickEvent() {
     const fabricCanvas = this.canvas
-    // this.left = 507.6300286964581
-    // this.top = 291.04788846390625
-    // this.cropX = 240.3292078406276
-    // this.cropY = 118.19736712300316
-    // this.width = 220.08444171166116
-    // this.height = 130.6164426818055
     if (!fabricCanvas) return
     fabricCanvas.defaultCursor = 'move';
     isolateObjectForEdit(this)
@@ -186,6 +180,18 @@ export class CropImage extends Image {
     ctx.lineWidth = 1;
     ctx.globalAlpha = 1;
     ctx.strokeStyle = CropLinesColor;
+    // 527.2586           top 277.5423           cropX: 0                  cropY: 0                 width: 740                height: 340
+    // 488.28194590861983 top 285.00083093234105 cropX: 223.39963540126905 cropY: 106.1032520598729 width: 215.24742101470156 height: 142.71055774493595
+    if (this.clipPath) {
+      const left = this.left + this.width / 2 - 100
+      const top = this.top + this.height / 2 - 100
+      this.cropX = left - this.left
+      this.cropY = top - this.top
+      this.left = left - this.cropX
+      this.top = top - this.cropY
+      this.width = 200
+      this.height = 200
+    }
     ctx.stroke(new Path2D(this.cropPath));
     ctx.scale(1 / (this.scaleX * zoom), 1 / (this.scaleY * zoom));
     ctx.restore();
