@@ -308,7 +308,6 @@ function imageCornerTL(dim, finalMatrix, fabricObject /* currentControl */) {
     x: (-fabricObject.width / 2 - fabricObject.cropX),
     y: (-fabricObject.height / 2 - fabricObject.cropY),
   }
-  console.log(_finalMatrix, 'imageCornerTL:', fabricObject.left, 'top', fabricObject.top, 'cropX:', fabricObject.cropX, 'cropY:', fabricObject.cropY, 'width:', fabricObject.width, 'height:', fabricObject.height)
   return fabric.util.transformPoint(point, _finalMatrix);
 }
 
@@ -322,7 +321,6 @@ function imageCornerTR(dim, finalMatrix, fabricObject /* currentControl */) {
     x: (fullWidth - fabricObject.width / 2 - fabricObject.cropX),
     y: (-fabricObject.height / 2 - fabricObject.cropY),
   }
-  console.log('imageCornerTR:', fabricObject.left, 'top', fabricObject.top, 'cropX:', fabricObject.cropX, 'cropY:', fabricObject.cropY, 'width:', fabricObject.width, 'height:', fabricObject.height)
   return fabric.util.transformPoint(point, _finalMatrix);
 }
 

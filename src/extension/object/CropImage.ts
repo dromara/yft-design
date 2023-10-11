@@ -58,10 +58,22 @@ export class CropImage extends Image {
     else {
       this.setControlsVisibility({tlS: true, trS: true, blS: true, brS: true});
     }
+    this.setCropCoords()
     this.setCoords();
     fabricCanvas.centeredKey = null;
     fabricCanvas.altActionKey = null;
     fabricCanvas.selection = false;
+  }
+
+  setCropCoords() {
+    const left = this.left + this.width / 2 - 100
+    const top = this.top + this.height / 2 - 100
+    this.cropX = left - this.left
+    this.cropY = top - this.top
+    this.left = left - this.cropX
+    this.top = top - this.cropY
+    this.width = 200
+    this.height = 200
   }
 
   getOriginalElementWidth() {
@@ -180,18 +192,6 @@ export class CropImage extends Image {
     ctx.lineWidth = 1;
     ctx.globalAlpha = 1;
     ctx.strokeStyle = CropLinesColor;
-    // 527.2586           top 277.5423           cropX: 0                  cropY: 0                 width: 740                height: 340
-    // 488.28194590861983 top 285.00083093234105 cropX: 223.39963540126905 cropY: 106.1032520598729 width: 215.24742101470156 height: 142.71055774493595
-    if (this.clipPath) {
-      const left = this.left + this.width / 2 - 100
-      const top = this.top + this.height / 2 - 100
-      this.cropX = left - this.left
-      this.cropY = top - this.top
-      this.left = left - this.cropX
-      this.top = top - this.cropY
-      this.width = 200
-      this.height = 200
-    }
     ctx.stroke(new Path2D(this.cropPath));
     ctx.scale(1 / (this.scaleX * zoom), 1 / (this.scaleY * zoom));
     ctx.restore();

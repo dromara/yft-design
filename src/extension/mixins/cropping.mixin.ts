@@ -69,10 +69,12 @@ function canvasMouseDown(e: TPointerEventInfo<TPointerEvent>) {
     if (activeObject.cropPath) {
       const clipPath = new Path(activeObject.cropPath)
       clipPath.set({left: -clipPath.width/2, top: -clipPath.height/2})
-      console.log('clipPath:', clipPath)
+      // console.log('clipPath:', clipPath)
+      // const clipPath = activeObject.clipPath
       activeObject.set({clipPath, width: clipPath.width, height: clipPath.height})
+      // activeObject.left = activeObject.cropLeft
+      // activeObject.top = activeObject.cropTop
     }
-    
     activeObject.onDeselectEvent()
     activeObject.isCropping = false
     activeObject.canvas.defaultCursor = 'default'
