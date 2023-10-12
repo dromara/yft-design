@@ -1,5 +1,4 @@
-import { CropLinesColor } from '@/configs/canvas'
-import { CLIPPATHS, ClipPathType } from '@/configs/images'
+import { ClipPathType } from '@/configs/images'
 import { addCropImageInteractions, isolateObjectForEdit } from '@/extension/mixins/cropping.mixin'
 import { croppingControlSet, flipXCropControls, flipXYCropControls, flipYCropControls } from '@/extension/controls/cropping/cropping.controls'
 import { Image, Point, Path, Object as FabricObject, config, util, classRegistry, TPointerEventInfo, TPointerEvent, ImageProps, TClassProperties } from 'fabric'
@@ -81,7 +80,6 @@ export class CropImage extends Image {
   }
 
   setCropCoords(width: number, height: number) {
-    
     if (!this.clipPath) {
       const left = this.left + this.getOriginalElementWidth() / 2 - width / 2
       const top = this.top + this.getOriginalElementHeight() / 2 - height / 2
@@ -89,9 +87,7 @@ export class CropImage extends Image {
       this.cropY = top - this.top
       this.width = width
       this.height = height
-      
     }
-    // console.log('this.clipPath:', this.clipPath, 'left:', this.left, 'top:', this.top, 'cropX:', this.cropX, 'cropY:', this.cropY)
   }
 
   getOriginalElementWidth() {
@@ -175,44 +171,6 @@ export class CropImage extends Image {
     super._render(ctx);
     this._drawCroppingLines(ctx)
     this._drawCroppingPath(ctx)
-    ctx.restore();
-  }
-
-  _drawCroppingLines(ctx: CanvasRenderingContext2D) {
-    if (!this.__isCropping || !this.canvas) {
-      return;
-    }
-    const w = this.width;
-    const h = this.height;
-    const zoom = this.canvas.getZoom() * config.devicePixelRatio;
-    ctx.save();
-    ctx.lineWidth = 1;
-    ctx.globalAlpha = 1;
-    ctx.strokeStyle = CropLinesColor;
-    ctx.beginPath();
-    ctx.moveTo(-w / 2 + w / 3, -h / 2);
-    ctx.lineTo(-w / 2 + w / 3, h / 2);
-    ctx.moveTo(-w / 2 + 2 * w / 3, -h / 2);
-    ctx.lineTo(-w / 2 + 2 * w / 3, h / 2);
-    ctx.moveTo(-w / 2, -h / 2 + h / 3);
-    ctx.lineTo(w / 2, -h / 2 + h / 3);
-    ctx.moveTo(-w / 2, -h / 2 + 2 * h / 3);
-    ctx.lineTo(w / 2, -h / 2 + 2 * h / 3);
-    ctx.scale(1 / (this.scaleX * zoom), 1 / (this.scaleY * zoom));
-    ctx.stroke();
-    ctx.restore();
-  }
-
-  _drawCroppingPath(ctx: CanvasRenderingContext2D) {
-    if (!this.__isCropping || !this.canvas || !this.cropKey) return
-    const zoom = this.canvas.getZoom() * config.devicePixelRatio;
-    ctx.save();
-    ctx.lineWidth = 1;
-    ctx.globalAlpha = 1;
-    ctx.strokeStyle = CropLinesColor;
-    this.cropPath = CLIPPATHS[this.cropKey].createPath(this.width, this.height)
-    ctx.stroke(new Path2D(this.cropPath));
-    ctx.scale(1 / (this.scaleX * zoom), 1 / (this.scaleY * zoom));
     ctx.restore();
   }
 

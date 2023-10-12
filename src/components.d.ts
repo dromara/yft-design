@@ -158,6 +158,8 @@ export declare module 'fabric' {
     lastEventLeft: number
     setupDragMatrix(): void
     bindCropModeHandlers(): void
+    _drawCroppingLines(ctx: CanvasRenderingContext2D): void
+    _drawCroppingPath(ctx: CanvasRenderingContext2D): void
   }
 
   type ExportedKeys =

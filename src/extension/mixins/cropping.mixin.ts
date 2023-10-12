@@ -1,4 +1,5 @@
 import { containsPoint } from '@/utils/utility'
+import { CLIPPATHS, ClipPathType } from '@/configs/images'
 import { createTextboxDefaultControls } from '@/app/controls'
 import { fireCropImageEvent } from '@/extension/controls/cropping/cropping.controls.handlers'
 import { config, Object as FabricObject, Path, util, Canvas, Point, TPointerEventInfo, TPointerEvent, Image, } from 'fabric'
@@ -68,7 +69,7 @@ function canvasMouseDown(e: TPointerEventInfo<TPointerEvent>) {
     }
     if (activeObject.cropPath) {
       const clipPath = new Path(activeObject.cropPath)
-      clipPath.set({left: -clipPath.width/2, top: -clipPath.height/2})
+      // clipPath.set({left: -clipPath.width/2, top: -clipPath.height/2})
       activeObject.set({clipPath, width: clipPath.width, height: clipPath.height})
     }
     activeObject.onDeselectEvent()
@@ -159,7 +160,9 @@ export function addCropImageInteractions() {
     },
 
     _drawCroppingLines(ctx: CanvasRenderingContext2D) {
-      if (!this.isCropping || (this.canvas && (this.canvas.isCropping))) return
+      if (!this.__isCropping || !this.canvas || this.cropKey) {
+        return;
+      }
       const w = this.width;
       const h = this.height;
       const zoom = this.canvas.getZoom() * config.devicePixelRatio;
@@ -178,6 +181,19 @@ export function addCropImageInteractions() {
       ctx.lineTo(w / 2, -h / 2 + 2 * h / 3);
       ctx.scale(1 / (this.scaleX * zoom), 1 / (this.scaleY * zoom));
       ctx.stroke();
+      ctx.restore();
+    },
+
+    _drawCroppingPath(ctx: CanvasRenderingContext2D) {
+      if (!this.__isCropping || !this.canvas || !this.cropKey) return
+      const zoom = this.canvas.getZoom() * config.devicePixelRatio;
+      ctx.save();
+      ctx.lineWidth = 1;
+      ctx.globalAlpha = 1;
+      ctx.strokeStyle = this.cropLinesColor;;
+      this.cropPath = CLIPPATHS[this.cropKey as ClipPathType].createPath(this.width, this.height)
+      ctx.stroke(new Path2D(this.cropPath));
+      ctx.scale(1 / (this.scaleX * zoom), 1 / (this.scaleY * zoom));
       ctx.restore();
     },
 

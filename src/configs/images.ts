@@ -96,9 +96,10 @@ export const CLIPPATHS = {
     type: ClipPathTypes.ELLIPSE,
     style: 'ellipse(50% 50% at 50% 50%)',
     createPath: (width: number, height: number, radius=100) => {
-      return `M ${radius} 0
-      A ${radius} ${radius} 0 1 0 ${-radius} 0
-      A ${radius} ${radius} 0 1 0 ${radius} 0
+      const size = Math.min(width, height)
+      return `M ${size/2} 0
+      A ${size/2} ${size/2} 0 1 0 ${-size/2} 0
+      A ${size/2} ${size/2} 0 1 0 ${size/2} 0
       Z`
     },
   },
