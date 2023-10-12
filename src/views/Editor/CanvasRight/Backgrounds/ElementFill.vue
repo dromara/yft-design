@@ -256,7 +256,7 @@ import { GradientColorLibs } from '@/configs/colorGradient'
 import { ShadingColorLibs, ShadingLigntColors } from '@/configs/colorShading'
 import { GradientCoords } from '@/types/elements'
 import { ShadingBackground, ShadingColorLib } from '@/types/elements'
-import { BackgroundElement, CanvasElement } from '@/types/canvas'
+import { BackgroundElement, CanvasElement, TextboxElement } from '@/types/canvas'
 import { getRandomNum } from '@/utils/common'
 import { getImageDataURL } from '@/utils/image'
 import trianglify from '@/plugins/trianglify/trianglify'
@@ -325,6 +325,7 @@ const background = computed(() => {
     return {
       fillType: 0,
       fill: handleElement.value.fill,
+      color: (handleElement.value as TextboxElement).color
     } as BackgroundElement
   }
   return canvasObject.value.background
@@ -402,7 +403,8 @@ const changeBackgroundType = (type: number) => {
 const updateBackground = (props: Partial<BackgroundElement>) => {
   const [ canvas ] = useCanvas()
   if (!canvasObject.value) return
-  canvasObject.value.set({fill: props.fill, color: props.color, fillType: background.value.fillType, background: {...background.value, ...props}})
+  const color = props.color ? props.color : (handleElement.value as TextboxElement).color
+  canvasObject.value.set({fill: props.fill, color, fillType: background.value.fillType, background: {...background.value, ...props}})
   canvas.renderAll()
   templatesStore.modifedElement()
 }
@@ -486,7 +488,8 @@ const generateGradientBackground = () => {
     coords: coords,
     offsetX: gradientOffsetX.value * width,
     offsetY: gradientOffsetY.value * height,
-    gradientTransform: [rotateCos, rotateSin, -1 * rotateSin, rotateCos, 0, 0]
+    gradientTransform: [rotateCos, rotateSin, -1 * rotateSin, rotateCos, 0, 0],
+    gradientUnits: 'pixels'
   })
   updateBackground({fill: gradient, opacity: gradientOpacity.value})
 }
