@@ -1,15 +1,15 @@
 <template>
-  <div class="text-style-panel">    
+  <div class="text-style-panel">
     <el-row>
       <el-col :span="12">
-        <el-select v-model="elementFontFamily" @change="handleElementFontFamily">
+        <el-select v-model="elementFontFamily" placement="left" @change="handleElementFontFamily">
           <el-option-group v-for="group in fontOptionGroups" :key="group.label" :label="group.label">
             <el-option v-for="item in group.options" :key="item" :value="item.value" :label="item.label" :style="{fontFamily: item.value}"></el-option>
           </el-option-group>
         </el-select>
       </el-col>
       <el-col :span="12">
-        <el-select v-model="handleElement.fontSize" @change="handleElementFontSize">
+        <el-select v-model="handleElement.fontSize" placement="left" @change="handleElementFontSize">
           <el-option v-for="item in FontSizeLibs" :key="item" :label="item" :value="item"></el-option>
         </el-select>
       </el-col>

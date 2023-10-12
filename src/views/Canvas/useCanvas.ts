@@ -10,7 +10,7 @@ import { WheelScroll } from '@/app/wheelScroll'
 import { CheckRuler } from '@/app/checkRuler'
 
 import { FabricCanvas } from '@/app/fabricCanvas'
-import { createObjectDefaultControls } from '@/app/controls'
+import { defaultControls } from '@/app/fabricControls'
 import { useTemplatesStore } from '@/store'
 import { CanvasElement } from '@/types/canvas'
 import { WorkSpaceDrawType, WorkSpaceCommonType } from '@/configs/canvas'
@@ -36,7 +36,7 @@ const initConf = () => {
   FabricObject.ownDefaults.rotatingPointOffset = 5
   FabricObject.ownDefaults.lockUniScaling = true
   FabricObject.ownDefaults.hasRotatingPoint = true
-  FabricObject.ownDefaults.controls = createObjectDefaultControls()
+  FabricObject.ownDefaults.controls = defaultControls()
   // Object.prototype.controls.mt.visible = false
   // Object.prototype.controls.mb.visible = false
   // console.log('FabricObject.ownDefaults.controls :', FabricObject.ownDefaults )

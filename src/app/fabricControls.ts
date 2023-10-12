@@ -99,7 +99,7 @@ const getHornControl = {
   actionName: 'scaling',
 }
 
-export const createObjectDefaultControls = (): TControlSet => ({
+export const defaultControls = (): TControlSet => ({
   size: new Control({
     x: 0,
     y: 0.5,
@@ -145,38 +145,37 @@ export const createObjectDefaultControls = (): TControlSet => ({
       ctx.fillText(text, 0, 1)
       ctx.restore()
     },
-    // positionHandler: (dim, finalMatrix, fabricObject: FabricObject, currentControl) => {
-    //   console.log('fabricObject:', fabricObject, fabricObject.canvas?.upperCanvasEl)
-    //   const activeObject = fabricObject.canvas?.getActiveObject()
+    positionHandler: (dim, finalMatrix, fabricObject: FabricObject, currentControl) => {
+      const activeObject = fabricObject.canvas?.getActiveObject instanceof Function ? fabricObject.canvas?.getActiveObject() : null
       
-    //   if (activeObject && activeObject === fabricObject) {
-    //     const angle = fabricObject.getTotalAngle()
+      if (activeObject && activeObject === fabricObject) {
+        const angle = fabricObject.getTotalAngle()
 
-    //     const angleInRadians = angle * PiBy180
+        const angleInRadians = angle * PiBy180
 
-    //     const x = Math.sin(angleInRadians)
-    //     const y = Math.cos(angleInRadians)
+        const x = Math.sin(angleInRadians)
+        const y = Math.cos(angleInRadians)
 
-    //     if (Math.abs(x) >= Math.abs(y)) {
-    //       const sign = Math.sign(x)
-    //       currentControl.x = sign / 2
-    //       currentControl.y = 0
-    //       currentControl.offsetX = sign * 14
-    //       currentControl.offsetY = 0
-    //     } else {
-    //       const sign = Math.sign(y)
-    //       currentControl.x = 0
-    //       currentControl.y = sign / 2
-    //       currentControl.offsetX = 0
-    //       currentControl.offsetY = sign * 14
-    //     }
+        if (Math.abs(x) >= Math.abs(y)) {
+          const sign = Math.sign(x)
+          currentControl.x = sign / 2
+          currentControl.y = 0
+          currentControl.offsetX = sign * 14
+          currentControl.offsetY = 0
+        } else {
+          const sign = Math.sign(y)
+          currentControl.x = 0
+          currentControl.y = sign / 2
+          currentControl.offsetX = 0
+          currentControl.offsetY = sign * 14
+        }
 
-    //     // 更新其它corners大小，放到这里一起更新，来防止多次运行
-    //     setCornersSize(fabricObject)
-    //   }
+        // 更新其它corners大小，放到这里一起更新，来防止多次运行
+        setCornersSize(fabricObject)
+      }
 
-    //   return positionHandler(dim, finalMatrix, fabricObject, currentControl)
-    // },
+      return positionHandler(dim, finalMatrix, fabricObject, currentControl)
+    },
   }),
 
   tlr: new Control({
@@ -282,7 +281,7 @@ const changeWidth = controlsUtils.wrapWithFireEvent(
   controlsUtils.wrapWithFixedAnchor(controlsUtils.changeWidth),
 )
 
-export const createResizeControls = (): TControlSet => ({
+export const resizeControls = (): TControlSet => ({
   mr: new Control({
     x: 0.5,
     y: 0,
@@ -301,7 +300,7 @@ export const createResizeControls = (): TControlSet => ({
   }),
 })
 
-export const createTextboxDefaultControls = (): TControlSet => ({
-  ...createObjectDefaultControls(),
-  ...createResizeControls(),
+export const textboxControls = (): TControlSet => ({
+  ...defaultControls(),
+  ...resizeControls(),
 })

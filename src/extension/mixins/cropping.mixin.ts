@@ -1,6 +1,6 @@
 import { containsPoint } from '@/utils/utility'
 import { CLIPPATHS, ClipPathType } from '@/configs/images'
-import { createTextboxDefaultControls } from '@/app/controls'
+import { defaultControls } from '@/app/fabricControls'
 import { fireCropImageEvent } from '@/extension/controls/cropping/cropping.controls.handlers'
 import { config, Object as FabricObject, Path, util, Canvas, Point, TPointerEventInfo, TPointerEvent, Image, } from 'fabric'
 
@@ -143,7 +143,7 @@ export function addCropImageInteractions() {
       fabricCanvas.centeredKey = Canvas.prototype.centeredKey;
       fabricCanvas.altActionKey = Canvas.prototype.altActionKey;
       fabricCanvas.selection = true;
-      this.controls = createTextboxDefaultControls()
+      this.controls = defaultControls()
       this.setCoords();
       fireCropImageEvent(this);
     },
