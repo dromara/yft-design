@@ -1,4 +1,5 @@
 import { CropLinesColor } from '@/configs/canvas'
+import { CLIPPATHS, ClipPathType } from '@/configs/images'
 import { addCropImageInteractions, isolateObjectForEdit } from '@/extension/mixins/cropping.mixin'
 import { croppingControlSet, flipXCropControls, flipXYCropControls, flipYCropControls } from '@/extension/controls/cropping/cropping.controls'
 import { Image, Point, Path, Object as FabricObject, config, util, classRegistry, TPointerEventInfo, TPointerEvent, ImageProps, TClassProperties } from 'fabric'
@@ -8,7 +9,9 @@ type ImageSource = HTMLImageElement | HTMLVideoElement | HTMLCanvasElement
 
 export class CropImage extends Image {
   public isCropping?: false
+  public cropKey?: ClipPathType
   public cropPath?: string
+  public cropSize?: number
   
   constructor(element: ImageSource, options?: FabricObject<ImageProps>) {
     super(element, { filters: [], ...options });
@@ -64,22 +67,17 @@ export class CropImage extends Image {
     fabricCanvas.selection = false;
   }
 
-  get _cropPath() {
-    return this.cropPath
+  get _cropKey() {
+    return this.cropKey
   }
 
-  set _cropPath(value) {
-    
-    if (this.cropPath !== value && value) {
-      // const clipPath = new Path(value)
-      // clipPath.set({left: -clipPath.width/2, top: -clipPath.height/2})
-      // console.log('this.cropX:', this.cropX, this.cropY)
+  set _cropKey(key) {
+    this.cropSize = Math.min(this.width, this.height)
+    if (this.cropKey !== key && key) {
       this.clipPath = undefined
-      // this.cropX = 0
-      // this.cropY = 0
     }
-    this.cropPath = value
-    this.setCropCoords(200, 200)
+    this.cropKey = key
+    this.setCropCoords(this.cropSize, this.cropSize)
   }
 
   setCropCoords(width: number, height: number) {
@@ -206,12 +204,13 @@ export class CropImage extends Image {
   }
 
   _drawCroppingPath(ctx: CanvasRenderingContext2D) {
-    if (!this.__isCropping || !this.canvas || !this.cropPath) return
+    if (!this.__isCropping || !this.canvas || !this.cropKey) return
     const zoom = this.canvas.getZoom() * config.devicePixelRatio;
     ctx.save();
     ctx.lineWidth = 1;
     ctx.globalAlpha = 1;
     ctx.strokeStyle = CropLinesColor;
+    this.cropPath = CLIPPATHS[this.cropKey].createPath(this.width, this.height)
     ctx.stroke(new Path2D(this.cropPath));
     ctx.scale(1 / (this.scaleX * zoom), 1 / (this.scaleY * zoom));
     ctx.restore();

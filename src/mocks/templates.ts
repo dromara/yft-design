@@ -541,7 +541,7 @@ export const Templates: Template[] = [
         "globalCompositeOperation": "source-over",
         "skewX": 0,
         "skewY": 0,
-        "src": "http://127.0.0.1:5173/src/assets/images/index.png",
+        "src": new URL(`/src/assets/images/index.png`, import.meta.url).href,
         "crossOrigin": "anonymous",
         "filters": []
       }

@@ -1,6 +1,6 @@
 import { containsPoint } from '@/utils/utility'
 import { createTextboxDefaultControls } from '@/app/controls'
-import { fireCropImageEvent } from '../controls/cropping/cropping.controls.handlers'
+import { fireCropImageEvent } from '@/extension/controls/cropping/cropping.controls.handlers'
 import { config, Object as FabricObject, Path, util, Canvas, Point, TPointerEventInfo, TPointerEvent, Image, } from 'fabric'
 
 
@@ -69,11 +69,7 @@ function canvasMouseDown(e: TPointerEventInfo<TPointerEvent>) {
     if (activeObject.cropPath) {
       const clipPath = new Path(activeObject.cropPath)
       clipPath.set({left: -clipPath.width/2, top: -clipPath.height/2})
-      // console.log('clipPath:', clipPath)
-      // const clipPath = activeObject.clipPath
       activeObject.set({clipPath, width: clipPath.width, height: clipPath.height})
-      // activeObject.left = activeObject.cropLeft
-      // activeObject.top = activeObject.cropTop
     }
     activeObject.onDeselectEvent()
     activeObject.isCropping = false
@@ -220,7 +216,6 @@ export function addCropImageInteractions() {
       if (!this.isCropping) {
         return;
       }
-      console.log('this.lastTop:', this.lastTop)
       const lastTop = this.lastTop === undefined ? this.lastEventTop : this.lastTop;
       const lastLeft = this.lastLeft === undefined ? this.lastEventLeft : this.lastLeft;
       const changeVector = new Point(lastLeft - this.left, lastTop - this.top);
