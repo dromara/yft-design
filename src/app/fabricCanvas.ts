@@ -59,6 +59,9 @@ export class FabricCanvas extends Canvas {
     if (!target.id) {
       target.set({id: nonid(8)})
     }
+    if (check.isTextObject(target)) {
+      target.set({color: target.fill})
+    }
     if (check.isCollection(target)) {
       target._objects.forEach((obj) => {
         this.setDefaultAttr(obj)

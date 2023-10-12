@@ -192,3 +192,5 @@ export declare module 'fabric' {
 export declare namespace fabric {
   export * from 'fabric'
 }
+
+export declare function loadFontData(fontFamily: string): any;

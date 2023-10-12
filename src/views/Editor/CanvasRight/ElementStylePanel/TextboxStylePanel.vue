@@ -22,12 +22,12 @@
             <el-popover trigger="click" placement="bottom" :width="265" @click.stop>
               <template #reference>
                 <el-button class="font-color">
-                  <TextColorButton :color="handleElement.fill">
+                  <TextColorButton :color="handleElement.color">
                     <IconText />
                   </TextColorButton>
                 </el-button>
               </template>
-              <ColorPicker :modelValue="handleElement.fill" @update:modelValue="(color: string) => updateFontColor(color)"/>
+              <ColorPicker :modelValue="handleElement.color" @update:modelValue="(color: string) => updateFontColor(color)"/>
             </el-popover>
           </div>
         </el-tooltip>
@@ -180,14 +180,14 @@ import { FontSizeLibs, LineHeightLibs, CharSpaceLibs } from '@/configs/texts'
 import { WEB_FONTS } from '@/configs/fonts'
 import { TextboxElement } from '@/types/canvas'
 import { FontGroupOption } from '@/types/elements'
-import useCreateElement from "@/hooks/useCreateElement"
-import * as localFonts from '@/utils/localFonts'
+import { loadFont } from '@/utils/localFonts'
 import opentype from "opentype.js";
 import ElementStroke from '../Components/ElementStroke.vue'
 import ElementShadow from '../Components/ElementShadow.vue'
 import ElementOpacity from '../Components/ElementOpacity.vue'
 import ElementPatterns from '../Components/ElementPatterns.vue'
 import ElementFill from '../Backgrounds/ElementFill.vue'
+import useCreateElement from "@/hooks/useCreateElement"
 import useCanvas from '@/views/Canvas/useCanvas'
 
 
@@ -195,7 +195,6 @@ const mainStore = useMainStore()
 const templatesStore = useTemplatesStore()
 const { canvasObject, systemFonts } = storeToRefs(mainStore)
 const { createPathElement } = useCreateElement()
-const { loadFontData } = localFonts
 const [ canvas ] = useCanvas()
 const handleElement = computed(() => canvasObject.value as TextboxElement)
 const elementGrapheme = computed(() => handleElement.value.splitByGrapheme)
@@ -233,7 +232,7 @@ const handleElementFontSize = (fontSize: number) => {
 
 // 修改字体颜色
 const updateFontColor = (fill: string) => {
-  handleElement.value.set({fill})
+  handleElement.value.set({fill, color: fill})
   templatesStore.modifedElement()
   canvas.renderAll()
 }
@@ -346,7 +345,7 @@ const handleElementCurve = async () => {
   if (WEB_FONTS.filter(item => item.value === hasFontFamily.value)[0]) {
     fontElement = await opentype.load(`/src/assets/fonts/${hasFontFamily.value}.ttf`)
   } else {
-    const fontData = await loadFontData(hasFontFamily.value)
+    const fontData = await loadFont(hasFontFamily.value)
     if (!fontData) return
     const fontBlob = await fontData.blob()
     const fontBuffer = await fontBlob.arrayBuffer()

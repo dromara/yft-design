@@ -20,7 +20,7 @@ export default () => {
   const mainStore = useMainStore()
   const templatesStore = useTemplatesStore()
   const { setZindex } = useCanvasZindex()
-  const { rightState } = storeToRefs(mainStore)
+  const { rightState, systemFonts } = storeToRefs(mainStore)
 
 
   const createTextElement = (fontSize: number, textStyle = 'transverse', textHollow = false) => {
@@ -31,7 +31,7 @@ export default () => {
       left: centerPoint.x,
       top: centerPoint.y,
       fontSize,
-      fontFamily: WEB_FONTS[0].value,
+      fontFamily: systemFonts.value[0].value,
       fillType: 0,
       hasControls: true,
       hasBorders: true,
@@ -108,7 +108,6 @@ export default () => {
     const [ canvas ] = useCanvas()
     const points = [ { x: 0, y: 0 }, { x: 100, y: 0 } ]
     const polygonElement = new fabric.Polygon(points, {
-      // @ts-ignore
       id: nanoid(10),
       left: centerPoint.x,
       top: centerPoint.y,

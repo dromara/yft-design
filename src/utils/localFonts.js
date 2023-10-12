@@ -34,7 +34,7 @@ export async function showStatus() {
   // elemStatus.innerText = statusMessage;
 }
 
-export async function loadFontData(fontFamily) {
+export async function loadFont(fontFamily) {
   let font
   try {
     const fonts = await window.queryLocalFonts();
@@ -101,4 +101,3 @@ export async function getFormat(fontdata) {
   }
   return outlineFormat;
 }
-

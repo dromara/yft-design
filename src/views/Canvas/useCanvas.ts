@@ -22,7 +22,7 @@ let canvas: null | Canvas = null
 
 // 初始化配置
 const initConf = () => {
-  FabricObject.prototype.objectCaching = false
+  FabricObject.ownDefaults.objectCaching = false
   FabricObject.ownDefaults.borderColor = 'blue'
   FabricObject.ownDefaults.cornerColor = 'white'
   FabricObject.ownDefaults.cornerStrokeColor = '#c0c0c0'

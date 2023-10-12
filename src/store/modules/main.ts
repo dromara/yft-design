@@ -9,7 +9,7 @@ import { CanvasElement } from '@/types/canvas'
 import useCanvas from '@/views/Canvas/useCanvas'
 
 export interface MainState {
-  canvasObject: FabricObject | null
+  canvasObject: CanvasElement | null
   hoveredObject: FabricObject | undefined 
   leavedObject: FabricObject | undefined 
   clonedObject: FabricObject | null
@@ -83,7 +83,7 @@ export const useMainStore = defineStore('main', {
       this.activeElementIdList = activeElementIdList
     },
     
-    setCanvasObject(canvasObject: FabricObject | null) {
+    setCanvasObject(canvasObject: CanvasElement | null) {
       this.canvasObject = canvasObject
     },
 
@@ -99,7 +99,6 @@ export const useMainStore = defineStore('main', {
       const [ canvas ] = useCanvas()
       if (!canvas) return
       const activeObject = canvas._activeObject as CanvasElement | null
-      // this.setCanvasObject(activeObject)
     },
     // setHandleElementId(handleElementId: string) {
     //   this.handleElementId = handleElementId

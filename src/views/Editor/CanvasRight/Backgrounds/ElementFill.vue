@@ -402,7 +402,7 @@ const changeBackgroundType = (type: number) => {
 const updateBackground = (props: Partial<BackgroundElement>) => {
   const [ canvas ] = useCanvas()
   if (!canvasObject.value) return
-  canvasObject.value.set({fill: props.fill, fillType: background.value.fillType, background: {...background.value, ...props}})
+  canvasObject.value.set({fill: props.fill, color: props.color, fillType: background.value.fillType, background: {...background.value, ...props}})
   canvas.renderAll()
   templatesStore.modifedElement()
 }
