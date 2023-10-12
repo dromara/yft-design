@@ -135,7 +135,7 @@ const presetImageClip = (key: ClipPathType, ratio = 0) => {
   // 形状裁剪（保持当前裁剪范围）
   else {
     const path = CLIPPATHS[key].createPath(200, 200)
-    handleElement.value.set({__isCropping: true, cropPath: path})
+    handleElement.value.set({__isCropping: true, _cropPath: path})
     canvas.renderAll()
   }
 }

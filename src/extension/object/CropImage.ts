@@ -1,7 +1,7 @@
 import { CropLinesColor } from '@/configs/canvas'
 import { addCropImageInteractions, isolateObjectForEdit } from '@/extension/mixins/cropping.mixin'
 import { croppingControlSet, flipXCropControls, flipXYCropControls, flipYCropControls } from '@/extension/controls/cropping/cropping.controls'
-import { Image, Point, Object as FabricObject, config, util, classRegistry, TPointerEventInfo, TPointerEvent, ImageProps, TClassProperties } from 'fabric'
+import { Image, Point, Path, Object as FabricObject, config, util, classRegistry, TPointerEventInfo, TPointerEvent, ImageProps, TClassProperties } from 'fabric'
 
 
 type ImageSource = HTMLImageElement | HTMLVideoElement | HTMLCanvasElement
@@ -58,24 +58,42 @@ export class CropImage extends Image {
     else {
       this.setControlsVisibility({tlS: true, trS: true, blS: true, brS: true});
     }
-    this.setCropCoords()
     this.setCoords();
     fabricCanvas.centeredKey = null;
     fabricCanvas.altActionKey = null;
     fabricCanvas.selection = false;
   }
 
-  setCropCoords() {
+  get _cropPath() {
+    return this.cropPath
+  }
+
+  set _cropPath(value) {
+    
+    if (this.cropPath !== value && value) {
+      // const clipPath = new Path(value)
+      // clipPath.set({left: -clipPath.width/2, top: -clipPath.height/2})
+      // console.log('this.cropX:', this.cropX, this.cropY)
+      this.clipPath = undefined
+      // this.cropX = 0
+      // this.cropY = 0
+    }
+    this.cropPath = value
+    this.setCropCoords(200, 200)
+  }
+
+  setCropCoords(width: number, height: number) {
+    
     if (!this.clipPath) {
-      const left = this.left + this.width / 2 - 100
-      const top = this.top + this.height / 2 - 100
+      const left = this.left + this.getOriginalElementWidth() / 2 - width / 2
+      const top = this.top + this.getOriginalElementHeight() / 2 - height / 2
       this.cropX = left - this.left
       this.cropY = top - this.top
-      this.left = left - this.cropX
-      this.top = top - this.cropY
-      this.width = 200
-      this.height = 200
+      this.width = width
+      this.height = height
+      
     }
+    // console.log('this.clipPath:', this.clipPath, 'left:', this.left, 'top:', this.top, 'cropX:', this.cropX, 'cropY:', this.cropY)
   }
 
   getOriginalElementWidth() {
