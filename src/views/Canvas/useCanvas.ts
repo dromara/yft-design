@@ -33,9 +33,9 @@ const initConf = () => {
   FabricObject.ownDefaults.centeredScaling = false
   FabricObject.ownDefaults.centeredRotation = true
   FabricObject.ownDefaults.transparentCorners = false
-  FabricObject.ownDefaults.rotatingPointOffset = 5
+  FabricObject.ownDefaults.rotatingPointOffset = 1
   FabricObject.ownDefaults.lockUniScaling = true
-  FabricObject.ownDefaults.hasRotatingPoint = true
+  FabricObject.ownDefaults.hasRotatingPoint = false
   FabricObject.ownDefaults.controls = defaultControls()
   // Object.prototype.controls.mt.visible = false
   // Object.prototype.controls.mb.visible = false

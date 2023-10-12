@@ -11,7 +11,6 @@ import * as fabric from "fabric"
 import useCenter from '@/views/Canvas/useCenter'
 import useCanvas from '@/views/Canvas/useCanvas'
 import useCanvasZindex from './useCanvasZindex'
-import { WEB_FONTS } from '@/configs/fonts'
 
 
 

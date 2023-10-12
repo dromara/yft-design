@@ -31,7 +31,6 @@ export const useKeyboardStore = defineStore('keyboard', {
       this.shiftKeyState = active
     },
     setSpaceKeyState(active: boolean) {
-      console.log('active:', active)
       this.spaceKeyState = active
     }
   },
