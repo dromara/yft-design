@@ -106,7 +106,9 @@ export default () => {
     const { centerPoint } = useCenter()
     const [ canvas ] = useCanvas()
     const points = [ { x: 0, y: 0 }, { x: 100, y: 0 } ]
-    const polygonElement = new fabric.Polygon(points, {
+    const Polygon = classRegistry.getClass('Polygon')
+
+    const polygonElement = new Polygon(points, {
       id: nanoid(10),
       left: centerPoint.x,
       top: centerPoint.y,
