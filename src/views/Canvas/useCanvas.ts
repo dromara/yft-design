@@ -1,5 +1,5 @@
 import { storeToRefs } from 'pinia'
-import { Canvas, Object as FabricObject, CanvasOptions } from 'fabric'
+import { Canvas, Object as FabricObject, CanvasOptions, Textbox } from 'fabric'
 import { useFabricStore } from '@/store/modules/fabric'
 import { watch } from 'vue'
 import { useElementBounding } from '@vueuse/core'
@@ -37,6 +37,10 @@ const initConf = () => {
   FabricObject.ownDefaults.lockUniScaling = true
   FabricObject.ownDefaults.hasRotatingPoint = false
   FabricObject.ownDefaults.controls = defaultControls()
+
+  Object.assign(Textbox.ownDefaults, {
+    controls: defaultControls()
+  })
   // Object.prototype.controls.mt.visible = false
   // Object.prototype.controls.mb.visible = false
   // console.log('FabricObject.ownDefaults.controls :', FabricObject.ownDefaults )
