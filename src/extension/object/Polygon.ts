@@ -1,8 +1,8 @@
-import { Object as FabricObject, Polygon as OriginPolygon, classRegistry, TPointerEventInfo, TPointerEvent, SerializedPolylineProps, TOptions, FabricObjectProps } from 'fabric'
+import { Object as FabricObject, Polygon as OriginPolygon, classRegistry, TPointerEventInfo, TPointerEvent, FabricObjectProps, XY } from 'fabric'
 
 export class Polygon extends OriginPolygon {
 
-  constructor(points?: SerializedPolylineProps['points'], options?: TOptions<FabricObjectProps>) {
+  constructor(points?: XY[], options?: Partial<FabricObjectProps>) {
     super(points, options)
     this.on('mousedblclick', this.doubleClickHandler.bind(this))
   }
@@ -41,8 +41,9 @@ export class Polygon extends OriginPolygon {
    * 双击后启用interactive，离开组后关闭
    */
   public doubleClickHandler(e: TPointerEventInfo<TPointerEvent>) {
+    console.log('dbclick')
     if (!this.canvas || !e.target || e.target !== this) return
-
+    console.log('dbclick')
     // 启用
     this.set({interactive: true, objectCaching: false})
 
