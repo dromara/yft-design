@@ -125,7 +125,7 @@ export interface CropElement extends Rect, CommenElement {
 }
 
 export interface GroupElement extends Group, CommenElement {
-  isShow?: boolean
+  isShow: boolean
   objects: FabricObject[]
   _objects: FabricObject[]
 }

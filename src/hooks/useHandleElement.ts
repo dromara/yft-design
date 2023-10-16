@@ -72,7 +72,7 @@ export default () => {
         const obj = item as CanvasElement
         obj.id = nanoid(15)
         obj.name = item.type
-        canvas.add(obj)
+        canvas.add(obj as FabricObject)
         setZindex(canvas)
         templatesStore.modifedElement()
       })
@@ -81,13 +81,13 @@ export default () => {
     else {
       clonedObj.id = nanoid(15)
       clonedObj.name = clonedObj.type
-      canvas.add(clonedObj)
+      canvas.add(clonedObj as FabricObject)
       setZindex(canvas)
       templatesStore.modifedElement()
     }
     clonedObject.value.top = top
     clonedObject.value.left = left
-    canvas.setActiveObject(clonedObj)
+    canvas.setActiveObject(clonedObj as FabricObject)
     canvas.renderAll()
   }
 
@@ -119,13 +119,13 @@ export default () => {
       }
       else {
         if (element.type === ElementNames.TEXTBOX && deleteTextbox(element as TextboxElement)) return
-        element.group.remove(element)
+        element.group.remove(element as FabricObject)
       }
     }
     if (element.type === ElementNames.TEXTBOX && deleteTextbox(element as TextboxElement)) return
     canvas.discardActiveObject()
     mainStore.setCanvasObject(null)
-    canvas.remove(element)
+    canvas.remove(element as FabricObject)
     canvas.renderAll()
     templatesStore.modifedElement()
   }
@@ -213,16 +213,16 @@ export default () => {
     const [ canvas ] = useCanvas()
     const activeObject = canvas.getActiveObject() as GroupElement
     if (!activeObject) return
-    const objects = activeObject.removeAll() as FabricObject[]
+    const objects = activeObject.removeAll()
     canvas.discardActiveObject()
     mainStore.setCanvasObject(null)
     if (activeObject.group) {
       activeObject.group.add(...objects)
-      activeObject.group.remove(activeObject)
+      activeObject.group.remove(activeObject as FabricObject)
     }
     else {
       canvas.add(...objects)
-      canvas.remove(activeObject)
+      canvas.remove(activeObject as FabricObject)
     }
     templatesStore.modifedElement()
     setZindex(canvas)
@@ -248,7 +248,7 @@ export default () => {
     const elements = canvas.getObjects().filter(item => !WorkSpaceCommonType.includes((item as CanvasElement).id))
     let element = elements.filter(obj => (obj as CanvasElement).id === eid)[0] as CanvasElement
     if (!element) {
-      return findElement(eid, elements as CanvasElement[])
+      return findElement(eid, elements as FabricObject[])
     }
     return element
   }
@@ -276,7 +276,7 @@ export default () => {
     const [ canvas ] = useCanvas()
     const element = queryElement(eid)
     if (!element) return
-    canvas.setActiveObject(element)
+    canvas.setActiveObject(element as FabricObject)
     canvas.renderAll()
   }
 
@@ -291,8 +291,8 @@ export default () => {
     templatesStore.modifedElement()
   }
 
-  const showElement = (item: GroupElement) => {
-    const element = queryElement(item.id) as GroupElement
+  const showElement = (eid: string) => {
+    const element = queryElement(eid) as GroupElement
     if (!element) return 
     element.isShow = !element.isShow
     templatesStore.modifedElement()
@@ -303,7 +303,7 @@ export default () => {
     if (activeObject && activeObject.id === eid) return
     const element = queryElement(eid)
     if (!element) return
-    mainStore.setHoveredObject(element)
+    mainStore.setHoveredObject(element as FabricObject)
   }
 
   const mouseleaveElement = (eid: string) => {
@@ -312,7 +312,7 @@ export default () => {
     if (activeObject && activeObject.id === eid) return
     const element = queryElement(eid)
     if (!element) return
-    mainStore.setLeaveddObject(element)
+    mainStore.setLeaveddObject(element as FabricObject)
   }
 
   const cancelElement = () => {
@@ -320,25 +320,6 @@ export default () => {
     mainStore.setCanvasObject(null)
     canvas.discardActiveObject()
     canvas.renderAll()
-  }
-
-  const frontElement = () => {
-    const [ canvas ] = useCanvas()
-    if (!canvasObject.value) return
-    canvas.bringObjectToFront(canvasObject.value as CanvasElement)
-
-    setZindex(canvas)
-    canvas.renderAll()
-    templatesStore.modifedElement()
-  }
-
-  const backElement = () => {
-    const [ canvas ] = useCanvas()
-    if (!canvasObject.value) return
-    canvas.sendObjectToBack(canvasObject.value as CanvasElement)
-    setZindex(canvas)
-    canvas.renderAll()
-    templatesStore.modifedElement()
   }
 
   const forwardElement = () => {
@@ -379,7 +360,7 @@ export default () => {
     element.isCheck = status
     canvas.renderAll()
     templatesStore.modifedElement()
-    const elements = canvas.getObjects().filter(item => !WorkSpaceCommonType.includes((item as CanvasElement).id)) as CanvasElement[]
+    const elements = canvas.getObjects().filter(item => !WorkSpaceCommonType.includes((item as CanvasElement).id)) as FabricObject[]
     isChecked.value = queryTextboxChecked(elements)
   }
 
@@ -401,8 +382,6 @@ export default () => {
     mouseoverElement,
     mouseleaveElement,
     cancelElement,
-    frontElement,
-    backElement,
     forwardElement,
     backwardElement,
     checkElement,

@@ -12,7 +12,7 @@ export interface MainState {
   canvasObject: CanvasElement | null
   hoveredObject: FabricObject | undefined 
   leavedObject: FabricObject | undefined 
-  clonedObject: FabricObject | null
+  clonedObject: CanvasElement | null
   currentPoint: PointElement | null
   rightState: RightStates
   activeElementIdList: string[]

@@ -23,7 +23,7 @@ const panelMap = {
   [ElementNames.TEXTBOX]: TextboxStylePanel,
   [ElementNames.TEXT]: TextboxStylePanel,
   [ElementNames.IMAGE]: ImageStylePanel,
-  [ElementNames.CROP]: ImageStylePanel,
+  [ElementNames.CROPIMAGE]: ImageStylePanel,
   [ElementNames.PATH]: PathStylePanel,
   [ElementNames.POLYGON]: PathStylePanel,
   [ElementNames.CIRCLE]: CircleStylePanel,
@@ -38,11 +38,6 @@ const { canvasObject } = storeToRefs(useMainStore())
 
 const currentPanelComponent = computed(() => {
   if (!canvasObject.value) return null
-  const elementName = canvasObject.value.name ? canvasObject.value.name : canvasObject.value.type
-  if (elementName) {
-    // @ts-ignore
-    return panelMap[elementName]
-  }
-  return null
+  return panelMap[canvasObject.value.type.toLowerCase() as ElementNames.TEXT]
 })
 </script>

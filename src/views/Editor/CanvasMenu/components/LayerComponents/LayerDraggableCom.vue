@@ -9,14 +9,14 @@
       :style="{ marginLeft: `${props.index * 10}px` }"
       >
       <div class="element-info">
-        <div v-if="element.type === ElementNames.GROUP">
-          <el-tooltip placement="top" :hide-after="0" :content="element.isShow ? '收回' : '展开'">
-            <IconExpandDownOne v-if="element.isShow" class="common-icon" @click.stop="showElement(element)"/>
-            <IconFoldUpOne v-else class="common-icon" @click.stop="showElement(element)"/>
+        <div v-if="element.type.toLowerCase() === ElementNames.GROUP">
+          <el-tooltip placement="top" :hide-after="0" :content="(element as Group).isShow ? '收回' : '展开'">
+            <IconExpandDownOne v-if="(element as Group).isShow" class="common-icon" @click.stop="showElement(element.id)"/>
+            <IconFoldUpOne v-else class="common-icon" @click.stop="showElement(element.id)"/>
           </el-tooltip>
         </div>
-        <el-tooltip placement="top" :hide-after="0" content="拖拽" v-if="!element.group && element.type !== ElementNames.GROUP">
-          <IconApplicationMenu class="common-icon" v-if="!element.group && element.type !== ElementNames.GROUP"/>
+        <el-tooltip placement="top" :hide-after="0" content="拖拽" v-else>
+          <IconApplicationMenu class="common-icon"/>
         </el-tooltip>
         <div class="element-type">{{ element.type }}</div>
         <div class="element-text" v-if="element.type === ElementNames.TEXTBOX || element.type === ElementNames.TEXT">{{ (element as TextboxElement).text }}</div>
@@ -54,6 +54,7 @@ import { ElementNames } from '@/types/elements'
 import { useMainStore } from '@/store'
 import { storeToRefs } from 'pinia'
 import useHandleElement from "@/hooks/useHandleElement"
+import { Group } from 'fabric'
 
 const { 
   selectElement, 

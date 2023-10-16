@@ -12,7 +12,7 @@
     <template #item="{ element }">
       <div v-contextmenu="contextMenusThumbnails">
         <LayerDraggableCom :index="props.index" :element="element" />
-        <LayerDraggableSelf v-if="element.type === ElementNames.GROUP && element.objects" v-show="element.isShow" :elements="element.objects" :index="props.index + 1"/>
+        <LayerDraggableSelf v-if="element.type.toLowerCase() === ElementNames.GROUP && element.objects" v-show="element.isShow" :elements="element.objects" :index="props.index + 1"/>
       </div>
     </template>
   </Draggable>

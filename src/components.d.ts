@@ -116,6 +116,7 @@ export declare module 'fabric' {
     name: string
     canvas: Canvas | undefined
     group: this | undefined
+    isShow: boolean
     objects: FabricObject[]
     _objects: FabricObject[]
     setDirty(): void
@@ -195,4 +196,8 @@ export declare namespace fabric {
   export * from 'fabric'
 }
 
-export declare function loadFontData(fontFamily: string): any;
+declare global {
+  interface Window {
+    queryLocalFonts(): any[];
+  }
+}

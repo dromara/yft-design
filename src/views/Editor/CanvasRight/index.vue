@@ -15,13 +15,12 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { computed, watch, watchEffect } from 'vue'
+import { computed, watch } from 'vue'
 import { RightStates } from '@/types/elements'
 import { storeToRefs } from 'pinia'
 import { useMainStore } from '@/store/modules/main'
 import WorkStylePanel from './WorkStylePanel/index.vue'
 import ElemnetStylePanel from './ElementStylePanel/index.vue'
-import useCanvas from '@/views/Canvas/useCanvas'
 
 const mainStore = useMainStore()
 const { canvasObject, rightState } = storeToRefs(mainStore)
@@ -37,17 +36,6 @@ const styleTabs = [
 const setRightState = (value: RightStates) => {
   mainStore.setRightState(value)
 }
-
-const activeObject = computed(() => {
-  const [ canvas ] = useCanvas()
-  if (!canvas) return
-  return canvas.getActiveObject()
-})
-
-watchEffect(() => {
-
-  console.log('activeObject:', activeObject.value)
-})
 
 const currentTabs = computed(() => {
   if (!canvasObject.value) return designTabs
@@ -67,8 +55,7 @@ const currentPanelComponent = computed(() => {
     [RightStates.ELEMENT_WORKER]: WorkStylePanel,
     [RightStates.ELEMENT_STYLE]: ElemnetStylePanel,
   }
-  //@ts-ignore
-  return panelMap[rightState.value as RightStates]
+  return panelMap[rightState.value as RightStates.ELEMENT_STYLE]
 })
 
 </script>

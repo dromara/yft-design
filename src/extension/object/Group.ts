@@ -3,6 +3,7 @@ import { Object as FabricObject, Group as OriginGroup, classRegistry, TPointerEv
 export class Group extends OriginGroup {
   public subTargetCheck = true
   public interactive = false
+  public isShow = false
 
   constructor(objects?: FabricObject[], options?: Partial<GroupProps>, objectsRelativeToGroup?: boolean) {
     super(objects, options, objectsRelativeToGroup)
