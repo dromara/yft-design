@@ -8,6 +8,10 @@ export const WorkSpaceCommonType = [
   WorkSpaceDrawType, WorkSpaceClipType, WorkSpaceSafeType, WorkSpaceMaskType, WorkSpaceLineType
 ]
 
+export const WorkSpaceThumbType = [
+  WorkSpaceClipType, WorkSpaceSafeType, WorkSpaceMaskType, WorkSpaceLineType
+]
+
 // 分割服
 export const Separator = '.'
 

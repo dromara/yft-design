@@ -14,15 +14,9 @@
 
 <script lang="ts" setup>
 import { computed, onMounted, PropType, ref, watch } from 'vue'
-import { StaticCanvas, Gradient, Pattern, Rect, Image } from 'fabric'
+import { StaticCanvas } from 'fabric'
 import { Template, CanvasElement } from '@/types/canvas'
-import { TransparentFill } from '@/configs/background'
-import { 
-  WorkSpaceName, 
-  WorkSpaceDrawType,
-} from '@/configs/canvas'
-
-const RectFillType = 'RectFillType'
+import { WorkSpaceThumbType, WorkSpaceDrawType } from '@/configs/canvas'
 
 const props = defineProps({
   template: {
@@ -38,8 +32,7 @@ const props = defineProps({
     default: true,
   },
 })
-
-// const viewportRatio = ref<number>(props.template.height / props.template.width) 
+ 
 const viewportRatio = computed(() => props.template.height / props.template.width)
 const height = computed(() => props.size * viewportRatio.value)
 const thumbnailTemplate = ref()
@@ -55,7 +48,7 @@ onMounted(() => {
   setThumbnailElement()
 })
 
-watch(props ,() => {
+watch(props, () => {
   if (!thumbCanvas.value) return
   setThumbnailElement()
 }, { deep: true })
@@ -64,11 +57,13 @@ const setThumbnailElement = async () => {
   if (!thumbCanvas.value) return
   await thumbCanvas.value.loadFromJSON(props.template)
   const thumbWorkSpaceDraw = thumbCanvas.value.getObjects().filter(item => (item as CanvasElement).id === WorkSpaceDrawType)[0]
-  thumbCanvas.value.getObjects().filter(item => (item as CanvasElement).name === WorkSpaceName && (item as CanvasElement).id !== WorkSpaceDrawType).map(item => (item as CanvasElement).visible = false)
+  thumbCanvas.value.getObjects().filter(item => WorkSpaceThumbType.includes(item.id)).map(item => (item as CanvasElement).visible = false)
   const width = props.template.width / props.template.zoom
   const thumbZoom = props.size / width
-  thumbCanvas.value.width = props.size
-  thumbCanvas.value.height = props.size * viewportRatio.value
+  thumbCanvas.value.setDimensions({
+    width: props.size,
+    height: props.size * viewportRatio.value
+  })
   thumbCanvas.value.setZoom(thumbZoom)
   const thumbViewportTransform = thumbCanvas.value.viewportTransform
   thumbViewportTransform[4] = -thumbWorkSpaceDraw.left * thumbZoom
