@@ -187,14 +187,14 @@ import ElementShadow from '../Components/ElementShadow.vue'
 import ElementOpacity from '../Components/ElementOpacity.vue'
 import ElementPatterns from '../Components/ElementPatterns.vue'
 import ElementFill from '../Backgrounds/ElementFill.vue'
-import useCreateElement from "@/hooks/useCreateElement"
+import useHandleCreate from "@/hooks/useHandleCreate"
 import useCanvas from '@/views/Canvas/useCanvas'
 
 
 const mainStore = useMainStore()
 const templatesStore = useTemplatesStore()
 const { canvasObject, systemFonts } = storeToRefs(mainStore)
-const { createPathElement } = useCreateElement()
+const { createPathElement } = useHandleCreate()
 const [ canvas ] = useCanvas()
 const handleElement = computed(() => canvasObject.value as TextboxElement)
 const elementGrapheme = computed(() => handleElement.value.splitByGrapheme)

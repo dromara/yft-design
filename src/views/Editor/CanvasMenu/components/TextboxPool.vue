@@ -35,9 +35,9 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
 import { Search } from '@element-plus/icons-vue'
-import useCreateElement from '@/hooks/useCreateElement'
+import useHandleCreate from '@/hooks/useHandleCreate'
 
-const { createTextElement } = useCreateElement()
+const { createTextElement } = useHandleCreate()
 
 const textStyle = ref<'transverse' | 'direction'>('transverse')
 const textHollow = ref(false)

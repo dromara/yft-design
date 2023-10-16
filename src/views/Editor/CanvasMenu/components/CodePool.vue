@@ -57,9 +57,9 @@ import {
   rendererFuncA,
   rendererFuncB,
 } from 'beautify-qrcode'
-import useCreateElement from '@/hooks/useCreateElement'
+import useHandleCreate from '@/hooks/useHandleCreate'
 
-const { createQRCodeElement } = useCreateElement()
+const { createQRCodeElement } = useHandleCreate()
 const codeContent = ref<string>(window.location.href)
 const codeSpace = ref<boolean>(true)
 const codeError = ref<number>(0)

@@ -1,11 +1,11 @@
-import { Object as FabricObject, Group, classRegistry } from 'fabric'
+import { Object as FabricObject, Group } from 'fabric'
 import { nanoid } from "nanoid"
 import { storeToRefs } from "pinia"
 import { KEYS } from '@/configs/hotkey'
 import { ElementNames } from "@/types/elements"
 import { propertiesToInclude, WorkSpaceCommonType } from "@/configs/canvas"
 import { useFabricStore, useMainStore, useTemplatesStore } from "@/store"
-import { TextboxElement, CanvasElement, PathElement, GroupElement } from "@/types/canvas"
+import { TextboxElement, CanvasElement, GroupElement } from "@/types/canvas"
 import useCanvas from "@/views/Canvas/useCanvas"
 import useCanvasZindex from "./useCanvasZindex"
 
@@ -13,11 +13,13 @@ export default () => {
   const templatesStore = useTemplatesStore()
   const mainStore = useMainStore()
   const { currentTemplate } = storeToRefs(templatesStore)
-  const { elementCoords, elementHover, isChecked } = storeToRefs(useFabricStore())
-  const { canvasObject, clonedObject, hoveredObject, currentPoint } = storeToRefs(mainStore)
+  const { isChecked } = storeToRefs(useFabricStore())
+  const { canvasObject, clonedObject, currentPoint } = storeToRefs(mainStore)
   const { setZindex } = useCanvasZindex()
 
-  const sortElement = async (newIndex: number, oldIndex: number, option: FabricObject) => {
+  const sortElement = async (eventData: { moved: { newIndex: number, oldIndex: number, element: FabricObject} }) => {
+    if (WorkSpaceCommonType.includes(eventData.moved.element.id)) return
+    const newIndex = eventData.moved.newIndex, oldIndex = eventData.moved.oldIndex, option = eventData.moved.element
     if (oldIndex === newIndex) return
     const element = queryElement(option.id)
     if (!element) return
@@ -37,6 +39,10 @@ export default () => {
     }
     await templatesStore.renderElement()
     templatesStore.modifedElement()
+  }
+
+  const layerElement = (e: any, originalEvent: any) => {
+    if (WorkSpaceCommonType.includes(e.draggedContext.element.id)) return false;
   }
 
   const lockElement = (eid: string, status: boolean) => {
@@ -191,15 +197,28 @@ export default () => {
     canvas.discardActiveObject()
     mainStore.setCanvasObject(null)
     if (activeObjects.length !== 2) return
+    // activeObjects.map(item => item.set({globalCompositeOperation: 'xor'}))
+    // activeObjects[0].set({globalCompositeOperation: 'xor'})
+    // const group = new Group(activeObjects, { 
+    //   id: nanoid(10),
+    //   name: ElementNames.GROUP,
+    //   interactive: false, 
+    //   subTargetCheck: true,
+    // })
+    // canvas.remove(...activeObjects)
+    // canvas.add(group)
+    // templatesStore.modifedElement()
+    // templatesStore.renderElement()
     activeObjects.map(item => item.set({globalCompositeOperation: 'xor'}))
-    const group = new Group(activeObjects, { 
+    const groupElement = new Group(activeObjects, { 
       id: nanoid(10),
       name: ElementNames.GROUP,
     })
-    canvas.remove(...activeObjects)
-    canvas.add(group)
-    templatesStore.modifedElement()
+    canvas.add(groupElement)
+    templatesStore.deleteElement(activeObjects.map(item => item.id))
+    templatesStore.addElement(groupElement.toObject(propertiesToInclude as any[]))
     templatesStore.renderElement()
+    canvas.remove(...activeObjects)
   }
 
   const uncombineElements = () => {
@@ -359,6 +378,7 @@ export default () => {
 
   return {
     // createElement,
+    layerElement,
     sortElement,
     lockElement,
     copyElement,

@@ -39,11 +39,11 @@ import useCanvas from '@/views/Canvas/useCanvas'
 import useCenter from '@/views/Canvas/useCenter'
 import PathPool from './MaterialComponents/PathPool.vue'
 import LinePool from './MaterialComponents/LinePool.vue'
-import useCreateElement from '@/hooks/useCreateElement'
+import useHandleCreate from '@/hooks/useHandleCreate'
 import { CanvasElement, TextboxElement } from '@/types/canvas'
 
 
-const { createLineElement, createPathElement } = useCreateElement()
+const { createLineElement, createPathElement } = useHandleCreate()
 const activeMaterial = ref('data')
 
 const drawLine = (line: LinePoolItem) => {
@@ -52,11 +52,6 @@ const drawLine = (line: LinePoolItem) => {
 
 const drawPath = (shape: PathPoolItem) => {
   createPathElement(shape.path)
-}
-
-const svgRevier = (option: any) => {
-  // console.log("option:", option.type)
-
 }
 
 const svgCallback: any = (element: Element, fabricObject: CanvasElement) => {

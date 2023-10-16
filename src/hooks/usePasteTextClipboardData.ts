@@ -1,5 +1,5 @@
 import { pasteCustomClipboardString } from '@/utils/clipboard'
-import useCreateElement from '@/hooks/useCreateElement'
+import useHandleCreate from '@/hooks/useHandleCreate'
 import useAddTemplateElement from '@/hooks/useAddTemplateElement'
 
 interface PasteTextClipboardDataOptions {
@@ -8,7 +8,7 @@ interface PasteTextClipboardDataOptions {
 }
 
 export default () => {
-  const { createTextElement } = useCreateElement()
+  const { createTextElement } = useHandleCreate()
   const { addElementsFromData, addTemplatesFromData } = useAddTemplateElement()
 
   /**

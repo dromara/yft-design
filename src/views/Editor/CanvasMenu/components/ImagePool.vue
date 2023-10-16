@@ -35,10 +35,10 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
 import { Search } from '@element-plus/icons-vue'
-import useCreateElement from '@/hooks/useCreateElement'
+import useHandleCreate from '@/hooks/useHandleCreate'
 import { getImageDataURL } from '@/utils/image'
 
-const { createImageElement } = useCreateElement()
+const { createImageElement } = useHandleCreate()
 
 
 

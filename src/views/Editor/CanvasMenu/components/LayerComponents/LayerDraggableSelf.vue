@@ -6,7 +6,8 @@
     :scroll="true"
     :scrollSensitivity="50"
     :setData="null"
-    @change="handleDragMoved"
+    :move="layerElement"
+    @change="sortElement"
     itemKey="id"
   >
     <template #item="{ element }">
@@ -29,7 +30,7 @@ import LayerDraggableSon from './LayerDraggableSon.vue'
 import LayerDraggableCom from './LayerDraggableCom.vue'
 
 
-const {  sortElement } = useHandleElement()
+const {  sortElement, layerElement } = useHandleElement()
 
 const props = defineProps({
   elements: {
@@ -41,11 +42,6 @@ const props = defineProps({
     required: true,
   }
 })
-
-// 拖拽调整顺序后进行数据的同步
-const handleDragMoved = (eventData: { moved: { newIndex: number, oldIndex: number, element: FabricObject} }) => {
-  sortElement(eventData.moved.newIndex, eventData.moved.oldIndex, eventData.moved.element)
-}
 </script>
 
 <style lang="scss" scoped>
