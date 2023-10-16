@@ -167,7 +167,7 @@ export default () => {
     deleteElement(canvasObject.value.id)
   }
 
-  const combineElements = () => {
+  const combineElements = async () => {
     const [ canvas ] = useCanvas()
     const activeObjects = canvas.getActiveObjects()
     if (!activeObjects) return
@@ -178,12 +178,10 @@ export default () => {
       interactive: false, 
       subTargetCheck: true,
     })
-    templatesStore.deleteElement(activeObjects.map(item => item.id))
-    templatesStore.addElement(group.toObject(propertiesToInclude as any[]))
-    templatesStore.renderElement()
-    setZindex(canvas)
-    canvas.renderAll()
+    canvas.remove(...activeObjects)
+    canvas.add(group)
     templatesStore.modifedElement()
+    templatesStore.renderElement()
   }
 
   const intersectElements = () => {
@@ -193,8 +191,6 @@ export default () => {
     canvas.discardActiveObject()
     mainStore.setCanvasObject(null)
     if (activeObjects.length !== 2) return
-    canvas.discardActiveObject()
-    mainStore.setCanvasObject(null)
     activeObjects.map(item => item.set({globalCompositeOperation: 'xor'}))
     const groupElement = new Group(activeObjects, { 
       id: nanoid(10),
