@@ -1,4 +1,4 @@
-import { Object as FabricObject, Group } from 'fabric'
+import { Object as FabricObject, Group, classRegistry } from 'fabric'
 import { nanoid } from "nanoid"
 import { storeToRefs } from "pinia"
 import { KEYS } from '@/configs/hotkey'
@@ -176,19 +176,21 @@ export default () => {
     // const insertGroup = activeObjects[0].getParent()
     // const index = insertGroup._objects.indexOf(activeObjects[0])
     // discardActiveObject 修复选中一个组内元素一个组外元素，打组位置偏移
-    canvas.discardActiveObject()
     // 创建组
-    const group = new Group(
-      activeObjects.filter((obj, index, array) => {
-        const parent = obj.getParent(true)
-        return !parent || !array.includes(parent)
-      }).reverse(), {
-        id: nanoid(10),
-        name: ElementNames.GROUP, 
-        interactive: false, 
-        subTargetCheck: true,
-      }
-    )
+    const Group = classRegistry.getClass('Group')
+    // const group = new Group(activeObjects, {
+    //     id: nanoid(10),
+    //     name: ElementNames.GROUP, 
+    //     interactive: true, 
+    //     subTargetCheck: true,
+    //   }
+    // )
+    const group = new Group(activeObjects, { 
+      id: nanoid(10),
+      name: ElementNames.GROUP, 
+      interactive: true, 
+      subTargetCheck: true,
+    })
     // insertGroup.insertAt(index, group)
     canvas.add(group)
     canvas.remove(...activeObjects)

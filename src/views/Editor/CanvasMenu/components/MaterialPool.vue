@@ -2,7 +2,7 @@
   <div class="layout-pool">
     <el-row class="layout-search">
       <el-col :span="5">
-        <FileInput @change="files => drawMaterial(files)">
+        <FileInput @change="(files: File[]) => drawMaterial(files)">
           <el-tooltip placement="top" :hide-after="0" content="上传素材">
             <el-button type="primary">
               <IconUpload />
@@ -51,7 +51,7 @@ const drawLine = (line: LinePoolItem) => {
 }
 
 const drawPath = (shape: PathPoolItem) => {
-  createPathElement(shape.path, shape.viewBox)
+  createPathElement(shape.path)
 }
 
 const svgRevier = (option: any) => {
@@ -59,40 +59,18 @@ const svgRevier = (option: any) => {
 
 }
 
-const svgCallback = (element: Element, fabricObject: CanvasElement) => {
-  const templatesStore = useTemplatesStore()
+const svgCallback: any = (element: Element, fabricObject: CanvasElement) => {
   const [ canvas ] = useCanvas()
-  // const { centerPoint } = useCenter()
-  // objects.forEach(item => {
-  //   item.id = nanoid(10)
-  //   if (item.type === ElementNames.TEXT) {
-  //     item.type = ElementNames.TEXTBOX
-  //   }
-  //   item.name = item.type
-  // })
-  // const svgGroup = new Group(objects, { 
-  //   id: nanoid(10),
-  //   name: ElementNames.GROUP, 
-  //   // interactive: true, 
-  //   // subTargetCheck: true, 
-  //   left: centerPoint.x,
-  //   top: centerPoint.y
-  // })
-  // const left = svgGroup.left - svgGroup.width / 2, top = svgGroup.top - svgGroup.height / 2
-  // svgGroup.set({left, top})
   canvas.add(fabricObject)
-  // canvas.setActiveObject(svgGroup)
-  // templatesStore.modifedElement()
 }
 
-const drawMaterial = async (files: FileList) => {
+const drawMaterial = async (files: File[]) => {
   const materialFile = files[0]
   const [ canvas ] = useCanvas()
   if (!materialFile) return
   const dataText = await getImageText(materialFile)
   console.log('dataText:', dataText)
-  // @ts-ignore
-  await loadSVGFromString(dataText, svgCallback, {})
+  await loadSVGFromString(dataText, svgCallback)
   canvas.renderAll()
   // loadSVGFromURL(dataURl, svgCallback, svgRevier, {})
   // getImageDataURL(imageFile).then(dataURL => createImageElement(dataURL))
