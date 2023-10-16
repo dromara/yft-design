@@ -3,21 +3,21 @@
     <div class="row">
       <div style="flex: 2;"><b>启用描边：</b></div>
       <div class="switch-wrapper" style="flex: 3;">
-        <el-switch v-model="hasStroke" @change="toggleStroke()"></el-switch>
+        <el-switch v-model="openStroke" @change="toggleStroke()"></el-switch>
       </div>
     </div>
-    <template v-if="hasStroke">
+    <template v-if="openStroke">
       <div class="row">
         <div style="flex: 2;">描边厚度：</div>
-        <el-slider class="slider" v-model="handleStroke.strokeWidth"></el-slider>
+        <el-slider class="slider" v-model="handleElement.strokeWidth" @change="updateStrokeWidth"></el-slider>
       </div>
       <div class="row">
         <div style="flex: 2;">描边颜色：</div>
         <el-popover trigger="click" width="265">
           <template #reference>
-            <ColorButton :color="handleStroke.stroke" style="flex: 3;" />
+            <ColorButton :color="handleElement.stroke" style="flex: 3;" />
           </template>
-          <ColorPicker :modelValue="handleStroke.stroke" @update:modelValue="(color: string) => updateStrokeColor(color)"/>
+          <ColorPicker :modelValue="handleElement.stroke" @update:modelValue="(color: string) => updateStrokeColor(color)"/>
         </el-popover>
       </div>
     </template>
@@ -35,28 +35,27 @@ const [ canvas ] = useCanvas()
 const { canvasObject } = storeToRefs(useMainStore())
 
 
-const hasStroke = ref(false)
-const handleStroke = computed(() => canvasObject.value as TextboxElement)
+const handleElement = computed(() => canvasObject.value as TextboxElement)
+const hasStroke = computed(() => handleElement.value.stroke ? true : false)
+const openStroke = ref(hasStroke.value)
 
+const updateStrokeColor = (stroke: string) => {
+  if (!handleElement.value) return
+  handleElement.value.set({stroke})
+  canvas.renderAll()
+}
 
-const updateStrokeColor = (color: string) => {
-  if (!canvasObject.value) return
-  handleStroke.value.stroke = color
+const updateStrokeWidth = (strokeWidth: number) => {
+  if (!handleElement.value) return
+  handleElement.value.set({strokeWidth})
   canvas.renderAll()
 }
 
 const toggleStroke = () => {
-  if (!handleStroke.value) return
-  if (hasStroke.value) {
-    if (!handleStroke.value.stroke) {
-      handleStroke.value.stroke = '#000'
-      handleStroke.value.strokeWidth = 1
-    }
-  }
-  else {
-    handleStroke.value.stroke = ''
-    handleStroke.value.strokeWidth = 0
-  }
+  if (!handleElement.value) return
+  const stroke = openStroke.value ? (!handleElement.value.stroke ? '#000' : '') : ''
+  const strokeWidth = openStroke.value ? (!handleElement.value.stroke ? 1 : 0) : 0
+  handleElement.value.set({stroke, strokeWidth})
   canvas.renderAll()
 }
 </script>

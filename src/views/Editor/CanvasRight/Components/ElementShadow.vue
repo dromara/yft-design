@@ -39,7 +39,7 @@
             <template #reference>
               <ColorButton :color="shadowColor" style="flex: 3;" />
             </template>
-            <ColorPicker :modelValue="shadowColor" @update:modelValue="color => updateShadowColor(color)"/>
+            <ColorPicker :modelValue="shadowColor" @update:modelValue="(color: string) => updateShadowColor(color)"/>
           </el-popover>
         </el-col>
       </el-row>
@@ -48,7 +48,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useMainStore } from '@/store'
 import * as fabric from 'fabric'

@@ -192,17 +192,14 @@ export default () => {
     mainStore.setCanvasObject(null)
     if (activeObjects.length !== 2) return
     activeObjects.map(item => item.set({globalCompositeOperation: 'xor'}))
-    const groupElement = new Group(activeObjects, { 
+    const group = new Group(activeObjects, { 
       id: nanoid(10),
       name: ElementNames.GROUP,
     })
-    canvas.add(groupElement)
-    templatesStore.deleteElement(activeObjects.map(item => item.id))
-    templatesStore.addElement(groupElement.toObject(propertiesToInclude as any[]))
-    templatesStore.renderElement()
     canvas.remove(...activeObjects)
-    setZindex(canvas)
-    canvas.renderAll()
+    canvas.add(group)
+    templatesStore.modifedElement()
+    templatesStore.renderElement()
   }
 
   const uncombineElements = () => {
