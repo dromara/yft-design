@@ -354,10 +354,10 @@ export default () => {
     return false
   }
 
-  const checkElement = (eid: string, status: boolean) => {
+  const checkElement = (eid: string) => {
     const [ canvas ] = useCanvas()
     const element = queryElement(eid) as TextboxElement
-    element.isCheck = status
+    element.isCheck = !element.isCheck
     canvas.renderAll()
     templatesStore.modifedElement()
     const elements = canvas.getObjects().filter(item => !WorkSpaceCommonType.includes((item as CanvasElement).id)) as FabricObject[]

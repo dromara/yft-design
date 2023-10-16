@@ -20,7 +20,6 @@
         </el-tooltip>
         <div class="element-type">{{ element.type }}</div>
         <div class="element-text" v-if="element.type === ElementNames.TEXTBOX || element.type === ElementNames.TEXT">{{ (element as TextboxElement).text }}</div>
-        
       </div>
       
       <div class="element-handler">
@@ -35,10 +34,10 @@
         <el-tooltip placement="top" :hide-after="0" content="删除">
           <IconDelete class="common-icon" @click.stop="deleteElement(element.id)"/>
         </el-tooltip>
-        <div v-if="element.type === ElementNames.TEXTBOX || element.type === ElementNames.TEXT">
-          <el-tooltip placement="top" :hide-after="0" :content="element.isCheck ? '取消可变' : '可变数据'">
-            <IconCheckOne class="common-icon" v-if="element.isCheck" @click.stop="checkElement(element.id, false)"/>
-            <IconRound class="common-icon" v-else  @click.stop="checkElement(element.id, true)"/>
+        <div v-if="element.type.toLowerCase() === ElementNames.TEXTBOX || element.type.toLowerCase() === ElementNames.TEXT">
+          <el-tooltip placement="top" :hide-after="0" :content="(element as TextboxElement).isCheck ? '取消可变' : '可变数据'">
+            <IconCheckOne class="common-icon" v-if="(element as TextboxElement).isCheck" @click.stop="checkElement(element.id)"/>
+            <IconRound class="common-icon" v-else  @click.stop="checkElement(element.id)"/>
           </el-tooltip>
         </div>
       </div>
