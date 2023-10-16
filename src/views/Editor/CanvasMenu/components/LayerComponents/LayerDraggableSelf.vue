@@ -1,6 +1,7 @@
 <template>
   <Draggable
     class="layer-draggable"
+    group="group"
     :modelValue="props.elements"
     :animation="300"
     :scroll="true"
