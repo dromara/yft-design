@@ -172,28 +172,15 @@ export default () => {
     const activeObjects = canvas.getActiveObjects()
     if (!activeObjects) return
     canvas.discardActiveObject()
-    // 获取要插入的分组，在deleteLayer前获取，不然获取不到
-    // const insertGroup = activeObjects[0].getParent()
-    // const index = insertGroup._objects.indexOf(activeObjects[0])
-    // discardActiveObject 修复选中一个组内元素一个组外元素，打组位置偏移
-    // 创建组
-    const Group = classRegistry.getClass('Group')
-    // const group = new Group(activeObjects, {
-    //     id: nanoid(10),
-    //     name: ElementNames.GROUP, 
-    //     interactive: true, 
-    //     subTargetCheck: true,
-    //   }
-    // )
     const group = new Group(activeObjects, { 
       id: nanoid(10),
       name: ElementNames.GROUP, 
-      interactive: true, 
+      interactive: false, 
       subTargetCheck: true,
     })
-    // insertGroup.insertAt(index, group)
-    canvas.add(group)
-    canvas.remove(...activeObjects)
+    templatesStore.deleteElement(activeObjects.map(item => item.id))
+    templatesStore.addElement(group.toObject(propertiesToInclude as any[]))
+    templatesStore.renderElement()
     setZindex(canvas)
     canvas.renderAll()
     templatesStore.modifedElement()

@@ -176,14 +176,7 @@ export const useTemplatesStore = defineStore('Templates', {
 
     addElement(element: SerializedObjectProps | SerializedObjectProps[]) {
       const { addHistorySnapshot } = useHistorySnapshot()
-      const { centerPoint } = useCenter()
       const elements = Array.isArray(element) ? element : [element]
-      elements.forEach(ele => {
-        if (typeof ele.left === 'number' && typeof ele.top === 'number') {
-          ele.left -= centerPoint.x
-          ele.top -= centerPoint.y
-        }
-      })
       const currentTemplateElements = this.templates[this.templateIndex].objects
       const newElements = [...currentTemplateElements, ...elements]
       this.templates[this.templateIndex].objects = newElements as FabricObject[]

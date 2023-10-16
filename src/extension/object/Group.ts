@@ -14,7 +14,6 @@ export class Group extends OriginGroup {
    */
   public addDeselectedEvent(target: FabricObject) {
     target.once('deselected', () => {
-      console.log('group deselected')
       const activeObject = this.canvas?.getActiveObject()
       if (!activeObject || !activeObject.getAncestors(true).includes(this)) {
         // 关闭
