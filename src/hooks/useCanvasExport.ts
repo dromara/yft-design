@@ -8,7 +8,6 @@ import { changeDataURLDPI } from '@/utils/changdpi'
 import { ImageFormat } from 'fabric'
 import { mm2px } from '@/utils/image'
 import { downloadSVGFile } from '@/utils/download'
-import jsPDF from 'jspdf'
 import useCenter from '@/views/Canvas/useCenter'
 
 
@@ -113,9 +112,8 @@ export default () => {
       left: left * zoom + viewportTransform[4],
       top: top * zoom + viewportTransform[5]
     })
-    const doc = new jsPDF({orientation: 'l', unit: 'px', format: [width, height]})
-    doc.addImage(result, 'JPEG', 0, 0, width, height)
-    doc.save(`yft-design-${Date.now()}.${'pdf'}`)
+    // doc.addImage(result, 'JPEG', 0, 0, width, height)
+    // doc.save(`yft-design-${Date.now()}.${'pdf'}`)
   }
 
   // 导出json
