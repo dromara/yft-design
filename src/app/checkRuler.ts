@@ -102,8 +102,8 @@ export class CheckRuler extends Disposable {
               textColor: '#444',
             }),
       }
-      this.render({ ctx: this.canvas.contextContainer })
       this.enabled = rulerShow.value
+      this.render({ ctx: this.canvas.contextContainer })
     })
 
     this.canvasEvents = {

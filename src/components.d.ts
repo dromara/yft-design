@@ -202,27 +202,7 @@ declare global {
   }
 }
 
-export declare module 'beautify-qrcode' {
-
-}
-export declare module 'beautify-qrcode' {
-  encodeData()
-  renderer25D()
-  rendererRect()
-  rendererRound()
-  rendererRandRound()
-  rendererDSJ()
-  rendererRandRect()
-  rendererImage()
-  rendererResImage()
-  rendererCircle()
-  rendererLine()
-  rendererLine2()
-  rendererFuncA()
-  rendererFuncB()
-}
-
-declare module "beautify-qrcode" {
+export declare module "beautify-qrcode" {
   interface qrOptions {
     text: string;
     correctLevel: 1 | 0 | 3 | 2;
