@@ -3,7 +3,7 @@ import { useFabricStore, useTemplatesStore } from "@/store"
 import { useMainStore } from '@/store/modules/main'
 import { RightStates, ElementNames } from '@/types/elements'
 import { nanoid } from 'nanoid'
-import { QRCodeElement, BarCodeElement, PolygonElement } from '@/types/canvas'
+import { QRCodeElement, PolygonElement, QRCodeOption } from '@/types/canvas'
 import { getImageSize } from '@/utils/image'
 import { classRegistry } from 'fabric'
 import JsBarcode from 'jsbarcode'
@@ -74,8 +74,9 @@ export default () => {
     canvas.add(pathElement)
     canvas.setActiveObject(pathElement)
     rightState.value = RightStates.ELEMENT_STYLE
-    templatesStore.modifedElement()
     setZindex(canvas)
+    canvas.renderAll()
+    templatesStore.modifedElement()
   }
 
   const createLineElement = (path: string) => {
@@ -160,23 +161,22 @@ export default () => {
         type: 'CropImage',
         name: ElementNames.IMAGE
       })
-      // if (typeof imageElement.isCropping === 'undefined') {
-      //   extendWithCropImage(imageElement)
-      // }
       canvas.add(imageElement)
       canvas.setActiveObject(imageElement)
       rightState.value = RightStates.ELEMENT_STYLE
-      templatesStore.modifedElement()
       setZindex(canvas)
+      canvas.renderAll()
+      templatesStore.modifedElement()
     })
   }
 
-  const createQRCodeElement = async (url: string, style: string, content?: string, error?: number, space?: boolean) => {
+  const createQRCodeElement = async (url: string, codeOption: QRCodeOption, codeContent?: string) => {
     const [ canvas ] = useCanvas()
     const { centerPoint } = useCenter()
-    const codeObject = await fabric.Image.fromURL(url, {crossOrigin: 'anonymous'}, {
-      // @ts-ignore
+    const QRCode = classRegistry.getClass('QRCode')
+    const codeObject = await QRCode.fromURL(url, {crossOrigin: 'anonymous'}, {
       id: nanoid(10),
+      name: ElementNames.QRCODE,
       angle: 0,
       left: centerPoint.x,
       top: centerPoint.y,
@@ -186,12 +186,9 @@ export default () => {
       originX: 'center',
       originY: 'center',
       borderColor: '#ff8d23',
-      name: ElementNames.QRCODE,
+      codeContent,
+      codeOption,
     }) as QRCodeElement
-    codeObject.codeStyle = style
-    codeObject.codeContent = content
-    codeObject.codeError = error
-    codeObject.codeSpace = space
     canvas.add(codeObject)
     templatesStore.modifedElement()
     canvas.setActiveObject(codeObject)
@@ -202,9 +199,10 @@ export default () => {
   const createBarCodeElement = async (url: string, codeContent: string, codeOption: JsBarcode.BaseOptions) => {
     const [ canvas ] = useCanvas()
     const { centerPoint } = useCenter()
-    const barcodeObject = await fabric.Image.fromURL(url,  {crossOrigin: 'anonymous'}, {
-      // @ts-ignore
+    const Barcode = classRegistry.getClass('BarCode')
+    const barcodeObject = await Barcode.fromURL(url,  {crossOrigin: 'anonymous'}, {
       id: nanoid(10),
+      name: ElementNames.BARCODE,
       angle: 0,
       left: centerPoint.x,
       top: centerPoint.y,
@@ -214,10 +212,9 @@ export default () => {
       originX: 'center',
       originY: 'center',
       borderColor: '#ff8d23',
-      name: ElementNames.BARCODE,
-    }) as BarCodeElement
-    barcodeObject.codeContent = codeContent
-    barcodeObject.codeOption = codeOption
+      codeContent,
+      codeOption,
+    })
     canvas.add(barcodeObject)
     templatesStore.modifedElement()
     canvas.setActiveObject(barcodeObject)

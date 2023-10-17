@@ -50,7 +50,6 @@ import {
   rendererFuncB,
 } from 'beautify-qrcode'
 import useHandleCreate from '@/hooks/useHandleCreate'
-import { BarCodeOption } from '@/types/elements'
 
 
 const { createQRCodeElement, createBarCodeElement } = useHandleCreate()
@@ -105,7 +104,12 @@ const createBarElement = () => {
 
 const createQRElement = (style: string) => {
   const src = `data:image/svg+xml;base64,` + Base64.encode(generateQRCodeMap[style](getEncodeData(118, 118)))
-  createQRCodeElement(src, style, codeContent.value, codeError.value, codeSpace.value)
+  const codeOption = {
+    codeStyle: style,
+    codeSpace: codeSpace.value,
+    codeError: codeError.value,
+  }
+  createQRCodeElement(src, codeOption, codeContent.value)
 }
 </script>
 

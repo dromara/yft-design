@@ -15,14 +15,14 @@
     <el-divider />
     <div class="title">码边距：</div>
     <div class="row">
-      <el-radio-group class="full-ratio" v-model="handleElement.codeSpace" @change="updateCodeSpace">
+      <el-radio-group class="full-ratio" v-model="handleElement.codeOption.codeSpace" @change="updateCodeSpace">
         <el-radio-button :value="true" :label="true">无边距</el-radio-button>
         <el-radio-button :value="false" :label="false">标准边距</el-radio-button>
       </el-radio-group>
     </div>
     <div class="title">容错率：</div>
     <div class="row">
-      <el-radio-group class="full-ratio" v-model="handleElement.codeError" @change="updateCodeError">
+      <el-radio-group class="full-ratio" v-model="handleElement.codeOption.codeError" @change="updateCodeError">
         <el-radio-button label="0">7%</el-radio-button>
         <el-radio-button label="1">15%</el-radio-button>
         <el-radio-button label="2">25%</el-radio-button>
@@ -38,7 +38,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useMainStore, useTemplatesStore } from '@/store'
 import { QRCodeStyleLibs } from '@/configs/codeStyles'
@@ -87,7 +87,7 @@ const generateQRCodeMap = {
 const handleElement = computed(() => canvasObject.value as QRCodeElement)
 const initialIndex = computed(() => {
   if (!handleElement.value) return 0
-  const codeItem = QRCodeStyleLibs.filter(item => item.name === handleElement.value.codeStyle)[0]
+  const codeItem = QRCodeStyleLibs.filter(item => item.name === handleElement.value.codeOption.codeStyle)[0]
   if (codeItem) return codeItem.index
   return 0
 })
@@ -113,17 +113,18 @@ const getEncodeData = (width = QRSize.value, height = QRSize.value) => {
     text: handleElement.value.codeContent,
     width,
     height,
-    correctLevel: Number(handleElement.value.codeError),
-    isSpace: handleElement.value.codeSpace
+    correctLevel: Number(handleElement.value.codeOption.codeError),
+    isSpace: handleElement.value.codeOption.codeSpace
   }
   return encodeData(codeOption)
 }
 
 const generateQRCode = async (style?: string) => {
   const encodeData = getEncodeData()
-  if (style) handleElement.value.codeStyle = style
+  if (style) handleElement.value.codeOption.codeStyle = style
   if (!encodeData) return
-  const src = `data:image/svg+xml;base64,` + Base64.encode(generateQRCodeMap[handleElement.value.codeStyle](encodeData))
+  const codeStyle = handleElement.value.codeOption.codeStyle
+  const src = `data:image/svg+xml;base64,` + Base64.encode(generateQRCodeMap[codeStyle](encodeData))
   const qrcodeElement = canvasObject.value as QRCodeElement
   await qrcodeElement.setSrc(src)
   templatesStore.modifedElement()

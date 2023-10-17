@@ -201,3 +201,19 @@ declare global {
     queryLocalFonts(): any[];
   }
 }
+declare module 'beautify-qrcode' {
+  encodeData()
+  renderer25D()
+  rendererRect()
+  rendererRound()
+  rendererRandRound()
+  rendererDSJ()
+  rendererRandRect()
+  rendererImage()
+  rendererResImage()
+  rendererCircle()
+  rendererLine()
+  rendererLine2()
+  rendererFuncA()
+  rendererFuncB()
+}

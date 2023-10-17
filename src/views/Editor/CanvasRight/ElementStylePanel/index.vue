@@ -38,6 +38,7 @@ const { canvasObject } = storeToRefs(useMainStore())
 
 const currentPanelComponent = computed(() => {
   if (!canvasObject.value) return null
-  return panelMap[canvasObject.value.type.toLowerCase() as ElementNames.TEXT]
+  const canvasType = canvasObject.value.name ? canvasObject.value.name : canvasObject.value.type
+  return panelMap[canvasType.toLowerCase() as ElementNames.TEXT]
 })
 </script>

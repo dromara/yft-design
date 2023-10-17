@@ -1,8 +1,14 @@
-import { Gradient, Pattern, Textbox, Path, Rect, Image, Point, Polygon, Group, Line, Object as FabricObject } from "fabric"
+import { Gradient, Pattern, Textbox, Path, Rect, Image, Point, Polygon, Group, Line, Object as FabricObject, ImageProps } from "fabric"
 import { ColorStop } from "./elements"
 import JsBarcode from "jsbarcode"
 export type LineOption = [number, number, number, number]
 export type TPatternRepeat = 'repeat' | 'repeat-x' | 'repeat-y' | 'no-repeat'
+export type ImageSource = HTMLImageElement | HTMLVideoElement | HTMLCanvasElement
+export interface QRCodeOption {
+  codeStyle: string
+  codeSpace?: boolean
+  codeError?: number
+}
 
 export interface CommenElement {
   id: string
@@ -99,15 +105,23 @@ export interface PolygonElement extends Polygon, CommenElement {
 }
 
 export interface QRCodeElement extends Image, CommenElement {
-  codeStyle: string
-  codeContent?: string
-  codeSpace?: boolean
-  codeError?: number
+  codeContent: string
+  codeOption: QRCodeOption
 }
 
 export interface BarCodeElement extends Image, CommenElement {
   codeContent: string
   codeOption: JsBarcode.BaseOptions     
+}
+
+export interface BarcodeProps extends ImageProps {
+  codeContent: string
+  codeOption: JsBarcode.BaseOptions 
+}
+
+export interface QRCodeProps extends ImageProps {
+  codeContent: string
+  codeOption: QRCodeOption
 }
 
 export interface ImageElement extends Image, CommenElement {

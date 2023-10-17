@@ -1,10 +1,10 @@
 import { ClipPathType } from '@/configs/images'
 import { addCropImageInteractions, isolateObjectForEdit } from '@/extension/mixins/cropping.mixin'
 import { croppingControlSet, flipXCropControls, flipXYCropControls, flipYCropControls } from '@/extension/controls/cropping/cropping.controls'
-import { Image, Point, Path, Object as FabricObject, config, util, classRegistry, TPointerEventInfo, TPointerEvent, ImageProps, TClassProperties } from 'fabric'
+import { Image, Point, Path, Object as FabricObject, config, util, classRegistry, TPointerEventInfo, TPointerEvent, ImageProps, TClassProperties, ImageSource } from 'fabric'
 
 
-type ImageSource = HTMLImageElement | HTMLVideoElement | HTMLCanvasElement
+
 
 export class CropImage extends Image {
   public isCropping?: false

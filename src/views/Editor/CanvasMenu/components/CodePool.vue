@@ -110,7 +110,12 @@ const getEncodeData = (width = 135, height = 135) => {
 
 const createElement = (style: string) => {
   const src = `data:image/svg+xml;base64,` + Base64.encode(generateQRCodeMap[style](getEncodeData(50, 50)))
-  createQRCodeElement(src, style, codeContent.value, codeError.value, codeSpace.value)
+  const codeOption = {
+    codeStyle: style,
+    codeSpace: codeSpace.value,
+    codeError: codeError.value,
+  }
+  createQRCodeElement(src, codeOption, codeContent.value)
 }
 </script>
 

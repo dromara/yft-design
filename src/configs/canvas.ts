@@ -74,6 +74,7 @@ export const propertiesToInclude = [
   'lockMovementY', 
   'objectCaching',
   'transparentCorners',
+  'codeOption',
   'codeStyle',
   'codeContent',
   'codeSpace',

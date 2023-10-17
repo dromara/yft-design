@@ -32,7 +32,7 @@
             <template #reference>
               <ColorButton :color="handleElement.codeOption.background || '#000'" style="flex: 3;" />
             </template>
-            <ColorPicker :modelValue="handleElement.codeOption.background" @update:modelValue="value => updateBackgroundColor(value)"/>
+            <ColorPicker :modelValue="handleElement.codeOption.background" @update:modelValue="(value: string) => updateBackgroundColor(value)"/>
           </el-popover>
         </div>
       </el-col>
@@ -44,7 +44,7 @@
             <template #reference>
               <ColorButton :color="handleElement.codeOption.lineColor || '#000'" style="flex: 3;" />
             </template>
-            <ColorPicker :modelValue="handleElement.codeOption.lineColor" @update:modelValue="value => updateLineColor(value)"/>
+            <ColorPicker :modelValue="handleElement.codeOption.lineColor" @update:modelValue="(value: string) => updateLineColor(value)"/>
           </el-popover>
         </div>
       </el-col>
@@ -58,7 +58,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useMainStore, useTemplatesStore } from '@/store'
 import { BarCodeStyleLibs } from '@/configs/codeStyles'
@@ -117,8 +117,7 @@ const generateBarCode = async () => {
   JsBarCode('#barcode', handleElement.value.codeContent, handleElement.value.codeOption)
   const barcode = document.getElementById('barcode')
   if (!barcode) return
-  const s = new XMLSerializer().serializeToString(barcode)
-  const src = `data:image/svg+xml;base64,` + Base64.encode(s)
+  const src = `data:image/svg+xml;base64,` + Base64.encode(new XMLSerializer().serializeToString(barcode))
   await handleElement.value.setSrc(src)
   templatesStore.modifedElement()
   canvas.renderAll()
