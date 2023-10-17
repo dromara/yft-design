@@ -8,8 +8,7 @@ import { copyText, readClipboard } from "@/utils/clipboard"
 import { encrypt } from "@/utils/crypto"
 import { ElMessage } from 'element-plus'
 import { KEYS } from '@/configs/hotkey'
-import { WorkSpaceDrawType, WorkSpaceMaskColor } from "@/configs/canvas"
-import useCanvas from "@/views/Canvas/useCanvas"
+import { WorkSpaceDrawType, CanvasBackground } from "@/configs/canvas"
 import usePasteTextClipboardData from '@/hooks/usePasteTextClipboardData'
 
 
@@ -46,7 +45,7 @@ export default () => {
         scaleX: 1,
         scaleY: 1,
       },
-      background: WorkSpaceMaskColor
+      background: CanvasBackground
     }
     return emptyTemplate
   }

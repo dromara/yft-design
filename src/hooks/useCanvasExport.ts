@@ -2,13 +2,12 @@ import useCanvas from '@/views/Canvas/useCanvas'
 import { ref } from 'vue'
 import { saveAs } from 'file-saver'
 import { storeToRefs } from 'pinia'
-import { useFabricStore, useTemplatesStore } from '@/store'
-import { WorkSpaceClipType, WorkSpaceSafeType, propertiesToInclude } from '@/configs/canvas'
+import { useFabricStore } from '@/store'
+import { WorkSpaceThumbType, WorkSpaceClipType, WorkSpaceCommonType, WorkSpaceSafeType, propertiesToInclude } from '@/configs/canvas'
 import { changeDataURLDPI } from '@/utils/changdpi'
 import { ImageFormat } from 'fabric'
 import { mm2px } from '@/utils/image'
 import { downloadSVGFile } from '@/utils/download'
-import { CanvasElement } from '@/types/canvas'
 import jsPDF from 'jspdf'
 import useCenter from '@/views/Canvas/useCenter'
 
@@ -16,8 +15,7 @@ import useCenter from '@/views/Canvas/useCenter'
 export default () => {
   
   const Exporting = ref(false)
-  const { templates } = storeToRefs(useTemplatesStore())
-  const ignoreElementIds = [WorkSpaceClipType, WorkSpaceSafeType]
+  const { showClip, showSafe } = storeToRefs(useFabricStore())
   // 导出图片
   const exportImage = (format: ImageFormat, quality: number, dpi: number, ignoreClip = true) => {
     Exporting.value = true
@@ -28,11 +26,14 @@ export default () => {
     const left = workSpaceDraw.left, top = workSpaceDraw.top
     const viewportTransform = canvas.viewportTransform
     const activeObject = canvas.getActiveObject()
+    const ignoreObjects = canvas.getObjects().filter(obj => WorkSpaceCommonType.includes(obj.id))
     if (ignoreClip) {
-      canvas.getObjects().filter(obj => ignoreElementIds.includes((obj as CanvasElement).id)).map(item => item.set({visible: false}))
+      ignoreObjects.map(item => item.set({visible: false}))
       canvas.renderAll()
     }
     if (activeObject) canvas.discardActiveObject()
+    canvas.set({background: 'rgba(255,255,255,0)'})
+    canvas.renderAll()
     const result = canvas.toDataURL({
       multiplier: 1 / zoom,
       quality: quality,
@@ -42,10 +43,12 @@ export default () => {
       left: left * zoom + viewportTransform[4],
       top: top * zoom + viewportTransform[5]
     })
-    const data = changeDataURLDPI(result, dpi)
-    saveAs(data, `yft-design-${Date.now()}.${format}`)
+    // const data = changeDataURLDPI(result, dpi)
+    saveAs(result, `yft-design-${Date.now()}.${format}`)
     Exporting.value = false
-    canvas.getObjects().filter(obj => ignoreElementIds.includes((obj as CanvasElement).id)).map(item => item.set({visible: true}))
+    ignoreObjects.map(item => item.set({visible: true}))
+    canvas.getObjects().filter(obj => obj.id === WorkSpaceClipType).map(item => item.set({visible: showClip.value}))
+    canvas.getObjects().filter(obj => obj.id === WorkSpaceSafeType).map(item => item.set({visible: showSafe.value}))
     if (activeObject) canvas.setActiveObject(activeObject)
     canvas.renderAll()
   }
@@ -55,7 +58,6 @@ export default () => {
     const { originPoint } = useCenter()
     const { workSpaceDraw } = useCenter()
     const width = workSpaceDraw.width, height = workSpaceDraw.height
-    canvas.getObjects().filter(obj => ignoreElementIds.includes((obj as CanvasElement).id)).map(item => item.set({visible: false}))
     canvas.renderAll()
     const data = canvas.toSVG({
       viewBox: {
@@ -77,9 +79,14 @@ export default () => {
 
   const exportSVG = () => {
     const [ canvas ] = useCanvas()
+    const ignoreObjects = canvas.getObjects().filter(obj => WorkSpaceThumbType.includes(obj.id))
+    ignoreObjects.map(item => item.set({visible: false}))
+    canvas.renderAll()
     const data = getSVGData()
     downloadSVGFile(data, `yft-design-${Date.now()}.svg`)
-    canvas.getObjects().filter(obj => ignoreElementIds.includes((obj as CanvasElement).id)).map(item => item.set({visible: true}))
+    ignoreObjects.map(item => item.set({visible: true}))
+    canvas.getObjects().filter(obj => obj.id === WorkSpaceClipType).map(item => item.set({visible: showClip.value}))
+    canvas.getObjects().filter(obj => obj.id === WorkSpaceSafeType).map(item => item.set({visible: showSafe.value}))
     canvas.renderAll()
   }
 

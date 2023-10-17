@@ -19,7 +19,7 @@
       </el-tooltip>
       <el-tooltip placement="top" :hide-after="0">
         <template #content>交叉</template>
-        <IconIntersection class="handler-item" :class="{ 'disable': !canGroup }" @click="intersection()"/>
+        <IconIntersection class="handler-item" @click="intersection()"/>
       </el-tooltip>
     </div>
 
@@ -134,10 +134,9 @@ const mainStore = useMainStore()
 const templatesStore = useTemplatesStore()
 const { alignElement, layerElement } = useHandleTool()
 const { setCanvasScalePercentage, scaleCanvas, resetCanvas } = useCanvasScale()
-const { combineElements, uncombineElements, intersectElements, backElement, forwardElement, backwardElement, sortElement } = useHandleElement()
+const { combineElements, uncombineElements, intersectElements } = useHandleElement()
 const { zoom } = storeToRefs(fabricStore)
 const { canvasObject } = storeToRefs(mainStore)
-const { currentTemplate } = storeToRefs(templatesStore)
 
 const layerRef = ref()
 const layerPopoverRef = ref()
@@ -193,50 +192,9 @@ const ungroup = () => {
 }
 
 const intersection = () => {
-  if (!handleElement.value || handleElement.value.type !== ElementNames.ACTIVE) return
+  if (!handleElement.value) return
   intersectElements()
 }
-
-// 置顶
-const bringToFront = () => {
-  if (!handleElement.value) return
-  let objects = currentTemplate.value.objects
-  if (handleElement.value.group) {
-    objects = handleElement.value.group._objects
-  } 
-  let oldIndex = 0
-  for (let i = 0; i < objects.length; i++) {
-    if ((objects[i] as CanvasElement).id === handleElement.value.id) {
-      oldIndex = i
-    }
-  }
-  sortElement(objects.length - 1, oldIndex, handleElement.value)
-}
-// 置底
-const sendToBack = () => {
-  if (!handleElement.value) return
-  let objects = currentTemplate.value.objects
-  if (handleElement.value.group) {
-    objects = handleElement.value.group._objects
-  } 
-  let oldIndex = 0
-  for (let i = 0; i < objects.length; i++) {
-    if ((objects[i] as CanvasElement).id === handleElement.value.id) {
-      oldIndex = i
-    }
-  }
-  sortElement(0, oldIndex, handleElement.value)
-}
-// // 上移
-// const bringForward = () => {
-//   if (!handleElement.value) return
-//   forwardElement()
-// }
-// // 下移
-// const sendBackwards = () => {
-//   if (!handleElement.value) return
-//   backwardElement()
-// }
 
 // 修改旋转
 const changeRotate = (value: number) => {

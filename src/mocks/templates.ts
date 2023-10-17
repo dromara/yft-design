@@ -15,7 +15,7 @@ export const Templates: Template[] = [
         "ry": 0,
         "id": "WorkSpaceDrawType",
         "name": "rect",
-        "fill": "#fff",
+        "fill": "#f3f3f3",
         "selectable": false,
         "evented": false,
         "lockMovementX": false,
@@ -546,7 +546,7 @@ export const Templates: Template[] = [
         "filters": []
       }
     ],
-    "background": "#f3f3f3",
+    "background": "",
     "workSpace": {
       "fillType": 0,
       "left": 0,
@@ -557,7 +557,7 @@ export const Templates: Template[] = [
     }
   },
   {
-    "background": "#f3f3f3",
+    "background": "rgba(255,255,255,0)",
     "zoom": 0.4298950822503346,
     "width": 456.97508743145806,
     "height": 274.18505245887485,
@@ -570,7 +570,7 @@ export const Templates: Template[] = [
         "ry": 0,
         "id": "WorkSpaceDrawType",
         "name": "rect",
-        "fill": "#fff",
+        "fill": "#f3f3f3",
         "selectable": false,
         "evented": false,
         "lockMovementX": false,
@@ -29484,7 +29484,7 @@ export const Templates: Template[] = [
     }
   },
   {
-    "background": "#f3f3f3",
+    "background": "rgba(255,255,255,0)",
     "zoom": 0.4298950822503346,
     "width": 456.97508743145806,
     "height": 274.18505245887485,
@@ -29497,7 +29497,7 @@ export const Templates: Template[] = [
         "ry": 0,
         "id": "WorkSpaceDrawType",
         "name": "rect",
-        "fill": "#fff",
+        "fill": "#f3f3f3",
         "selectable": false,
         "evented": false,
         "lockMovementX": false,
