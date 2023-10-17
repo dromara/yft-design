@@ -42,71 +42,6 @@ const initConf = () => {
   Object.assign(Textbox.ownDefaults, {
     controls: textboxControls()
   })
-  // Object.prototype.controls.mt.visible = false
-  // Object.prototype.controls.mb.visible = false
-  // console.log('FabricObject.ownDefaults.controls :', FabricObject.ownDefaults )
-  // Object.prototype.controls.mtr = new Control({
-  //   x: 0,
-  //   y: -0.5,
-  //   actionHandler: controlsUtils.rotationWithSnapping,
-  //   cursorStyleHandler: controlsUtils.rotationStyleHandler,
-  //   actionName: 'rotating',
-  //   render: drawRotateIcon,
-  //   sizeX: 20,
-  //   sizeY: 20,
-  //   offsetY: -20,
-  //   withConnection: false,
-  //   mouseDownHandler: () => rotateElement(),
-  //   mouseUpHandler: () => unrotateElement()
-  // })
-
-  // Object.prototype.controls.angle = new Control({
-  //   x: 0,
-  //   y: -0.5,
-  //   actionName: 'angle',
-  //   render: drawAngleIcon,
-  //   sizeX: 20,
-  //   sizeY: 20,
-  //   offsetY: -60,
-  //   withConnection: false,
-  // })
-  
-  // Textbox.prototype.controls.ml = new Control({
-  //   x: -0.5,
-  //   y: 0,
-  //   actionHandler: controlsUtils.changeWidth,
-  //   cursorStyleHandler: controlsUtils.scaleSkewCursorStyleHandler,
-  //   actionName: 'resizing',
-  //   render: drawVerticalLeftLineIcon,
-  //   sizeX: 28,
-  //   sizeY: 28,
-  //   withConnection: true,
-  // })
-
-  // Textbox.prototype.controls.mtr = new Control({
-  //   x: 0,
-  //   y: -0.5,
-  //   actionHandler: controlsUtils.rotationWithSnapping,
-  //   cursorStyleHandler: controlsUtils.rotationStyleHandler,
-  //   actionName: 'rotating',
-  //   render: drawRotateIcon,
-  //   sizeX: 20,
-  //   sizeY: 20,
-  //   offsetY: -20,
-  //   withConnection: false,
-  // })
-
-  // Textbox.prototype.controls.mr = new Control({
-  //   x: 0.5,
-  //   y: 0,
-  //   actionHandler: controlsUtils.changeWidth,
-  //   cursorStyleHandler: controlsUtils.scaleSkewCursorStyleHandler,
-  //   actionName: 'resizing',
-  //   render: drawVerticalRightLineIcon,
-  //   sizeX: 28,
-  //   sizeY: 28,
-  //   withConnection: true,
-  // })
 }
 
 const initWorkSpace = (width: number, height: number) => {
@@ -170,12 +105,12 @@ const initCanvas = () => {
     width: fabricWidth,
     height: fabricHeight
   } as CanvasOptions)
-  const keybinding = new Keybinding()
+  // const keybinding = new Keybinding()
   new PressKey(canvas)
   new GuideLines(canvas)
   new HoverBorders(canvas)
   new WheelScroll(canvas)
-  new CheckRuler(canvas, keybinding)
+  new CheckRuler(canvas)
   canvas.preserveObjectStacking = true
   canvas.renderAll()
 }

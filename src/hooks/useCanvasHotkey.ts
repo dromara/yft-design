@@ -31,6 +31,7 @@ export default () => {
     handleElementId,
     thumbnailsFocus,
     drawAreaFocus,
+    rulerShow
   } = storeToRefs(mainStore)
   const { currentTemplate, templateIndex } = storeToRefs(templatesStore)
   const { ctrlKeyState, shiftKeyState, spaceKeyState } = storeToRefs(keyboardStore)
@@ -287,7 +288,7 @@ export default () => {
       console.log('key:', key)
       if (disableHotkeys.value) return
       e.preventDefault()
-      
+      rulerShow.value = !rulerShow.value
     }
   }
   

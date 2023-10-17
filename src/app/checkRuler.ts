@@ -5,6 +5,8 @@ import { watchEffect } from 'vue'
 // import { useThemes } from '@/hooks/useThemes'
 import { PiBy180 } from '@/utils/common'
 import { TAxis, Canvas } from 'fabric'
+import { useMainStore } from '@/store'
+import { storeToRefs } from 'pinia'
 
 type Rect = { left: number; top: number; width: number; height: number }
 
@@ -69,7 +71,7 @@ export class CheckRuler extends Disposable {
     y: HighlightRect[]
   }
 
-  constructor(private readonly canvas: Canvas, readonly keybinding: Keybinding) {
+  constructor(private readonly canvas: Canvas) {
     super()
 
     // 合并默认配置
@@ -83,6 +85,7 @@ export class CheckRuler extends Disposable {
     const isDark = false
 
     watchEffect(() => {
+      const { rulerShow } = storeToRefs(useMainStore())
       this.options = {
         ...this.options,
         ...(isDark
@@ -100,15 +103,12 @@ export class CheckRuler extends Disposable {
             }),
       }
       this.render({ ctx: this.canvas.contextContainer })
+      this.enabled = rulerShow.value
     })
 
     this.canvasEvents = {
       'after:render': this.render.bind(this),
     }
-
-    this.keybinding.bind('shift+r', () => {
-      this.enabled = !this.enabled
-    })
 
     this.enabled = this.options.enabled
   }
