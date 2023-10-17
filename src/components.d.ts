@@ -201,7 +201,11 @@ declare global {
     queryLocalFonts(): any[];
   }
 }
-declare module 'beautify-qrcode' {
+
+export declare module 'beautify-qrcode' {
+
+}
+export declare module 'beautify-qrcode' {
   encodeData()
   renderer25D()
   rendererRect()
@@ -216,4 +220,30 @@ declare module 'beautify-qrcode' {
   rendererLine2()
   rendererFuncA()
   rendererFuncB()
+}
+
+declare module "beautify-qrcode" {
+  interface qrOptions {
+    text: string;
+    correctLevel: 1 | 0 | 3 | 2;
+    width: number;
+    height: number;
+    isSpace: boolean;
+  }
+  export default {
+    encodeData: (options: qrOptions) => {},
+    renderer25D: (): string => {},
+    rendererRect: (): string => {},
+    rendererRound: (): string => {},
+    rendererRandRound: (): string => {},
+    rendererDSJ: (): string => {},
+    rendererRandRect: (): string => {},
+    rendererImage: (): string => {},
+    rendererResImag: (): string => {},
+    rendererCircle: (): string => {},
+    rendererLine: (): string => {},
+    rendererLine2: (): string => {},
+    rendererFuncA: (): string => {},
+    rendererFuncB: (): string => {},
+  };
 }

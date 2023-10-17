@@ -42,7 +42,6 @@ import {
   rendererDSJ,
   rendererRandRect,
   rendererImage,
-  rendererResImage,
   rendererCircle,
   rendererLine,
   rendererLine2,
@@ -50,6 +49,7 @@ import {
   rendererFuncB,
 } from 'beautify-qrcode'
 import useHandleCreate from '@/hooks/useHandleCreate'
+import { QRCodeType } from '@/types/canvas'
 
 
 const { createQRCodeElement, createBarCodeElement } = useHandleCreate()
@@ -67,7 +67,6 @@ const generateQRCodeMap = {
   'SP3': rendererCircle,
   'B1': renderer25D,
   'C1': rendererImage,
-  'C2': rendererResImage,
   'A_a1': rendererLine,
   'A_a2': rendererLine2,
   'A_b1': rendererFuncA,
@@ -102,7 +101,7 @@ const createBarElement = () => {
   createBarCodeElement(src, '1234', codeOption)
 }
 
-const createQRElement = (style: string) => {
+const createQRElement = (style: QRCodeType) => {
   const src = `data:image/svg+xml;base64,` + Base64.encode(generateQRCodeMap[style](getEncodeData(118, 118)))
   const codeOption = {
     codeStyle: style,

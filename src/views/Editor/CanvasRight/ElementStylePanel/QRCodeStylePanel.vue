@@ -4,7 +4,7 @@
     <el-carousel type="card" :height="QRSize + 'px'" :initial-index="initialIndex" :autoplay="false" trigger="click" indicator-position="none" ref="carousel">
       <el-carousel-item v-for="item in QRCodeStyleLibs" :key="item.index" :name="item.name">
         <div justify="center" @click="generateQRCode(item.name)">
-          <img v-if="item.name !== 'C2'" :src="`data:image/svg+xml;base64,` + Base64.encode(generateQRCodeMap[item.name](getEncodeData()))" :alt="item.name">
+          <img v-if="item.name !== 'C2'" :src="`data:image/svg+xml;base64,` + Base64.encode(generateQRCodeMap[item.name as QRCodeType](getEncodeData()))" :alt="item.name">
         </div>
       </el-carousel-item>
     </el-carousel>
@@ -58,7 +58,7 @@ import {
   rendererFuncB,
 } from 'beautify-qrcode'
 import { Base64 } from 'js-base64'
-import { QRCodeElement } from '@/types/canvas'
+import { QRCodeElement, QRCodeType } from '@/types/canvas'
 import useCanvas from '@/views/Canvas/useCanvas'
 import ElementOutline from '../Components/ElementOutline.vue'
 import ElementShadow from '../Components/ElementShadow.vue'
@@ -119,11 +119,11 @@ const getEncodeData = (width = QRSize.value, height = QRSize.value) => {
   return encodeData(codeOption)
 }
 
-const generateQRCode = async (style?: string) => {
+const generateQRCode = async (style?: QRCodeType) => {
   const encodeData = getEncodeData()
   if (style) handleElement.value.codeOption.codeStyle = style
   if (!encodeData) return
-  const codeStyle = handleElement.value.codeOption.codeStyle
+  const codeStyle = handleElement.value.codeOption.codeStyle as QRCodeType
   const src = `data:image/svg+xml;base64,` + Base64.encode(generateQRCodeMap[codeStyle](encodeData))
   const qrcodeElement = canvasObject.value as QRCodeElement
   await qrcodeElement.setSrc(src)

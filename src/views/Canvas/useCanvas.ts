@@ -10,7 +10,7 @@ import { WheelScroll } from '@/app/wheelScroll'
 import { CheckRuler } from '@/app/checkRuler'
 
 import { FabricCanvas } from '@/app/fabricCanvas'
-import { defaultControls } from '@/app/fabricControls'
+import { defaultControls, textboxControls } from '@/app/fabricControls'
 import { useTemplatesStore } from '@/store'
 import { CanvasElement } from '@/types/canvas'
 import { WorkSpaceDrawType, WorkSpaceCommonType } from '@/configs/canvas'
@@ -39,7 +39,7 @@ const initConf = () => {
   FabricObject.ownDefaults.controls = defaultControls()
 
   Object.assign(Textbox.ownDefaults, {
-    controls: defaultControls()
+    controls: textboxControls()
   })
   // Object.prototype.controls.mt.visible = false
   // Object.prototype.controls.mb.visible = false

@@ -7,8 +7,8 @@
       <div class="title">码样式：</div>
       <el-carousel type="card" height="135px" :autoplay="false" trigger="click" indicator-position="none">
         <el-carousel-item v-for="item in QRCodeStyleLibs" :key="item">
-          <div justify="center" @click="createElement(item.name)">
-            <img v-if="item.name !== 'C2'" :src="`data:image/svg+xml;base64,` + Base64.encode(generateQRCodeMap[item.name](getEncodeData()))" :alt="item.name">
+          <div justify="center" @click="createElement(item.name as QRCodeType)">
+            <img v-if="item.name !== 'C2'" :src="`data:image/svg+xml;base64,` + Base64.encode(generateQRCodeMap[item.name as QRCodeType](getEncodeData()))" :alt="item.name">
             <img v-else :src="c2QRURL" alt="">
           </div>
         </el-carousel-item>
@@ -38,8 +38,9 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { Base64 } from 'js-base64'
+import { QRCodeType } from '@/types/canvas'
 import { QRCodeStyleLibs } from '@/configs/codeStyles'
 import { 
   encodeData,
@@ -74,7 +75,6 @@ const generateQRCodeMap = {
   'SP3': rendererCircle,
   'B1': renderer25D,
   'C1': rendererImage,
-  'C2': rendererResImage,
   'A_a1': rendererLine,
   'A_a2': rendererLine2,
   'A_b1': rendererFuncA,
@@ -108,7 +108,7 @@ const getEncodeData = (width = 135, height = 135) => {
   return encodeData(codeOption)
 }
 
-const createElement = (style: string) => {
+const createElement = (style: QRCodeType) => {
   const src = `data:image/svg+xml;base64,` + Base64.encode(generateQRCodeMap[style](getEncodeData(50, 50)))
   const codeOption = {
     codeStyle: style,

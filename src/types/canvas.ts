@@ -4,8 +4,9 @@ import JsBarcode from "jsbarcode"
 export type LineOption = [number, number, number, number]
 export type TPatternRepeat = 'repeat' | 'repeat-x' | 'repeat-y' | 'no-repeat'
 export type ImageSource = HTMLImageElement | HTMLVideoElement | HTMLCanvasElement
+export type QRCodeType = 'A1' | 'A2' | 'A3' | 'SP1' | 'SP2' | 'SP3' | 'B1'| 'C1'| 'A_a1'| 'A_a2'| 'A_b1'| 'A_b2'
 export interface QRCodeOption {
-  codeStyle: string
+  codeStyle: QRCodeType
   codeSpace?: boolean
   codeError?: number
 }
