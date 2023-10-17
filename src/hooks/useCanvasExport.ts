@@ -1,15 +1,16 @@
-import useCanvas from '@/views/Canvas/useCanvas'
+
 import { ref } from 'vue'
 import { saveAs } from 'file-saver'
 import { storeToRefs } from 'pinia'
 import { useFabricStore } from '@/store'
 import { WorkSpaceThumbType, WorkSpaceClipType, WorkSpaceCommonType, WorkSpaceSafeType, propertiesToInclude } from '@/configs/canvas'
-import { changeDataURLDPI } from '@/utils/changdpi'
 import { ImageFormat } from 'fabric'
 import { mm2px } from '@/utils/image'
 import { downloadSVGFile } from '@/utils/download'
+import useCanvas from '@/views/Canvas/useCanvas'
 import useCenter from '@/views/Canvas/useCenter'
-
+import PDFDocument from 'pdfkit'
+import FileSaver from 'file-saver'
 
 export default () => {
   
@@ -89,29 +90,36 @@ export default () => {
     canvas.renderAll()
   }
 
+  const generatePDF = () => {
+    const doc = new PDFDocument();
+    // 添加内容到PDF
+    doc.text('Hello, World!');
+  
+    return new Promise<any>((resolve) => {
+      let chunks: any[] = [];
+      doc.on('data', (chunk) => chunks.push(chunk));
+      doc.on('end', () => resolve(new Blob(chunks, { type: 'application/pdf' })));
+      doc.end();
+    });
+  };
+
   // 导出PDF
   const exportPDF = async () => {
     const [ canvas ] = useCanvas()
-    const { clip } = storeToRefs(useFabricStore())
-    const zoom = canvas.getZoom()
-    const { workSpaceDraw } = useCenter()
-    const width = workSpaceDraw.width ? workSpaceDraw.width * zoom : 0
-    const height = workSpaceDraw.height ? workSpaceDraw.height * zoom : 0
-    const left = workSpaceDraw.left ? workSpaceDraw.left : 0
-    const top = workSpaceDraw.top ? workSpaceDraw.top : 0
-    const viewportTransform = canvas.viewportTransform
-    if (!viewportTransform) return
+    // const { clip } = storeToRefs(useFabricStore())
+    // const zoom = canvas.getZoom()
+    // const { workSpaceDraw } = useCenter()
+    // const width = workSpaceDraw.width ? workSpaceDraw.width * zoom : 0
+    // const height = workSpaceDraw.height ? workSpaceDraw.height * zoom : 0
+    // const left = workSpaceDraw.left ? workSpaceDraw.left : 0
+    // const top = workSpaceDraw.top ? workSpaceDraw.top : 0
+    // const viewportTransform = canvas.viewportTransform
+    // if (!viewportTransform) return
     
+    const pdfBlob = await generatePDF();
+    const pdfURL = URL.createObjectURL(pdfBlob);
     
-    const result = canvas.toDataURL({
-      multiplier: 1 / zoom,
-      quality: 1,
-      // format: 'jpeg', 
-      width: width + 2 * mm2px(clip.value),
-      height: height + 2 * mm2px(clip.value),
-      left: left * zoom + viewportTransform[4],
-      top: top * zoom + viewportTransform[5]
-    })
+    window.open(pdfURL); // 在新窗口中打开PDF
     // doc.addImage(result, 'JPEG', 0, 0, width, height)
     // doc.save(`yft-design-${Date.now()}.${'pdf'}`)
   }
