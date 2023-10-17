@@ -78,7 +78,7 @@ export const changeWidth = (eventData: MouseEvent, transform: Transform, x: numb
 }
 
 export const changeHeight = (eventData: MouseEvent, transform: Transform, x: number, y: number) => {
-  const localPoint = getLocalPoint(transform, transform.originX, transform.originY, x, y);
+  const localPoint = fabric.controlsUtils.getLocalPoint(transform, transform.originX, transform.originY, x, y);
   
   //  make sure the control changes width ONLY from it's side of target
   const { target } = transform

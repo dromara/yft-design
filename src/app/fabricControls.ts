@@ -1,4 +1,5 @@
 import { noop } from '@vueuse/core'
+import { changeHeight as changeSize } from '@/extension/controls'
 import { Control, Object as FabricObject, controlsUtils, Point, TPointerEvent, Transform, TDegree } from 'fabric'
 import { PiBy180, toFixed } from '@/utils/common'
 import { TControlSet } from '@/types/fabric'
@@ -281,6 +282,11 @@ const changeWidth = controlsUtils.wrapWithFireEvent(
   controlsUtils.wrapWithFixedAnchor(controlsUtils.changeWidth),
 )
 
+const changeHeight = controlsUtils.wrapWithFireEvent(
+  'scaling',
+  controlsUtils.wrapWithFixedAnchor(changeSize)
+)
+
 export const resizeControls = (): TControlSet => ({
   mr: new Control({
     x: 0.5,
@@ -294,6 +300,22 @@ export const resizeControls = (): TControlSet => ({
     x: -0.5,
     y: 0,
     actionHandler: changeWidth,
+    cursorStyleHandler: controlsUtils.scaleSkewCursorStyleHandler,
+    render: noop,
+    // positionHandler: positionHandlerH,
+  }),
+  mt: new Control({
+    x: 0,
+    y: -0.5,
+    actionHandler: changeHeight,
+    cursorStyleHandler: controlsUtils.scaleSkewCursorStyleHandler,
+    render: noop,
+    // positionHandler: positionHandlerH,
+  }),
+  mb: new Control({
+    x: 0,
+    y: 0.5,
+    actionHandler: changeHeight,
     cursorStyleHandler: controlsUtils.scaleSkewCursorStyleHandler,
     render: noop,
     // positionHandler: positionHandlerH,
