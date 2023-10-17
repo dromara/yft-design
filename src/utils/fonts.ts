@@ -1,7 +1,5 @@
 import { SystemFont } from "@/types/common"
-import * as localFonts from './localFonts'
 
-const { showStatus } = localFonts
 
 /**
  * 判断操作系统是否存在某字体
@@ -37,10 +35,4 @@ export const getSupportFonts = (fontNames: SystemFont[]) => {
     }
     return getDotArray(arial).join('') !== getDotArray(item.value).join('')
   })
-}
-
-
-// 获取本地字体
-export const getLocalFonts = () => {
-  showStatus()
 }

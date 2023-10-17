@@ -1,11 +1,11 @@
 import { Object as FabricObject } from 'fabric'
 import { customAlphabet } from 'nanoid'
 import { defineStore } from 'pinia'
-import { RightStates, PointElement } from '@/types/elements'
 import { SYS_FONTS } from '@/configs/fonts'
-import { getSupportFonts, getLocalFonts } from '@/utils/fonts'
-import { ExportTypes, PoolType, SystemFont } from '@/types/common'
+import { getSupportFonts } from '@/utils/fonts'
 import { CanvasElement } from '@/types/canvas'
+import { RightStates, PointElement } from '@/types/elements'
+import { ExportTypes, PoolType, SystemFont } from '@/types/common'
 import useCanvas from '@/views/Canvas/useCanvas'
 
 export interface MainState {

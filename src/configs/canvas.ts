@@ -62,8 +62,9 @@ export const propertiesToInclude = [
   'isShow',
   'isCheck',
   'color', 
-  'isCrop', 
-  'cropId', 
+  'cropKey', 
+  'cropPath', 
+  'cropSize', 
   'fill',
   'selectable',
   'evented',
@@ -75,9 +76,6 @@ export const propertiesToInclude = [
   'objectCaching',
   'transparentCorners',
   'codeOption',
-  'codeStyle',
   'codeContent',
-  'codeSpace',
-  'codeError',
   'background'
 ]

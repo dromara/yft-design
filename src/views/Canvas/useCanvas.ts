@@ -10,6 +10,7 @@ import { WheelScroll } from '@/app/wheelScroll'
 import { CheckRuler } from '@/app/checkRuler'
 
 import { FabricCanvas } from '@/app/fabricCanvas'
+import { Keybinding } from '@/app/keybinding'
 import { defaultControls, textboxControls } from '@/app/fabricControls'
 import { useTemplatesStore } from '@/store'
 import { CanvasElement } from '@/types/canvas'
@@ -169,11 +170,12 @@ const initCanvas = () => {
     width: fabricWidth,
     height: fabricHeight
   } as CanvasOptions)
+  const keybinding = new Keybinding()
   new PressKey(canvas)
   new GuideLines(canvas)
   new HoverBorders(canvas)
   new WheelScroll(canvas)
-  new CheckRuler(canvas)
+  new CheckRuler(canvas, keybinding)
   canvas.preserveObjectStacking = true
   canvas.renderAll()
 }

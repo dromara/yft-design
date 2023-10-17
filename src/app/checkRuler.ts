@@ -1,4 +1,5 @@
 // import { FabricCanvas, IFabricCanvas } from '@/core/canvas/fabricCanvas'
+import { Keybinding } from './keybinding'
 import { Disposable } from '@/utils/lifecycle'
 import { watchEffect } from 'vue'
 // import { useThemes } from '@/hooks/useThemes'
@@ -68,7 +69,7 @@ export class CheckRuler extends Disposable {
     y: HighlightRect[]
   }
 
-  constructor(private readonly canvas: Canvas) {
+  constructor(private readonly canvas: Canvas, readonly keybinding: Keybinding) {
     super()
 
     // 合并默认配置
@@ -105,9 +106,9 @@ export class CheckRuler extends Disposable {
       'after:render': this.render.bind(this),
     }
 
-    // this.keybinding.bind('shift+r', () => {
-    //   this.enabled = !this.enabled
-    // })
+    this.keybinding.bind('shift+r', () => {
+      this.enabled = !this.enabled
+    })
 
     this.enabled = this.options.enabled
   }

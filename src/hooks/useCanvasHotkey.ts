@@ -283,6 +283,12 @@ export default () => {
       e.preventDefault()
       // tabActiveElement()
     }
+    if (shiftKey && key ===  KEYS.R) {
+      console.log('key:', key)
+      if (disableHotkeys.value) return
+      e.preventDefault()
+      
+    }
   }
   
   const keyupListener = () => {
@@ -291,16 +297,6 @@ export default () => {
     if (spaceKeyState.value) keyboardStore.setSpaceKeyState(false)
   }
 
-  // onMounted(() => {
-  //   document.addEventListener('keydown', keydownListener)
-  //   document.addEventListener('keyup', keyupListener)
-  //   window.addEventListener('blur', keyupListener)
-  // })
-  // onUnmounted(() => {
-  //   document.removeEventListener('keydown', keydownListener)
-  //   document.removeEventListener('keyup', keyupListener)
-  //   window.removeEventListener('blur', keyupListener)
-  // })
   return {
     keydownListener,
     keyupListener,
