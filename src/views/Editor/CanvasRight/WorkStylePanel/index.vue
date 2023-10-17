@@ -125,27 +125,46 @@ const { sizeMode, unitMode } = storeToRefs(mainStore)
 const { currentTemplate } = storeToRefs(templatesStore)
 const { clip, safe, zoom, opacity } = storeToRefs(fabricStore)
 
-const canvasWidth = ref<number>(px2mm(currentTemplate.value.width / currentTemplate.value.zoom))
-const canvasHeight = ref<number>(px2mm(currentTemplate.value.height / currentTemplate.value.zoom))
-
-watch(currentTemplate, () => {
+const templateWidth = computed(() => {
   const [ canvas ] = useCanvas()
-  if (!canvas) return
+  if (!canvas) return 0
   const { workSpaceDraw } = useCenter()
-  if (!workSpaceDraw || !currentTemplate.value) return
+  if (!workSpaceDraw || !currentTemplate.value) return 0
   const workWidth = currentTemplate.value.width / currentTemplate.value.zoom
-  const workHeight = currentTemplate.value.height / currentTemplate.value.zoom
-  if (unitMode.value === 0) {
-    canvasWidth.value = px2mm(workWidth)
-    canvasHeight.value = px2mm(workHeight)
-  } 
-  else {
-    canvasWidth.value = workWidth
-    canvasHeight.value = workHeight
-  }
-}, { deep: true })
+  return unitMode.value === 0 ? px2mm(workWidth) : workWidth
+})
 
-// 宽高固定比例
+const templateHeight = computed(() => {
+  const [ canvas ] = useCanvas()
+  if (!canvas) return 0
+  const { workSpaceDraw } = useCenter()
+  if (!workSpaceDraw || !currentTemplate.value) return 0
+  const workHeight = currentTemplate.value.height / currentTemplate.value.zoom
+  return unitMode.value === 0 ? px2mm(workHeight) : workHeight
+})
+
+// const canvasWidth = ref<number>(px2mm(currentTemplate.value.width / currentTemplate.value.zoom))
+const canvasWidth = ref<number>(templateWidth.value)
+const canvasHeight = ref<number>(templateHeight.value)
+
+// watch(currentTemplate, () => {
+//   const [ canvas ] = useCanvas()
+//   if (!canvas) return
+//   const { workSpaceDraw } = useCenter()
+//   if (!workSpaceDraw || !currentTemplate.value) return
+//   const workWidth = currentTemplate.value.width / currentTemplate.value.zoom
+//   const workHeight = currentTemplate.value.height / currentTemplate.value.zoom
+//   if (unitMode.value === 0) {
+//     canvasWidth.value = px2mm(workWidth)
+//     canvasHeight.value = px2mm(workHeight)
+//   } 
+//   else {
+//     canvasWidth.value = workWidth
+//     canvasHeight.value = workHeight
+//   }
+// }, { deep: true })
+
+// 固定宽高
 const isFixed = ref(false)
 
 // 直角圆角
