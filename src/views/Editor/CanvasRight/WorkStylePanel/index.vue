@@ -147,23 +147,6 @@ const templateHeight = computed(() => {
 const canvasWidth = ref<number>(templateWidth.value)
 const canvasHeight = ref<number>(templateHeight.value)
 
-// watch(currentTemplate, () => {
-//   const [ canvas ] = useCanvas()
-//   if (!canvas) return
-//   const { workSpaceDraw } = useCenter()
-//   if (!workSpaceDraw || !currentTemplate.value) return
-//   const workWidth = currentTemplate.value.width / currentTemplate.value.zoom
-//   const workHeight = currentTemplate.value.height / currentTemplate.value.zoom
-//   if (unitMode.value === 0) {
-//     canvasWidth.value = px2mm(workWidth)
-//     canvasHeight.value = px2mm(workHeight)
-//   } 
-//   else {
-//     canvasWidth.value = workWidth
-//     canvasHeight.value = workHeight
-//   }
-// }, { deep: true })
-
 // 固定宽高
 const isFixed = ref(false)
 

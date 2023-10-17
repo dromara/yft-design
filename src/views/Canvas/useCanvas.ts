@@ -16,6 +16,7 @@ import { useTemplatesStore } from '@/store'
 import { CanvasElement } from '@/types/canvas'
 import { WorkSpaceDrawType, WorkSpaceCommonType } from '@/configs/canvas'
 import useCommon from './useCommon'
+import useCanvasScale from '@/hooks/useCanvasScale'
 
 
 
@@ -44,44 +45,15 @@ const initConf = () => {
   })
 }
 
-const initWorkSpace = (width: number, height: number) => {
-  if (!canvas) return
-  const fabricStore = useFabricStore()
-  const templatesStore = useTemplatesStore()
-  const { scalePercentage, zoom, clip } = storeToRefs(fabricStore)
-  const { currentTemplate } = storeToRefs(templatesStore)
-  const scalePercentageVal = scalePercentage.value / 100
-  let zoomVal = 1
-  const workWidth = currentTemplate.value.width / currentTemplate.value.zoom
-  const workHeight = currentTemplate.value.height / currentTemplate.value.zoom
-  if (width < workWidth / scalePercentageVal || height < workHeight / scalePercentageVal) {
-    //按照宽度缩放
-    if (workWidth / width > workHeight / height) {
-      zoomVal = workWidth / (width * scalePercentageVal)
-    } 
-    //按照高度缩放
-    else {  
-      zoomVal = workHeight / (height * scalePercentageVal)
-    }
-  }
-  zoom.value = 1 / zoomVal
-  clip.value = currentTemplate.value.clip
-  canvas.setZoom(zoom.value)
-  return {
-    workWidth,
-    workHeight
-  }
-}
-
 // 更新视图区长宽
 const setCanvasTransform = () => {
   
   if (!canvas) return
-  
+  const { setWorkSpace } = useCanvasScale()
   const fabricStore = useFabricStore()
   const { zoom, wrapperRef } = storeToRefs(fabricStore)
   const { width, height } = useElementBounding(wrapperRef.value)
-  initWorkSpace(width.value, height.value)
+  setWorkSpace(width.value, height.value)
   const WorkSpaceDraw = canvas.getObjects().filter(item => (item as CanvasElement).id === WorkSpaceDrawType)[0]
   if (!WorkSpaceDraw) return
   const workSpaceBound = WorkSpaceDraw.getBoundingRect()

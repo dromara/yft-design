@@ -199,31 +199,6 @@ export default () => {
     activeObject.set({globalCompositeOperation: 'xor'})
     canvas.renderAll()
     templatesStore.modifedElement()
-    // canvas.discardActiveObject()
-    // mainStore.setCanvasObject(null)
-    // if (activeObjects.length !== 2) return
-    // // activeObjects.map(item => item.set({globalCompositeOperation: 'xor'}))
-    // // activeObjects[0].set({globalCompositeOperation: 'xor'})
-    // // const group = new Group(activeObjects, { 
-    // //   id: nanoid(10),
-    // //   name: ElementNames.GROUP,
-    // //   interactive: false, 
-    // //   subTargetCheck: true,
-    // // })
-    // // canvas.remove(...activeObjects)
-    // // canvas.add(group)
-    // // templatesStore.modifedElement()
-    // // templatesStore.renderElement()
-    // activeObjects.map(item => item.set({globalCompositeOperation: 'xor'}))
-    // const groupElement = new Group(activeObjects, { 
-    //   id: nanoid(10),
-    //   name: ElementNames.GROUP,
-    // })
-    // canvas.add(groupElement)
-    // templatesStore.deleteElement(activeObjects.map(item => item.id))
-    // templatesStore.addElement(groupElement.toObject(propertiesToInclude as any[]))
-    // templatesStore.renderElement()
-    // canvas.remove(...activeObjects)
   }
 
   const uncombineElements = () => {

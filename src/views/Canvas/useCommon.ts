@@ -12,7 +12,7 @@ import {
   WorkSpaceCommonOption,
 } from '@/configs/canvas'
 import { Line, Group, Rect, Path } from 'fabric'
-import { CanvasElement, LineOption } from '@/types/canvas'
+import { LineOption } from '@/types/canvas'
 import { TransparentFill } from '@/configs/background'
 import useCanvas from "./useCanvas"
 
@@ -20,7 +20,7 @@ export default () => {
   const initCommon = () => {
     const [canvas] = useCanvas()
     if (!canvas) return
-    const workSpaceDraw = canvas.getObjects().filter(ele => (ele as CanvasElement).id === WorkSpaceDrawType)[0]
+    const workSpaceDraw = canvas.getObjects().filter(ele => ele.id === WorkSpaceDrawType)[0]
     if (!workSpaceDraw) return
     const fabricStore = useFabricStore()
     const templatesStore = useTemplatesStore()

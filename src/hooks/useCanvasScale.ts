@@ -1,13 +1,12 @@
 import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useFabricStore, useTemplatesStore } from '@/store'
+import { useElementBounding } from '@vueuse/core'
 import useCanvas from '@/views/Canvas/useCanvas'
 import useCenter from '@/views/Canvas/useCenter'
-import { useElementBounding } from '@vueuse/core'
 
 export default () => {
   const fabricStore = useFabricStore()
-  const templatesStore = useTemplatesStore()
   const { zoom, wrapperRef } = storeToRefs(fabricStore)
   const canvasScalePercentage = computed(() => Math.round(zoom.value * 100) + '%')
 
@@ -40,7 +39,7 @@ export default () => {
     zoom.value = canvas.getZoom()
   }
 
-  const initWorkSpace = (width: number, height: number) => {
+  const setWorkSpace = (width: number, height: number) => {
     const [ canvas ] = useCanvas()
     if (!canvas) return
     const fabricStore = useFabricStore()
@@ -51,8 +50,7 @@ export default () => {
     let zoomVal = 1
     const workWidth = currentTemplate.value.width / currentTemplate.value.zoom
     const workHeight = currentTemplate.value.height / currentTemplate.value.zoom
-    
-    if (width < workWidth || height < workHeight) {
+    if (width < workWidth / scalePercentageVal || height < workHeight / scalePercentageVal) {
       //按照宽度缩放
       if (workWidth / width > workHeight / height) {
         zoomVal = workWidth / (width * scalePercentageVal)
@@ -79,7 +77,7 @@ export default () => {
     const fabricStore = useFabricStore()
     const { zoom, wrapperRef } = storeToRefs(fabricStore)
     const { width, height } = useElementBounding(wrapperRef.value)
-    initWorkSpace(width.value, height.value)
+    setWorkSpace(width.value, height.value)
     const workSpaceBound = workSpaceDraw.getBoundingRect()
     const left = workSpaceDraw.left, top = workSpaceDraw.top
     const canvasTransform = canvas.viewportTransform
@@ -108,6 +106,7 @@ export default () => {
     canvasScalePercentage,
     setCanvasScalePercentage,
     setCanvasTransform,
+    setWorkSpace,
     scaleCanvas,
     resetCanvas,
     setCanvasSize
