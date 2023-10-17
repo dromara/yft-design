@@ -139,9 +139,9 @@ export default ({ command }: ConfigEnv): UserConfigExport => {
       sourcemap: false,
       rollupOptions: {
         output: {
-          chunkFileNames: 'js/[name]-[hash].js',  // 引入文件名的名称
-          entryFileNames: 'js/[name]-[hash].js',  // 包的入口文件名称
-          assetFileNames: '[ext]/[name]-[hash].[ext]', // 资源文件像 字体，图片等
+          // chunkFileNames: 'js/[name]-[hash].js',  // 引入文件名的名称
+          // entryFileNames: 'js/[name]-[hash].js',  // 包的入口文件名称
+          // assetFileNames: '[ext]/[name]-[hash].[ext]', // 资源文件像 字体，图片等
           manualChunks: {
             vue: ['vue'],
             fabric: ['fabric'],

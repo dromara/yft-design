@@ -1,6 +1,7 @@
-import { Point, TransformActionHandler, Control, Polygon as OriginPolygon, classRegistry, FabricObjectProps, XY } from 'fabric'
-import { polygonPositionHandler, anchorWrapper, actionHandler} from '@/extension/controls/index'
 import { TControlSet } from '@/types/fabric'
+import { polygonPositionHandler, anchorWrapper, actionHandler} from '@/app/fabricControls'
+import { Point, TransformActionHandler, Control, Polygon as OriginPolygon, classRegistry, FabricObjectProps, XY } from 'fabric'
+
 
 export class Polygon extends OriginPolygon {
 

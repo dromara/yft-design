@@ -1,8 +1,94 @@
 import { noop } from '@vueuse/core'
-import { changeHeight as changeSize } from '@/extension/controls'
-import { Control, Object as FabricObject, controlsUtils, Point, TPointerEvent, Transform, TDegree } from 'fabric'
-import { PiBy180, toFixed } from '@/utils/common'
 import { TControlSet } from '@/types/fabric'
+import { PolygonElement } from '@/types/canvas'
+import { PiBy180, toFixed } from '@/utils/common'
+import { Control, Object as FabricObject, controlsUtils, Point, TPointerEvent, Transform, TDegree, util,TransformActionHandler } from 'fabric'
+
+
+
+export const changeObjectHeight: TransformActionHandler = (eventData: TPointerEvent, transform: Transform, x: number, y: number) => {
+  const localPoint = controlsUtils.getLocalPoint(transform, transform.originX, transform.originY, x, y);
+  
+  //  make sure the control changes width ONLY from it's side of target
+  const { target } = transform
+  if ((transform.originY === 'top' && localPoint.y > 0) || (transform.originY === 'bottom' && localPoint.y < 0)) {
+    
+    const strokeWidth = target.strokeWidth ? target.strokeWidth : 0
+    if (!target.scaleY) return false
+    const strokePadding = strokeWidth / (target.strokeUniform ? target.scaleY : 1)
+    const oldHeight = target.height
+    const newHeight = Math.ceil(Math.abs((localPoint.y * 1) / target.scaleY) - strokePadding)
+    target.set('height', Math.max(newHeight, 0))
+    return oldHeight !== target.height;
+  }
+  return false;
+};
+
+
+// define a function that can locate the controls.
+// this function will be used both for drawing and for interaction.
+export function polygonPositionHandler(dim: Point, finalMatrix: number[], fabricObject: any) {
+  // @ts-ignore
+  const pointIndex = this.pointIndex
+  const x = (fabricObject.points[pointIndex].x - fabricObject.pathOffset.x)
+  const y = (fabricObject.points[pointIndex].y - fabricObject.pathOffset.y)
+  return util.transformPoint(
+    { x, y } as Point,
+    util.multiplyTransformMatrices(
+      fabricObject.canvas.viewportTransform,
+      fabricObject.calcTransformMatrix()
+    )
+  )
+}
+
+function getObjectSizeWithStroke(object: FabricObject) {
+  const scaleX = object.scaleX, scaleY = object.scaleY, strokeWidth = object.strokeWidth
+  const width = object.width, height = object.height
+  const stroke = new Point(
+    object.strokeUniform ? 1 / scaleX : 1, 
+    object.strokeUniform ? 1 / scaleY : 1
+  ).scalarMultiply(strokeWidth);
+  return new Point(width + stroke.x, height + stroke.y);
+}
+
+// define a function that can keep the polygon in the same position when we change its
+// width/height/top/left.
+export function anchorWrapper(anchorIndex: any, fn: any) {
+
+  return function(eventData: MouseEvent, transform: any, x: number, y: number) {
+
+    const fabricObject = transform.target as PolygonElement
+    const pointX = fabricObject.points[anchorIndex].x, pointY = fabricObject.points[anchorIndex].y
+    const handlePoint = new Point({x: (pointX - fabricObject.pathOffset.x), y: (pointY - fabricObject.pathOffset.y)})
+    const absolutePoint = util.transformPoint(handlePoint, fabricObject.calcTransformMatrix()),
+        actionPerformed = fn(eventData, transform, x, y),
+        newDim = fabricObject.setDimensions(),
+        polygonBaseSize = getObjectSizeWithStroke(fabricObject),
+        newX = (pointX - fabricObject.pathOffset.x) / polygonBaseSize.x,
+        newY = (pointY - fabricObject.pathOffset.y) / polygonBaseSize.y
+    fabricObject.setPositionByOrigin(absolutePoint, newX + 0.5, newY + 0.5)
+    return actionPerformed;
+  }
+}
+
+export function actionHandler(eventData: TPointerEvent, transform: any, x: number, y: number) {
+  const polygon = transform.target as PolygonElement
+  if (!polygon.__corner) return
+  const currentControl = polygon.controls[polygon.__corner]
+  const mouseLocalPosition = controlsUtils.getLocalPoint(transform, 'center', 'center', x, y)
+  // const mouseLocalPosition = polygon.toLocalPoint(new fabric.Point(x, y), 'center', 'center')
+  const polygonBaseSize = getObjectSizeWithStroke(polygon)
+
+  const size = polygon._getTransformedDimensions(0)
+  const finalPointPosition = {
+    x: mouseLocalPosition.x * polygonBaseSize.x / size.x + polygon.pathOffset.x,
+    y: mouseLocalPosition.y * polygonBaseSize.y / size.y + polygon.pathOffset.y
+  } as Point
+  //@ts-ignore
+  polygon.points[currentControl.pointIndex] = finalPointPosition
+  return true
+}
+
 /**
  * 计算当前控件的位置
  */
@@ -284,7 +370,7 @@ const changeWidth = controlsUtils.wrapWithFireEvent(
 
 const changeHeight = controlsUtils.wrapWithFireEvent(
   'scaling',
-  controlsUtils.wrapWithFixedAnchor(changeSize)
+  controlsUtils.wrapWithFixedAnchor(changeObjectHeight)
 )
 
 export const resizeControls = (): TControlSet => ({
