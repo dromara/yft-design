@@ -152,11 +152,9 @@ export class HoverBorders extends Disposable {
   public initWatch() {
     const mainStore = useMainStore()
     const { hoveredObject, leavedObject } = storeToRefs(mainStore)
-    // this.hoveredTarget = hoveredObject.value as FabricObject
-    
-    watch(computed(() => hoveredObject.value), (hover) => {
-      if (hover) this.drawBorderByObject(hover as FabricObject)
-      else this.clearBorderByObject(leavedObject.value as FabricObject)
+    computed(() => {
+      if (hoveredObject.value) this.drawBorderByObject(hoveredObject.value)
+      else this.clearBorderByObject(leavedObject.value)
     })
   }
 
