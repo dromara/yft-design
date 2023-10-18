@@ -1,14 +1,12 @@
 import { defineStore } from 'pinia'
 import { Templates } from '@/mocks/templates'
 import { Template, CanvasElement } from '@/types/canvas'
-import { Object as FabricObject, SerializedObjectProps } from 'fabric'
+import { Object as FabricObject } from 'fabric'
 import { WorkSpaceDrawType, propertiesToInclude } from '@/configs/canvas'
 import { useMainStore } from './main'
 import useCanvasScale from '@/hooks/useCanvasScale'
 import useCanvas from '@/views/Canvas/useCanvas'
 import useHistorySnapshot from '@/hooks/useHistorySnapshot'
-
-import useCenter from '@/views/Canvas/useCenter'
 import useCommon from '@/views/Canvas/useCommon'
 
 
@@ -167,14 +165,12 @@ export const useTemplatesStore = defineStore('Templates', {
       const elementIds = typeof id === 'string' ? [id] : id
       if (!elementIds) return
       const template = this.templates[this.templateIndex]
-      const elements = template.objects.map(el => {
-        return elementIds.includes(el.id) ? { ...el, ...props }: el
-      })
+      const elements = template.objects.map(el => elementIds.includes(el.id) ? { ...el, ...props }: el)
       this.templates[this.templateIndex].objects = (elements as FabricObject[])
       addHistorySnapshot()
     },
 
-    addElement(element: SerializedObjectProps | SerializedObjectProps[]) {
+    addElement(element: FabricObject | FabricObject[]) {
       const { addHistorySnapshot } = useHistorySnapshot()
       const elements = Array.isArray(element) ? element : [element]
       const currentTemplateElements = this.templates[this.templateIndex].objects
