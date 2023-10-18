@@ -1,5 +1,5 @@
 import { storeToRefs } from 'pinia'
-import { Canvas, Object as FabricObject, CanvasOptions, Textbox } from 'fabric'
+import { Canvas, Object as FabricObject, Textbox } from 'fabric'
 import { useFabricStore } from '@/store/modules/fabric'
 import { watch } from 'vue'
 import { useElementBounding } from '@vueuse/core'
@@ -76,7 +76,7 @@ const initCanvas = () => {
   canvas = new FabricCanvas(canvasRef.value, {
     width: fabricWidth,
     height: fabricHeight
-  } as CanvasOptions)
+  })
   // const keybinding = new Keybinding()
   new PressKey(canvas)
   new GuideLines(canvas)

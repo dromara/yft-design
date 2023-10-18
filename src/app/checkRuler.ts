@@ -1,7 +1,7 @@
 // import { FabricCanvas, IFabricCanvas } from '@/core/canvas/fabricCanvas'
 import { Keybinding } from './keybinding'
 import { Disposable } from '@/utils/lifecycle'
-import { watchEffect } from 'vue'
+import { computed, watchEffect } from 'vue'
 // import { useThemes } from '@/hooks/useThemes'
 import { PiBy180 } from '@/utils/common'
 import { TAxis, Canvas } from 'fabric'
@@ -83,25 +83,29 @@ export class CheckRuler extends Disposable {
 
     // const { isDark } = useThemes()
     const isDark = false
-
-    watchEffect(() => {
-      const { rulerShow } = storeToRefs(useMainStore())
-      this.options = {
-        ...this.options,
-        ...(isDark
-          ? {
-              backgroundColor: '#242424',
-              borderColor: '#555',
-              highlightColor: '#165dff3b',
-              textColor: '#ddd',
-            }
-          : {
-              backgroundColor: '#fff',
-              borderColor: '#ccc',
-              highlightColor: '#165dff3b',
-              textColor: '#444',
-            }),
-      }
+    const { rulerShow } = storeToRefs(useMainStore())
+    // watchEffect(() => {
+      
+    this.options = {
+      ...this.options,
+      ...(isDark 
+        ? {
+            backgroundColor: '#242424',
+            borderColor: '#555',
+            highlightColor: '#165dff3b',
+            textColor: '#ddd',
+          }
+        : {
+            backgroundColor: '#fff',
+            borderColor: '#ccc',
+            highlightColor: '#165dff3b',
+            textColor: '#444',
+          }),
+    }
+    //   this.enabled = rulerShow.value
+    //   this.render({ ctx: this.canvas.contextContainer })
+    // })
+    computed(() => {
       this.enabled = rulerShow.value
       this.render({ ctx: this.canvas.contextContainer })
     })

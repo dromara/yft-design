@@ -153,8 +153,8 @@ export class HoverBorders extends Disposable {
     const mainStore = useMainStore()
     const { hoveredObject, leavedObject } = storeToRefs(mainStore)
     computed(() => {
-      if (hoveredObject.value) this.drawBorderByObject(hoveredObject.value)
-      else this.clearBorderByObject(leavedObject.value)
+      if (hoveredObject.value) this.drawBorderByObject(hoveredObject.value as FabricObject)
+      else this.clearBorderByObject(leavedObject.value as FabricObject)
     })
   }
 

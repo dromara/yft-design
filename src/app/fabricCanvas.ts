@@ -1,6 +1,6 @@
 import { useMainStore, useTemplatesStore } from '@/store'
 import { CanvasElement } from '@/types/canvas'
-import { Canvas, Object, CanvasOptions } from 'fabric'
+import { Canvas, Object } from 'fabric'
 import { shallowRef } from 'vue'
 import { toRef } from './attribute/toRef'
 import { check } from '@/utils/check'
@@ -10,14 +10,13 @@ export class FabricCanvas extends Canvas {
 
   public activeObject = shallowRef<Object>()
 
-  constructor(el: string | HTMLCanvasElement, options?: CanvasOptions) {
+  constructor(el: string | HTMLCanvasElement, options?: any) {
     super(el, options)
-    this.onObjectModified()
+    // this.onObjectModified()
   }
 
   public onObjectModified() {
-    const templatesStore = useTemplatesStore()
-    this.on('object:modified', () => templatesStore.modifedElement())
+    
   }
 
   // @ts-ignore
@@ -29,6 +28,15 @@ export class FabricCanvas extends Canvas {
     const mainStore = useMainStore()
     mainStore.setCanvasObject(value as CanvasElement)
     this.activeObject.value = value
+    if (value) {
+      console.log('value-on:', value)
+      const templatesStore = useTemplatesStore()
+      this.on('object:modified', () => templatesStore.modifedElement())
+    }
+    else {
+      console.log('value-off:', value)
+      this.off('object:modified', () => {})
+    }
   }
 
   override add(...objects: Object[]): number {
