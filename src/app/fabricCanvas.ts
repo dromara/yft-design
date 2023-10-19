@@ -12,7 +12,8 @@ export class FabricCanvas extends Canvas {
 
   constructor(el: string | HTMLCanvasElement, options?: any) {
     super(el, options)
-    // this.onObjectModified()
+    const templatesStore = useTemplatesStore()
+    this.on('object:modified', () => templatesStore.modifedElement())
   }
 
   public onObjectModified() {
@@ -28,15 +29,6 @@ export class FabricCanvas extends Canvas {
     const mainStore = useMainStore()
     mainStore.setCanvasObject(value as CanvasElement)
     this.activeObject.value = value
-    if (value) {
-      console.log('value-on:', value)
-      const templatesStore = useTemplatesStore()
-      this.on('object:modified', () => templatesStore.modifedElement())
-    }
-    else {
-      console.log('value-off:', value)
-      this.off('object:modified', () => {})
-    }
   }
 
   override add(...objects: Object[]): number {

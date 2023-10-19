@@ -55,7 +55,7 @@ watch(props, () => {
 
 const setThumbnailElement = async () => {
   if (!thumbCanvas.value) return
-  thumbCanvas.value.loadFromJSON(props.template)
+  await thumbCanvas.value.loadFromJSON(props.template)
   const thumbWorkSpaceDraw = thumbCanvas.value.getObjects().filter(item => (item as CanvasElement).id === WorkSpaceDrawType)[0]
   thumbCanvas.value.getObjects().filter(item => WorkSpaceThumbType.includes(item.id)).map(item => (item as CanvasElement).visible = false)
   const width = props.template.width / props.template.zoom
