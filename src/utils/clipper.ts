@@ -56,7 +56,7 @@ const getPathPoints = (path: util.TSimplePathData, x = 0, y = 0) => {
     var point = Raphael.getPointAtLength(elementPath, c);
     pathPoints.push({X: point.x + x, Y: point.y + y})
   }
-  return pathPoints
+  return [pathPoints]
 }
 
 // Converts Paths to SVG path string
