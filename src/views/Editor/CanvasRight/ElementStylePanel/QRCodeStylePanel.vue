@@ -3,7 +3,7 @@
     <div class="title">码样式：</div>
     <el-carousel type="card" :height="QRSize + 'px'" :initial-index="initialIndex" :autoplay="false" trigger="click" indicator-position="none" ref="carousel">
       <el-carousel-item v-for="item in QRCodeStyleLibs" :key="item.index" :name="item.name">
-        <div justify="center" @click="generateQRCode(item.name)">
+        <div justify="center" @click="generateQRCode(item.name as QRCodeType)">
           <img v-if="item.name !== 'C2'" :src="`data:image/svg+xml;base64,` + Base64.encode(generateQRCodeMap[item.name as QRCodeType](getEncodeData()))" :alt="item.name">
         </div>
       </el-carousel-item>
@@ -56,6 +56,7 @@ import {
   rendererLine2,
   rendererFuncA,
   rendererFuncB,
+  CodeOption
 } from 'beautify-qrcode'
 import { Base64 } from 'js-base64'
 import { QRCodeElement, QRCodeType } from '@/types/canvas'
@@ -109,7 +110,7 @@ const updateCodeError = () => {
 
 // 获取qrcode
 const getEncodeData = (width = QRSize.value, height = QRSize.value) => {
-  const codeOption = {
+  const codeOption: CodeOption = {
     text: handleElement.value.codeContent,
     width,
     height,

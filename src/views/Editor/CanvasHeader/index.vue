@@ -128,6 +128,7 @@ import useHandleTool from '@/hooks/useHandleTool'
 import useCanvasScale from '@/hooks/useCanvasScale'
 import useHandleElement from '@/hooks/useHandleElement'
 import useHistorySnapshot from '@/hooks/useHistorySnapshot'
+import { Path } from 'fabric'
 
 const fabricStore = useFabricStore()
 const mainStore = useMainStore()
@@ -137,7 +138,6 @@ const { setCanvasScalePercentage, scaleCanvas, resetCanvas } = useCanvasScale()
 const { combineElements, uncombineElements, intersectElements } = useHandleElement()
 const { zoom } = storeToRefs(fabricStore)
 const { canvasObject } = storeToRefs(mainStore)
-
 const layerRef = ref()
 const layerPopoverRef = ref()
 
@@ -223,7 +223,6 @@ const changeRotate45 = (command: '+' | '-') => {
 const applyCanvasPresetScale = (value: number) => {
   setCanvasScalePercentage(value)
 }
-
 // const setZoom = ()
 </script>
 

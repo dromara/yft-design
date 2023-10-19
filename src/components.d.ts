@@ -199,31 +199,6 @@ export declare namespace fabric {
 declare global {
   interface Window {
     queryLocalFonts(): any[];
+    ClipperLib: any
   }
-}
-
-export declare module "beautify-qrcode" {
-  interface qrOptions {
-    text: string;
-    correctLevel: 1 | 0 | 3 | 2;
-    width: number;
-    height: number;
-    isSpace: boolean;
-  }
-  export default {
-    encodeData: (options: qrOptions) => {},
-    renderer25D: (): string => {},
-    rendererRect: (): string => {},
-    rendererRound: (): string => {},
-    rendererRandRound: (): string => {},
-    rendererDSJ: (): string => {},
-    rendererRandRect: (): string => {},
-    rendererImage: (): string => {},
-    rendererResImag: (): string => {},
-    rendererCircle: (): string => {},
-    rendererLine: (): string => {},
-    rendererLine2: (): string => {},
-    rendererFuncA: (): string => {},
-    rendererFuncB: (): string => {},
-  };
 }

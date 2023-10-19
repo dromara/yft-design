@@ -7,8 +7,8 @@ export type ImageSource = HTMLImageElement | HTMLVideoElement | HTMLCanvasElemen
 export type QRCodeType = 'A1' | 'A2' | 'A3' | 'SP1' | 'SP2' | 'SP3' | 'B1'| 'C1'| 'A_a1'| 'A_a2'| 'A_b1'| 'A_b2'
 export interface QRCodeOption {
   codeStyle: QRCodeType
-  codeSpace?: boolean
-  codeError?: number
+  codeSpace: boolean
+  codeError: number
 }
 
 export interface CommenElement {

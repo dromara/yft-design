@@ -1,4 +1,4 @@
-import { Object as FabricObject, Group } from 'fabric'
+import { Object as FabricObject, Group, Path } from 'fabric'
 import { nanoid } from "nanoid"
 import { storeToRefs } from "pinia"
 import { KEYS } from '@/configs/hotkey'
@@ -6,6 +6,7 @@ import { ElementNames } from "@/types/elements"
 import { propertiesToInclude, WorkSpaceCommonType } from "@/configs/canvas"
 import { useFabricStore, useMainStore, useTemplatesStore } from "@/store"
 import { TextboxElement, CanvasElement, GroupElement } from "@/types/canvas"
+import { clipperPath } from '@/utils/clipper'
 import useCanvas from "@/views/Canvas/useCanvas"
 import useCanvasZindex from "./useCanvasZindex"
 
@@ -181,6 +182,7 @@ export default () => {
     if (!activeObjects) return
     canvas.discardActiveObject()
     const group = new Group(activeObjects, { 
+      // @ts-ignore
       id: nanoid(10),
       name: ElementNames.GROUP, 
       interactive: false, 
@@ -194,18 +196,20 @@ export default () => {
 
   const intersectElements = () => {
     const [ canvas ] = useCanvas()
-    const activeObject = canvas.getActiveObject()
-    if (!activeObject) return
-    activeObject.set({globalCompositeOperation: 'xor'})
-    canvas.renderAll()
-    templatesStore.modifedElement()
+    const activeObjects = canvas.getActiveObjects()
+    if (!activeObjects) return
+    // activeObject.set({globalCompositeOperation: 'xor'})
+    // if (activeObjects.length !== 2) return
+    const res = clipperPath(activeObjects)
+    // canvas.renderAll()
+    // templatesStore.modifedElement()
   }
 
   const uncombineElements = () => {
     const [ canvas ] = useCanvas()
     const activeObject = canvas.getActiveObject() as GroupElement
     if (!activeObject) return
-    const objects = activeObject.removeAll()
+    const objects = activeObject.removeAll() as FabricObject[]
     canvas.discardActiveObject()
     mainStore.setCanvasObject(null)
     if (activeObject.group) {

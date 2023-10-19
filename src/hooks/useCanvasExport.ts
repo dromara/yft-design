@@ -7,7 +7,7 @@ import { WorkSpaceThumbType, WorkSpaceClipType, WorkSpaceCommonType, WorkSpaceSa
 import { ImageFormat } from 'fabric'
 import { mm2px } from '@/utils/image'
 import { downloadSVGFile } from '@/utils/download'
-import { mupdf } from 'mupdf'
+import mupdf from 'mupdf'
 import useCanvas from '@/views/Canvas/useCanvas'
 import useCenter from '@/views/Canvas/useCenter'
 
@@ -105,6 +105,7 @@ export default () => {
   // 导出PDF
   const exportPDF = async () => {
     const [ canvas ] = useCanvas()
+    // const pdfDocument = new mupdf.PDFDocument()
   }
 
   // 导出json

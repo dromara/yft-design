@@ -32,7 +32,7 @@
 import { ref } from 'vue'
 import { Base64 } from 'js-base64'
 import { Search } from '@element-plus/icons-vue'
-import JsBarCode from 'jsbarcode'
+
 import { 
   encodeData,
   renderer25D,
@@ -47,16 +47,18 @@ import {
   rendererLine2,
   rendererFuncA,
   rendererFuncB,
+  CodeOption
 } from 'beautify-qrcode'
-import useHandleCreate from '@/hooks/useHandleCreate'
+
 import { QRCodeType } from '@/types/canvas'
+import JsBarCode from 'jsbarcode'
+import useHandleCreate from '@/hooks/useHandleCreate'
 
 
 const { createQRCodeElement, createBarCodeElement } = useHandleCreate()
 const codeContent = ref<string>(window.location.href)
 const codeSpace = ref<boolean>(true)
 const codeError = ref<number>(0)
-const c2QRURL = ref<string>('')
 
 const generateQRCodeMap = {
   'A1': rendererRect,
@@ -75,7 +77,7 @@ const generateQRCodeMap = {
 
 // 获取qrcode
 const getEncodeData = (width = 118, height = 118) => {
-  const codeOption = {
+  const codeOption: CodeOption = {
     text: codeContent.value,
     width,
     height,
