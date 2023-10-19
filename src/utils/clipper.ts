@@ -3,25 +3,29 @@ import { PathPoint } from '@/types/common'
 import Raphael from 'raphael'
 
 export function clipperPath(fabricObjects: FabricObject[]) {
-  var subjPaths = [
-    [{ X: 10, Y: 10 }, { X: 110, Y: 10 }, { X: 110, Y: 110 }, { X: 10, Y: 110 }],
-    [{ X: 20, Y: 20 }, { X: 20, Y: 100 }, { X: 100, Y: 100 }, { X: 100, Y: 20 }]
-  ];
-  var clip_paths = [
-    [{ X: 50, Y: 50 }, { X: 150, Y: 50 }, { X: 150, Y: 150 }, { X: 50, Y: 150 }],
-    [{ X: 60, Y: 60 }, { X: 60, Y: 140 }, { X: 140, Y: 140 }, { X: 140, Y: 60 }]
-  ];
-  const pathElement = fabricObjects[0] as Path
-  console.log('fabricObject[0].path:', pathElement.path)
-  const subPaths = getPathPoints(pathElement.path)
-  // Raphael.getPointAtLength(pathElement.path, 10)
+  // var subjPaths = [
+  //   [{ X: 10, Y: 10 }, { X: 110, Y: 10 }, { X: 110, Y: 110 }, { X: 10, Y: 110 }],
+  //   [{ X: 20, Y: 20 }, { X: 20, Y: 100 }, { X: 100, Y: 100 }, { X: 100, Y: 20 }]
+  // ];
+  // var clip_paths = [
+  //   [{ X: 50, Y: 50 }, { X: 150, Y: 50 }, { X: 150, Y: 150 }, { X: 50, Y: 150 }],
+  //   [{ X: 60, Y: 60 }, { X: 60, Y: 140 }, { X: 140, Y: 140 }, { X: 140, Y: 60 }]
+  // ];
+  const itemPath = fabricObjects[0] as Path
+  const clipPath = fabricObjects[1] as Path
+  const x = clipPath.left > itemPath.left ? clipPath.left - itemPath.left : itemPath.left - clipPath.left
+  const y = clipPath.top > itemPath.top ? clipPath.top - itemPath.top : itemPath.top - clipPath.top
+  const itemPathPoints = getPathPoints(itemPath.path)
+  const clipPathPoints = getPathPoints(itemPath.path, x, y)
+  console.log('itemPathPoints:', itemPathPoints)
+  console.log('clipPathPoints:', clipPathPoints)
   var scale = 100;
   const ClipperLib = window.ClipperLib
-  ClipperLib.JS.ScaleUpPaths(subjPaths, scale);
-  ClipperLib.JS.ScaleUpPaths(clip_paths, scale);
+  ClipperLib.JS.ScaleUpPaths(itemPathPoints, scale);
+  ClipperLib.JS.ScaleUpPaths(clipPathPoints, scale);
   var cpr = new ClipperLib.Clipper();
-  cpr.AddPaths(subjPaths, ClipperLib.PolyType.ptSubject, true);
-  cpr.AddPaths(clip_paths, ClipperLib.PolyType.ptClip, true);
+  cpr.AddPaths(itemPathPoints, ClipperLib.PolyType.ptSubject, true);
+  cpr.AddPaths(clipPathPoints, ClipperLib.PolyType.ptClip, true);
   var subject_fillType = ClipperLib.PolyFillType.pftNonZero;
   var clip_fillType = ClipperLib.PolyFillType.pftNonZero;
   // var clipTypes = [ClipperLib.ClipType.ctUnion, ClipperLib.ClipType.ctDifference, ClipperLib.ClipType.ctXor, ClipperLib.ClipType.ctIntersection];
@@ -45,22 +49,14 @@ export function clipperPath(fabricObjects: FabricObject[]) {
   return path2str(solution_paths, scale)
 }
 
-const getPathPoints = (elementPath: util.TSimplePathData) => {
-  let clipperPaths: any[] = []
-  let pathPoints: PathPoint[] = []
-  elementPath.forEach(item => {
-    const command = item[0]
-    if (command === 'M' || command === 'L' || command === 'Q') {
-      pathPoints.push({ X: item[1], Y: item[2] })
-    }
-    else if (command === 'Z') {
-      if (pathPoints.length > 0) {
-        clipperPaths.push(pathPoints)
-      }
-      pathPoints = []
-    }
-  })
-  return clipperPaths
+const getPathPoints = (path: util.TSimplePathData, x = 0, y = 0) => {
+  const elementPath = path.toString().replaceAll(',', ' ')
+  let pathPoints: {X: number, Y: number}[] = []
+  for (var c = 0; c < Raphael.getTotalLength(elementPath); c += 1) {
+    var point = Raphael.getPointAtLength(elementPath, c);
+    pathPoints.push({X: point.x + x, Y: point.y + y})
+  }
+  return pathPoints
 }
 
 // Converts Paths to SVG path string
