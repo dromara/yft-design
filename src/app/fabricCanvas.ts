@@ -16,10 +16,6 @@ export class FabricCanvas extends Canvas {
     this.on('object:modified', () => templatesStore.modifedElement())
   }
 
-  public onObjectModified() {
-    
-  }
-
   // @ts-ignore
   public get _activeObject() {
     return this.activeObject ? this.activeObject.value : undefined

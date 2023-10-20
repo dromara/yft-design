@@ -28,6 +28,7 @@ const panelMap = {
   [ElementNames.POLYGON]: PathStylePanel,
   [ElementNames.CIRCLE]: CircleStylePanel,
   [ElementNames.LINE]: LineStylePanel,
+  [ElementNames.ARROW]: LineStylePanel,
   [ElementNames.QRCODE]: QRCodeStylePanel,
   [ElementNames.BARCODE]: BarCodeStylePanel,
   [ElementNames.GROUP]: GroupStylePanel,

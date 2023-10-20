@@ -108,7 +108,7 @@ export default () => {
     const points = [ { x: 0, y: 0 }, { x: 100, y: 0 } ]
     const Polygon = classRegistry.getClass('Polygon')
 
-    const polygonElement = new Polygon(points, {
+    const element = new Polygon(points, {
       id: nanoid(10),
       left: centerPoint.x,
       top: centerPoint.y,
@@ -122,17 +122,17 @@ export default () => {
       objectCaching: false,
       transparentCorners: false,
       name: ElementNames.LINE
-    }) as PolygonElement
-    renderCanvas(polygonElement)
+    })
+    renderCanvas(element)
   }
 
   const createArrowElement = (path: string) => {
     const { centerPoint } = useCenter()
     // const points = [ { x: 0, y: 0 }, { x: 100, y: 0 } ]
-    const points = [ 0, 0, 100, 0 ]
-    const Arrow = classRegistry.getClass('Arrow')
+    const points = [ { x: 0, y: 0 }, { x: 100, y: 0 } ]
+    const Polygon = classRegistry.getClass('Polygon')
 
-    const ArrowElement = new Arrow(points, {
+    const element = new Polygon(points, {
       id: nanoid(10),
       left: centerPoint.x,
       top: centerPoint.y,
@@ -147,7 +147,7 @@ export default () => {
       transparentCorners: false,
       name: ElementNames.ARROW
     })
-    renderCanvas(ArrowElement)
+    renderCanvas(element)
   }
 
   const createImageElement = (url: string) => {

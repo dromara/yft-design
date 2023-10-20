@@ -53,7 +53,7 @@ function getObjectSizeWithStroke(object: FabricObject) {
 
 // define a function that can keep the polygon in the same position when we change its
 // width/height/top/left.
-export function anchorWrapper(anchorIndex: any, fn: any) {
+export function anchorWrapper(anchorIndex: number, fn: Function) {
 
   return function(eventData: MouseEvent, transform: any, x: number, y: number) {
 
@@ -62,7 +62,7 @@ export function anchorWrapper(anchorIndex: any, fn: any) {
     const handlePoint = new Point({x: (pointX - fabricObject.pathOffset.x), y: (pointY - fabricObject.pathOffset.y)})
     const absolutePoint = util.transformPoint(handlePoint, fabricObject.calcTransformMatrix()),
         actionPerformed = fn(eventData, transform, x, y),
-        newDim = fabricObject.setDimensions(),
+        // newDim = fabricObject.setDimensions(),
         polygonBaseSize = getObjectSizeWithStroke(fabricObject),
         newX = (pointX - fabricObject.pathOffset.x) / polygonBaseSize.x,
         newY = (pointY - fabricObject.pathOffset.y) / polygonBaseSize.y
@@ -84,8 +84,7 @@ export function actionHandler(eventData: TPointerEvent, transform: any, x: numbe
     x: mouseLocalPosition.x * polygonBaseSize.x / size.x + polygon.pathOffset.x,
     y: mouseLocalPosition.y * polygonBaseSize.y / size.y + polygon.pathOffset.y
   } as Point
-  //@ts-ignore
-  polygon.points[currentControl.pointIndex] = finalPointPosition
+  polygon.points[currentControl.pointIndex as number] = finalPointPosition
   return true
 }
 

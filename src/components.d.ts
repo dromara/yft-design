@@ -1,4 +1,4 @@
-import { Object as FabricObject } from "fabric"
+import { Object as FabricObject, Control as FabricControl } from "fabric"
 import type { FabricObject, Point, TPointerEventInfo, TPointerEvent, Rect } from '@fabric'
 import type { FabricObjectProps as FabricObjectPropsOrigin } from 'fabric/src/shapes/Object/types/FabricObjectProps'
 import type { GroupOwnProps } from 'fabric/src/shapes/Group'
@@ -194,6 +194,10 @@ export declare module 'fabric' {
   }
 
   export declare interface GroupProps extends FabricObjectProps, GroupOwnProps { }
+
+  export declare class Control extends FabricControl {
+    pointIndex?: number
+  }
 }
 
 export declare namespace fabric {
