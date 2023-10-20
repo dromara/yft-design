@@ -181,6 +181,7 @@ import { WEB_FONTS } from '@/configs/fonts'
 import { TextboxElement } from '@/types/canvas'
 import { FontGroupOption } from '@/types/elements'
 import { loadFont } from '@/utils/localFonts'
+import { loadSVGFromString } from 'fabric'
 import opentype from "opentype.js";
 import ElementStroke from '../Components/ElementStroke.vue'
 import ElementShadow from '../Components/ElementShadow.vue'
@@ -189,6 +190,7 @@ import ElementPatterns from '../Components/ElementPatterns.vue'
 import ElementFill from '../Backgrounds/ElementFill.vue'
 import useHandleCreate from "@/hooks/useHandleCreate"
 import useCanvas from '@/views/Canvas/useCanvas'
+
 
 
 const mainStore = useMainStore()
@@ -352,9 +354,20 @@ const handleElementCurve = async () => {
     fontElement = opentype.parse(fontBuffer)
   }
   if (!fontElement) return
-  const path = fontElement.getPath(handleElement.value.text, 0, 0, handleElement.value.fontSize).toPathData(2);
-  createPathElement(path, handleElement.value.left, handleElement.value.top)
-  canvas.remove(handleElement.value)
+  const paths = fontElement.getPaths(handleElement.value.text, 0, 0, handleElement.value.fontSize);
+  const svg = paths[0].toSVG(2)
+  console.log('svg:', paths[0].toPathData(2))
+  let svgText = "<svg width='100%' height='100%'>"
+  paths.forEach(item => {
+    svgText += item.toSVG(2)
+    // createPathElement(item.toPathData(2))
+  })
+  svgText += "</svg>"
+  const svgLoad = await loadSVGFromString(svgText)
+  canvas.add(...svgLoad.objects)
+  console.log('svgLoad:', svgLoad)
+  // createPathElement(path, handleElement.value.left, handleElement.value.top)
+  // canvas.remove(handleElement.value)
   canvas.renderAll()
 }
 

@@ -1,4 +1,4 @@
-import { util, Path, Object as FabricObject } from 'fabric'
+import { util, Path, Object as FabricObject, Group } from 'fabric'
 import { PathPoint } from '@/types/common'
 import Raphael from 'raphael'
 
@@ -11,12 +11,12 @@ export function clipperPath(fabricObjects: FabricObject[]) {
   //   [{ X: 50, Y: 50 }, { X: 150, Y: 50 }, { X: 150, Y: 150 }, { X: 50, Y: 150 }],
   //   [{ X: 60, Y: 60 }, { X: 60, Y: 140 }, { X: 140, Y: 140 }, { X: 140, Y: 60 }]
   // ];
-  const itemPath = fabricObjects[0] as Path
+  const itemPath = fabricObjects[0] as Path | Group
   const clipPath = fabricObjects[1] as Path
   const x = clipPath.left > itemPath.left ? clipPath.left - itemPath.left : itemPath.left - clipPath.left
   const y = clipPath.top > itemPath.top ? clipPath.top - itemPath.top : itemPath.top - clipPath.top
-  const itemPathPoints = getPathPoints(itemPath.path)
-  const clipPathPoints = getPathPoints(itemPath.path, x, y)
+  const itemPathPoints = getItemPoints(itemPath)
+  const clipPathPoints = getItemPoints(clipPath, x, y)
   console.log('itemPathPoints:', itemPathPoints)
   console.log('clipPathPoints:', clipPathPoints)
   var scale = 100;
@@ -49,13 +49,27 @@ export function clipperPath(fabricObjects: FabricObject[]) {
   return path2str(solution_paths, scale)
 }
 
-const getPathPoints = (path: util.TSimplePathData, x = 0, y = 0) => {
-  const elementPath = path.toString().replaceAll(',', ' ')
+const getItemPoints = (item: FabricObject, x = 0, y = 0) => {
+  if (item.isType('Path')) {
+    return getPathPoints(item, x, y)
+  }
+  else if (item.isType('Group')) {
+    let groupPoints = []
+    item._objects.forEach(ele => {
+      groupPoints.push(getPathPoints(ele, x, y)[0])
+    })
+    return groupPoints
+  }
+}
+
+const getPathPoints = (path: Path, x = 0, y = 0) => {
+  const itemPath = item.path.toString().replaceAll(',', ' ')
   let pathPoints: {X: number, Y: number}[] = []
-  for (var c = 0; c < Raphael.getTotalLength(elementPath); c += 1) {
-    var point = Raphael.getPointAtLength(elementPath, c);
+  for (var c = 0; c < Raphael.getTotalLength(itemPath); c += 1) {
+    var point = Raphael.getPointAtLength(itemPath, c);
     pathPoints.push({X: point.x + x, Y: point.y + y})
   }
+  
   return [pathPoints]
 }
 

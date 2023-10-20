@@ -3,6 +3,8 @@
 <b>体验Demo：[https://yft.design](https://yft.design)</b>  
 <b>体验Demo：[https://more-strive.github.io/design/](https://more-strive.github.io/design/)</b>
 
+![image](doc/index.png)
+
 ## 项目运行
 ```
 npm install
@@ -10,17 +12,8 @@ npm run dev
 npm run build
 ```
 
-### 页面功能
-![avatar](doc/index.png)
-
-### 渐变背景
-![avatar](doc/gradient.png)
-
-### 网格背景
-![avatar](doc/grid.png)
-
-### 形状背景
-![avatar](doc/shape.png)
+### 矢量背景
+![image](doc/background.gif)
 
 
 # 📚 功能列表
@@ -36,7 +29,7 @@ npm run build
 - 背景设置（纯色、渐变、图片）
 - 设置画布尺寸
 - 网格线(TODO)
-- 标尺(TODO)
+- 标尺
 - 画布缩放、移动
 - 页面模板
 - 选择面板（隐藏元素、层级排序、元素命名）(TODO)
