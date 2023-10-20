@@ -3,7 +3,7 @@
 <b>体验Demo：[https://yft.design](https://yft.design)</b>  
 <b>体验Demo：[https://more-strive.github.io/design/](https://more-strive.github.io/design/)</b>
 
-![image](doc/index.png)
+![image](doc/background.gif)
 
 ## 项目运行
 ```
@@ -11,10 +11,6 @@ npm install
 npm run dev
 npm run build
 ```
-
-### 矢量背景
-![image](doc/background.gif)
-
 
 # 📚 功能列表
 ### 基础功能
