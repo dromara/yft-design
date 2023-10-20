@@ -5,7 +5,7 @@ export class Group extends OriginGroup {
   public interactive = false
   public isShow = false
 
-  constructor(objects?: FabricObject[], options?: Partial<GroupProps>, objectsRelativeToGroup?: boolean) {
+  constructor(objects?: FabricObject[], options?: FabricObject<Group>, objectsRelativeToGroup?: boolean) {
     super(objects, options, objectsRelativeToGroup)
     this.on('mousedblclick', this.doubleClickHandler.bind(this))
   }

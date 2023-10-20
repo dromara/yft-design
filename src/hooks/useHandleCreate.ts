@@ -118,6 +118,7 @@ export default () => {
       scaleY: 1,
       originX: 'center',
       originY: 'center',
+      hasBorders: false,
       objectCaching: false,
       transparentCorners: false,
       name: ElementNames.LINE
@@ -127,7 +128,8 @@ export default () => {
 
   const createArrowElement = (path: string) => {
     const { centerPoint } = useCenter()
-    const points = [ { x: 0, y: 0 }, { x: 100, y: 0 } ]
+    // const points = [ { x: 0, y: 0 }, { x: 100, y: 0 } ]
+    const points = [ 0, 0, 100, 0 ]
     const Arrow = classRegistry.getClass('Arrow')
 
     const ArrowElement = new Arrow(points, {
@@ -135,12 +137,13 @@ export default () => {
       left: centerPoint.x,
       top: centerPoint.y,
       strokeWidth: 4,
-      stroke: 'green',
+      stroke: 'red',
       scaleX: 1,
       scaleY: 1,
       originX: 'center',
       originY: 'center',
       objectCaching: false,
+      hasBorders: false,
       transparentCorners: false,
       name: ElementNames.ARROW
     })

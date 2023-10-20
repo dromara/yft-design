@@ -80,5 +80,6 @@ export const propertiesToInclude = [
   'transparentCorners',
   'codeOption',
   'codeContent',
-  'background'
+  'background',
+  'hasBorders',
 ]
