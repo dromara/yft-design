@@ -1,5 +1,4 @@
-import { util, Path, Object as FabricObject, Group } from 'fabric'
-import { PathPoint } from '@/types/common'
+import { Path, Object as FabricObject, Group } from 'fabric'
 import Raphael from 'raphael'
 
 export function clipperPath(fabricObjects: FabricObject[]) {
@@ -51,18 +50,18 @@ export function clipperPath(fabricObjects: FabricObject[]) {
 
 const getItemPoints = (item: FabricObject, x = 0, y = 0) => {
   if (item.isType('Path')) {
-    return getPathPoints(item, x, y)
+    return getPathPoints(item as Path, x, y)
   }
   else if (item.isType('Group')) {
-    let groupPoints = []
-    item._objects.forEach(ele => {
-      groupPoints.push(getPathPoints(ele, x, y)[0])
+    let groupPoints: any[] = []
+    (item as Group)._objects.forEach(ele => {
+      groupPoints.push(getPathPoints(ele as Path, x, y)[0])
     })
     return groupPoints
   }
 }
 
-const getPathPoints = (path: Path, x = 0, y = 0) => {
+const getPathPoints = (item: Path, x = 0, y = 0) => {
   const itemPath = item.path.toString().replaceAll(',', ' ')
   let pathPoints: {X: number, Y: number}[] = []
   for (var c = 0; c < Raphael.getTotalLength(itemPath); c += 1) {

@@ -100,6 +100,7 @@ export default () => {
     // templatesStore.modifedElement()
     // setZindex(canvas)
     createPolygonElement(path)
+    createArrowElement(path)
   }
 
   const createPolygonElement = (path: string) => {
@@ -122,6 +123,28 @@ export default () => {
       name: ElementNames.LINE
     }) as PolygonElement
     renderCanvas(polygonElement)
+  }
+
+  const createArrowElement = (path: string) => {
+    const { centerPoint } = useCenter()
+    const points = [ { x: 0, y: 0 }, { x: 100, y: 0 } ]
+    const Arrow = classRegistry.getClass('Arrow')
+
+    const ArrowElement = new Arrow(points, {
+      id: nanoid(10),
+      left: centerPoint.x,
+      top: centerPoint.y,
+      strokeWidth: 4,
+      stroke: 'green',
+      scaleX: 1,
+      scaleY: 1,
+      originX: 'center',
+      originY: 'center',
+      objectCaching: false,
+      transparentCorners: false,
+      name: ElementNames.ARROW
+    })
+    renderCanvas(ArrowElement)
   }
 
   const createImageElement = (url: string) => {

@@ -7,6 +7,7 @@ export const enum ElementNames {
   PATH = 'path',
   RECT = 'rect',
   LINE = 'line',
+  ARROW = 'arrow',
   POLYGON = 'polygon',
   QRCODE = 'qrcode',
   BARCODE = 'barcode',
