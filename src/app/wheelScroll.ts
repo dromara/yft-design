@@ -39,7 +39,7 @@ export class WheelScroll extends Disposable {
         }
         zoom.value = zoomVal
         this.canvas.zoomToPoint(new Point(offsetX, offsetY), zoomVal)
-        this.setCoords()
+        // this.setCoords()
         return
       }
       
@@ -51,7 +51,7 @@ export class WheelScroll extends Disposable {
         deltaPoint.y = deltaY > 0 ? -20 : 20
       }
       this.canvas.relativePan(deltaPoint)
-      this.setCoords()
+      // this.setCoords()
     }
 
     this.canvas.on('mouse:wheel', mouseWheel)

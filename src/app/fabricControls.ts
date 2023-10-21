@@ -62,12 +62,12 @@ export function anchorWrapper(anchorIndex: number, fn: Function) {
     const handlePoint = new Point({x: (pointX - fabricObject.pathOffset.x), y: (pointY - fabricObject.pathOffset.y)})
     const absolutePoint = util.transformPoint(handlePoint, fabricObject.calcTransformMatrix()),
         actionPerformed = fn(eventData, transform, x, y),
-        // newDim = fabricObject.setDimensions(),
+        newDim = fabricObject.setDimensions(),
         polygonBaseSize = getObjectSizeWithStroke(fabricObject),
         newX = (pointX - fabricObject.pathOffset.x) / polygonBaseSize.x,
         newY = (pointY - fabricObject.pathOffset.y) / polygonBaseSize.y
     fabricObject.setPositionByOrigin(absolutePoint, newX + 0.5, newY + 0.5)
-    return actionPerformed;
+    return actionPerformed
   }
 }
 
