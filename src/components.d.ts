@@ -207,6 +207,5 @@ export declare namespace fabric {
 declare global {
   interface Window {
     queryLocalFonts(): any[];
-    ClipperLib: any
   }
 }

@@ -1,38 +1,29 @@
 import { Path, Object as FabricObject, Group } from 'fabric'
+import ClipperLib from 'clipper-lib'
 import Raphael from 'raphael'
 
 export function clipperPath(fabricObjects: FabricObject[]) {
-  // var subjPaths = [
-  //   [{ X: 10, Y: 10 }, { X: 110, Y: 10 }, { X: 110, Y: 110 }, { X: 10, Y: 110 }],
-  //   [{ X: 20, Y: 20 }, { X: 20, Y: 100 }, { X: 100, Y: 100 }, { X: 100, Y: 20 }]
-  // ];
-  // var clip_paths = [
-  //   [{ X: 50, Y: 50 }, { X: 150, Y: 50 }, { X: 150, Y: 150 }, { X: 50, Y: 150 }],
-  //   [{ X: 60, Y: 60 }, { X: 60, Y: 140 }, { X: 140, Y: 140 }, { X: 140, Y: 60 }]
-  // ];
-  const itemPath = fabricObjects[0] as Path | Group
+  const subjPath = fabricObjects[0] as Path
   const clipPath = fabricObjects[1] as Path
-  const x = clipPath.left > itemPath.left ? clipPath.left - itemPath.left : itemPath.left - clipPath.left
-  const y = clipPath.top > itemPath.top ? clipPath.top - itemPath.top : itemPath.top - clipPath.top
-  const itemPathPoints = getItemPoints(itemPath)
-  const clipPathPoints = getItemPoints(clipPath, x, y)
-  console.log('itemPathPoints:', itemPathPoints)
-  console.log('clipPathPoints:', clipPathPoints)
-  var scale = 100;
-  const ClipperLib = window.ClipperLib
-  ClipperLib.JS.ScaleUpPaths(itemPathPoints, scale);
+  
+  const x = clipPath.left - subjPath.left, y = clipPath.top - subjPath.top
+  console.log('x:', x, 'y:', y, 'clipPath:', clipPath, 'subjPath:', subjPath)
+  const subjPathPoints = getPathPoints(subjPath)
+  const clipPathPoints = getPathPoints(clipPath, x, y)
+  const scale = 100;
+  ClipperLib.JS.ScaleUpPaths(subjPathPoints, scale);
   ClipperLib.JS.ScaleUpPaths(clipPathPoints, scale);
-  var cpr = new ClipperLib.Clipper();
-  cpr.AddPaths(itemPathPoints, ClipperLib.PolyType.ptSubject, true);
+  const cpr = new ClipperLib.Clipper();
+  cpr.AddPaths(subjPathPoints, ClipperLib.PolyType.ptSubject, true);
   cpr.AddPaths(clipPathPoints, ClipperLib.PolyType.ptClip, true);
-  var subject_fillType = ClipperLib.PolyFillType.pftNonZero;
-  var clip_fillType = ClipperLib.PolyFillType.pftNonZero;
+  const subjFillType = ClipperLib.PolyFillType.pftNonZero;
+  const clipFillType = ClipperLib.PolyFillType.pftNonZero;
   // var clipTypes = [ClipperLib.ClipType.ctUnion, ClipperLib.ClipType.ctDifference, ClipperLib.ClipType.ctXor, ClipperLib.ClipType.ctIntersection];
   // var clipTypesTexts = "Union, Difference, Xor, Intersection";
   // var solution_paths, svg, cont = document.getElementById('svgcontainer');
   // var i;
-  let solution_paths = new ClipperLib.Paths();
-  cpr.Execute(ClipperLib.ClipType.ctXor, solution_paths, subject_fillType, clip_fillType);
+  let solutionPaths = new ClipperLib.Paths() as ArrayLike<any>;
+  cpr.Execute(ClipperLib.ClipType.ctXor, solutionPaths, subjFillType, clipFillType);
   // for (i = 0; i < clipTypes.length; i++) {
   //   solution_paths = new ClipperLib.Paths();
   //   cpr.Execute(clipTypes[i], solution_paths, subject_fillType, clip_fillType);
@@ -44,32 +35,25 @@ export function clipperPath(fabricObjects: FabricObject[]) {
   // }
 
   // cont.innerHTML += "<br>" + clipTypesTexts;
-  console.log('solution_paths:', solution_paths)
-  return path2str(solution_paths, scale)
+  // console.log('solution_paths:', solutionPaths)
+  return path2str(solutionPaths, scale)
 }
 
-const getItemPoints = (item: FabricObject, x = 0, y = 0) => {
-  if (item.isType('Path')) {
-    return getPathPoints(item as Path, x, y)
-  }
-  else if (item.isType('Group')) {
-    let groupPoints: any[] = []
-    (item as Group)._objects.forEach(ele => {
-      groupPoints.push(getPathPoints(ele as Path, x, y)[0])
-    })
-    return groupPoints
-  }
-}
 
-const getPathPoints = (item: Path, x = 0, y = 0) => {
-  const itemPath = item.path.toString().replaceAll(',', ' ')
-  let pathPoints: {X: number, Y: number}[] = []
-  for (var c = 0; c < Raphael.getTotalLength(itemPath); c += 1) {
-    var point = Raphael.getPointAtLength(itemPath, c);
-    pathPoints.push({X: point.x + x, Y: point.y + y})
+const getPathPoints = (item: Path, x = 0, y = 0) : ArrayLike<any> => {
+  const itemPath = item.path.toString().replaceAll(',', ' ').split('Z')
+  let pathPoints: any = []
+  for (let i = 0; i < itemPath.length; i++) {
+    let pathPoint: {X: number, Y: number}[] = []
+    const item = itemPath[i]
+    if (!item) continue
+    for (let c = 0; c < Raphael.getTotalLength(item.trim() + ' Z'); c += 1) {
+      let point = Raphael.getPointAtLength(item.trim() + ' Z', c)
+      pathPoint.push({X: point.x + x, Y: point.y + y})
+    }
+    pathPoints.push(pathPoint)
   }
-  
-  return [pathPoints]
+  return pathPoints
 }
 
 // Converts Paths to SVG path string
