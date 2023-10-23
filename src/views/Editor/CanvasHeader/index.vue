@@ -17,10 +17,6 @@
         <template #content>解组</template>
         <IconUngroup class="handler-item" :class="{ 'disable': !canUnGroup }" @click="ungroup()"/>
       </el-tooltip>
-      <el-tooltip placement="top" :hide-after="0">
-        <template #content>交叉</template>
-        <IconIntersection class="handler-item" @click="intersection()"/>
-      </el-tooltip>
     </div>
 
     <div class="center-handler">
@@ -37,10 +33,10 @@
               <el-button @click="layerElement(LayerCommand.BOTTOM)"><IconBringToFrontOne/></el-button>
             </el-tooltip>
             <el-tooltip placement="top" :hide-after="0" content="下移">
-              <el-button @click="layerElement(LayerCommand.DOWN)"><IconSentToBack/></el-button>
+              <el-button @click="layerElement(LayerCommand.DOWN)"><IconSendBackward/></el-button>
             </el-tooltip>
             <el-tooltip placement="top" :hide-after="0" content="上移">
-              <el-button @click="layerElement(LayerCommand.UP)"><IconBringToFront/></el-button>
+              <el-button @click="layerElement(LayerCommand.UP)"><IconBringForward/></el-button>
             </el-tooltip>
           </el-button-group>
         </el-row>
@@ -96,6 +92,10 @@
       <el-tooltip placement="top" content="锁定">
         <IconLock class="handler-item" @click="changeElementLock(false)" v-if="lock" :class="{ 'disable': !handleElement }"/>
         <IconUnlock class="handler-item" @click="changeElementLock(true)" v-else :class="{ 'disable': !handleElement }"/>
+      </el-tooltip>
+      <el-tooltip placement="top" :hide-after="0">
+        <template #content>交叉</template>
+        <IconIntersection class="handler-item" @click="intersection()"/>
       </el-tooltip>
     </div>
     <div class="right-handler">

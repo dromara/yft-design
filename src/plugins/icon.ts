@@ -147,7 +147,14 @@ import {
   BarCode,
   PayCodeTwo,
   TextStyleOne,
-  Intersection
+  Intersection,
+  SendBackward,
+  BringForward,
+  IntersectSelection,
+  UnionSelection,
+  ExcludeSelection,
+  SubtractSelection,
+  SubtractSelectionOne
 } from '@icon-park/vue-next'
 
 export const icons = {
@@ -296,7 +303,14 @@ export const icons = {
   IconBarCode: BarCode,
   IconPayCodeTwo: PayCodeTwo,
   IconTextStyleOne: TextStyleOne,
-  IconIntersection: Intersection
+  IconIntersection: Intersection,
+  IconSendBackward: SendBackward,
+  IconBringForward: BringForward,
+  IconIntersectSelection: IntersectSelection,
+  IconUnionSelection: UnionSelection,
+  IconExcludeSelection: ExcludeSelection,
+  IconSubtractSelection: SubtractSelection,
+  IconSubtractSelectionOne: SubtractSelectionOne
 }
 
 export default {
