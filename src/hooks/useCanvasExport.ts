@@ -5,12 +5,11 @@ import { storeToRefs } from 'pinia'
 import { useFabricStore } from '@/store'
 import { WorkSpaceThumbType, WorkSpaceClipType, WorkSpaceCommonType, WorkSpaceSafeType, propertiesToInclude } from '@/configs/canvas'
 import { ImageFormat } from 'fabric'
-import { mm2px } from '@/utils/image'
 import { downloadSVGFile } from '@/utils/download'
-import mupdf from 'mupdf'
 import useCanvas from '@/views/Canvas/useCanvas'
 import useCenter from '@/views/Canvas/useCenter'
-
+import PDFWorker from "@/worker/mupdf.js?worker"
+const worker = new PDFWorker()
 export default () => {
   
   const Exporting = ref(false)
@@ -105,7 +104,11 @@ export default () => {
   // 导出PDF
   const exportPDF = async () => {
     const [ canvas ] = useCanvas()
-    // const pdfDocument = new mupdf.PDFDocument()
+    
+    worker.postMessage({
+      type: "convert",
+    });
+    // var document = new mupdf.Document.openDocument("my_pdf.pdf", "application/pdf");
   }
 
   // 导出json
