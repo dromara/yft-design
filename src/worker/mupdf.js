@@ -25,11 +25,15 @@
 "use strict"
 
 // Import the WASM module.
-globalThis.__filename = "/lib/mupdf-wasm.js"
-importScripts("/lib/mupdf-wasm.js")
+// globalThis.__filename = "mupdf/lib/mupdf-wasm.js"
+// importScripts("/lib/mupdf-wasm.js")
+// import * as wasmMuPDF from 'mupdf/lib/mupdf-wasm.js'
 
 // Import the MuPDF bindings.
-importScripts("/lib/mupdf.js")
+// importScripts("/lib/mupdf.js")
+// import libmupdf from 'mupdf/lib/mupdf-wasm'
+
+import mupdf from 'mupdf'
 
 const workerMethods = {}
 
