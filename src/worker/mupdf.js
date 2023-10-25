@@ -37,195 +37,313 @@ import mupdf from 'mupdf'
 
 const workerMethods = {}
 
-onmessage = async function (event) {
-	let [ func, id, args ] = event.data
-	try {
-		let result = workerMethods[func](...args)
-		postMessage([ "RESULT", id, result ])
-	} catch (error) {
-		if (error instanceof mupdf.TryLaterError) {
-			trylaterQueue.push(event)
-		} else {
-			postMessage([ "ERROR", id, { name: error.name, message: error.message, stack: error.stack } ])
-		}
-	}
-}
+// onmessage = async function (event) {
+//   let [func, id, args] = event.data
+//   try {
+//     let result = workerMethods[func](...args)
+//     postMessage(["RESULT", id, result])
+//   } catch (error) {
+//     if (error instanceof mupdf.TryLaterError) {
+//       trylaterQueue.push(event)
+//     } else {
+//       postMessage(["ERROR", id, { name: error.name, message: error.message, stack: error.stack }])
+//     }
+//   }
+// }
+
+self.addEventListener("message", handleMessage);
+
+// let muPdf: MuPdf.Instance | undefined;
+// initMuPdf().then((muPdf: MuPdf.Instance)=> {
+//     muPdf = muPdf
+// }) 
+
+function handleMessage(e) {
+    if (e.data.type === "convert") {
+      console.log('convert')
+      const doc = createBlankPDF()
+      console.log('doc:', doc)
+      savePDF()
+    }
+  }
+  
 
 let trylaterScheduled = false
 let trylaterQueue = []
+
 mupdf.onFetchCompleted = function (_id) {
-	if (!trylaterScheduled) {
-		trylaterScheduled = true
-		setTimeout(() => {
-			trylaterScheduled = false
-			let currentQueue = trylaterQueue
-			trylaterQueue = []
-			currentQueue.forEach(onmessage)
-		}, 0)
-	}
+  if (!trylaterScheduled) {
+    trylaterScheduled = true
+    setTimeout(() => {
+      trylaterScheduled = false
+      let currentQueue = trylaterQueue
+      trylaterQueue = []
+      currentQueue.forEach(onmessage)
+    }, 0)
+  }
 }
 
 let openStream = null
 let openDocument = null
 
 workerMethods.setLogFilters = function (filters) {
-	logFilters = filters
+  logFilters = filters
 }
 
 workerMethods.openStreamFromUrl = function (url, contentLength, progressive, prefetch) {
-	openStream = new mupdf.Stream(url, contentLength, Math.max(progressive << 10, 1 << 16), prefetch)
+  openStream = new mupdf.Stream(url, contentLength, Math.max(progressive << 10, 1 << 16), prefetch)
 }
 
 workerMethods.openDocumentFromBuffer = function (buffer, magic) {
-	openDocument = mupdf.Document.openDocument(buffer, magic)
+  openDocument = mupdf.Document.openDocument(buffer, magic)
 }
 
 workerMethods.openDocumentFromStream = function (magic) {
-	if (openStream == null) {
-		throw new Error("openDocumentFromStream called but no stream has been open")
-	}
-	openDocument = mupdf.Document.openDocument(openStream, magic)
+  if (openStream == null) {
+    throw new Error("openDocumentFromStream called but no stream has been open")
+  }
+  openDocument = mupdf.Document.openDocument(openStream, magic)
 }
 
 workerMethods.freeDocument = function () {
-	openDocument?.destroy()
-	openDocument = null
+  openDocument?.destroy()
+  openDocument = null
 }
 
 workerMethods.documentTitle = function () {
-	return openDocument.getMetaData(Document.META_INFO_TITLE)
+  return openDocument.getMetaData(Document.META_INFO_TITLE)
 }
 
 workerMethods.documentOutline = function () {
-	return openDocument.loadOutline()
+  return openDocument.loadOutline()
 }
 
 workerMethods.countPages = function () {
-	return openDocument.countPages()
+  return openDocument.countPages()
 }
 
 // TODO - use hungarian notation for coord spaces
 // TODO - document the "- 1" better
 // TODO - keep page loaded?
 workerMethods.getPageSize = function (pageNumber) {
-	let page = openDocument.loadPage(pageNumber - 1)
-	let bounds = page.getBounds()
-	return { width: bounds[2] - bounds[0], height: bounds[3] - bounds[1] }
+  let page = openDocument.loadPage(pageNumber - 1)
+  let bounds = page.getBounds()
+  return { width: bounds[2] - bounds[0], height: bounds[3] - bounds[1] }
 }
 
 workerMethods.getPageLinks = function (pageNumber) {
-	let page = openDocument.loadPage(pageNumber - 1)
-	let links = page.getLinks()
+  let page = openDocument.loadPage(pageNumber - 1)
+  let links = page.getLinks()
 
-	return links.map((link) => {
-		const [ x0, y0, x1, y1 ] = link.getBounds()
+  return links.map((link) => {
+    const [x0, y0, x1, y1] = link.getBounds()
 
-		let href
-		if (link.isExternal()) {
-			href = link.getURI()
-		} else {
-			const linkPageNumber = openDocument.resolveLink(link)
-			// TODO - move to front-end
-			// TODO - document the "+ 1" better
-			href = `#page${linkPageNumber + 1}`
-		}
+    let href
+    if (link.isExternal()) {
+      href = link.getURI()
+    } else {
+      const linkPageNumber = openDocument.resolveLink(link)
+      // TODO - move to front-end
+      // TODO - document the "+ 1" better
+      href = `#page${linkPageNumber + 1}`
+    }
 
-		return {
-			x: x0,
-			y: y0,
-			w: x1 - x0,
-			h: y1 - y0,
-			href,
-		}
-	})
+    return {
+      x: x0,
+      y: y0,
+      w: x1 - x0,
+      h: y1 - y0,
+      href,
+    }
+  })
 }
 
 workerMethods.getPageText = function (pageNumber) {
-	let page = openDocument.loadPage(pageNumber - 1)
-	let text = page.toStructuredText(1).asJSON()
-	return JSON.parse(text)
+  let page = openDocument.loadPage(pageNumber - 1)
+  let text = page.toStructuredText(1).asJSON()
+  return JSON.parse(text)
 }
 
 workerMethods.search = function (pageNumber, needle) {
-	let page = openDocument.loadPage(pageNumber - 1)
-	const hits = page.search(needle)
-	let result = []
-	for (let hit of hits) {
-		for (let quad of hit) {
-			const [ ulx, uly, urx, ury, llx, lly, lrx, lry ] = quad
-			result.push({
-				x: ulx,
-				y: uly,
-				w: urx - ulx,
-				h: lly - uly,
-			})
-		}
-	}
-	return result
+  let page = openDocument.loadPage(pageNumber - 1)
+  const hits = page.search(needle)
+  let result = []
+  for (let hit of hits) {
+    for (let quad of hit) {
+      const [ulx, uly, urx, ury, llx, lly, lrx, lry] = quad
+      result.push({
+        x: ulx,
+        y: uly,
+        w: urx - ulx,
+        h: lly - uly,
+      })
+    }
+  }
+  return result
 }
 
 workerMethods.getPageAnnotations = function (pageNumber, dpi) {
-	let page = openDocument.loadPage(pageNumber - 1)
+  let page = openDocument.loadPage(pageNumber - 1)
 
-	if (page == null) {
-		return []
-	}
+  if (page == null) {
+    return []
+  }
 
-	const annotations = page.getAnnotations()
-	const doc_to_screen = [ dpi = 72, 0, 0, dpi / 72, 0, 0 ]
+  const annotations = page.getAnnotations()
+  const doc_to_screen = [dpi = 72, 0, 0, dpi / 72, 0, 0]
 
-	return annotations.map((annotation) => {
-		const [ x0, y0, x1, y1 ] = Matrix.transformRect(annotation.getBounds())
-		return {
-			x: x0,
-			y: y0,
-			w: x1 - x0,
-			h: y1 - y0,
-			type: annotation.getType(),
-			ref: annotation.pointer,
-		}
-	})
+  return annotations.map((annotation) => {
+    const [x0, y0, x1, y1] = Matrix.transformRect(annotation.getBounds())
+    return {
+      x: x0,
+      y: y0,
+      w: x1 - x0,
+      h: y1 - y0,
+      type: annotation.getType(),
+      ref: annotation.pointer,
+    }
+  })
 }
 
 // TODO - Move this to mupdf-view
 const lastPageRender = new Map()
 
 workerMethods.drawPageAsPNG = function (pageNumber, dpi) {
-	const doc_to_screen = mupdf.Matrix.scale(dpi / 72, dpi / 72)
+  const doc_to_screen = mupdf.Matrix.scale(dpi / 72, dpi / 72)
 
-	// TODO - use canvas?
+  // TODO - use canvas?
 
-	let page = openDocument.loadPage(pageNumber - 1)
-	let pixmap = page.toPixmap(doc_to_screen, mupdf.DeviceRGB, false)
+  let page = openDocument.loadPage(pageNumber - 1)
+  let pixmap = page.toPixmap(doc_to_screen, mupdf.DeviceRGB, false)
 
-	let png = pixmap?.saveAsPNG()
+  let png = pixmap?.saveAsPNG()
 
-	pixmap?.destroy()
+  pixmap?.destroy()
 
-	return png
+  return png
 }
 
 workerMethods.drawPageAsPixmap = function (pageNumber, dpi) {
-	const doc_to_screen = mupdf.Matrix.scale(dpi / 72, dpi / 72)
+  const doc_to_screen = mupdf.Matrix.scale(dpi / 72, dpi / 72)
 
-	let page = openDocument.loadPage(pageNumber - 1)
-	let bbox = Rect.transform(page.getBounds(), doc_to_screen)
-	let pixmap = new mupdf.Pixmap(mupdf.ColorSpace.DeviceRGB, bbox, true)
-	pixmap.clear(255)
+  let page = openDocument.loadPage(pageNumber - 1)
+  let bbox = Rect.transform(page.getBounds(), doc_to_screen)
+  let pixmap = new mupdf.Pixmap(mupdf.ColorSpace.DeviceRGB, bbox, true)
+  pixmap.clear(255)
 
-	let device = new mupdf.DrawDevice(doc_to_screen, pixmap)
-	page.run(device, Matrix.identity)
-	device.close()
+  let device = new mupdf.DrawDevice(doc_to_screen, pixmap)
+  page.run(device, Matrix.identity)
+  device.close()
 
-	let pixArray = pixmap.getPixels()
-	let pixW = pixmap.getWidth()
-	let pixH = pixmap.getHeight()
+  let pixArray = pixmap.getPixels()
+  let pixW = pixmap.getWidth()
+  let pixH = pixmap.getHeight()
 
-	let imageData = new ImageData(pixArray.slice(), pixW, pixH)
+  let imageData = new ImageData(pixArray.slice(), pixW, pixH)
 
-	pixmap.destroy()
+  pixmap.destroy()
 
-	return imageData
+  return imageData
 }
 
-postMessage([ "READY", Object.keys(workerMethods) ])
+function createBlankPDF() {
+  var doc = new mupdf.PDFDocument()
+  doc.insertPage(0, doc.addPage([0, 0, 595, 842], 0, null, ""))
+  return doc
+}
+
+function savePDF() {
+  // fs.writeFileSync(path, doc.saveToBuffer(opts).asUint8Array())
+  try {
+    var doc = createBlankPDF()
+    var page = doc.loadPage(0)
+    var annot
+  
+    annot = page.createAnnotation("Text")
+    annot.setRect([200, 10, 250, 50])
+    annot.setContents("This is a Text annotation!")
+    annot.setColor([0, 0.5, 1])
+  
+    annot = page.createAnnotation("FreeText")
+    annot.setRect([10, 10, 200, 50])
+    annot.setContents("This is a FreeText annotation!")
+    annot.setDefaultAppearance("TiRo", 18, [0])
+  
+    annot = page.createAnnotation("Circle")
+    annot.setRect([100, 100, 300, 300])
+    annot.setColor([0, 1, 1])
+    annot.setInteriorColor([0.5, 0, 0])
+    annot.setBorderEffect("Cloudy")
+    annot.setBorderEffectIntensity(4)
+    annot.setBorderWidth(10)
+  
+    annot = page.createAnnotation("Polygon")
+    annot.setColor([1, 0, 0])
+    annot.setInteriorColor([1, 1, 0])
+    annot.addVertex([10, 100])
+    annot.addVertex([200, 200])
+    annot.addVertex([30, 300])
+  
+    annot = page.createAnnotation("Line")
+    annot.setColor([1, 0, 0])
+    annot.setInteriorColor([0, 0, 1])
+    annot.setLine([10, 300], [200, 500])
+    annot.setLineEndingStyles("None", "ClosedArrow")
+  
+    annot = page.createAnnotation("Highlight")
+    annot.setColor([1, 1, 0])
+    annot.setQuadPoints([
+      [
+        80, 70,
+        190, 70,
+        80, 90,
+        190, 90,
+      ]
+    ])
+  
+    annot = page.createAnnotation("Stamp")
+    annot.setRect([10, 600, 200, 700])
+    annot.setAppearance(null, null, mupdf.Matrix.identity, [0, 0, 100, 100], {}, "0 1 0 rg 10 10 50 50 re f")
+  
+    annot = page.createAnnotation("Stamp")
+    annot.setRect([10, 750, 200, 850])
+    annot.setIcon("TOP SECRET")
+  
+    annot = page.createAnnotation("FileAttachment")
+    annot.setRect([300, 10, 350, 60])
+    annot.setFileSpec(
+      doc.addEmbeddedFile(
+        "readme.txt",
+        "text/plain",
+        "Lorem ipsum dolor...",
+        new Date(),
+        new Date(),
+        false
+      )
+    )
+  
+    annot = page.createAnnotation("Ink")
+    annot.setColor([0.5])
+    annot.setBorderWidth(5)
+    annot.addInkListStroke()
+    for (let i = 0; i < 360; i += 5) {
+      let y = Math.sin(i * Math.PI / 180)
+      annot.addInkListStrokeVertex([200 + i, 700 + y * 50])
+    }
+  
+    page.createLink([500, 20, 590, 40], "https://mupdf.com/")
+    page.createLink([500, 40, 590, 60], doc.formatLinkURI({ type: "Fit", page: 0 }))
+  
+    page.update()
+    
+    // savePDF(doc, "out.pdf", "")
+  
+  } catch (err) {
+    console.error(err)
+    // process.exit(1)
+  }
+}
+
+
+
+postMessage(["READY", Object.keys(workerMethods)])

@@ -10,6 +10,7 @@ import useCanvas from '@/views/Canvas/useCanvas'
 import useCenter from '@/views/Canvas/useCenter'
 import PDFWorker from "@/worker/mupdf.js?worker"
 const worker = new PDFWorker()
+
 export default () => {
   
   const Exporting = ref(false)
