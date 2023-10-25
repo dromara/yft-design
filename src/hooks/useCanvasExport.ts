@@ -109,6 +109,13 @@ export default () => {
     worker.postMessage({
       type: "convert",
     });
+    worker.addEventListener('message', (event) => {
+      // 获取来自 Web Worker 的 Uint8Array 数据
+      const originalUint8Array = event.data;
+      console.log('Received data from worker: ', originalUint8Array);
+      const blob = new Blob([originalUint8Array], { type: 'application/pdf' })
+      saveAs(blob, `yft-design-${Date.now()}.pdf`)
+    });
     // var document = new mupdf.Document.openDocument("my_pdf.pdf", "application/pdf");
   }
 

@@ -34,6 +34,7 @@
 // import libmupdf from 'mupdf/lib/mupdf-wasm'
 
 import mupdf from 'mupdf'
+import { saveAs } from 'file-saver'
 
 const workerMethods = {}
 
@@ -60,9 +61,9 @@ self.addEventListener("message", handleMessage);
 
 function handleMessage(e) {
     if (e.data.type === "convert") {
-      console.log('convert')
-      const doc = createBlankPDF()
-      console.log('doc:', doc)
+      // console.log('convert')
+      // const doc = createBlankPDF()
+      // console.log('doc:', doc)
       savePDF()
     }
   }
@@ -258,7 +259,7 @@ function savePDF() {
     var doc = createBlankPDF()
     var page = doc.loadPage(0)
     var annot
-  
+    console.log('page:', page)
     annot = page.createAnnotation("Text")
     annot.setRect([200, 10, 250, 50])
     annot.setContents("This is a Text annotation!")
@@ -335,9 +336,11 @@ function savePDF() {
     page.createLink([500, 40, 590, 60], doc.formatLinkURI({ type: "Fit", page: 0 }))
   
     page.update()
+    const buffer = doc.saveToBuffer('{"compress-images":true}')
+    const arr = buffer.asUint8Array()
     
     // savePDF(doc, "out.pdf", "")
-  
+    postMessage(arr)
   } catch (err) {
     console.error(err)
     // process.exit(1)
