@@ -156,45 +156,45 @@
       <el-row>
         <el-col :span="7" class="slider-name">图形缩放：</el-col>
         <el-col :span="13">
-          <el-slider class="common-slider" :min="1" :max="shadingElement.maxScale" :step="1" v-model="shadingBackground.scale" @change="changeShadingZoom"/>
+          <el-slider class="common-slider" :min="1" :max="shadingColorLib.maxScale" :step="1" v-model="shadingBackground.scale" @change="changeShadingZoom"/>
         </el-col>
         <el-col :span="4" class="slider-num">{{ shadingBackground.scale }}</el-col>
       </el-row>
       <el-row>
         <el-col :span="7" class="slider-name">水平位置：</el-col>
         <el-col :span="13">
-          <el-slider class="common-slider" :min="0" :max="shadingElement.width * 2" :step="1" v-model="shadingBackground.moveLeft" @change="changeShadingHorizontal"/>
+          <el-slider class="common-slider" :min="0" :max="shadingColorLib.width * 2" :step="1" v-model="shadingBackground.moveLeft" @change="changeShadingHorizontal"/>
         </el-col>
         <el-col :span="4" class="slider-num">{{ shadingBackground.moveLeft }}</el-col>
       </el-row>
       <el-row>
         <el-col :span="7" class="slider-name">垂直位置：</el-col>
         <el-col :span="13">
-          <el-slider class="common-slider" :min="0" :max="shadingElement.height" :step="1" v-model="shadingBackground.moveTop" @change="changeShadingVertical"/>
+          <el-slider class="common-slider" :min="0" :max="shadingColorLib.height" :step="1" v-model="shadingBackground.moveTop" @change="changeShadingVertical"/>
         </el-col>
         <el-col :span="4" class="slider-num">{{ shadingBackground.moveTop }}</el-col>
       </el-row>
 
-      <el-row v-if="shadingElement.mode === 'stroke-join' || shadingElement.mode === 'stroke'">
+      <el-row v-if="shadingColorLib.mode === 'stroke-join' || shadingColorLib.mode === 'stroke'">
         <el-col :span="7" class="slider-name">线条粗细：</el-col>
         <el-col :span="13">
-          <el-slider class="common-slider" :min="0.5" :max="shadingElement.maxStroke" :step="0.5" v-model="shadingBackground.stroke" @change="changeShadingStroke"/>
+          <el-slider class="common-slider" :min="0.5" :max="shadingColorLib.maxStroke" :step="0.5" v-model="shadingBackground.stroke" @change="changeShadingStroke"/>
         </el-col>
         <el-col :span="4" class="slider-num">{{ shadingBackground.stroke }}</el-col>
       </el-row>
 
-      <el-row v-if="shadingElement.maxSpacing[0] > 0">
+      <el-row v-if="shadingColorLib.maxSpacing[0] > 0">
         <el-col :span="7" class="slider-name">垂直间距：</el-col>
         <el-col :span="13">
-          <el-slider class="common-slider" :min="0" :max="shadingElement.maxSpacing[0]" :step="0.5" v-model="shadingBackground.spacing[0]" @change="changeShadingHSpacing"/>
+          <el-slider class="common-slider" :min="0" :max="shadingColorLib.maxSpacing[0]" :step="0.5" v-model="shadingBackground.spacing[0]" @change="changeShadingHSpacing"/>
         </el-col>
         <el-col :span="4" class="slider-num">{{ shadingBackground.spacing[0] }}</el-col>
       </el-row>
 
-      <el-row v-if="shadingElement.maxSpacing[1] > 0">
+      <el-row v-if="shadingColorLib.maxSpacing[1] > 0">
         <el-col :span="7" class="slider-name">水平间距：</el-col>
         <el-col :span="13">
-          <el-slider class="common-slider" :min="0" :max="shadingElement.maxSpacing[1]" :step="0.5" v-model="shadingBackground.spacing[1]" @change="changeShadingVSpacing"/>
+          <el-slider class="common-slider" :min="0" :max="shadingColorLib.maxSpacing[1]" :step="0.5" v-model="shadingBackground.spacing[1]" @change="changeShadingVSpacing"/>
         </el-col>
         <el-col :span="4" class="slider-num">{{ shadingBackground.spacing[1] }}</el-col>
       </el-row>
@@ -209,7 +209,7 @@
       <el-row>
         <el-col :span="7" class="slider-name">颜色数量：</el-col>
         <el-col :span="13">
-          <el-slider class="common-slider" :min="2" :max="shadingElement.colors" :step="1" v-model="shadingBackground.colorCounts" @change="changeShadingColors"/>
+          <el-slider class="common-slider" :min="2" :max="shadingColorLib.colors" :step="1" v-model="shadingBackground.colorCounts" @change="changeShadingColors"/>
         </el-col>
         <el-col :span="4" class="slider-num">{{ shadingBackground.colorCounts }}</el-col>
       </el-row>
@@ -253,7 +253,7 @@ import { Gradient, Pattern, Image, util } from 'fabric'
 import { TransparentFill, BackgroundFillMode, BackgroundFillImageMode, BackgroundFillGridMode, BackgroundFillGradientMode } from '@/configs/background'
 import { GridColorLibs } from '@/configs/colorGrid'
 import { GradientColorLibs } from '@/configs/colorGradient'
-import { ShadingLigntColors } from '@/configs/colorShading'
+import { ShadingLigntColors, ShadingColorLibInit, ShadingBackgroudInit } from '@/configs/colorShading'
 import { GradientCoords } from '@/types/elements'
 import { ShadingBackground, ShadingColorLib } from '@/types/elements'
 import { propertiesToInclude } from '@/configs/canvas'
@@ -292,8 +292,8 @@ const gridVarianceRef = ref(0.5)
 const gridColorDialog = ref(false)
 
 const shadingColorLibs = ref<ShadingColorLib[]>([])
-const shadingElement = ref()  // 底纹 预定义 参数
-const shadingBackground = ref()
+const shadingColorLib = ref<ShadingColorLib>(ShadingColorLibInit)  // 底纹 预定义 参数
+const shadingBackground = ref<ShadingBackground>(ShadingBackgroudInit)
 
 // 加载缓存最近添加的网格 
 onMounted(async () => {
@@ -301,19 +301,7 @@ onMounted(async () => {
   if (recentGridCache) gridColorRecent.value = JSON.parse(recentGridCache)
   const res = await getColorShading()
   shadingColorLibs.value = res.data
-  shadingElement.value = shadingColorLibs.value[0]
-  shadingBackground.value = {
-    id: 1,
-    colors: ShadingLigntColors,
-    colorCounts: shadingElement.value.colors,
-    stroke: 1,
-    scale: 1,
-    spacing: [0, 0],
-    angle: 0,
-    join: 1,
-    moveLeft: 0,
-    moveTop: 0
-  }
+  shadingColorLib.value = shadingColorLibs.value[0]
 })
 
 const background = computed(() => {
@@ -679,7 +667,7 @@ const multiStroke = (index: number, vHeight: number, maxColors: number, mode: st
 // 底纹样式背景生成
 const generateShadingBackground = async () => {
   const { workSpaceDraw } = useCenter()
-  const item = shadingElement.value
+  const item = shadingColorLib.value
   const maxColors = item.path.split('~').length + 1
   const width = item.width
   const height = item.height
@@ -721,7 +709,7 @@ const generateShadingBackground = async () => {
 
 // // 选择底纹填充
 const changeShadingElement = (item: ShadingColorLib) => {
-  shadingElement.value = item
+  shadingColorLib.value = item
   shadingBackground.value.colorCounts = item.colors
   generateShadingBackground()
 }
@@ -776,7 +764,7 @@ const changeShadingIndexColor = (index: number, color: string) => {
 // 随机底纹填充形状
 const generateShadingBackgroundRandom = () => {
   const item = shadingColorLibs.value[Math.floor(getRandomNum(0, shadingColorLibs.value.length - 1))]
-  shadingElement.value = item
+  shadingColorLib.value = item
   if (item.colors) shadingBackground.value.colorCounts = item.colors
   generateShadingBackground()
 }
