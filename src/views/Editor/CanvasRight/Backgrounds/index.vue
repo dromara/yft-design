@@ -230,7 +230,7 @@
       </div>
       <div class="background-shading-body">
         <div 
-          v-for="item in ShadingColorLibs" 
+          v-for="item in shadingColorLibs" 
           :key="item.title" 
           class="shading-box" 
           :style="{ backgroundImage: `url(&quot;${shadingSvgPattern(item.width, item.height, item.path, item.mode)}&quot;)` }"
@@ -253,13 +253,14 @@ import { Gradient, Pattern, Image, util } from 'fabric'
 import { TransparentFill, BackgroundFillMode, BackgroundFillImageMode, BackgroundFillGridMode, BackgroundFillGradientMode } from '@/configs/background'
 import { GridColorLibs } from '@/configs/colorGrid'
 import { GradientColorLibs } from '@/configs/colorGradient'
-import { ShadingColorLibs, ShadingLigntColors } from '@/configs/colorShading'
+import { ShadingLigntColors } from '@/configs/colorShading'
 import { GradientCoords } from '@/types/elements'
 import { ShadingBackground, ShadingColorLib } from '@/types/elements'
 import { propertiesToInclude } from '@/configs/canvas'
 import { ImageElement, WorkSpaceElement } from '@/types/canvas'
 import { getRandomNum } from '@/utils/common'
 import { getImageDataURL } from '@/utils/image'
+import { getColorShading } from '@/api/color'
 import trianglify from '@/plugins/trianglify/trianglify'
 import useCanvas from '@/views/Canvas/useCanvas'
 import useCenter from '@/views/Canvas/useCenter'
@@ -290,19 +291,29 @@ const gridStrengthRef = ref(0.5)
 const gridVarianceRef = ref(0.5)
 const gridColorDialog = ref(false)
 
-// 底纹 预定义 参数
-const shadingElement = ref<ShadingColorLib>(ShadingColorLibs[0])
-const shadingBackground = ref<ShadingBackground>({
-  id: 1,
-  colors: ShadingLigntColors,
-  colorCounts: shadingElement.value.colors,
-  stroke: 1,
-  scale: 1,
-  spacing: [0, 0],
-  angle: 0,
-  join: 1,
-  moveLeft: 0,
-  moveTop: 0
+const shadingColorLibs = ref<ShadingColorLib[]>([])
+const shadingElement = ref()  // 底纹 预定义 参数
+const shadingBackground = ref()
+
+// 加载缓存最近添加的网格 
+onMounted(async () => {
+  const recentGridCache = localStorage.getItem(RECENT_GRIDS)
+  if (recentGridCache) gridColorRecent.value = JSON.parse(recentGridCache)
+  const res = await getColorShading()
+  shadingColorLibs.value = res.data
+  shadingElement.value = shadingColorLibs.value[0]
+  shadingBackground.value = {
+    id: 1,
+    colors: ShadingLigntColors,
+    colorCounts: shadingElement.value.colors,
+    stroke: 1,
+    scale: 1,
+    spacing: [0, 0],
+    angle: 0,
+    join: 1,
+    moveLeft: 0,
+    moveTop: 0
+  }
 })
 
 const background = computed(() => {
@@ -500,13 +511,6 @@ const updateGridColorRecentCache = debounce(function() {
   }
 }, 300, { trailing: true })
 
-
-// 加载缓存最近添加的网格 
-onMounted(() => {
-  const recentGridCache = localStorage.getItem(RECENT_GRIDS)
-  if (recentGridCache) gridColorRecent.value = JSON.parse(recentGridCache)
-})
-
 // 保存缓存最近添加的网格 
 watch(gridColorRecent, () => {
   const recentGridCache = JSON.stringify(gridColorRecent.value)
@@ -608,7 +612,7 @@ const generateGridBackground = async (status?: string) => {
   const canvasBackground = trianglifier.toSVG()
   const serialize = new XMLSerializer()
   const imageURL = `data:image/svg+xml,${serialize.serializeToString(canvasBackground)}`
-  const backgroundImage = await Image.fromURL(imageURL, {crossOrigin: 'anonymous'}, {})
+  const backgroundImage = await Image.fromURL(imageURL, {crossOrigin: 'anonymous'})
   const left = workSpaceDraw.left, top = workSpaceDraw.top, angle = workSpaceDraw.angle, scaleX = workSpaceDraw.scaleX, scaleY = workSpaceDraw.scaleY
   backgroundImage.set({left, top, angle, scaleX, scaleY})
   generateBackgroundImage(backgroundImage, imageURL)
@@ -707,7 +711,7 @@ const generateShadingBackground = async () => {
     </svg>
   `
   const imageURL = `data:image/svg+xml,${svg}`
-  const backgroundImage = await Image.fromURL(imageURL, {crossOrigin: 'anonymous'}, {})
+  const backgroundImage = await Image.fromURL(imageURL, {crossOrigin: 'anonymous'})
   const left = workSpaceDraw.left, top = workSpaceDraw.top, angle = workSpaceDraw.angle, scaleX = workSpaceDraw.scaleX, scaleY = workSpaceDraw.scaleY
   backgroundImage.set({left, top, angle, scaleX, scaleY, width: imageWidth, height: imageHeight})
   
@@ -771,7 +775,7 @@ const changeShadingIndexColor = (index: number, color: string) => {
 
 // 随机底纹填充形状
 const generateShadingBackgroundRandom = () => {
-  const item = ShadingColorLibs[Math.floor(getRandomNum(0, ShadingColorLibs.length - 1))]
+  const item = shadingColorLibs.value[Math.floor(getRandomNum(0, shadingColorLibs.value.length - 1))]
   shadingElement.value = item
   if (item.colors) shadingBackground.value.colorCounts = item.colors
   generateShadingBackground()

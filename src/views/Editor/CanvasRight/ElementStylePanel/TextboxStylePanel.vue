@@ -355,17 +355,6 @@ const handleElementCurve = async () => {
   }
   if (!fontElement) return
   const path = fontElement.getPath(handleElement.value.text, 0, 0, handleElement.value.fontSize);
-  // const svg = paths[0].toSVG(2)
-  // console.log('svg:', paths[0].toPathData(2))
-  // let svgText = "<svg width='100%' height='100%'>"
-  // paths.forEach(item => {
-  //   svgText += item.toSVG(2)
-  //   // createPathElement(item.toPathData(2))
-  // })
-  // svgText += "</svg>"
-  // const svgLoad = await loadSVGFromString(svgText)
-  // canvas.add(...svgLoad.objects)
-  // console.log('svgLoad:', svgLoad)
   createPathElement(path.toPathData(2), handleElement.value.left, handleElement.value.top)
   canvas.remove(handleElement.value)
   canvas.renderAll()
