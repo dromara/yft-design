@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { saveAs } from 'file-saver'
 import { storeToRefs } from 'pinia'
-import { useFabricStore } from '@/store'
+import { useFabricStore, useTemplatesStore } from '@/store'
 import { WorkSpaceThumbType, WorkSpaceClipType, WorkSpaceCommonType, WorkSpaceSafeType, propertiesToInclude } from '@/configs/canvas'
 import { ImageFormat } from 'fabric'
 import { downloadSVGFile } from '@/utils/download'
@@ -15,6 +15,7 @@ export default () => {
   
   const Exporting = ref(false)
   const { showClip, showSafe } = storeToRefs(useFabricStore())
+  const { currentTemplate } = storeToRefs(useTemplatesStore())
   // 导出图片
   const exportImage = (format: ImageFormat, quality: number, dpi: number, ignoreClip = true) => {
     Exporting.value = true
@@ -105,9 +106,9 @@ export default () => {
   // 导出PDF
   const exportPDF = async () => {
     const [ canvas ] = useCanvas()
-    
     worker.postMessage({
       type: "convert",
+      template: JSON.stringify(currentTemplate.value)
     });
     worker.addEventListener('message', (event) => {
       // 获取来自 Web Worker 的 Uint8Array 数据

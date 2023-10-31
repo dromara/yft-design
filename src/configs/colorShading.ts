@@ -249,6 +249,8 @@ export const ShadingColorLibs = [
   { title: 'Waves - 9', slug: 'waves-9', mode: 'fill', colors: 3, maxStroke: 1, maxScale: 16, maxSpacing: [0, 0], width: 30, height: 52, vHeight: 0, tags: ['waves', 'curves'], path: "<path d='M0 0v17.34L15 26a10.02 10.02 0 0 0 0 17.34L30 52V34.66L15 26a10.02 10.02 0 0 0 .3-17.16zm30 0a10.02 10.02 0 0 0 0 17.34zM0 34.66V52a10.02 10.02 0 0 0 .3-17.16Z'/>~<path d='M0 0a10 10 0 0 0 15 8.67A9.97 9.97 0 0 1 19.97 0H10A9.98 9.98 0 0 1 0 0Zm30 0v.15ZM4.98 15.98A10 10 0 0 0 0 17.32l-1.1 8.76L0 34.67A10 10 0 0 1 15 26 10 10 0 0 0 4.98 16ZM30 17.32A10 10 0 0 1 15 26a10 10 0 0 0 15 8.67l1.64-7.4zM19.97 41.98A10 10 0 0 0 15 43.32 10 10 0 0 1 10 52h9.97A10 10 0 0 1 30 52a10 10 0 0 0-10.03-10.02Z'/>" },
 ]
 
+export const ShadingColorLibInit = { title: 'Waves - 1', slug: 'waves-1', mode: 'stroke', colors: 5, maxStroke: 6.5, maxScale: 16, maxSpacing: [0, 10], width: 120, height: 80, vHeight: 20, tags: ['waves', 'curves'], path: "<path d='M-50.129 12.685C-33.346 12.358-16.786 4.918 0 5c16.787.082 43.213 10 60 10s43.213-9.918 60-10c16.786-.082 33.346 7.358 50.129 7.685'/>~<path d='M-50.129 32.685C-33.346 32.358-16.786 24.918 0 25c16.787.082 43.213 10 60 10s43.213-9.918 60-10c16.786-.082 33.346 7.358 50.129 7.685'/>~<path d='M-50.129 52.685C-33.346 52.358-16.786 44.918 0 45c16.787.082 43.213 10 60 10s43.213-9.918 60-10c16.786-.082 33.346 7.358 50.129 7.685'/>~<path d='M-50.129 72.685C-33.346 72.358-16.786 64.918 0 65c16.787.082 43.213 10 60 10s43.213-9.918 60-10c16.786-.082 33.346 7.358 50.129 7.685'/>" }
+
 export const ShadingLigntColors = [
   'hsla(0,0%,100%,1)',
   'hsla(258.5,59.4%,59.4%,1)',
@@ -264,6 +266,19 @@ export const DARK_COLORS = [
   'hsla(186.8,100%,41.6%,1)',
   'hsla(258.5,59.4%,59.4%,1)',
 ]
+
+export const ShadingBackgroudInit = {
+  id: 1,
+  colors: ShadingLigntColors,
+  colorCounts: 2,
+  stroke: 1,
+  scale: 1,
+  spacing: [0, 0],
+  angle: 0,
+  join: 1,
+  moveLeft: 0,
+  moveTop: 0
+}
 
 export const COLOR_PALETTES = [
   ['#264653', '#2A9D8F', '#E9C46A', '#F4A261', '#E76F51'],
