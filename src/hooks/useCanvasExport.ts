@@ -8,7 +8,7 @@ import { ImageFormat } from 'fabric'
 import { downloadSVGFile } from '@/utils/download'
 import useCanvas from '@/views/Canvas/useCanvas'
 import useCenter from '@/views/Canvas/useCenter'
-import PDFWorker from "@/worker/mupdf.js?worker"
+import PDFWorker from "@/worker/pdf.js?worker"
 const worker = new PDFWorker()
 
 export default () => {
