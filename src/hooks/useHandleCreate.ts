@@ -79,7 +79,6 @@ export default () => {
   }
 
   const createLineElement = (path: string) => {
-    // const { centerPoint } = useCenter()
     // const [ canvas ] = useCanvas()
     // const lineElement = new fabric.Line([0, 0, 100, 0], {
     //   // @ts-ignore

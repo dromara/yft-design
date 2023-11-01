@@ -2,12 +2,13 @@ import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useFabricStore, useTemplatesStore } from '@/store'
 import { useElementBounding } from '@vueuse/core'
+import { Group, Point } from 'fabric'
 import useCanvas from '@/views/Canvas/useCanvas'
 import useCenter from '@/views/Canvas/useCenter'
 
 export default () => {
   const fabricStore = useFabricStore()
-  const { zoom, wrapperRef } = storeToRefs(fabricStore)
+  const { zoom, wrapperRef, scalePercentage } = storeToRefs(fabricStore)
   const canvasScalePercentage = computed(() => Math.round(zoom.value * 100) + '%')
 
   /**
@@ -73,20 +74,26 @@ export default () => {
   const setCanvasTransform = () => {
     const [ canvas ] = useCanvas()
     if (!canvas) return
-    const { workSpaceDraw } = useCenter()
-    const fabricStore = useFabricStore()
-    const { zoom, wrapperRef } = storeToRefs(fabricStore)
-    const { width, height } = useElementBounding(wrapperRef.value)
-    setWorkSpace(width.value, height.value)
-    const workSpaceBound = workSpaceDraw.getBoundingRect()
-    const left = workSpaceDraw.left, top = workSpaceDraw.top
-    const canvasTransform = canvas.viewportTransform
-    zoom.value = canvas.getZoom()
-    canvasTransform[4] = (width.value - workSpaceBound.width) / 2 - left * zoom.value
-    canvasTransform[5] = (height.value - workSpaceBound.height) / 2 - top * zoom.value
-    canvas.setViewportTransform(canvasTransform)
-    canvas.setDimensions({width: width.value, height: height.value})
-    canvas.renderAll()
+    // const fabricStore = useFabricStore()
+    // const { zoom, wrapperRef } = storeToRefs(fabricStore)
+    // const { width, height } = useElementBounding(wrapperRef.value)
+    // setWorkSpace(width.value, height.value)
+    // const workSpaceBound = workSpaceDraw.getBoundingRect()
+    // const left = workSpaceDraw.left, top = workSpaceDraw.top
+    // const canvasTransform = canvas.viewportTransform
+    // zoom.value = canvas.getZoom()
+    // canvasTransform[4] = (width.value - workSpaceBound.width) / 2 - left * zoom.value
+    // canvasTransform[5] = (height.value - workSpaceBound.height) / 2 - top * zoom.value
+    // canvas.setViewportTransform(canvasTransform)
+    // canvas.setDimensions({width: width.value, height: height.value})
+    // canvas.renderAll()
+    const { zoom } = storeToRefs(fabricStore)
+    const objects = canvas.getObjects()
+    const boundingBox = Group.prototype.getObjectsBoundingBox(objects)
+    if (!boundingBox) return
+    zoom.value = Math.min(canvas.getWidth() / boundingBox.width, canvas.getHeight() / boundingBox.height,) * scalePercentage.value / 100
+    canvas.setZoom(zoom.value)
+    canvas.absolutePan(new Point(boundingBox.centerX, boundingBox.centerY).scalarMultiply(zoom.value).subtract(canvas.getCenterPoint()))
   }
 
   /**

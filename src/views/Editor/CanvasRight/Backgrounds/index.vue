@@ -256,14 +256,13 @@ import { GradientColorLibs } from '@/configs/colorGradient'
 import { ShadingLigntColors, ShadingColorLibInit, ShadingBackgroudInit } from '@/configs/colorShading'
 import { GradientCoords } from '@/types/elements'
 import { ShadingBackground, ShadingColorLib } from '@/types/elements'
-import { propertiesToInclude } from '@/configs/canvas'
+import { WorkSpaceDrawType, propertiesToInclude } from '@/configs/canvas'
 import { ImageElement, WorkSpaceElement } from '@/types/canvas'
 import { getRandomNum } from '@/utils/common'
 import { getImageDataURL } from '@/utils/image'
 import { getColorShading } from '@/api/color'
 import trianglify from '@/plugins/trianglify/trianglify'
 import useCanvas from '@/views/Canvas/useCanvas'
-import useCenter from '@/views/Canvas/useCenter'
 import GridFill from './GridFill.vue'
 import GradientFill from './GradientFill.vue'
 import useHandleBackground from '@/hooks/useHandleBackground'
@@ -397,16 +396,9 @@ const changeBackgroundType = (type: number) => {
 // 设置背景
 const updateBackground = (props: Partial<WorkSpaceElement>) => {
   const [ canvas ] = useCanvas()
-  const { workSpaceDraw } = useCenter()
-  workSpaceDraw.set({
-    ...props,
-    left: workSpaceDraw.left,
-    top: workSpaceDraw.top,
-    width: workSpaceDraw.width,
-    height: workSpaceDraw.height,
-  })
+  const workSpaceDraw = canvas.getObjects().filter(item => item.id === WorkSpaceDrawType)[0]
+  if (!workSpaceDraw) return
   templatesStore.updateWorkSpace({ workSpace: { ...background.value, ...props } })
-  // @ts-ignore
   templatesStore.updateElement({ id: workSpaceDraw.id, props: workSpaceDraw.toObject(propertiesToInclude as any[]) })
   canvas.renderAll()
 }
@@ -470,7 +462,9 @@ const updateGradientBackground = (index: number, color: string) => {
 
 // 生成渐变背景
 const generateGradientBackground = () => {
-  const { workSpaceDraw } = useCenter()
+  const [ canvas ] = useCanvas()
+  const workSpaceDraw = canvas.getObjects().filter(item => item.id === WorkSpaceDrawType)[0]
+  if (!workSpaceDraw) return
   const width = workSpaceDraw.width
   const height = workSpaceDraw.height
   if (!width || !height) return 
@@ -576,7 +570,9 @@ const getGridColorFunction = () => {
 
 // 生成网格图片
 const generateGridBackground = async (status?: string) => {
-  const { workSpaceDraw } = useCenter()
+  const [ canvas ] = useCanvas()
+  const workSpaceDraw = canvas.getObjects().filter(item => item.id === WorkSpaceDrawType)[0]
+  if (!workSpaceDraw) return
   const gridColors = gridColorsRef.value && gridColorsRef.value.length > 0 && status !== 'random' ? gridColorsRef.value : 'random'
  
   if (!workSpaceDraw.width) return
@@ -666,7 +662,9 @@ const multiStroke = (index: number, vHeight: number, maxColors: number, mode: st
 
 // 底纹样式背景生成
 const generateShadingBackground = async () => {
-  const { workSpaceDraw } = useCenter()
+  const [ canvas ] = useCanvas()
+  const workSpaceDraw = canvas.getObjects().filter(item => item.id === WorkSpaceDrawType)[0]
+  if (!workSpaceDraw) return
   const item = shadingColorLib.value
   const maxColors = item.path.split('~').length + 1
   const width = item.width

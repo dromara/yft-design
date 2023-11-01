@@ -113,7 +113,6 @@ import { useFabricStore, useMainStore, useTemplatesStore } from '@/store'
 import { WorkSpaceClipType, WorkSpaceDrawType, WorkSpaceMaskType } from '@/configs/canvas'
 import { DesignUnitMode, DesignSizeMode, MinSize, MaxSize } from '@/configs/background'
 import useCanvas from '@/views/Canvas/useCanvas'
-import useCenter from '@/views/Canvas/useCenter'
 import Backgrounds from '../Backgrounds/index.vue'
 import useHistorySnapshot from '@/hooks/useHistorySnapshot'
 
@@ -127,18 +126,14 @@ const { clip, safe, zoom, opacity } = storeToRefs(fabricStore)
 
 const templateWidth = computed(() => {
   const [ canvas ] = useCanvas()
-  if (!canvas) return 0
-  const { workSpaceDraw } = useCenter()
-  if (!workSpaceDraw || !currentTemplate.value) return 0
+  if (!canvas || !currentTemplate.value) return 0
   const workWidth = currentTemplate.value.width / currentTemplate.value.zoom
   return unitMode.value === 0 ? px2mm(workWidth) : workWidth
 })
 
 const templateHeight = computed(() => {
   const [ canvas ] = useCanvas()
-  if (!canvas) return 0
-  const { workSpaceDraw } = useCenter()
-  if (!workSpaceDraw || !currentTemplate.value) return 0
+  if (!canvas || !currentTemplate.value) return 0
   const workHeight = currentTemplate.value.height / currentTemplate.value.zoom
   return unitMode.value === 0 ? px2mm(workHeight) : workHeight
 })
@@ -172,7 +167,8 @@ const getCanvasSize = () => {
 // 修改画布宽度
 const changeTemplateWidth = () => {
   const [ canvas ] = useCanvas()
-  const { workSpaceDraw } = useCenter()
+  const workSpaceDraw = canvas.getObjects().filter(item => item.id === WorkSpaceDrawType)[0]
+  if (!workSpaceDraw) return
   const ratio = currentTemplate.value.height / currentTemplate.value.width
   let { width, height } = getCanvasSize()
   if ((width / zoom.value) < mm2px(MinSize)) {
@@ -200,7 +196,8 @@ const changeTemplateWidth = () => {
 // 修改画布高度
 const changeTemplateHeight = () => {
   const [ canvas ] = useCanvas()
-  const { workSpaceDraw } = useCenter()
+  const workSpaceDraw = canvas.getObjects().filter(item => item.id === WorkSpaceDrawType)[0]
+  if (!workSpaceDraw) return
   const ratio = currentTemplate.value.height / currentTemplate.value.width
   let { width, height } = getCanvasSize()
   if ((height / zoom.value) < mm2px(MinSize)) {

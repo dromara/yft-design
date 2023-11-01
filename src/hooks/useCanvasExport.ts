@@ -20,10 +20,8 @@ export default () => {
   const exportImage = (format: ImageFormat, quality: number, dpi: number, ignoreClip = true) => {
     Exporting.value = true
     const [ canvas ] = useCanvas()
-    const { workSpaceDraw } = useCenter()
+    const { left, top, width, height } = useCenter()
     const zoom = canvas.getZoom()
-    const width = workSpaceDraw.width, height = workSpaceDraw.height
-    const left = workSpaceDraw.left, top = workSpaceDraw.top
     const viewportTransform = canvas.viewportTransform
     const activeObject = canvas.getActiveObject()
     const ignoreObjects = canvas.getObjects().filter(obj => WorkSpaceCommonType.includes(obj.id))
@@ -55,14 +53,12 @@ export default () => {
 
   const getSVGData = () => {
     const [ canvas ] = useCanvas()
-    const { originPoint } = useCenter()
-    const { workSpaceDraw } = useCenter()
-    const width = workSpaceDraw.width, height = workSpaceDraw.height
+    const { left, top, width, height } = useCenter()
     canvas.renderAll()
     const data = canvas.toSVG({
       viewBox: {
-        x: originPoint.x,
-        y: originPoint.y,
+        x: left,
+        y: top,
         width: width,
         height: height,
       },
