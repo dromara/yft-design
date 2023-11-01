@@ -2,7 +2,7 @@
 node_modules
 dist
 
-
+stats.html
 # local env files
 .env.local
 .env.*.local

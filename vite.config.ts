@@ -1,10 +1,14 @@
 import { VitePWA } from "vite-plugin-pwa";
 import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
 import { createHtmlPlugin } from "vite-plugin-html";
+import { visualizer } from "rollup-plugin-visualizer";
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
 import type { ConfigEnv, UserConfigExport } from "vite";
 import path from "path";
 import vue from "@vitejs/plugin-vue";
 import autoprefixer from 'autoprefixer';
+import AutoImport from 'unplugin-auto-import/vite';
+import Components from 'unplugin-vue-components/vite';
 import viteCompression from 'vite-plugin-compression';
 
 export default ({ command }: ConfigEnv): UserConfigExport => {
@@ -12,12 +16,19 @@ export default ({ command }: ConfigEnv): UserConfigExport => {
     base: "./", // publicPath
     plugins: [
       vue(),
+      visualizer({ open: true }),
       viteCompression({
         verbose: true,
         disable: false,
         threshold: 10240,
         algorithm: 'gzip',
         ext: '.gz',
+      }),
+      AutoImport({
+        resolvers: [ElementPlusResolver()],
+      }),
+      Components({
+        resolvers: [ElementPlusResolver()],
       }),
       VitePWA({
         registerType: "autoUpdate",
