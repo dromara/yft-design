@@ -1,5 +1,5 @@
 import { storeToRefs } from 'pinia'
-import { Canvas, Object as FabricObject, Textbox } from 'fabric'
+import { Canvas, Object as FabricObject, Textbox, Group, Point } from 'fabric'
 import { useFabricStore } from '@/store/modules/fabric'
 import { watch } from 'vue'
 import { useElementBounding } from '@vueuse/core'
@@ -13,10 +13,7 @@ import { FabricCanvas } from '@/app/fabricCanvas'
 import { Keybinding } from '@/app/keybinding'
 import { defaultControls, textboxControls } from '@/app/fabricControls'
 import { useTemplatesStore } from '@/store'
-import { CanvasElement } from '@/types/canvas'
-import { WorkSpaceDrawType, WorkSpaceCommonType } from '@/configs/canvas'
 import useCommon from './useCommon'
-import useCanvasScale from '@/hooks/useCanvasScale'
 
 
 
@@ -47,24 +44,17 @@ const initConf = () => {
 
 // 更新视图区长宽
 const setCanvasTransform = () => {
-  
   if (!canvas) return
-  const { setWorkSpace } = useCanvasScale()
   const fabricStore = useFabricStore()
-  const { zoom, wrapperRef } = storeToRefs(fabricStore)
+  const { zoom, wrapperRef, scalePercentage } = storeToRefs(fabricStore)
   const { width, height } = useElementBounding(wrapperRef.value)
-  setWorkSpace(width.value, height.value)
-  const WorkSpaceDraw = canvas.getObjects().filter(item => (item as CanvasElement).id === WorkSpaceDrawType)[0]
-  if (!WorkSpaceDraw) return
-  const workSpaceBound = WorkSpaceDraw.getBoundingRect()
-  const left = WorkSpaceDraw.left, top = WorkSpaceDraw.top
-  const canvasTransform = canvas.viewportTransform
-  zoom.value = canvas.getZoom()
-  canvasTransform[4] = (width.value - workSpaceBound.width) / 2 - left * zoom.value
-  canvasTransform[5] = (height.value - workSpaceBound.height) / 2 - top * zoom.value
-  canvas.setViewportTransform(canvasTransform)
   canvas.setDimensions({width: width.value, height: height.value})
-  canvas.renderAll()
+  const objects = canvas.getObjects()
+  const boundingBox = Group.prototype.getObjectsBoundingBox(objects)
+  if (!boundingBox) return
+  zoom.value = Math.min(canvas.getWidth() / boundingBox.width, canvas.getHeight() / boundingBox.height,) * scalePercentage.value / 100
+  canvas.setZoom(zoom.value)
+  canvas.absolutePan(new Point(boundingBox.centerX, boundingBox.centerY).scalarMultiply(zoom.value).subtract(canvas.getCenterPoint()))
 }
 
 const initCanvas = () => {
