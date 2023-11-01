@@ -22,3 +22,6 @@ pnpm-debug.log*
 *.sln
 *.sw?
 dist/*
+
+auto-imports.d.ts
+components.d.ts

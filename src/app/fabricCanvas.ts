@@ -47,7 +47,7 @@ export class FabricCanvas extends Canvas {
   }
 
   private setDefaultAttr(target: Object) {
-    // 添加名称
+    // 添加name
     if (!target.name) {
       target.set({name: target.type})
     }
