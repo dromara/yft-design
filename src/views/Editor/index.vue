@@ -13,9 +13,6 @@
       <CanvasRight class="layout-content-right" />
       <CanvasDom class="layout-content-dom"/>
     </div>
-    <!-- <div class="layout-barcode">
-      <svg id="barcode"></svg>
-    </div> -->
   </div>
 </template>
 

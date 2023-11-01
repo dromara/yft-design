@@ -1,7 +1,7 @@
 <template>
   <div class="slide-design-panel">
     
-    <div class="title"><b>画布尺寸</b></div>
+    <div class="mb-10"><b>画布尺寸</b></div>
     <div class="mb-10">
       <el-row>
         <el-col :span="11">

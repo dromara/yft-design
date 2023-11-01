@@ -1,9 +1,9 @@
 <template>
   <div class="image-style-panel">
-    <div 
-      class="origin-image"
-      :style="{ backgroundImage: `url(${handleElement.getSrc()})` }"
-    ></div>
+    <ElementPosition/>
+    <el-divider />
+    
+    <div class="origin-image" :style="{ backgroundImage: `url(${handleElement.getSrc()})` }"></div>
 
     <ElementFlip />
 
@@ -79,7 +79,7 @@ import { ImageElement } from '@/types/canvas'
 import { ratioClipOptions } from '@/configs/images'
 import { getImageDataURL } from '@/utils/image'
 import { propertiesToInclude } from '@/configs/canvas'
-import { Path } from 'fabric'
+import ElementPosition from '../Components/ElementPosition.vue'
 import ElementOutline from '../Components/ElementOutline.vue'
 import ElementShadow from '../Components/ElementShadow.vue'
 import ElementFlip from '../Components/ElementFlip.vue'
