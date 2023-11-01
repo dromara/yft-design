@@ -79,8 +79,6 @@ export default () => {
       const groupObject = clonedObj as GroupElement
       groupObject.forEachObject(item => {
         const obj = item as CanvasElement
-        obj.id = nanoid(15)
-        obj.name = item.type
         canvas.add(obj as FabricObject)
         setZindex(canvas)
         templatesStore.modifedElement()
@@ -88,8 +86,6 @@ export default () => {
       clonedObj.setCoords()
     }
     else {
-      clonedObj.id = nanoid(15)
-      clonedObj.name = clonedObj.type
       canvas.add(clonedObj as FabricObject)
       setZindex(canvas)
       templatesStore.modifedElement()
