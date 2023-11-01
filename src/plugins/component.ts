@@ -7,7 +7,7 @@ import ColorPicker from '@/components/ColorPicker/index.vue'
 import ColorButton from '@/components/ColorButton.vue'
 import TextColorButton from '@/components/TextColorButton.vue'
 import FullscreenSpin from '@/components/FullscreenSpin.vue'
-// import MoveablePanel from '@/components/MoveablePanel.vue'
+import SwipeInput from '@/components/SwipeInput.vue'
 
 const components = {
   FileInput,
@@ -17,7 +17,7 @@ const components = {
   // CheckboxButtonGroup,
   ColorPicker,
   FullscreenSpin,
-  // MoveablePanel,
+  SwipeInput,
 }
 
 export default {

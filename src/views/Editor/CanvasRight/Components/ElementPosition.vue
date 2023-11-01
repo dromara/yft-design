@@ -4,9 +4,7 @@
     <div class="mb-10">
       <el-row>
         <el-col :span="11">
-          <el-input v-model="elementLeft" :value="(Math.round(elementLeft * 100/100))" @change="changeElementWidth" oninput="value=value.replace(/[^\d]/g,'')">
-            <template #prepend>x</template>
-          </el-input>
+          <SwipeInput v-bind="left" :label="'x'"/>
         </el-col>
         <el-col :span="2" class="fixed-ratio">
           <!-- <el-tooltip effect="dark"  placement="top" content="解除宽高比" v-if="isFixed">
@@ -17,18 +15,14 @@
           </el-tooltip> -->
         </el-col>
         <el-col :span="11">
-          <el-input v-model="elementTop" :value="(Math.round(elementTop * 100/100))" @change="changeElementHeight" oninput="value=value.replace(/[^\d]/g,'')">
-            <template #prepend>y</template>
-          </el-input>
+          <SwipeInput v-bind="top" :label="'y'"/>
         </el-col>
       </el-row>
     </div>
     <div class="mb-10">
       <el-row>
         <el-col :span="11">
-          <el-input v-model="elementWidth" :value="(Math.round(elementWidth * 100/100))" @change="changeElementWidth" oninput="value=value.replace(/[^\d]/g,'')">
-            <template #prepend>w</template>
-          </el-input>
+          <SwipeInput v-bind="width" :label="'w'"/>
         </el-col>
         <el-col :span="2" class="fixed-ratio">
           <el-tooltip effect="dark"  placement="top" content="解除宽高比" v-if="isFixed">
@@ -39,9 +33,7 @@
           </el-tooltip>
         </el-col>
         <el-col :span="11">
-          <el-input v-model="elementHeight" :value="(Math.round(elementHeight * 100/100))" @change="changeElementHeight" oninput="value=value.replace(/[^\d]/g,'')">
-            <template #prepend>h</template>
-          </el-input>
+          <SwipeInput v-bind="height" :label="'h'"/>
         </el-col>
       </el-row>
     </div>
@@ -49,38 +41,28 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, watch, watchEffect } from 'vue'
+import { ref, computed, } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useMainStore } from '@/store'
 import { CanvasElement } from '@/types/canvas'
+import useHandleActive from '@/hooks/useHandleActive'
 import useCanvas from '@/views/Canvas/useCanvas'
-
 
 const [ canvas ] = useCanvas()
 const { canvasObject } = storeToRefs(useMainStore())
-
+const { handleActive } = useHandleActive()
 
 const handleElement = computed(() => canvasObject.value as CanvasElement)
-const elementLeft = ref(handleElement.value.left)
-const elementTop = ref(handleElement.value.top)
-const elementWidth = ref(handleElement.value.width)
-const elementHeight = ref(handleElement.value.height)
+const left = handleActive('left')
+const top = handleActive('top')
+const width = handleActive('width')
+const height = handleActive('height')
+
 const isFixed = ref(false)
 
-watch(elementLeft, () => {
-  console.log('canvasObject.value', canvasObject.value)
-})
 
 const changeFixedRatio = (status: boolean) => {
   isFixed.value = status
-}
-
-const changeElementWidth = (val: number) => {
-  elementWidth.value = val
-}
-
-const changeElementHeight = (val: number) => {
-  elementWidth.value = val
 }
 
 </script>

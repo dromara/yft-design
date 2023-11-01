@@ -1,8 +1,14 @@
 <template>
-  <el-input-number v-model="numberValue" :modelEvent="modelEvent" :step="step" :max="max" :min="min"
-    :hide-button="hasLabel" :class="{
-      hasLabel,
-    }" @change="change">
+  <el-input-number 
+    v-model="numberValue" 
+    :modelEvent="modelEvent" 
+    :step="step" 
+    :max="max" 
+    :min="min"
+    :hide-button="hasLabel" 
+    :class="{ hasLabel }" 
+    @change="change"
+  >
     <template #prefix v-if="hasLabel">
       <div ref="labelRef" class="w26px text-center cursor-ew-resize">
         <slot v-if="$slots.label" name="label"></slot>
@@ -45,16 +51,10 @@ const slots = useSlots()
 
 const numberValue = useVModel(props, 'modelValue', emit)
 
-watch(
-  numberValue,
-  (value) => {
-    if (!value) return
-    numberValue.value = toFixed(value)
-  },
-  {
-    immediate: true,
-  },
-)
+watch(numberValue, (value) => {
+  if (!value) return
+  numberValue.value = toFixed(value)
+}, { immediate: true})
 
 const change = (value: number | undefined, ev: Event) => {
   emit('change', value, ev)

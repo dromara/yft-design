@@ -37,9 +37,32 @@ const initConf = () => {
   FabricObject.ownDefaults.hasRotatingPoint = false
   FabricObject.ownDefaults.controls = defaultControls()
 
-  Object.assign(Textbox.ownDefaults, {
-    controls: textboxControls()
-  })
+  Object.assign(Textbox.ownDefaults, { controls: textboxControls() } )
+
+  const mixin = {
+    getWidthHeight(noFixed = false): Point {
+      // @ts-ignore
+      const objScale = this.getObjectScaling()
+      // @ts-ignore
+      const point = this._getTransformedDimensions({
+        scaleX: objScale.x,
+        scaleY: objScale.y,
+      })
+      if (!noFixed) {
+        point.setX(point.x)
+        point.setY(point.y)
+      }
+      return point
+    },
+    getHeight() {
+      return this.getWidthHeight().y
+    },
+    getWidth() {
+      return this.getWidthHeight().x
+    },
+  }
+
+  Object.assign(FabricObject.prototype, mixin)
 }
 
 // 更新视图区长宽
