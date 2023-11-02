@@ -1,4 +1,4 @@
-import { Gradient, Pattern, Textbox, Path, Rect, Image, Point, Polygon, Group, Line, Object as FabricObject, ImageProps } from "fabric"
+import { Gradient, Pattern, Textbox, SerializedImageProps, Path, Rect, Image, Point, Polygon, Group, Line, Object as FabricObject, ImageProps } from "fabric"
 import { ColorStop } from "./elements"
 import JsBarcode from "jsbarcode"
 export type LineOption = [number, number, number, number]
@@ -89,43 +89,51 @@ export interface TextboxElement extends Textbox, CommenElement {
 
 export interface PathElement extends Path, CommenElement {
   fill: string | Gradient<'linear'> | Gradient<'radial'>
+  type: string
 }
 
 export interface RectElement extends Rect, CommenElement {
+  type: string
 
 }
 
 export interface LineElement extends Line, CommenElement {
   startStyle?: string | null
   endStyle?: string | null
+  type: string
 }
 
 export interface PolygonElement extends Polygon, CommenElement {
-
+  type: string
   points: Point[]
 }
 
 export interface QRCodeElement extends Image, CommenElement {
+  type: string
   codeContent: string
   codeOption: QRCodeOption
 }
 
 export interface BarCodeElement extends Image, CommenElement {
+  type: string
   codeContent: string
   codeOption: JsBarcode.BaseOptions     
 }
 
 export interface BarcodeProps extends ImageProps {
+  type: string
   codeContent: string
   codeOption: JsBarcode.BaseOptions 
 }
 
 export interface QRCodeProps extends ImageProps {
+  type: string
   codeContent: string
   codeOption: QRCodeOption
 }
 
-export interface ImageElement extends Image, CommenElement {
+export interface ImageElement extends SerializedImageProps, CommenElement {
+  type: string
   isCropping?: boolean
   originId?: string
   cropPath?: FabricObject
@@ -135,14 +143,12 @@ export interface ImageElement extends Image, CommenElement {
   originCropY?: number
 }
 
-export interface CropElement extends Rect, CommenElement {
-  imageId: string
-}
 
 export interface GroupElement extends Group, CommenElement {
+  type: string
   isShow: boolean
   objects: FabricObject[]
   _objects: FabricObject[]
 }
 
-export type CanvasElement = TextboxElement | LineElement | QRCodeElement | BarCodeElement | ImageElement | PathElement | GroupElement | CropElement | PolygonElement | RectElement
+export type CanvasElement = TextboxElement | LineElement | QRCodeElement | BarCodeElement | ImageElement | PathElement | GroupElement | PolygonElement | RectElement

@@ -62,3 +62,42 @@ export const clampAngle = (angle: number): number => {
  * @returns {number} - The rounded number.
  */
 export const toFixed = (v: number, digits = 2): number => NP.round(v, digits)
+
+
+export const isBase64 = (str: string): boolean => {
+  if(str === '' || str.trim() === ''){
+    return false;
+  }
+  try{
+    return btoa(atob(str)) == str
+  }catch(err){
+    return false;
+  }
+}
+
+
+export const getImageType = (base64: string) => {
+
+  let fileHeader = new Map()
+
+  fileHeader.set("/9j", "JPG")
+  fileHeader.set("iVB", "PNG")
+  fileHeader.set("Qk0", "BMP")
+  fileHeader.set("SUk", "TIFF")
+  fileHeader.set("JVB", "PDF")
+  fileHeader.set("UEs", "OFD")
+
+  let res = ""
+
+  fileHeader.forEach((v, k) => {
+    if (k == base64.substr(0, 3)) {
+      res = v
+    }
+  })
+
+  if (res == "") {
+    res = "unknown file"
+  }
+
+  return res
+}

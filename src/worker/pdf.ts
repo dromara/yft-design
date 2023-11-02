@@ -1,8 +1,8 @@
 import { CanvasElement, GroupElement, ImageElement, Template } from '@/types/canvas'
 import { ElementNames } from '@/types/elements'
-
-import { PDFDocument, StandardFonts, rgb, PDFPage } from 'pdf-lib'
-import type { Textbox, Image, Object as FabricObject, Group } from 'fabric'
+import { isBase64, getImageType } from '@/utils/common'
+import { PDFDocument, StandardFonts, rgb, PDFPage, PDFImage } from 'pdf-lib'
+import type { Textbox } from 'fabric'
 
 self.addEventListener("message", handleMessage);
 
@@ -63,18 +63,28 @@ const drawText = async (item: Textbox, page: PDFPage, pdfDoc: PDFDocument) => {
 
 const drawImage = async (item: ImageElement, page: PDFPage, pdfDoc: PDFDocument) => {
   const imageUrl = item.src
-
-  const imageBytes = await fetch(imageUrl).then((res) => res.arrayBuffer())
-
-  // const pdfDoc = await PDFDocument.create()
-
-  const jpgImage = await pdfDoc.embedJpg(imageBytes)
-  // const pngImage = await pdfDoc.embedPng(pngImageBytes)
-
+  if (isBase64(imageUrl)) {
+    const imageType = getImageType(imageUrl)
+    if (!imageType) return
+    if (imageType === 'png') {
+      const pngImage = await pdfDoc.embedPng(imageUrl)
+      await imageDraw(item, page, pngImage)
+    }
+    else if (imageType === 'jpg') {
+      const jpgImage = await pdfDoc.embedJpg(imageUrl)
+      await imageDraw(item, page, jpgImage)
+    }
+    return
+  }
+  const jpgImage = await pdfDoc.embedJpg(await fetch(imageUrl).then((res) => res.arrayBuffer()))
   // const jpgDims = jpgImage.scale(0.5)
   // const pngDims = pngImage.scale(0.5)
+  await imageDraw(item, page, jpgImage)
+  
+}
 
-  page.drawImage(jpgImage, {
+const imageDraw = async (item: ImageElement, page: PDFPage, img: PDFImage) => {
+  page.drawImage(img, {
     x: 0,
     y: 0,
     width: item.width,
