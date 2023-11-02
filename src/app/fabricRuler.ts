@@ -55,7 +55,7 @@ export interface RulerOptions {
 
 export type HighlightRect = {skip?: TAxis} & Rect
 
-export class CheckRuler extends Disposable {
+export class FabricRuler extends Disposable {
   private canvasEvents
 
   /**

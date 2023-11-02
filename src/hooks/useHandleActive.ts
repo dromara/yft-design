@@ -147,11 +147,7 @@ export default () => {
         })
       } 
       // 组
-      else if (
-        check.isCollection(activeObject) &&
-        // 排除要给组设置的属性
-        !['left', 'top', 'visible', 'globalCompositeOperation', 'opacity'].includes(key)
-      ) {
+      else if (check.isCollection(activeObject) && !['left', 'top', 'visible', 'globalCompositeOperation', 'opacity'].includes(key)) {
         activeObject.forEachObject((obj) => {
           setObjectValue(obj, newValue)
         })
@@ -172,7 +168,6 @@ export default () => {
       },
       onChange: (value: T) => {
         changeValue(value, 'change')
-        // 保存历史
         if (!isDefined(canvas.activeObject)) return
         canvas.fire('object:modified', { target: canvas.activeObject.value })
       },

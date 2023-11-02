@@ -98,7 +98,7 @@ const positionHandler: Control['positionHandler'] = (dim, finalMatrix, fabricObj
   ).transform(finalMatrix)
 }
 
-const getWidthHeight = (fabricObject: FabricObject, noFixed = false) => {
+export const getWidthHeight = (fabricObject: FabricObject, noFixed = false) => {
   const objScale = fabricObject.getObjectScaling()
   const point = fabricObject._getTransformedDimensions({
     scaleX: objScale.x,

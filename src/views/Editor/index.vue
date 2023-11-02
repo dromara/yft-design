@@ -26,7 +26,6 @@ import CanvasRight from './CanvasRight/index.vue'
 import CanvasFooter from './CanvasFooter/index.vue'
 import CanvasAffix from './CanvasAffix/index.vue'
 import CanvasDom from './CanvasDom/index.vue'
-
 </script>
 
 <style lang="scss" scoped>

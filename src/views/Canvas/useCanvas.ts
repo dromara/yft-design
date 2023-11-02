@@ -3,11 +3,11 @@ import { Canvas, Object as FabricObject, Textbox, Group, Point } from 'fabric'
 import { useFabricStore } from '@/store/modules/fabric'
 import { watch } from 'vue'
 import { useElementBounding } from '@vueuse/core'
-import { PressKey } from '@/app/pressKey'
+import { FabricTool } from '@/app/fabricTool'
 import { GuideLines } from '@/app/guideLiles'
 import { HoverBorders } from '@/app/hoverBorders'
 import { WheelScroll } from '@/app/wheelScroll'
-import { CheckRuler } from '@/app/checkRuler'
+import { FabricRuler } from '@/app/fabricRuler'
 
 import { FabricCanvas } from '@/app/fabricCanvas'
 import { Keybinding } from '@/app/keybinding'
@@ -91,11 +91,11 @@ const initCanvas = () => {
     height: fabricHeight
   })
   // const keybinding = new Keybinding()
-  new PressKey(canvas)
+  new FabricTool(canvas)
   new GuideLines(canvas)
   new HoverBorders(canvas)
   new WheelScroll(canvas)
-  new CheckRuler(canvas)
+  new FabricRuler(canvas)
   canvas.preserveObjectStacking = true
   canvas.renderAll()
 }

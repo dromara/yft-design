@@ -41,23 +41,24 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, } from 'vue'
+import { ref, computed, watchEffect, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useMainStore } from '@/store'
 import { CanvasElement } from '@/types/canvas'
-import useHandleActive from '@/hooks/useHandleActive'
+import { getWidthHeight } from '@/app/fabricControls'
+import { Object as FabricObject } from 'fabric'
 import useCanvas from '@/views/Canvas/useCanvas'
+import useHandleActive from '@/hooks/useHandleActive'
 
 const [ canvas ] = useCanvas()
 const { canvasObject } = storeToRefs(useMainStore())
 const { handleActive } = useHandleActive()
-
-const handleElement = computed(() => canvasObject.value as CanvasElement)
 const left = handleActive('left')
 const top = handleActive('top')
-const width = handleActive('width')
 const height = handleActive('height')
-
+const width = handleActive('width')
+// const handleElement = computed(() => canvasObject.value as CanvasElement)
+// const { x, y } = getWidthHeight(canvas.activeObject.value as FabricObject)
 const isFixed = ref(false)
 
 
