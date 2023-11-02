@@ -1,4 +1,4 @@
-import { Template } from '@/types/canvas'
+import { CanvasElement, GroupElement, ImageElement, Template } from '@/types/canvas'
 import { ElementNames } from '@/types/elements'
 
 import { PDFDocument, StandardFonts, rgb, PDFPage } from 'pdf-lib'
@@ -25,23 +25,23 @@ async function handleMessage(e: MessageEvent) {
     color: rgb(0, 0.53, 0.71),
   })
   
-  await drawItem(template.objects, page, pdfDoc)
+  await drawItem(template.objects as CanvasElement[], page, pdfDoc)
   const pdfBytes = await pdfDoc.save()
   postMessage(pdfBytes)
 }
 
 
-const drawItem = async (objects: FabricObject[], page: PDFPage, pdfDoc: PDFDocument) => {
+const drawItem = async (objects: CanvasElement[], page: PDFPage, pdfDoc: PDFDocument) => {
   for (let i = 0; i < objects.length; i++) {
     const item = objects[i]
     if (item.type.toLowerCase() === ElementNames.TEXT || item.type.toLowerCase() === ElementNames.TEXTBOX) {
       await drawText(item as Textbox, page, pdfDoc)
     }
     else if (item.type.toLowerCase() === ElementNames.GROUP) {
-      await drawItem((item as Group).objects, page, pdfDoc)
+      await drawItem((item as GroupElement).objects, page, pdfDoc)
     }
-    else if (item.type.toLowerCase() === ElementNames.IMAGE) {
-      await drawImage((item as Image), page)
+    else if (item.type.toLowerCase() === ElementNames.IMAGE || item.type.toLowerCase() === ElementNames.CROPIMAGE ) {
+      await drawImage((item as ImageElement), page, pdfDoc)
     }
   }
   // objects.forEach(async (item) => {
@@ -61,12 +61,12 @@ const drawText = async (item: Textbox, page: PDFPage, pdfDoc: PDFDocument) => {
   })
 }
 
-const drawImage = async (item: Image, page: PDFPage) => {
-  const imageUrl = item.getSrc(true)
+const drawImage = async (item: ImageElement, page: PDFPage, pdfDoc: PDFDocument) => {
+  const imageUrl = item.src
 
   const imageBytes = await fetch(imageUrl).then((res) => res.arrayBuffer())
 
-  const pdfDoc = await PDFDocument.create()
+  // const pdfDoc = await PDFDocument.create()
 
   const jpgImage = await pdfDoc.embedJpg(imageBytes)
   // const pngImage = await pdfDoc.embedPng(pngImageBytes)
@@ -76,7 +76,7 @@ const drawImage = async (item: Image, page: PDFPage) => {
 
   page.drawImage(jpgImage, {
     x: 0,
-    y: 300,
+    y: 0,
     width: item.width,
     height: item.height,
   })
