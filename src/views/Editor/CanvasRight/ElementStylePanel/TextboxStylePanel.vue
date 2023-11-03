@@ -181,8 +181,7 @@ import { WEB_FONTS } from '@/configs/fonts'
 import { TextboxElement } from '@/types/canvas'
 import { FontGroupOption } from '@/types/elements'
 import { loadFont } from '@/utils/localFonts'
-import { loadSVGFromString } from 'fabric'
-import opentype from "opentype.js";
+import opentype from "opentype.js"
 import ElementStroke from '../Components/ElementStroke.vue'
 import ElementShadow from '../Components/ElementShadow.vue'
 import ElementOpacity from '../Components/ElementOpacity.vue'

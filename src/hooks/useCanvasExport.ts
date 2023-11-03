@@ -8,8 +8,8 @@ import { ImageFormat } from 'fabric'
 import { downloadSVGFile } from '@/utils/download'
 import useCanvas from '@/views/Canvas/useCanvas'
 import useCenter from '@/views/Canvas/useCenter'
-import PDFWorker from "@/worker/pdf.js?worker"
-const worker = new PDFWorker()
+import { handleMessage } from "@/worker/pdf"
+// const worker = new PDFWorker()
 
 export default () => {
   
@@ -102,18 +102,21 @@ export default () => {
   // 导出PDF
   const exportPDF = async () => {
     const [ canvas ] = useCanvas()
-    worker.postMessage({
-      type: "convert",
-      template: JSON.stringify(currentTemplate.value)
-    });
-    worker.addEventListener('message', (event) => {
-      // 获取来自 Web Worker 的 Uint8Array 数据
-      const originalUint8Array = event.data;
-      console.log('Received data from worker: ', originalUint8Array);
-      const blob = new Blob([originalUint8Array], { type: 'application/pdf' })
-      saveAs(blob, `yft-design-${Date.now()}.pdf`)
-    });
+    // worker.postMessage({
+    //   type: "convert",
+    //   template: JSON.stringify(currentTemplate.value)
+    // });
+    // worker.addEventListener('message', (event) => {
+    //   // 获取来自 Web Worker 的 Uint8Array 数据
+    //   const originalUint8Array = event.data;
+    //   console.log('Received data from worker: ', originalUint8Array);
+    //   const blob = new Blob([originalUint8Array], { type: 'application/pdf' })
+    //   saveAs(blob, `yft-design-${Date.now()}.pdf`)
+    // });
     // var document = new mupdf.Document.openDocument("my_pdf.pdf", "application/pdf");
+    const pdfUintArray = await handleMessage(currentTemplate.value)
+    const blob = new Blob([pdfUintArray], { type: 'application/pdf' })
+    saveAs(blob, `yft-design-${Date.now()}.pdf`)
   }
 
   // 导出json
