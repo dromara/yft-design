@@ -1,12 +1,13 @@
 <template>
   <el-input
+    class="swipe-input"
     v-model="numberValue" 
     :modelEvent="modelEvent" 
     :step="step" 
     :max="max" 
     :min="min"
     :hide-button="hasLabel" 
-    :class="{ hasLabel }" 
+    :class="hasLabel" 
     @change="change"
   >
     <template #prefix v-if="hasLabel">
@@ -15,15 +16,14 @@
         <template v-else>{{ label }}</template>
       </div>
     </template>
-    <template v-for="(item, key) in slots" :key="key" #[key]>
+    <!-- <template v-for="(item, key) in slots" :key="key" #[key]>
       <slot :name="key"></slot>
-    </template>
+    </template> -->
   </el-input>
 </template>
 <script setup lang="ts">
 import { usePointerSwipe, useVModel, isDefined, useMagicKeys } from '@vueuse/core'
 import { useSlots, watch, ref, computed } from 'vue'
-import { isNumber } from 'lodash'
 import { toFixed } from '@/utils/common'
 
 const props = withDefaults(
@@ -99,7 +99,7 @@ const hasLabel = computed(() => !!props.label || !!slots.label)
 
 
 
-<style scoped lang="less">
+<style scoped lang="scss">
 // .arco-input-wrapper.hasLabel {
 //   line-height: 1;
 //   padding-left: 0;
@@ -109,10 +109,19 @@ const hasLabel = computed(() => !!props.label || !!slots.label)
 //     padding-right: 0;
 //   }
 // }
+.swipe-input {
+  :deep(.el-input__wrapper) {
+    padding: 1px;
+  }
+  :deep(.el-input__prefix-inner) {
+    margin: 0;
+    width: 25px;
+  }
+}
 </style>
 
 <style scoped>
-:deep(.el-input .el-input__wrapper) {
+:deep(.swipe-input .el-input__wrapper) {
   padding: 0 5px;
   width: 25px;
 }
