@@ -117,6 +117,9 @@ const hasLabel = computed(() => !!props.label || !!slots.label)
     margin: 0;
     width: 25px;
   }
+  :deep(.label-ref) {
+    margin: 0;
+  }
 }
 </style>
 
