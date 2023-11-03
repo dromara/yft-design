@@ -19099,7 +19099,7 @@ export const Templates: Template[] = [
       {
         "fontSize": 7.458,
         "fontWeight": "normal",
-        "fontFamily": "FZSSJW--GB1",
+        "fontFamily": "Arial",
         "fontStyle": "normal",
         "lineHeight": 1.16,
         "text": "emali",
@@ -19160,7 +19160,7 @@ export const Templates: Template[] = [
       {
         "fontSize": 7.458,
         "fontWeight": "normal",
-        "fontFamily": "FZSSJW--GB1",
+        "fontFamily": "Arial",
         "fontStyle": "normal",
         "lineHeight": 1.16,
         "text": "fax",
@@ -19221,7 +19221,7 @@ export const Templates: Template[] = [
       {
         "fontSize": 7.458,
         "fontWeight": "normal",
-        "fontFamily": "FZSSJW--GB1",
+        "fontFamily": "Arial",
         "fontStyle": "normal",
         "lineHeight": 1.16,
         "text": "Mobile",
@@ -19282,7 +19282,7 @@ export const Templates: Template[] = [
       {
         "fontSize": 7.458,
         "fontWeight": "normal",
-        "fontFamily": "FZSSJW--GB1",
+        "fontFamily": "Arial",
         "fontStyle": "normal",
         "lineHeight": 1.16,
         "text": "tel",
@@ -19343,7 +19343,7 @@ export const Templates: Template[] = [
       {
         "fontSize": 13,
         "fontWeight": "normal",
-        "fontFamily": "FZSSJW--GB1",
+        "fontFamily": "Arial",
         "fontStyle": "normal",
         "lineHeight": 1.16,
         "text": "中文姓名",
@@ -19404,7 +19404,7 @@ export const Templates: Template[] = [
       {
         "fontSize": 9,
         "fontWeight": "normal",
-        "fontFamily": "FZSSJW--GB1",
+        "fontFamily": "Arial",
         "fontStyle": "normal",
         "lineHeight": 1.16,
         "text": "中文职位",
@@ -19465,7 +19465,7 @@ export const Templates: Template[] = [
       {
         "fontSize": 8,
         "fontWeight": "normal",
-        "fontFamily": "FZSSJW--GB1",
+        "fontFamily": "Arial",
         "fontStyle": "normal",
         "lineHeight": 1.16,
         "text": "公司中文简称",

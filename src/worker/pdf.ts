@@ -1,8 +1,8 @@
 import { CanvasElement, GroupElement, ImageElement, Template } from '@/types/canvas'
 import { ElementNames } from '@/types/elements'
-import { isBase64, getImageType } from '@/utils/common'
+import { isBase64, getBase64Type, getLinkType } from '@/utils/common'
 import { PDFDocument, StandardFonts, rgb, PDFPage, PDFImage } from 'pdf-lib'
-import type { Textbox } from 'fabric'
+import type { Group, Textbox } from 'fabric'
 
 self.addEventListener("message", handleMessage);
 
@@ -16,14 +16,14 @@ async function handleMessage(e: MessageEvent) {
 
   const page = pdfDoc.addPage([templateWidth, templateHeight])
   const { width, height } = page.getSize()
-  const fontSize = 30
-  page.drawText('Creating PDFs in JavaScript is awesome!', {
-    x: 50,
-    y: height - 4 * fontSize,
-    size: fontSize,
-    font: timesRomanFont,
-    color: rgb(0, 0.53, 0.71),
-  })
+  // const fontSize = 30
+  // page.drawText('Creating PDFs in JavaScript is awesome!', {
+  //   x: 50,
+  //   y: height - 4 * fontSize,
+  //   size: fontSize,
+  //   font: timesRomanFont,
+  //   color: rgb(0, 0.53, 0.71),
+  // })
   
   await drawItem(template.objects as CanvasElement[], page, pdfDoc)
   const pdfBytes = await pdfDoc.save()
@@ -38,7 +38,7 @@ const drawItem = async (objects: CanvasElement[], page: PDFPage, pdfDoc: PDFDocu
       await drawText(item as Textbox, page, pdfDoc)
     }
     else if (item.type.toLowerCase() === ElementNames.GROUP) {
-      await drawItem((item as GroupElement).objects, page, pdfDoc)
+      await drawItem((item as any).objects, page, pdfDoc)
     }
     else if (item.type.toLowerCase() === ElementNames.IMAGE || item.type.toLowerCase() === ElementNames.CROPIMAGE ) {
       await drawImage((item as ImageElement), page, pdfDoc)
@@ -52,19 +52,24 @@ const drawItem = async (objects: CanvasElement[], page: PDFPage, pdfDoc: PDFDocu
 
 const drawText = async (item: Textbox, page: PDFPage, pdfDoc: PDFDocument) => {
   const timesRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRoman)
-  page.drawText(item.text, {
-    x: item.left,
-    y: item.top,
-    size: item.fontSize,
-    font: timesRomanFont,
-    color: rgb(0, 0.53, 0.71),
-  })
+  try {
+    page.drawText(item.text, {
+      x: item.left,
+      y: item.top,
+      size: item.fontSize,
+      font: timesRomanFont,
+      color: rgb(0, 0.53, 0.71),
+    })
+  } catch (er) {
+    console.log('er:', er)
+  }
+  
 }
 
 const drawImage = async (item: ImageElement, page: PDFPage, pdfDoc: PDFDocument) => {
   const imageUrl = item.src
   if (isBase64(imageUrl)) {
-    const imageType = getImageType(imageUrl)
+    const imageType = getBase64Type(imageUrl)
     if (!imageType) return
     if (imageType === 'png') {
       const pngImage = await pdfDoc.embedPng(imageUrl)
@@ -76,14 +81,22 @@ const drawImage = async (item: ImageElement, page: PDFPage, pdfDoc: PDFDocument)
     }
     return
   }
-  const jpgImage = await pdfDoc.embedJpg(await fetch(imageUrl).then((res) => res.arrayBuffer()))
-  // const jpgDims = jpgImage.scale(0.5)
-  // const pngDims = pngImage.scale(0.5)
-  await imageDraw(item, page, jpgImage)
-  
+  const linkType = getLinkType(imageUrl)
+  if (!linkType) return
+  if (linkType === 'jpg') {
+    const jpgImage = await pdfDoc.embedJpg(await fetch(imageUrl).then((res) => res.arrayBuffer()))
+    await imageDraw(item, page, jpgImage)
+    return
+  }
+  else if (linkType === 'png') {
+    const pngImage = await pdfDoc.embedPng(await fetch(imageUrl).then((res) => res.arrayBuffer()))
+    await imageDraw(item, page, pngImage)
+  }
 }
 
 const imageDraw = async (item: ImageElement, page: PDFPage, img: PDFImage) => {
+  // const jpgDims = jpgImage.scale(0.5)
+  // const pngDims = pngImage.scale(0.5)
   page.drawImage(img, {
     x: 0,
     y: 0,

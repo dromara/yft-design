@@ -65,39 +65,37 @@ export const toFixed = (v: number, digits = 2): number => NP.round(v, digits)
 
 
 export const isBase64 = (str: string): boolean => {
-  if(str === '' || str.trim() === ''){
-    return false;
-  }
-  try{
-    return btoa(atob(str)) == str
-  }catch(err){
-    return false;
-  }
+  return /^data:image/.test(str);
 }
 
+/**
+ * 从base64编码的图片中获取扩展名
+ * @param {String} base64 
+ * @returns 
+ */
+export const getBase64Type = (base64: string) => {
+  const re = new RegExp('data:image/(?<ext>.*?);base64,.*')
+  const res = re.exec(base64)
+  if (res) {
+    return res.groups?.ext
+  }
+  return ''
+}
 
-export const getImageType = (base64: string) => {
-
-  let fileHeader = new Map()
-
-  fileHeader.set("/9j", "JPG")
-  fileHeader.set("iVB", "PNG")
-  fileHeader.set("Qk0", "BMP")
-  fileHeader.set("SUk", "TIFF")
-  fileHeader.set("JVB", "PDF")
-  fileHeader.set("UEs", "OFD")
-
-  let res = ""
-
-  fileHeader.forEach((v, k) => {
-    if (k == base64.substr(0, 3)) {
-      res = v
-    }
-  })
-
-  if (res == "") {
-    res = "unknown file"
+export const getLinkType = (url: string) => {
+  const link = new URL(url)
+  const path = link.pathname
+  const extension = path.split('.')[-1];
+  const jpgExtensions = ['jpg', 'jpeg'];
+  const pngExtensions = ['png'];
+ 
+  if (jpgExtensions.includes(extension)) {
+    return 'jpg';
+  }
+ 
+  if (pngExtensions.includes(extension)) {
+    return 'png';
   }
 
-  return res
+  return null;
 }
