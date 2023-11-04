@@ -3,26 +3,20 @@
     <div class="mb-10"><b>元素坐标</b></div>
     <div class="mb-10">
       <el-row>
-        <el-col :span="11">
-          <SwipeInput v-bind="left" :label="'x'"/>
+        <el-col :span="11" class="position-input">
+          <SwipeInput v-bind="left" content='X'/>
         </el-col>
         <el-col :span="2" class="fixed-ratio">
-          <!-- <el-tooltip effect="dark"  placement="top" content="解除宽高比" v-if="isFixed">
-            <IconLock class="icon-btn" @click="changeFixedRatio(false)"/>
-          </el-tooltip>
-          <el-tooltip effect="dark" placement="top" content="锁定宽高比" v-else>
-            <IconUnlock class="icon-btn" @click="changeFixedRatio(true)"/>
-          </el-tooltip> -->
         </el-col>
-        <el-col :span="11">
-          <SwipeInput v-bind="top" :label="'y'"/>
+        <el-col :span="11" class="position-input">
+          <SwipeInput v-bind="top" content='Y'/>
         </el-col>
       </el-row>
     </div>
     <div class="mb-10">
       <el-row>
-        <el-col :span="11">
-          <SwipeInput v-bind="width" :label="'w'"/>
+        <el-col :span="11" class="position-input">
+          <SwipeInput v-bind="width" content='W'/>
         </el-col>
         <el-col :span="2" class="fixed-ratio">
           <el-tooltip effect="dark"  placement="top" content="解除宽高比" v-if="isFixed">
@@ -32,8 +26,8 @@
             <IconUnlock class="icon-btn" @click="changeFixedRatio(true)"/>
           </el-tooltip>
         </el-col>
-        <el-col :span="11">
-          <SwipeInput v-bind="height" :label="'h'"/>
+        <el-col :span="11" class="position-input">
+          <SwipeInput v-bind="height" content='H'/>
         </el-col>
       </el-row>
     </div>
@@ -76,6 +70,27 @@ const changeFixedRatio = (status: boolean) => {
   display: flex;
   flex-direction: column;
   justify-content: center;
+}
+.position-input {
+  :deep(.el-input-number) {
+    width: auto
+  }
+}
+.position-input {
+  .swipe-input {
+    position: relative;
+    &::after {
+      width: 25px;
+      content: attr(content);
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      right: var(--el-input-number-unit-offset-x);
+      color: #999999;
+    }
+  }
 }
 </style>
 

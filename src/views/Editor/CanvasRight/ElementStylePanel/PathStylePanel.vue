@@ -1,5 +1,7 @@
 <template>
   <div class="shape-style-panel">
+    <ElementPosition/>
+    <el-divider />
     <ElementFill />
     <el-divider />
     <ElementFlip />
@@ -16,7 +18,7 @@
 
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue'
-
+import ElementPosition from '../Components/ElementPosition.vue'
 import ElementOpacity from '../Components/ElementOpacity.vue'
 import ElementOutline from '../Components/ElementOutline.vue'
 import ElementShadow from '../Components/ElementShadow.vue'

@@ -1,5 +1,7 @@
 <template>
   <div class="text-style-panel">
+    <ElementPosition/>
+    <el-divider />
     <el-row>
       <el-col :span="12">
         <el-select v-model="elementFontFamily" placement="left" @change="handleElementFontFamily">
@@ -182,6 +184,7 @@ import { TextboxElement } from '@/types/canvas'
 import { FontGroupOption } from '@/types/elements'
 import { loadFont } from '@/utils/localFonts'
 import opentype from "opentype.js"
+import ElementPosition from '../Components/ElementPosition.vue'
 import ElementStroke from '../Components/ElementStroke.vue'
 import ElementShadow from '../Components/ElementShadow.vue'
 import ElementOpacity from '../Components/ElementOpacity.vue'

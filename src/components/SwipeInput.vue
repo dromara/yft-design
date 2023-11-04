@@ -1,25 +1,24 @@
 <template>
-  <el-input
+  <el-input-number
     class="swipe-input"
     v-model="numberValue" 
-    :modelEvent="modelEvent" 
     :step="step" 
     :max="max" 
     :min="min"
-    :hide-button="hasLabel" 
-    :class="hasLabel" 
+    :controls="false"
+    :label="label"
     @change="change"
   >
-    <template #prefix v-if="hasLabel">
+    <!-- <template #prefix v-if="hasLabel">
       <div ref="labelRef" class="label-ref">
         <slot v-if="$slots.label" name="label"></slot>
         <template v-else>{{ label }}</template>
       </div>
-    </template>
+    </template> -->
     <!-- <template v-for="(item, key) in slots" :key="key" #[key]>
       <slot :name="key"></slot>
     </template> -->
-  </el-input>
+  </el-input-number>
 </template>
 <script setup lang="ts">
 import { usePointerSwipe, useVModel, isDefined, useMagicKeys } from '@vueuse/core'
@@ -94,21 +93,12 @@ const change = (value: number | undefined, ev: Event) => {
 //   },
 // })
 
-const hasLabel = computed(() => !!props.label || !!slots.label)
+// const hasLabel = computed(() => !!props.label || !!slots.label)
 </script>
 
 
 
 <style scoped lang="scss">
-// .arco-input-wrapper.hasLabel {
-//   line-height: 1;
-//   padding-left: 0;
-//   padding-right: 4px;
-
-//   :deep(.arco-input-prefix) {
-//     padding-right: 0;
-//   }
-// }
 .swipe-input {
   :deep(.el-input__wrapper) {
     padding: 1px;
@@ -120,18 +110,5 @@ const hasLabel = computed(() => !!props.label || !!slots.label)
   :deep(.label-ref) {
     margin: 0;
   }
-}
-</style>
-
-<style scoped>
-:deep(.swipe-input .el-input__wrapper) {
-  padding: 0 5px;
-  width: 25px;
-}
-:deep(.el-input .el-input-group__append) {
-  padding: 0 5px;
-}
-:deep(.full-ratio .el-radio-button__inner) {
-  width: 100%;
 }
 </style>

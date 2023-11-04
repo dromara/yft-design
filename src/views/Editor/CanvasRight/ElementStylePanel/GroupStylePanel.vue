@@ -1,5 +1,8 @@
 <template>
   <div class="multi-style-panel">
+    <ElementPosition/>
+    <el-divider />
+
     <div class="row">
       <div style="flex: 2;">填充颜色：</div>
       <el-popover trigger="click" width="265">
@@ -132,6 +135,7 @@ import { FontSizeLibs, LineHeightLibs, CharSpaceLibs } from '@/configs/texts'
 import { WEB_FONTS } from '@/configs/fonts'
 import { ElementNames, FontGroupOption } from '@/types/elements'
 import { CanvasElement, GroupElement, ImageElement, PathElement, TextboxElement } from '@/types/canvas'
+import ElementPosition from '../Components/ElementPosition.vue'
 import useCanvas from '@/views/Canvas/useCanvas'
 // 组合元素编辑
 // http://jsfiddle.net/crandellws/1cad3e4o/

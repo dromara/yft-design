@@ -7,6 +7,8 @@ import { propertiesToInclude, WorkSpaceCommonType } from "@/configs/canvas"
 import { useFabricStore, useMainStore, useTemplatesStore } from "@/store"
 import { TextboxElement, CanvasElement, GroupElement } from "@/types/canvas"
 import { clipperPath } from '@/utils/clipper'
+import { useActiveElement } from '@vueuse/core'
+import { computed } from 'vue'
 import useCanvas from "@/views/Canvas/useCanvas"
 import useCanvasZindex from "./useCanvasZindex"
 
@@ -139,6 +141,11 @@ export default () => {
     const [ canvas ] = useCanvas()
     const activeObject = canvas.getActiveObject() as FabricObject
     if (!activeObject || !activeObject.left || !activeObject.top) return
+    const activeElement = useActiveElement()
+    if (activeElement.value) {
+      const tagName = activeElement.value.tagName
+      if (tagName === 'INPUT' || tagName === 'TEXTARE') return
+    }
     const left = activeObject.left, top = activeObject.top
     switch (command) {
       case KEYS.LEFT: 

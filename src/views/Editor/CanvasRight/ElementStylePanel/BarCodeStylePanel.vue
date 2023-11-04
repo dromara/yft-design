@@ -1,5 +1,7 @@
 <template>
   <div class="image-style-panel">
+    <ElementPosition/>
+    <el-divider />
     <div class="title">码制：</div>
     <el-select class="full-row mb-10" v-model="handleElement.codeOption.format" @change="generateBarCode">
       <el-option v-for="item in BarCodeStyleLibs" :key="item.index" :value="item.name"></el-option>
@@ -66,6 +68,7 @@ import { Base64 } from 'js-base64'
 import { BarCodeElement } from '@/types/canvas'
 import JsBarCode from 'jsbarcode'
 import useCanvas from '@/views/Canvas/useCanvas'
+import ElementPosition from '../Components/ElementPosition.vue'
 import ElementOutline from '../Components/ElementOutline.vue'
 import ElementShadow from '../Components/ElementShadow.vue'
 // const carousel = ref<HTMLFormElement>()

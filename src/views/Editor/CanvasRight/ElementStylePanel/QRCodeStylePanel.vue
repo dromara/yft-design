@@ -1,5 +1,7 @@
 <template>
   <div class="image-style-panel">
+    <ElementPosition/>
+    <el-divider />
     <div class="title">码样式：</div>
     <el-carousel type="card" :height="QRSize + 'px'" :initial-index="initialIndex" :autoplay="false" trigger="click" indicator-position="none" ref="carousel">
       <el-carousel-item v-for="item in QRCodeStyleLibs" :key="item.index" :name="item.name">
@@ -61,6 +63,7 @@ import {
 import { Base64 } from 'js-base64'
 import { QRCodeElement, QRCodeType } from '@/types/canvas'
 import useCanvas from '@/views/Canvas/useCanvas'
+import ElementPosition from '../Components/ElementPosition.vue'
 import ElementOutline from '../Components/ElementOutline.vue'
 import ElementShadow from '../Components/ElementShadow.vue'
 const carousel = ref<HTMLFormElement>()

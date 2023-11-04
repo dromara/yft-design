@@ -101,7 +101,7 @@ export class GuideLines extends Disposable {
         }
         return true
       })
-      canvasObjects.push(...objects as CanvasElement[])
+      canvasObjects.push(...objects as FabricObject[])
     }
 
     if (check.isActiveSelection(target)) {

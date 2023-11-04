@@ -1,5 +1,7 @@
 <template>
   <div class="line-style-panel">
+    <ElementPosition/>
+    <el-divider />
     <div class="row">
       <div style="flex: 2;">线条样式：</div>
       <el-select style="flex: 3;" v-model="lineStyle" @change="changeLineStyle">
@@ -52,6 +54,7 @@ import * as fabric from 'fabric'
 import { LineElement } from '@/types/canvas'
 import { storeToRefs } from 'pinia'
 import { computed, ref, watch } from 'vue'
+import ElementPosition from '../Components/ElementPosition.vue'
 import ElementShadow from '../Components/ElementShadow.vue'
 
 const mainStore = useMainStore()

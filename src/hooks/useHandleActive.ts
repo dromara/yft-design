@@ -30,7 +30,6 @@ export default () => {
       }
 
       const activeObject = canvas.activeObject.value as FabricObject & Textbox & Rect
-      console.log('activeObject:',activeObject)
       // 锁定修改
       lockChange = true
 
