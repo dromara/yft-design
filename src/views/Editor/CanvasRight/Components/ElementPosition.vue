@@ -2,19 +2,19 @@
   <div class="element-position">
     <div class="mb-10">
       <el-row>
-        <el-col :span="11" class="position-input">
+        <el-col :span="11" class="position-col">
           <SwipeInput v-bind="left" content='X'/>
         </el-col>
         <el-col :span="2" class="fixed-ratio">
         </el-col>
-        <el-col :span="11" class="position-input">
+        <el-col :span="11" class="position-col">
           <SwipeInput v-bind="top" content='Y'/>
         </el-col>
       </el-row>
     </div>
     <div class="mb-10">
       <el-row>
-        <el-col :span="11" class="position-input">
+        <el-col :span="11" class="position-col">
           <SwipeInput v-bind="width" content='W'/>
         </el-col>
         <el-col :span="2" class="fixed-ratio">
@@ -25,8 +25,30 @@
             <IconUnlock class="icon-btn" @click="changeFixedRatio(true)"/>
           </el-tooltip>
         </el-col>
-        <el-col :span="11" class="position-input">
+        <el-col :span="11" class="position-col">
           <SwipeInput v-bind="height" content='H'/>
+        </el-col>
+      </el-row>
+    </div>
+    <div class="mb-10">
+      <el-row>
+        <el-col :span="11" class="position-col">
+          <SwipeInput v-bind="angle" content='A'/>
+        </el-col>
+        <el-col :span="2" class="fixed-ratio">
+          <!-- <el-tooltip effect="dark"  placement="top" content="解除宽高比" v-if="isFixed">
+            <IconLock class="icon-btn" @click="changeFixedRatio(false)"/>
+          </el-tooltip>
+          <el-tooltip effect="dark" placement="top" content="锁定宽高比" v-else>
+            <IconUnlock class="icon-btn" @click="changeFixedRatio(true)"/>
+          </el-tooltip> -->
+        </el-col>
+        <el-col :span="5" class="angle-col">
+          <IconRotate/> -45°
+        </el-col>
+        <el-col :span="1"></el-col>
+        <el-col :span="5" class="angle-col">
+          <IconRotate :style="{ transform: 'rotateY(180deg)' }"/> +45°
         </el-col>
       </el-row>
     </div>
@@ -50,6 +72,7 @@ const left = handleActive('left')
 const top = handleActive('top')
 const height = handleActive('height')
 const width = handleActive('width')
+const angle = handleActive('angle')
 // const handleElement = computed(() => canvasObject.value as CanvasElement)
 // const { x, y } = getWidthHeight(canvas.activeObject.value as FabricObject)
 const isFixed = ref(false)
@@ -70,12 +93,12 @@ const changeFixedRatio = (status: boolean) => {
   flex-direction: column;
   justify-content: center;
 }
-.position-input {
+.position-col {
   :deep(.el-input-number) {
     width: auto
   }
 }
-.position-input {
+.position-col {
   .swipe-input {
     position: relative;
     &::after {
@@ -89,6 +112,16 @@ const changeFixedRatio = (status: boolean) => {
       right: var(--el-input-number-unit-offset-x);
       color: #999999;
     }
+  }
+}
+.angle-col {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border-radius: $borderRadius;
+  &:hover{
+    background-color: #f1f1f1;
   }
 }
 </style>
