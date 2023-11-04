@@ -42,7 +42,7 @@
         </el-row>
       </el-popover>
 
-      <el-tooltip placement="top" content="对齐">
+      <!-- <el-tooltip placement="top" content="对齐">
         <IconAlignTextCenter class="handler-item" ref="alignRef" :class="{ 'disable': !handleElement }"/>
       </el-tooltip>
       <el-popover ref="alignPopoverRef" :virtual-ref="alignRef" trigger="click" :width="300" virtual-triggering :disabled="!handleElement">
@@ -70,9 +70,9 @@
             </el-tooltip>
           </el-button-group>
         </el-row>
-      </el-popover>
+      </el-popover> -->
 
-      <el-tooltip placement="top" content="旋转">
+      <!-- <el-tooltip placement="top" content="旋转">
         <IconScreenRotation class="handler-item" ref="rotateRef" :class="{ 'disable': !handleElement }"/>
       </el-tooltip>
       <el-popover ref="rotatePopoverRef" :virtual-ref="rotateRef" trigger="click" :width="360" virtual-triggering :disabled="!handleElement">
@@ -87,7 +87,7 @@
             <el-button @click="changeRotate45('+')"><IconRotate :style="{ transform: 'rotateY(180deg)' }"/> +45°</el-button>
           </el-button-group>
         </el-row>
-      </el-popover>
+      </el-popover> -->
 
       <el-tooltip placement="top" content="锁定">
         <IconLock class="handler-item" @click="changeElementLock(false)" v-if="lock" :class="{ 'disable': !handleElement }"/>

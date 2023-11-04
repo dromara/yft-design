@@ -88,8 +88,9 @@ const currentPanelComponent = computed(() => {
   }
 }
 .right-content {
-  padding: 10px;
+  padding: 10px 5px 10px 10px;
   font-size: 13px;
-  @include overflow-overlay();
+  overflow: scroll;
+  // @include overflow-overlay();
 }
 </style>

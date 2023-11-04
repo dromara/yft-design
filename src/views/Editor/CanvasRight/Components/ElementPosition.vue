@@ -2,6 +2,60 @@
   <div class="element-position">
     <div class="mb-10">
       <el-row>
+        <el-tooltip placement="top" :hide-after="0" content="左对齐">
+          <el-col :span="4" class="align-item" @click="alignElement(AlignCommand.LEFT)">
+            <IconAlignLeft/>
+          </el-col>
+        </el-tooltip>
+        <el-tooltip placement="top" :hide-after="0" content="水平居中">
+          <el-col :span="4" class="align-item" @click="alignElement(AlignCommand.HORIZONTAL)">
+            <IconAlignVertically/>
+          </el-col>
+        </el-tooltip>
+        <el-tooltip placement="top" :hide-after="0" content="右对齐">
+          <el-col :span="4" class="align-item" @click="alignElement(AlignCommand.RIGHT)">
+            <IconAlignRight/>
+          </el-col>
+        </el-tooltip>
+        <el-tooltip placement="top" :hide-after="0" content="上对齐">
+          <el-col :span="4" class="align-item" @click="alignElement(AlignCommand.TOP)">
+            <IconAlignTop/>
+          </el-col>
+        </el-tooltip>
+        <el-tooltip placement="top" :hide-after="0" content="垂直居中">
+          <el-col :span="4" class="align-item" @click="alignElement(AlignCommand.VERTICAL)">
+            <IconAlignHorizontally/>
+          </el-col>
+        </el-tooltip>
+        <el-tooltip placement="top" :hide-after="0" content="下对齐">
+          <el-col :span="4" class="align-item" @click="alignElement(AlignCommand.BOTTOM)">
+            <IconAlignBottom/>
+          </el-col>
+        </el-tooltip>
+      </el-row>
+      <!-- <el-button-group>
+        <el-tooltip placement="top" :hide-after="0" content="左对齐">
+          <IconAlignLeft/>
+        </el-tooltip>
+        <el-tooltip placement="top" :hide-after="0" content="水平居中">
+          <el-button @click="alignElement(AlignCommand.HORIZONTAL)"><IconAlignVertically/></el-button>
+        </el-tooltip>
+        <el-tooltip placement="top" :hide-after="0" content="右对齐">
+          <el-button @click="alignElement(AlignCommand.RIGHT)"><IconAlignRight/></el-button>
+        </el-tooltip>
+        <el-tooltip placement="top" :hide-after="0" content="上对齐">
+          <el-button @click="alignElement(AlignCommand.TOP)"><IconAlignTop/></el-button>
+        </el-tooltip>
+        <el-tooltip placement="top" :hide-after="0" content="垂直居中">
+          <el-button @click="alignElement(AlignCommand.VERTICAL)"><IconAlignHorizontally/></el-button>
+        </el-tooltip>
+        <el-tooltip placement="top" :hide-after="0" content="下对齐">
+          <el-button @click="alignElement(AlignCommand.BOTTOM)"><IconAlignBottom/></el-button>
+        </el-tooltip>
+      </el-button-group> -->
+    </div>
+    <div class="mb-10">
+      <el-row>
         <el-col :span="11" class="position-col">
           <SwipeInput v-bind="left" content='X'/>
         </el-col>
@@ -36,19 +90,17 @@
           <SwipeInput v-bind="angle" content='A'/>
         </el-col>
         <el-col :span="2" class="fixed-ratio">
-          <!-- <el-tooltip effect="dark"  placement="top" content="解除宽高比" v-if="isFixed">
-            <IconLock class="icon-btn" @click="changeFixedRatio(false)"/>
-          </el-tooltip>
-          <el-tooltip effect="dark" placement="top" content="锁定宽高比" v-else>
-            <IconUnlock class="icon-btn" @click="changeFixedRatio(true)"/>
-          </el-tooltip> -->
         </el-col>
         <el-col :span="5" class="angle-col">
-          <IconRotate/> -45°
+          <div @click="changeRotate45('-')">
+            <IconRotate/> -45°
+          </div>
         </el-col>
         <el-col :span="1"></el-col>
         <el-col :span="5" class="angle-col">
-          <IconRotate :style="{ transform: 'rotateY(180deg)' }"/> +45°
+          <div @click="changeRotate45('+')">
+            <IconRotate :style="{ transform: 'rotateY(180deg)' }"/> +45°
+          </div>
         </el-col>
       </el-row>
     </div>
@@ -58,13 +110,17 @@
 <script lang="ts" setup>
 import { ref, computed, watchEffect, watch } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useMainStore } from '@/store'
+import { ElementNames, AlignCommand, LayerCommand } from '@/types/elements'
+import { useMainStore, useTemplatesStore } from '@/store'
 import { CanvasElement } from '@/types/canvas'
 import { getWidthHeight } from '@/app/fabricControls'
 import { Object as FabricObject } from 'fabric'
 import useCanvas from '@/views/Canvas/useCanvas'
+import useHandleTool from '@/hooks/useHandleTool'
 import useHandleActive from '@/hooks/useHandleActive'
 
+const templatesStore = useTemplatesStore()
+const { alignElement, layerElement } = useHandleTool()
 const [ canvas ] = useCanvas()
 const { canvasObject } = storeToRefs(useMainStore())
 const { handleActive } = useHandleActive()
@@ -82,9 +138,35 @@ const changeFixedRatio = (status: boolean) => {
   isFixed.value = status
 }
 
+// 修改旋转45度（顺时针或逆时针）
+const changeRotate45 = (command: '+' | '-') => {
+  const [ canvas ] = useCanvas()
+  if (!canvasObject.value || !canvas) return
+  let _rotate = Math.floor(canvasObject.value.angle / 45) * 45
+  if (command === '+') _rotate = _rotate + 45
+  else if (command === '-') _rotate = _rotate - 45
+  if (_rotate < -180) _rotate = -180
+  if (_rotate > 180) _rotate = 180
+  canvasObject.value.angle = _rotate
+  canvas.renderAll()
+  templatesStore.modifedElement()
+}
+
+
 </script>
 
 <style lang="scss" scoped>
+.align-item {
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border-radius: $borderRadius;
+  &:hover{
+    background-color: #f1f1f1;
+  }
+}
 .mb-10 {
   margin-bottom: 10px;
 }
