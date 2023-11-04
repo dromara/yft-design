@@ -9,15 +9,6 @@
     :label="label"
     @change="change"
   >
-    <!-- <template #prefix v-if="hasLabel">
-      <div ref="labelRef" class="label-ref">
-        <slot v-if="$slots.label" name="label"></slot>
-        <template v-else>{{ label }}</template>
-      </div>
-    </template> -->
-    <!-- <template v-for="(item, key) in slots" :key="key" #[key]>
-      <slot :name="key"></slot>
-    </template> -->
   </el-input-number>
 </template>
 <script setup lang="ts">

@@ -1,6 +1,5 @@
 <template>
   <div class="element-position">
-    <div class="mb-10"><b>元素坐标</b></div>
     <div class="mb-10">
       <el-row>
         <el-col :span="11" class="position-input">
