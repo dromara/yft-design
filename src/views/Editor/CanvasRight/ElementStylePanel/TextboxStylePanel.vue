@@ -182,7 +182,7 @@ import { FontSizeLibs, LineHeightLibs, CharSpaceLibs } from '@/configs/texts'
 import { WEB_FONTS } from '@/configs/fonts'
 import { TextboxElement } from '@/types/canvas'
 import { FontGroupOption } from '@/types/elements'
-import { loadFont } from '@/utils/localFonts'
+import { loadFont } from '@/utils/fonts'
 import opentype from "opentype.js"
 import ElementPosition from '../Components/ElementPosition.vue'
 import ElementStroke from '../Components/ElementStroke.vue'
@@ -347,7 +347,8 @@ const handleElementCurve = async () => {
   // ElMessage
   let fontElement: opentype.Font | undefined
   if (WEB_FONTS.filter(item => item.value === hasFontFamily.value)[0]) {
-    fontElement = await opentype.load(`/src/assets/fonts/${hasFontFamily.value}.ttf`)
+    const fontURL = import.meta.env.MODE === 'production' ? `/assets/${hasFontFamily.value}.ttf` : `/src/assets/fonts/${hasFontFamily.value}.ttf`
+    fontElement = await opentype.load(fontURL)
   } else {
     const fontData = await loadFont(hasFontFamily.value)
     if (!fontData) return

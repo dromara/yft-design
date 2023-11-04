@@ -2,7 +2,7 @@ import { CanvasElement, TextboxElement, ImageElement, Template } from '@/types/c
 import { ElementNames } from '@/types/elements'
 import { isBase64, getBase64Type, getLinkType } from '@/utils/common'
 import { PDFDocument, StandardFonts, rgb, PDFPage, PDFImage } from 'pdf-lib'
-import { loadFont } from '@/utils/localFonts'
+import { loadFont } from '@/utils/fonts'
 import { WEB_FONTS } from '@/configs/fonts'
 
 // self.addEventListener("message", handleMessage);
