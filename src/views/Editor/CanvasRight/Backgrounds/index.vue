@@ -771,7 +771,7 @@ const generateShadingBackgroundRandom = () => {
 const generateBackgroundImage = async (backgroundImage: Image, url: string) => {
   const [ canvas ] = useCanvas()
   if (canvasObject.value && canvasObject.value.name === 'backgroundImage') {
-    const imageElement = canvasObject.value as ImageElement
+    const imageElement = canvasObject.value as Image
     await imageElement.setSrc(url)
   }
   else {

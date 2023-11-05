@@ -59,7 +59,7 @@ const { createTemplate, deleteTemplate, sortTemplates, cutTemplate, pasteTemplat
 
 const selectedTemplatesIndex = computed(() => [..._selectedTemplatesIndex.value, templateIndex.value])
 
-const contextmenusThumbnailItem = (): ContextmenuItem[] => {
+const contextmenusThumbnailItem = (): ContextMenu[] => {
   return [
     {
       text: '剪切',
@@ -178,7 +178,7 @@ const changeSlideIndex = (index: number) => {
   if (templateIndex.value === index) return
   templatesStore.setTemplateIndex(index)
   templatesStore.renderTemplate()
-  canvasObject.value = null
+  canvasObject.value = undefined
 }
 
 </script>

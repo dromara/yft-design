@@ -15,7 +15,7 @@
             <template #reference>
               <ColorButton :color="maskColor" style="flex: 3;" />
             </template>
-            <ColorPicker :modelValue="maskColor" @update:modelValue="color => updateMaskColor(color)"/>
+            <ColorPicker :modelValue="maskColor" @update:modelValue="(color: string) => updateMaskColor(color)"/>
           </el-popover>
         </el-col>
       </el-row>
@@ -37,7 +37,7 @@ import { storeToRefs } from 'pinia'
 import { useMainStore } from '@/store'
 import { ImageElement } from '@/types/canvas'
 import { ElementNames } from '@/types/elements'
-import { filters } from 'fabric'
+import { filters, Image } from 'fabric'
 import useCanvas from '@/views/Canvas/useCanvas'
 
 const BlendColorFilter = 'BlendColor'
@@ -46,7 +46,7 @@ const maskAlpha = ref(0.3)
 const [ canvas ] = useCanvas()
 const { canvasObject } = storeToRefs(useMainStore())
 
-const handleElement = computed(() => canvasObject.value as ImageElement)
+const handleElement = computed(() => canvasObject.value as Image)
 const hasColorMask = computed(() => {
   if (!handleElement.value || handleElement.value.type !== ElementNames.IMAGE) return false
   const blendColorFilter = handleElement.value.filters.filter(obj => obj.type === BlendColorFilter)[0] as filters.BlendColor

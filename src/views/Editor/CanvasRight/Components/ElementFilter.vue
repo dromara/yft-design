@@ -212,7 +212,7 @@
 import { computed, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useMainStore } from '@/store'
-import { filters } from 'fabric'
+import { filters, Image } from 'fabric'
 import { ImageElement } from '@/types/canvas'
 import { ElementNames } from '@/types/elements'
 import { SharpenMatrix, EmbossMatrix, GrayscaleType } from '@/configs/images'
@@ -220,7 +220,7 @@ import useCanvas from '@/views/Canvas/useCanvas'
 
 const [ canvas ] = useCanvas()
 const { canvasObject } = storeToRefs(useMainStore())
-const handleElement = computed(() => canvasObject.value as ImageElement)
+const handleElement = computed(() => canvasObject.value as Image)
 
 interface FilterOption {
   label: string

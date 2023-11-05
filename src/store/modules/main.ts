@@ -9,10 +9,10 @@ import { ExportTypes, PoolType, SystemFont } from '@/types/common'
 import useCanvas from '@/views/Canvas/useCanvas'
 
 export interface MainState {
-  canvasObject: CanvasElement | null
+  canvasObject: FabricObject | undefined
   hoveredObject: FabricObject | undefined 
   leavedObject: FabricObject | undefined 
-  clonedObject: CanvasElement | null
+  clonedObject: FabricObject | undefined
   currentPoint: PointElement | null
   rightState: RightStates
   activeElementIdList: string[]
@@ -37,8 +37,8 @@ export const databaseId = nanoid(10)
 
 export const useMainStore = defineStore('main', {
   state: (): MainState => ({
-    canvasObject: null,
-    clonedObject: null,
+    canvasObject: undefined,
+    clonedObject: undefined,
     hoveredObject: undefined,
     leavedObject: undefined,
     currentPoint: null,
@@ -84,7 +84,7 @@ export const useMainStore = defineStore('main', {
       this.activeElementIdList = activeElementIdList
     },
     
-    setCanvasObject(canvasObject: CanvasElement | null) {
+    setCanvasObject(canvasObject: FabricObject | undefined) {
       this.canvasObject = canvasObject
     },
 

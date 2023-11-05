@@ -13,7 +13,7 @@
           <template #reference>
             <ColorButton :color="maskColor" style="flex: 3;" />
           </template>
-          <ColorPicker :modelValue="maskColor" @update:modelValue="color => updateMaskColor(color)"/>
+          <ColorPicker :modelValue="maskColor" @update:modelValue="(color: string) => updateMaskColor(color)"/>
         </el-popover>
       </div>
       <div class="row">
@@ -29,7 +29,7 @@ import { computed, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useMainStore } from '@/store'
 import { ImageElement } from '@/types/canvas'
-import { filters } from 'fabric'
+import { filters, Image } from 'fabric'
 import useCanvas from '@/views/Canvas/useCanvas'
 
 const BlendColorFilter = 'BlendColor'
@@ -39,7 +39,7 @@ const maskAlpha = ref(0.3)
 const { canvasObject } = storeToRefs(useMainStore())
 
 const hasGradient = ref(false)
-const handleElement = computed(() => canvasObject.value as ImageElement)
+const handleElement = computed(() => canvasObject.value as Image)
 
 const updateMaskColor = (color: string) => {
   maskColor.value = color

@@ -43,8 +43,8 @@ const { canvasObject } = storeToRefs(useMainStore())
 const outlineStyle = ref(0)
 const handleElement = computed(() => canvasObject.value as CanvasElement)
 const hasOutline = computed(() => {
-    if (!handleElement.value) return false
-    return handleElement.value.stroke ? true : false
+  if (!handleElement.value) return false
+  return handleElement.value.stroke ? true : false
 })
 const openOutline = ref(hasOutline.value)
 

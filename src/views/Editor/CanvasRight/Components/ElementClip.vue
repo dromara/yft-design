@@ -37,13 +37,12 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import { PathShapeLibs } from '@/configs/shape'
 import { PathPoolItem } from '@/types/elements'
 import { useMainStore } from '@/store'
 import { storeToRefs } from 'pinia'
 import { Path } from 'fabric'
-import { nanoid } from 'nanoid'
 import { PathElement } from '@/types/canvas'
 import useCanvas from '@/views/Canvas/useCanvas'
 const mainStore = useMainStore()

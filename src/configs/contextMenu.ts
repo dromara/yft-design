@@ -1,7 +1,6 @@
 import { ContextMenu } from '@/components/ContextMenu/types'
-import { CanvasElement } from '@/types/canvas'
 import { ElementNames, AlignCommand, LayerCommand } from '@/types/elements'
-
+import { Object as FabricObject } from 'fabric'
 import { storeToRefs } from 'pinia'
 import { useMainStore } from '@/store'
 import useHandleElement from '@/hooks/useHandleElement'
@@ -38,8 +37,8 @@ export const contextMenus = (): ContextMenu[] => {
   const { lockElement, deleteElement } = useHandleElement()
   const { alignElement, layerElement } = useHandleTool()
   const { canvasObject } = storeToRefs(useMainStore())
-  const element = canvasObject.value as CanvasElement
-  if (!canvasObject.value) {
+  const element = canvasObject.value as FabricObject
+  if (!element) {
     return [
       {
         text: '粘贴',

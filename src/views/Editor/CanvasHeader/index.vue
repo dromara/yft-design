@@ -20,7 +20,7 @@
     </div>
 
     <div class="center-handler">
-      <el-tooltip placement="top" content="图层">
+      <!-- <el-tooltip placement="top" content="图层">
         <IconLayers class="handler-item" ref="layerRef" :class="{ 'disable': !handleElement }"/>
       </el-tooltip>
       <el-popover ref="layerPopoverRef" :virtual-ref="layerRef" trigger="click" virtual-triggering width="240" :disabled="!handleElement">
@@ -40,7 +40,7 @@
             </el-tooltip>
           </el-button-group>
         </el-row>
-      </el-popover>
+      </el-popover> -->
 
       <!-- <el-tooltip placement="top" content="对齐">
         <IconAlignTextCenter class="handler-item" ref="alignRef" :class="{ 'disable': !handleElement }"/>
@@ -89,10 +89,10 @@
         </el-row>
       </el-popover> -->
 
-      <el-tooltip placement="top" content="锁定">
+      <!-- <el-tooltip placement="top" content="锁定">
         <IconLock class="handler-item" @click="changeElementLock(false)" v-if="lock" :class="{ 'disable': !handleElement }"/>
         <IconUnlock class="handler-item" @click="changeElementLock(true)" v-else :class="{ 'disable': !handleElement }"/>
-      </el-tooltip>
+      </el-tooltip> -->
       <el-tooltip placement="top" :hide-after="0">
         <template #content>交叉</template>
         <IconIntersection class="handler-item" @click="intersection()"/>
@@ -128,7 +128,7 @@ import useHandleTool from '@/hooks/useHandleTool'
 import useCanvasScale from '@/hooks/useCanvasScale'
 import useHandleElement from '@/hooks/useHandleElement'
 import useHistorySnapshot from '@/hooks/useHistorySnapshot'
-import { Path } from 'fabric'
+import { Object as FabricObject } from 'fabric'
 
 const fabricStore = useFabricStore()
 const mainStore = useMainStore()
@@ -157,7 +157,7 @@ const { canUndo, canRedo } = storeToRefs(useSnapshotStore())
 
 const { redo, undo } = useHistorySnapshot()
 
-const handleElement = computed(() => canvasObject.value as CanvasElement)
+const handleElement = computed(() => canvasObject.value as FabricObject)
 
 const canGroup = computed(() => {
   if (!handleElement.value) return false
@@ -173,7 +173,7 @@ const lock = computed(() => {
   return handleElement.value.lockMovementX && handleElement.value.lockMovementY ? true : false
 })
 
-// 锁定解锁
+// // 锁定解锁
 const changeElementLock = (status: boolean) => {
   if (!handleElement.value) return
   handleElement.value.lockMovementY = handleElement.value.lockMovementX = status
@@ -196,29 +196,29 @@ const intersection = () => {
   intersectElements()
 }
 
-// 修改旋转
-const changeRotate = (value: number) => {
-  const [ canvas ] = useCanvas()
-  if (!handleElement.value || !canvas) return
-  handleElement.value.set({angle: value})
-  canvas.renderAll()
-  templatesStore.modifedElement()
-}
+// // 修改旋转
+// const changeRotate = (value: number) => {
+//   const [ canvas ] = useCanvas()
+//   if (!handleElement.value || !canvas) return
+//   handleElement.value.set({angle: value})
+//   canvas.renderAll()
+//   templatesStore.modifedElement()
+// }
 
 // 修改旋转45度（顺时针或逆时针）
-const changeRotate45 = (command: '+' | '-') => {
-  const [ canvas ] = useCanvas()
-  if (!handleElement.value || !canvas) return
-  let _rotate = Math.floor(rotate.value / 45) * 45
-  if (command === '+') _rotate = _rotate + 45
-  else if (command === '-') _rotate = _rotate - 45
-  if (_rotate < -180) _rotate = -180
-  if (_rotate > 180) _rotate = 180
-  rotate.value = _rotate
-  handleElement.value.angle = _rotate
-  canvas.renderAll()
-  templatesStore.modifedElement()
-}
+// const changeRotate45 = (command: '+' | '-') => {
+//   const [ canvas ] = useCanvas()
+//   if (!handleElement.value || !canvas) return
+//   let _rotate = Math.floor(rotate.value / 45) * 45
+//   if (command === '+') _rotate = _rotate + 45
+//   else if (command === '-') _rotate = _rotate - 45
+//   if (_rotate < -180) _rotate = -180
+//   if (_rotate > 180) _rotate = 180
+//   rotate.value = _rotate
+//   handleElement.value.angle = _rotate
+//   canvas.renderAll()
+//   templatesStore.modifedElement()
+// }
 
 const applyCanvasPresetScale = (value: number) => {
   setCanvasScalePercentage(value)

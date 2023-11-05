@@ -308,20 +308,20 @@ watch(gridColorRecent, () => {
 const handleElement = computed(() => canvasObject.value as CanvasElement)
 
 const background = computed(() => {
-  if (!canvasObject.value) {
+  if (!handleElement.value) {
     return {
       fillType: 0,
       fill: '#fff',
     } as BackgroundElement
   }
-  if (!canvasObject.value.background) {
+  if (!handleElement.value.background) {
     return {
       fillType: 0,
       fill: handleElement.value.fill,
       color: (handleElement.value as TextboxElement).color
     } as BackgroundElement
   }
-  return canvasObject.value.background
+  return handleElement.value.background
 })
 
 // 设置背景图片隐藏

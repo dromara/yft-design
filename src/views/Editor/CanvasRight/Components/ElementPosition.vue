@@ -33,26 +33,6 @@
           </el-col>
         </el-tooltip>
       </el-row>
-      <!-- <el-button-group>
-        <el-tooltip placement="top" :hide-after="0" content="左对齐">
-          <IconAlignLeft/>
-        </el-tooltip>
-        <el-tooltip placement="top" :hide-after="0" content="水平居中">
-          <el-button @click="alignElement(AlignCommand.HORIZONTAL)"><IconAlignVertically/></el-button>
-        </el-tooltip>
-        <el-tooltip placement="top" :hide-after="0" content="右对齐">
-          <el-button @click="alignElement(AlignCommand.RIGHT)"><IconAlignRight/></el-button>
-        </el-tooltip>
-        <el-tooltip placement="top" :hide-after="0" content="上对齐">
-          <el-button @click="alignElement(AlignCommand.TOP)"><IconAlignTop/></el-button>
-        </el-tooltip>
-        <el-tooltip placement="top" :hide-after="0" content="垂直居中">
-          <el-button @click="alignElement(AlignCommand.VERTICAL)"><IconAlignHorizontally/></el-button>
-        </el-tooltip>
-        <el-tooltip placement="top" :hide-after="0" content="下对齐">
-          <el-button @click="alignElement(AlignCommand.BOTTOM)"><IconAlignBottom/></el-button>
-        </el-tooltip>
-      </el-button-group> -->
     </div>
     <div class="mb-10">
       <el-row>
@@ -60,6 +40,12 @@
           <SwipeInput v-bind="left" content='X'/>
         </el-col>
         <el-col :span="2" class="fixed-ratio">
+          <el-tooltip effect="dark"  placement="top" content="解除宽高比" v-if="isFixed">
+            <IconLock class="icon-btn" @click="changeFixedRatio(false)"/>
+          </el-tooltip>
+          <el-tooltip effect="dark" placement="top" content="锁定宽高比" v-else>
+            <IconUnlock class="icon-btn" @click="changeFixedRatio(true)"/>
+          </el-tooltip>
         </el-col>
         <el-col :span="11" class="position-col">
           <SwipeInput v-bind="top" content='Y'/>
@@ -103,6 +89,42 @@
           </div>
         </el-col>
       </el-row>
+    </div>
+    <div>
+      <el-row>
+        <el-tooltip placement="top" :hide-after="0" content="置顶">
+          <el-col :span="6" class="align-item" @click="layerElement(LayerCommand.TOP)">
+            <IconSendToBack/>
+          </el-col>
+        </el-tooltip>
+        <el-tooltip placement="top" :hide-after="0" content="置底">
+          <el-col :span="6" class="align-item" @click="layerElement(LayerCommand.BOTTOM)">
+            <IconBringToFrontOne/>
+          </el-col>
+        </el-tooltip>
+        <el-tooltip placement="top" :hide-after="0" content="下移">
+          <el-col :span="6" class="align-item" @click="layerElement(LayerCommand.DOWN)">
+            <IconSendBackward/>
+          </el-col>
+        </el-tooltip>
+        <el-tooltip placement="top" :hide-after="0" content="上移">
+          <el-col :span="6" class="align-item" @click="layerElement(LayerCommand.UP)">
+            <IconBringForward/>
+          </el-col>
+        </el-tooltip>
+      </el-row>
+      <!-- <el-tooltip placement="top" :hide-after="0" content="置顶">
+        <el-button @click="layerElement(LayerCommand.TOP)"><IconSendToBack/></el-button>
+      </el-tooltip>
+      <el-tooltip placement="top" :hide-after="0" content="置底">
+        <el-button @click="layerElement(LayerCommand.BOTTOM)"><IconBringToFrontOne/></el-button>
+      </el-tooltip>
+      <el-tooltip placement="top" :hide-after="0" content="下移">
+        <el-button @click="layerElement(LayerCommand.DOWN)"><IconSendBackward/></el-button>
+      </el-tooltip>
+      <el-tooltip placement="top" :hide-after="0" content="上移">
+        <el-button @click="layerElement(LayerCommand.UP)"><IconBringForward/></el-button>
+      </el-tooltip> -->
     </div>
   </div>
 </template>

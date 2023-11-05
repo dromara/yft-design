@@ -15,7 +15,7 @@
         <template #reference>
           <ColorButton :color="handleElement.stroke" style="flex: 3;" />
         </template>
-        <ColorPicker :modelValue="handleElement.stroke" @update:modelValue="color => updateStrokeColor(color)"/>
+        <ColorPicker :modelValue="handleElement.stroke" @update:modelValue="(color: string) => updateStrokeColor(color)"/>
       </el-popover>
     </div>
     <div class="row">
@@ -25,7 +25,7 @@
     
     <div class="row">
       <div style="flex: 2;">起点样式：</div>
-      <el-select style="flex: 3;" v-model="handleElement.startStyle" @change="(value) => updateLineStyle(value, 'start')">
+      <el-select style="flex: 3;" v-model="handleElement.startStyle" @change="(value: string) => updateLineStyle(value, 'start')">
         <el-option value="0" label="无"></el-option>
         <el-option value="triangle" label="箭头"></el-option>
         <el-option value="circle" label="圆点"></el-option>
@@ -33,7 +33,7 @@
     </div>
     <div class="row">
       <div style="flex: 2;">终点样式：</div>
-      <el-select style="flex: 3;" v-model="handleElement.endStyle" @change="(value) => updateLineStyle(value, 'end')">
+      <el-select style="flex: 3;" v-model="handleElement.endStyle" @change="(value: string) => updateLineStyle(value, 'end')">
         <el-option value="0" label="无"></el-option>
         <el-option value="triangle" label="箭头"></el-option>
         <el-option value="circle" label="圆点"></el-option>
@@ -85,7 +85,8 @@ const changeLineStyle = () => {
 }
 
 const updateTemplateElement = () => {
-  const props = handleElement.value.toObject(propertiesToInclude)
+  const lineElement = handleElement.value as fabric.Object
+  const props = lineElement.toObject(propertiesToInclude)
   templatesStore.updateElement({ id: props.id,  props})
   
 }
@@ -139,7 +140,6 @@ const createCircleElement = (mode: 'start' | 'end') => {
   const triangleLeft = mode === 'start' ? lineLeft - lineHeight / 2 : lineLeft + lineHeight / 2
   const [ canvas ] = useCanvas()
   const circle = new fabric.Circle({
-    // @ts-ignore
     id: `${handleElement.value.id}-${mode}-circle`,
     angle: handleElement.value.angle, 
     fill: handleElement.value.stroke, 
@@ -153,7 +153,7 @@ const createCircleElement = (mode: 'start' | 'end') => {
   })
   canvas.add(circle)
   canvas.renderAll()
-  const circleElement = circle.toObject(propertiesToInclude)
+  // const circleElement = circle.toObject(propertiesToInclude)
  
   if (mode === 'start') {
     handleElement.value.startStyle = 'circle'

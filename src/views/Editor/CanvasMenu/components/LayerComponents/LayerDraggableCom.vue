@@ -53,7 +53,7 @@ import { ElementNames } from '@/types/elements'
 import { useMainStore } from '@/store'
 import { storeToRefs } from 'pinia'
 import useHandleElement from "@/hooks/useHandleElement"
-import { Group } from 'fabric'
+import { Group, Object as FabricObject } from 'fabric'
 
 const { 
   selectElement, 
@@ -68,7 +68,7 @@ const {
 
 const props = defineProps({
   element: {
-    type: Object as PropType<CanvasElement>,
+    type: Object as PropType<FabricObject>,
     required: true,
   },
   index: {
@@ -80,7 +80,7 @@ const props = defineProps({
 const mainStore = useMainStore()
 const { canvasObject } = storeToRefs(mainStore)
 
-const handleElement = computed(() => canvasObject.value as CanvasElement)
+const handleElement = computed(() => canvasObject.value as FabricObject)
 </script>
 <style lang="scss" scoped>
 .layout-search {

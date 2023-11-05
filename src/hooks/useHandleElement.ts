@@ -68,13 +68,13 @@ export default () => {
   const patseEelement = async () => {
     const [ canvas ] = useCanvas()
     if (!clonedObject.value) return
-    const clonedObj = await clonedObject.value.clone(propertiesToInclude) as CanvasElement
+    const clonedObj = await clonedObject.value.clone(propertiesToInclude) as FabricObject
     let left = clonedObject.value.left + 10, top = clonedObject.value.top + 10
     if (currentPoint.value) {
       left = currentPoint.value.x, top = currentPoint.value.y
     }
     canvas.discardActiveObject()
-    mainStore.setCanvasObject(null)
+    mainStore.setCanvasObject(undefined)
     clonedObj.set({left, top, evented: true})
     if (clonedObj.type === ElementNames.ACTIVE) {
       clonedObj.canvas = canvas
@@ -131,7 +131,7 @@ export default () => {
     }
     if (element.type === ElementNames.TEXTBOX && deleteTextbox(element as TextboxElement)) return
     canvas.discardActiveObject()
-    mainStore.setCanvasObject(null)
+    mainStore.setCanvasObject(undefined)
     canvas.remove(element as FabricObject)
     canvas.renderAll()
     templatesStore.modifedElement()
@@ -217,7 +217,7 @@ export default () => {
     if (!activeObject) return
     const objects = activeObject.removeAll() as FabricObject[]
     canvas.discardActiveObject()
-    mainStore.setCanvasObject(null)
+    mainStore.setCanvasObject(undefined)
     if (activeObject.group) {
       activeObject.group.add(...objects)
       activeObject.group.remove(activeObject as FabricObject)
@@ -231,10 +231,10 @@ export default () => {
     canvas.renderAll()
   }
 
-  const findElement = (eid: string, elements: FabricObject[] | undefined): CanvasElement | undefined => {
+  const findElement = (eid: string, elements: FabricObject[] | undefined): FabricObject | undefined => {
     if (!elements) return
     for (let i = 0; i < elements.length; i++) {
-      const item = elements[i] as CanvasElement
+      const item = elements[i] as FabricObject
       if (item.id === eid) {
         return item
       }
@@ -245,10 +245,10 @@ export default () => {
     return
   }
 
-  const queryElement = (eid: string): CanvasElement | undefined => {
+  const queryElement = (eid: string): FabricObject | undefined => {
     const [ canvas ] = useCanvas()
-    const elements = canvas.getObjects().filter(item => !WorkSpaceCommonType.includes((item as CanvasElement).id))
-    let element = elements.filter(obj => (obj as CanvasElement).id === eid)[0] as CanvasElement
+    const elements = canvas.getObjects().filter(item => !WorkSpaceCommonType.includes((item as FabricObject).id))
+    let element = elements.filter(obj => (obj as FabricObject).id === eid)[0] as FabricObject
     if (!element) {
       return findElement(eid, elements as FabricObject[])
     }
@@ -319,7 +319,7 @@ export default () => {
 
   const cancelElement = () => {
     const [ canvas ] = useCanvas()
-    mainStore.setCanvasObject(null)
+    mainStore.setCanvasObject(undefined)
     canvas.discardActiveObject()
     canvas.renderAll()
   }
