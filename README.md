@@ -4,7 +4,7 @@
 <b>体验Demo：[https://dromara.org/yft-design](https://dromara.org/yft-design)</b>  
 <b>体验Demo：[https://more-strive.github.io/design/](https://more-strive.github.io/design/)</b>
 
-![image](doc/background.gif)
+<!-- ![image](doc/background.gif) -->
 
 ## 项目运行
 ```
