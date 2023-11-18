@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { Templates } from '@/mocks/templates'
 import { Template, CanvasElement } from '@/types/canvas'
-import { Object as FabricObject } from 'fabric'
+import { Object as FabricObject, SerializedImageProps } from 'fabric'
 import { WorkSpaceDrawType, propertiesToInclude } from '@/configs/canvas'
 import { useMainStore } from './main'
 import useCanvasScale from '@/hooks/useCanvasScale'
@@ -73,7 +73,7 @@ export const useTemplatesStore = defineStore('Templates', {
       const [ canvas ] = useCanvas()
       const { initCommon } = useCommon()
       canvas.discardActiveObject()
-      mainStore.setCanvasObject(null)
+      mainStore.setCanvasObject(undefined)
       await canvas.loadFromJSON(this.currentTemplate)
       setCanvasSize()
       initCommon()
@@ -187,5 +187,9 @@ export const useTemplatesStore = defineStore('Templates', {
       this.templates[this.templateIndex].objects = newElements
       addHistorySnapshot()
     },
+
+    setBackgroundImage(props: SerializedImageProps) {
+      this.currentTemplate.backgroundImage = props
+    }
   }
 })

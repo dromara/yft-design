@@ -30,7 +30,7 @@ export interface Template {
   version: string
   workSpace: WorkSpaceElement
   background?: string
-  backgroundImage?: string
+  backgroundImage?: SerializedImageProps
   zoom: number
   width: number
   height: number

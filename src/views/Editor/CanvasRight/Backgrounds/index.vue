@@ -271,7 +271,6 @@ import useHandleBackground from '@/hooks/useHandleBackground'
 const templatesStore = useTemplatesStore()
 const { setBackgroudImage } = useHandleBackground()
 const { currentTemplate } = storeToRefs(templatesStore)
-const { canvasObject } = storeToRefs(useMainStore())
 
 // 渐变偏移
 const gradientOpacity = ref(1)
@@ -399,7 +398,9 @@ const updateBackground = (props: Partial<WorkSpaceElement>) => {
   const workSpaceDraw = canvas.getObjects().filter(item => item.id === WorkSpaceDrawType)[0]
   if (!workSpaceDraw) return
   templatesStore.updateWorkSpace({ workSpace: { ...background.value, ...props } })
-  templatesStore.updateElement({ id: workSpaceDraw.id, props: workSpaceDraw.toObject(propertiesToInclude as any[]) })
+  const workProps = workSpaceDraw.toObject(propertiesToInclude as any[])
+  templatesStore.updateElement({ id: workSpaceDraw.id, props: { ...workProps, ...props } })
+  workSpaceDraw.set({...props})
   canvas.renderAll()
 }
 
@@ -592,14 +593,14 @@ const generateGridBackground = async (status?: string) => {
     points: null
   }
   const trianglifier = trianglify(defaultOptions)
-  // @ts-ignore
-  const canvasBackground = trianglifier.toSVG()
+  const canvasBackground = trianglifier.toSVG(undefined, undefined)
   const serialize = new XMLSerializer()
   const imageURL = `data:image/svg+xml,${serialize.serializeToString(canvasBackground)}`
   const backgroundImage = await Image.fromURL(imageURL, {crossOrigin: 'anonymous'})
   const left = workSpaceDraw.left, top = workSpaceDraw.top, angle = workSpaceDraw.angle, scaleX = workSpaceDraw.scaleX, scaleY = workSpaceDraw.scaleY
   backgroundImage.set({left, top, angle, scaleX, scaleY})
-  generateBackgroundImage(backgroundImage, imageURL)
+  canvas.set('backgroundImage', backgroundImage)
+  templatesStore.setBackgroundImage(backgroundImage.toObject())
   updateBackground({fill: TransparentFill, gaidImageURL: imageURL})
 }
 
@@ -701,8 +702,9 @@ const generateShadingBackground = async () => {
   const left = workSpaceDraw.left, top = workSpaceDraw.top, angle = workSpaceDraw.angle, scaleX = workSpaceDraw.scaleX, scaleY = workSpaceDraw.scaleY
   backgroundImage.set({left, top, angle, scaleX, scaleY, width: imageWidth, height: imageHeight})
   
-  generateBackgroundImage(backgroundImage, imageURL)
+  canvas.set('backgroundImage', backgroundImage)
   updateBackground({ shadingImageURL: imageURL, fill: TransparentFill })
+  templatesStore.setBackgroundImage(backgroundImage.toObject())
 }
 
 // // 选择底纹填充
@@ -768,16 +770,17 @@ const generateShadingBackgroundRandom = () => {
 }
 
 // 设置背景图片
-const generateBackgroundImage = async (backgroundImage: Image, url: string) => {
-  const [ canvas ] = useCanvas()
-  if (canvasObject.value && canvasObject.value.name === 'backgroundImage') {
-    const imageElement = canvasObject.value as Image
-    await imageElement.setSrc(url)
-  }
-  else {
-    canvas.backgroundImage = backgroundImage
-  }
-}
+// const generateBackgroundImage = async (backgroundImage: Image, url: string) => {
+//   const [ canvas ] = useCanvas()
+//   canvas.set('backgroundImage', backgroundImage)
+//   // if (canvasObject.value && canvasObject.value.name === 'backgroundImage') {
+//   //   const imageElement = canvasObject.value as Image
+//   //   await imageElement.setSrc(url)
+//   // }
+//   // else {
+//   //   canvas.backgroundImage = backgroundImage
+//   // }
+// }
 </script>
 
 <style lang="scss" scoped>
