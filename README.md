@@ -4,7 +4,7 @@
 <b>体验Demo：[https://dromara.org/yft-design](https://dromara.org/yft-design)</b>
 
 
-![image](https://file.yft.design/api/v1/buckets/yft-design/objects/download?preview=true&prefix=YmFja2dyb3VuZC5naWY=)
+![background](https://file.yft.design/api/v1/buckets/yft-design/objects/download?preview=true&prefix=YmFja2dyb3VuZC5naWY=)
 
 # 🚀 项目运行
 ```
