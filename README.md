@@ -1,11 +1,12 @@
 # yft-design
-> 基于 Canvas 的开源版"创客贴"，使用 Vue3 + TypeScript + Fabric.js + Pinia + Element-Plus，支持 文字、图片、形状、线条、二维码 、条形码几种最常用的元素类型，每一种元素都拥有高度可编辑能力，缩略图显示，模板，支持导出json，svg, image文件。  
+一幅图设计，使用 Vue3 + TypeScript + Fabric.js + Element-Plus，支持 文字、图片、形状、线条、二维码 、条形码几种最常用的元素类型，每一种元素都拥有高度可编辑能力，缩略图显示，模板，支持导出json，svg, image文件。  
 <b>快速体验：[https://yft.design](https://yft.design)</b>  
 <b>体验Demo：[https://dromara.org/yft-design](https://dromara.org/yft-design)</b>
 
-<!-- ![image](doc/background.gif) -->
 
-## 项目运行
+![image](https://file.yft.design/api/v1/buckets/yft-design/objects/download?preview=true&prefix=YmFja2dyb3VuZC5naWY=)
+
+# 🚀 项目运行
 ```
 npm install
 npm run dev
