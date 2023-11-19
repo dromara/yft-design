@@ -573,10 +573,8 @@ const getGridColorFunction = () => {
 const generateGridBackground = async (status?: string) => {
   const [ canvas ] = useCanvas()
   const workSpaceDraw = canvas.getObjects().filter(item => item.id === WorkSpaceDrawType)[0]
-  if (!workSpaceDraw) return
+  if (!workSpaceDraw || !workSpaceDraw.width) return
   const gridColors = gridColorsRef.value && gridColorsRef.value.length > 0 && status !== 'random' ? gridColorsRef.value : 'random'
- 
-  if (!workSpaceDraw.width) return
   const defaultOptions = {
     width: workSpaceDraw.width,
     height: workSpaceDraw.height,
@@ -596,9 +594,16 @@ const generateGridBackground = async (status?: string) => {
   const canvasBackground = trianglifier.toSVG(undefined, undefined)
   const serialize = new XMLSerializer()
   const imageURL = `data:image/svg+xml,${serialize.serializeToString(canvasBackground)}`
-  const backgroundImage = await Image.fromURL(imageURL, {crossOrigin: 'anonymous'})
-  const left = workSpaceDraw.left, top = workSpaceDraw.top, angle = workSpaceDraw.angle, scaleX = workSpaceDraw.scaleX, scaleY = workSpaceDraw.scaleY
-  backgroundImage.set({left, top, angle, scaleX, scaleY})
+  const backgroundImage = await Image.fromURL(imageURL, {
+    crossOrigin: 'anonymous',
+    left: workSpaceDraw.left,
+    top: workSpaceDraw.top,
+    angle: workSpaceDraw.angle,
+    scaleX: workSpaceDraw.scaleX,
+    scaleY: workSpaceDraw.scaleY,
+    width: workSpaceDraw.width,
+    height: workSpaceDraw.height
+  })
   canvas.set('backgroundImage', backgroundImage)
   templatesStore.setBackgroundImage(backgroundImage.toObject())
   updateBackground({fill: TransparentFill, gaidImageURL: imageURL})
