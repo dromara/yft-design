@@ -1,6 +1,6 @@
 import { useMainStore, useTemplatesStore } from '@/store'
 import { CanvasElement } from '@/types/canvas'
-import { Canvas, Object } from 'fabric'
+import { Canvas, Object as FabricObject } from 'fabric'
 import { shallowRef } from 'vue'
 import { toRef } from './attribute/toRef'
 import { check } from '@/utils/check'
@@ -8,7 +8,7 @@ import { nonid } from '@/utils/common'
 
 export class FabricCanvas extends Canvas {
 
-  public activeObject = shallowRef<Object>()
+  public activeObject = shallowRef<FabricObject>()
 
   constructor(el: string | HTMLCanvasElement, options?: any) {
     super(el, options)
@@ -23,11 +23,11 @@ export class FabricCanvas extends Canvas {
 
   public set _activeObject(value) {
     const mainStore = useMainStore()
-    mainStore.setCanvasObject(value as CanvasElement)
+    mainStore.setCanvasObject(value as FabricObject)
     this.activeObject.value = value
   }
 
-  override add(...objects: Object[]): number {
+  override add(...objects: FabricObject[]): number {
     return super.add(
       ...objects.map((obj) => {
         this.setDefaultAttr(obj)
@@ -36,7 +36,7 @@ export class FabricCanvas extends Canvas {
     )
   }
 
-  override insertAt(index: number, ...objects: Object[]): number {
+  override insertAt(index: number, ...objects: FabricObject[]): number {
     return super.insertAt(
       index,
       ...objects.map((obj) => {
@@ -46,7 +46,7 @@ export class FabricCanvas extends Canvas {
     )
   }
 
-  private setDefaultAttr(target: Object) {
+  private setDefaultAttr(target: FabricObject) {
     // 添加name
     if (!target.name) {
       target.set({name: target.type})

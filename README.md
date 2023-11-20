@@ -6,13 +6,44 @@
 
 ![image](/docs/example.png)
 
-![background](https://file.yft.design/api/v1/buckets/yft-design/objects/download?preview=true&prefix=YmFja2dyb3VuZC5naWY=)
+![background](/docs/background.gif)
 
 # 🚀 项目运行
 ```
 npm install
 npm run dev
 npm run build
+```
+
+# 📖 项目结构
+```
+├── app                           // 静态资源
+│   ├── fabricCanvas              // FabricCanvas
+│   ├── fabricControls            // 选择器
+│   ├── fabricRuler               // 标尺
+│   ├── fabricTool                // 拖动
+│   ├── guideLines                // 辅助线
+│   ├── hoverBorders              // 预选择
+│   └── wheelScroll               // 缩放
+├── assets                        // 静态资源
+│   ├── fonts                     // 在线字体文件
+│   └── styles                    // 样式
+├── components                    // 与业务逻辑无关的通用组件
+├── configs                       // 配置文件，如：颜色，字体。
+├── hooks                         // 供多个组件（模块）使用的 hooks 方法
+├── extension                     // 自定义fabirc对象
+│   ├── controls                  // 裁剪图片controls
+│   ├── mixins                    // 裁剪图片mixins
+│   └── object                    // 自定义元素对象
+├── mocks                         // mocks 数据
+├── plugins                       // 自定义的 Vue 插件
+├── types                         // 类型定义文件
+├── store                         // Pinia store，参考：https://pinia.vuejs.org/
+├── utils                         // 通用的工具方法
+├── views                         // 业务组件目录。
+│    ├── Canvas                   // 编辑器对象
+│    └── Editor                   // 编辑器模块
+└── worker                        // web worker
 ```
 
 # 📚 功能列表
