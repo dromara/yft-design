@@ -6,6 +6,8 @@
 
 ![image](/docs/example.png)
 
+# 📋 色彩演示
+
 ![background](/docs/background.gif)
 
 # 🚀 项目运行
