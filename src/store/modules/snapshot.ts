@@ -100,7 +100,7 @@ export const useSnapshotStore = defineStore('snapshot', {
       templatesStore.setTemplateIndex(templateIndex)
       this.setSnapshotCursor(snapshotCursor)
       templatesStore.renderElement()
-      mainStore.setCanvasObject(null)
+      mainStore.setCanvasObject(undefined)
     },
   
     async reDo() {
@@ -119,7 +119,7 @@ export const useSnapshotStore = defineStore('snapshot', {
       templatesStore.setTemplateIndex(templateIndex)
       this.setSnapshotCursor(snapshotCursor)
       templatesStore.renderElement()
-      mainStore.setCanvasObject(null)
+      mainStore.setCanvasObject(undefined)
     },
   }
 })
