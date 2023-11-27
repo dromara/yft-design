@@ -2,7 +2,7 @@
   <div class="layout-pool">
     <el-row class="layout-search">
       <el-col :span="5">
-        <FileInput @change="files => drawImage(files)">
+        <FileInput @change="(files: FileList) => drawImage(files)">
           <el-tooltip placement="top" :hide-after="0" content="上传图片">
             <el-button type="primary">
               <IconUpload />
@@ -22,7 +22,14 @@
       </FileInput>
     </el-row> -->
     <el-tabs v-model="activeImage" class="layout-tabs">
-      <el-tab-pane label="推荐图片" name="data">推荐图片</el-tab-pane>
+      <el-tab-pane label="推荐图片" name="data">
+        <el-row>
+          <el-col :span="12" v-for="item in pixabayImageResult?.hits" class="col-img">
+            <img :src="item.previewURL" alt="">
+          </el-col>
+          
+        </el-row>
+      </el-tab-pane>
       <el-tab-pane label="我的收藏" name="self">
         
       </el-tab-pane>
@@ -34,30 +41,25 @@
 
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
+import { getPixabayImage } from '@/api/image'
+import { PixabayImageResult } from '@/api/image/types'
 import { Search } from '@element-plus/icons-vue'
-import useHandleCreate from '@/hooks/useHandleCreate'
 import { getImageDataURL } from '@/utils/image'
-
+import useHandleCreate from '@/hooks/useHandleCreate'
 const { createImageElement } = useHandleCreate()
 
 
-
 const activeImage = ref('data')
-
+const pixabayImageResult = ref<PixabayImageResult>()
 const drawImage = (files: FileList) => {
   const imageFile = files[0]
   if (!imageFile) return
   getImageDataURL(imageFile).then(dataURL => createImageElement(dataURL))
 }
-// const selectSlideTemplate = (tid: string) => {
-//   const templateDetail = templateInfo.value.filter(template => template.template_id === tid)[0]
-//   emit('select', JSON.parse(templateDetail.template_data))
-// }
-
-// onMounted(async () => {
-//   const queryData = await getTemplateInfoData()
-//   templateInfo.value = queryData.data.data
-// })
+onMounted(async () => {
+  const res = await getPixabayImage()
+  pixabayImageResult.value = res.data.data
+})
 </script>
 
 <style lang="scss" scoped>
@@ -89,6 +91,12 @@ const drawImage = (files: FileList) => {
     &:hover {
       outline-color: $themeColor;
     }
+  }
+}
+.col-img {
+  height: 100px;
+  img {
+    max-height: 100%;
   }
 }
 </style>

@@ -14,6 +14,20 @@ import viteCompression from 'vite-plugin-compression';
 export default ({ command }: ConfigEnv): UserConfigExport => {
   return {
     base: "./", // publicPath
+    server: {
+      host: 'localhost',
+      port: 5173,
+      proxy: {
+        '/api': {
+          // 线上API地址
+          // target: 'https://draw.morestrive.com',
+          // 本地API地址
+          target: 'http://127.0.0.1:9292',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(new RegExp('^'), ''),
+        },
+      },
+    },
     plugins: [
       vue(),
       visualizer({ open: true }),
