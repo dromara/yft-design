@@ -28,7 +28,7 @@ export class WheelScroll extends Disposable {
     const mouseWheel = (e: CanvasEvents['mouse:wheel']) => {
       e.e.preventDefault()
       e.e.stopPropagation()
-      const { deltaY, offsetX, offsetY } = e.e
+      const { deltaX, deltaY, offsetX, offsetY } = e.e
       // 缩放视窗
       if (ctrl.value || cmd.value) {
         const zoomFactor = Math.abs(deltaY) < 10 ? deltaY * 2 : deltaY / 3
