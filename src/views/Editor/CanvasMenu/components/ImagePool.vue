@@ -29,8 +29,6 @@
 
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
-import { getPixabayImage } from '@/api/image'
-import { PixabayImageResult } from '@/api/image/types'
 import { Search } from '@element-plus/icons-vue'
 import { getImageDataURL } from '@/utils/image'
 import useHandleCreate from '@/hooks/useHandleCreate'
@@ -39,16 +37,11 @@ const { createImageElement } = useHandleCreate()
 
 
 const activeImage = ref('data')
-const pixabayImageResult = ref<PixabayImageResult>()
 const drawImage = (files: FileList) => {
   const imageFile = files[0]
   if (!imageFile) return
   getImageDataURL(imageFile).then(dataURL => createImageElement(dataURL))
 }
-onMounted(async () => {
-  const res = await getPixabayImage()
-  pixabayImageResult.value = res.data.data
-})
 </script>
 
 <style lang="scss" scoped>

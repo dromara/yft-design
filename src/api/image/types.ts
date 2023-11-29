@@ -3,16 +3,16 @@ export interface QueryParams {
   page: number
 }
 
-export enum PixabayImageType {
+export enum ImageType {
   photo,
   illustration,
   vector,
 }
 
-export interface PixabayImageDetail {
+export interface ImageHits {
   id: number
   pageURL: string
-  type: PixabayImageType
+  type: ImageType
   tags: string
   previewURL: string
   previewWidth: number
@@ -34,14 +34,19 @@ export interface PixabayImageDetail {
   userImageURL: string
 }
 
-export interface PixabayImageResult {
+export interface ImagePage {
   total: number
   totalHits: number
-  hits: PixabayImageDetail[]
+  hits: ImageHits[]
 }
 
 export interface ImagePageResult {
   code: number
-  msg: number
-  data: PixabayImageResult
+  msg: string
+  data: ImagePage
+}
+
+export interface ImageCategoryResult {
+  code: number
+  msg: string
 }

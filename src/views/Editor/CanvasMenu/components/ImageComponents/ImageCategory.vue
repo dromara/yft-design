@@ -17,8 +17,15 @@
 </template>
 
 <script lang="ts" setup>
+import { onMounted, ref } from 'vue'
 import { ImageCategory } from '@/configs/images'
+import { getImageCategory } from '@/api/image'
 
+
+onMounted(async () => {
+  const res = await getImageCategory()
+  console.log('res:', res)
+})
 </script>
 
 <style lang="scss" scoped>

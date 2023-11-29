@@ -19,7 +19,8 @@ export default ({ command }: ConfigEnv): UserConfigExport => {
       port: 5173,
       proxy: {
         '/api': {
-          target: 'https://yft.design',
+          // target: 'https://yft.design',
+          target: 'http://localhost:9292',
           changeOrigin: true,
           rewrite: (path) => path.replace(new RegExp('^'), ''),
         },

@@ -1,11 +1,18 @@
 import request from '@/utils/request'
-import { QueryParams, ImagePageResult } from './types'
+import { QueryParams, ImagePageResult, ImageCategoryResult } from './types'
 import { AxiosPromise } from 'axios'
 
-export function getPixabayImage(params?: QueryParams): AxiosPromise<ImagePageResult> {
+export function getImagePages(params?: QueryParams): AxiosPromise<ImagePageResult> {
   return request({
-    url: 'api/pixabay/image',
+    url: 'api/image/page',
     method: 'get',
     params,
+  });
+}
+
+export function getImageCategory(): AxiosPromise<ImageCategoryResult> {
+  return request({
+    url: 'api/image/category',
+    method: 'get',
   });
 }
