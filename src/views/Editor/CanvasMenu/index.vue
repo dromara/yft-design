@@ -21,7 +21,6 @@ import ImagePool from './components/ImagePool.vue'
 import ToolkitPool from './components/ToolkitPool.vue'
 import LayerPool from './components/LayerPool.vue'
 import CodePool from './components/CodePool.vue'
-import { PoolType } from '@/types/common'
 
 const mainStore = useMainStore()
 
@@ -63,7 +62,7 @@ const leftToggle = () => {
 }
 .menu-pool {
   width: 300px;
-  height: 100%;
+  height: 100vh;
   transition: left .3s linear;
   border-bottom: 1px solid $borderColor;
 }

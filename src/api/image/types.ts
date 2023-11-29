@@ -1,6 +1,10 @@
-export interface QueryParams {
+export interface QueryPgaes {
   q: string
   page: number
+}
+
+export interface QueryCategory {
+  t: string
 }
 
 export enum ImageType {
@@ -49,4 +53,5 @@ export interface ImagePageResult {
 export interface ImageCategoryResult {
   code: number
   msg: string
+  data: ImagePage
 }

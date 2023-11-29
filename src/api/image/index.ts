@@ -1,8 +1,8 @@
 import request from '@/utils/request'
-import { QueryParams, ImagePageResult, ImageCategoryResult } from './types'
+import { QueryPgaes, QueryCategory, ImagePageResult, ImageCategoryResult } from './types'
 import { AxiosPromise } from 'axios'
 
-export function getImagePages(params?: QueryParams): AxiosPromise<ImagePageResult> {
+export function getImagePages(params?: QueryPgaes): AxiosPromise<ImagePageResult> {
   return request({
     url: 'api/image/page',
     method: 'get',
@@ -10,9 +10,10 @@ export function getImagePages(params?: QueryParams): AxiosPromise<ImagePageResul
   });
 }
 
-export function getImageCategory(): AxiosPromise<ImageCategoryResult> {
+export function getImageCategory(params: QueryCategory): AxiosPromise<ImageCategoryResult> {
   return request({
     url: 'api/image/category',
     method: 'get',
+    params,
   });
 }

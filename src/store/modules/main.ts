@@ -4,7 +4,7 @@ import { defineStore } from 'pinia'
 import { SYS_FONTS } from '@/configs/fonts'
 import { getSupportFonts } from '@/utils/fonts'
 import { CanvasElement } from '@/types/canvas'
-import { RightStates, PointElement } from '@/types/elements'
+import { RightStates, PointElement, ImageCategory } from '@/types/elements'
 import { ExportTypes, PoolType, SystemFont } from '@/types/common'
 import useCanvas from '@/views/Canvas/useCanvas'
 
@@ -15,6 +15,7 @@ export interface MainState {
   clonedObject: FabricObject | undefined
   currentPoint: PointElement | null
   rightState: RightStates
+  imageCategory: ImageCategory[]
   activeElementIdList: string[]
   handleElementId: string
   sizeMode: number
@@ -43,6 +44,7 @@ export const useMainStore = defineStore('main', {
     leavedObject: undefined,
     currentPoint: null,
     rightState: RightStates.ELEMENT_WORKER,
+    imageCategory: [],
     activeElementIdList: [], // 被选中的元素ID集合，包含 handleElementId
     handleElementId: '', // 正在操作的元素ID
     sizeMode: 0,  // 模板样式

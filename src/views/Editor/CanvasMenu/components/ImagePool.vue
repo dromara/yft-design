@@ -31,6 +31,7 @@
 import { onMounted, ref } from 'vue'
 import { Search } from '@element-plus/icons-vue'
 import { getImageDataURL } from '@/utils/image'
+
 import useHandleCreate from '@/hooks/useHandleCreate'
 import ImageCategory from './ImageComponents/ImageCategory.vue'
 const { createImageElement } = useHandleCreate()

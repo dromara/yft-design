@@ -1,3 +1,4 @@
+import { ImagePage } from "@/api/image/types"
 export const enum ElementNames {
   TEXTBOX = 'textbox',
   TEXT = 'text',
@@ -218,4 +219,9 @@ export const enum LayerCommand {
   DOWN = 'right',
   TOP = 'top',
   BOTTOM = 'bottom',
+}
+
+export interface ImageCategory {
+  type: string
+  data: ImagePage
 }

@@ -258,15 +258,26 @@ export const GrayscaleType = 'Grayscale'
 export const SharpenMatrix = [ 0, -1, 0, -1,   5, -1,  0,  -1,  0 ]
 export const EmbossMatrix =  [ 1,  1, 1,  1, 0.7, -1, -1,  -1, -1 ]
 
-export const ImageCategory = [
-  {id: 0, name: '风景'},
-  {id: 1, name: '背景'},
-  {id: 2, name: '城市'},
-  {id: 3, name: '雪'},
-  {id: 4, name: '冬天'},
-  {id: 5, name: '森林'},
-  {id: 6, name: '花'},
-  {id: 7, name: '天空'},
-  {id: 8, name: '科技'},
-  {id: 9, name: '建筑'},
+// backgrounds, fashion, nature, science, education, feelings, health, people, religion, 
+// places, animals, industry, computer, food, sports, transportation, travel, buildings, business, music
+export const ImageCategoryInfo = [
+  {id: 0, name: '背景', type: 'backgrounds'},
+  {id: 1, name: '时尚', type: 'fashion'},
+  {id: 2, name: '自然', type: 'nature'},
+  {id: 3, name: '科学', type: 'science'},
+  {id: 4, name: '教育', type: 'education'},
+  {id: 5, name: '情感', type: 'feelings'},
+  {id: 6, name: '健康', type: 'health'},
+  {id: 7, name: '人物', type: 'people'},
+  {id: 8, name: '宗教', type: 'religion'},
+  {id: 9, name: '场所', type: 'places'},
+  {id: 9, name: '动物', type: 'animals'},
+  {id: 9, name: '工业', type: 'industry'},
+  {id: 9, name: '计算机', type: 'computer'},
+  {id: 9, name: '食品', type: 'food'},
+  {id: 9, name: '体育', type: 'sports'},
+  {id: 9, name: '交通', type: 'transportation'},
+  {id: 9, name: '旅游', type: 'travel'},
+  {id: 9, name: '建筑', type: 'buildings'},
+  {id: 9, name: '商业', type: 'business'},
 ]
