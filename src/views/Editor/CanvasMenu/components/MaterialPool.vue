@@ -14,15 +14,16 @@
         <el-input :prefix-icon="Search" placeholder="搜索素材"></el-input>
       </el-col>
     </el-row>
+    <div>
     <el-tabs v-model="activeMaterial" class="layout-tabs">
       <el-tab-pane label="推荐素材" name="data">
-        <LinePool @select="line => drawLine(line)"/>
-        <PathPool @select="path => drawPath(path)"/>
+        <LinePool @select="(line: LinePoolItem) => drawLine(line)"/>
+        <PathPool @select="(path: PathPoolItem) => drawPath(path)"/>
       </el-tab-pane>
       <el-tab-pane label="我的收藏" name="self">我的模板</el-tab-pane>
       <el-tab-pane label="我的购买" name="team">团队模板</el-tab-pane>
     </el-tabs>
-    
+  </div>
   </div>
 </template>
 
@@ -32,7 +33,7 @@ import { Search } from '@element-plus/icons-vue'
 import { nanoid } from 'nanoid'
 
 import { PathPoolItem, LinePoolItem, ElementNames } from '@/types/elements'
-import { loadSVGFromURL, loadSVGFromString, Group } from 'fabric'
+import { loadSVGFromURL, loadSVGFromString, Object as FabricObject } from 'fabric'
 import { getImageDataURL, getImageText } from '@/utils/image'
 import { useTemplatesStore } from '@/store'
 import useCanvas from '@/views/Canvas/useCanvas'
@@ -53,7 +54,7 @@ const drawPath = (shape: PathPoolItem) => {
   createPathElement(shape.path)
 }
 
-const svgCallback: any = (element: Element, fabricObject: CanvasElement) => {
+const svgCallback: any = (element: Element, fabricObject: FabricObject) => {
   const [ canvas ] = useCanvas()
   canvas.add(fabricObject)
 }
@@ -110,5 +111,10 @@ const drawMaterial = async (files: File[]) => {
   flex-wrap: nowrap;
   justify-content: space-around;
   width: 100%;
+}
+
+.el-tabs .el-tabs__content {
+  height: 100vh;
+  overflow-y: scroll;
 }
 </style>

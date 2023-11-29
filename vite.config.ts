@@ -19,10 +19,7 @@ export default ({ command }: ConfigEnv): UserConfigExport => {
       port: 5173,
       proxy: {
         '/api': {
-          // 线上API地址
-          // target: 'https://draw.morestrive.com',
-          // 本地API地址
-          target: 'http://127.0.0.1:9292',
+          target: 'https://yft.design',
           changeOrigin: true,
           rewrite: (path) => path.replace(new RegExp('^'), ''),
         },

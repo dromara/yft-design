@@ -257,3 +257,16 @@ export const PatternImages = [
 export const GrayscaleType = 'Grayscale'
 export const SharpenMatrix = [ 0, -1, 0, -1,   5, -1,  0,  -1,  0 ]
 export const EmbossMatrix =  [ 1,  1, 1,  1, 0.7, -1, -1,  -1, -1 ]
+
+export const ImageCategory = [
+  {id: 0, name: '风景'},
+  {id: 1, name: '背景'},
+  {id: 2, name: '城市'},
+  {id: 3, name: '雪'},
+  {id: 4, name: '冬天'},
+  {id: 5, name: '森林'},
+  {id: 6, name: '花'},
+  {id: 7, name: '天空'},
+  {id: 8, name: '科技'},
+  {id: 9, name: '建筑'},
+]
