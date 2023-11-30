@@ -9,8 +9,11 @@
           </el-button>
         </el-col>
       </el-row>
-      <el-row class="category-box">
-
+      <el-row class="category-box" v-show="item.data">
+        <el-col :span="12" v-for="img in item.data">
+          <img :src="img.previewURL" alt="">
+        </el-col>
+        <el-col :span="12"></el-col>
       </el-row>
     </div>
   </div>
@@ -83,6 +86,7 @@ onMounted(() => {
 }
 .category-box {
   height: 150px;
+  flex-wrap: nowrap
 }
 .category-container {
   overflow-y: scroll;

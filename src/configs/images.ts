@@ -269,7 +269,6 @@ export const ImageCategoryInfo = [
   {id: 5, name: '情感', type: 'feelings', data: []},
   {id: 6, name: '健康', type: 'health', data: []},
   {id: 7, name: '人物', type: 'people', data: []},
-  {id: 8, name: '宗教', type: 'religion', data: []},
   {id: 9, name: '场所', type: 'places', data: []},
   {id: 10, name: '动物', type: 'animals', data: []},
   {id: 11, name: '工业', type: 'industry', data: []},
