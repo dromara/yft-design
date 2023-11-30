@@ -1,7 +1,7 @@
 <template>
   <div class="category-container" ref="containerRef" @scroll="onContainerScroll">
     <div v-for="item in imageCategoryData" >
-      <el-row class="category-tip">
+      <el-row class="category-tip mt-5">
         <el-col :span="5" class="category-name">{{ item.name }}</el-col>
         <el-col :span="7" class="category-name">
           <el-button text>
@@ -9,13 +9,13 @@
           </el-button>
         </el-col>
       </el-row>
-      <el-row class="category-box" v-show="item.data">
-        <el-col :span="12" v-for="img in item.data">
-          <img :src="img.previewURL" alt="">
-        </el-col>
-        <el-col :span="12"></el-col>
+      <el-row class="category-box mt-5" v-show="item.data">
+        <div :style="{width: (img.previewHeight <= 120 ? img.previewWidth / img.previewHeight * 120 : img.previewWidth) + 'px'}" v-for="img in item.data" class="box-image">
+          <img :src="img.previewURL" :alt="img.tags">
+        </div>
       </el-row>
     </div>
+    <el-row class="category-bottom">到底了~</el-row>
   </div>
 </template>
 
@@ -33,7 +33,7 @@ const containerRef = ref<HTMLDivElement>();
 const getImageCategoryData = async (type: string) => {
   const res = await getImageCategory({t: type})
   if (res && res.data.code === 200) {
-    imageCategoryData.value.filter(item => item.type === type).map(ele => ele.data = res.data.data)
+    imageCategoryData.value.filter(item => item.type === type).map(ele => ele.data = res.data.data.slice(0, 2))
   }
 }
 
@@ -46,7 +46,7 @@ const getContainScroll = () => {
   }
   const scrollTop = containerRef.value.scrollTop;
   const containerHeight = containerRef.value.clientHeight;
-  const itemHeight = 182;
+  const itemHeight = 132;
   startIndex = Math.floor(scrollTop / itemHeight);
   endIndex = Math.ceil((scrollTop + containerHeight) / itemHeight);
   return {
@@ -84,12 +84,33 @@ onMounted(() => {
 .category-name {
   text-align: center;
 }
+.mt-5 {
+  margin-top: 5px;
+}
 .category-box {
-  height: 150px;
-  flex-wrap: nowrap
+  align-items: center;
+  flex-wrap: nowrap;
+  overflow: hidden;
+  height: 100px;
+}
+.box-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 2px;
+  
+  img {
+    max-width: 100%;
+  }
 }
 .category-container {
   overflow-y: scroll;
   height: 100vh;
+  align-items: center;
+}
+.category-bottom {
+  justify-content: center;
+  padding-top: 20px;
+  margin-bottom: 130px;
 }
 </style>
