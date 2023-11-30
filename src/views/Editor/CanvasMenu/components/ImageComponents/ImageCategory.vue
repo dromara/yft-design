@@ -9,8 +9,8 @@
           </el-button>
         </el-col>
       </el-row>
-      <el-row class="category-box mt-5" v-show="item.data">
-        <div :style="{width: (img.previewHeight <= 120 ? img.previewWidth / img.previewHeight * 120 : img.previewWidth) + 'px'}" v-for="img in item.data" class="box-image">
+      <el-row class="category-box mt-5" v-loading="item.data.length === 0">
+        <div :style="{width: (img.previewHeight <= 150 ? img.previewWidth / img.previewHeight * 150 : img.previewWidth) + 'px'}" v-for="img in item.data" class="box-image">
           <img :src="img.previewURL" :alt="img.tags">
         </div>
       </el-row>
@@ -95,13 +95,19 @@ onMounted(() => {
 }
 .box-image {
   display: flex;
-  justify-content: center;
   align-items: center;
   padding: 0 2px;
-  
+  &:first-child {
+    justify-content: flex-start;
+  }
+  &:last-child {
+    justify-content: flex-end;
+  }
   img {
     max-width: 100%;
+    cursor: pointer;
   }
+  
 }
 .category-container {
   overflow-y: scroll;
