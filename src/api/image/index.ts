@@ -10,10 +10,10 @@ export function getImagePages(params?: QueryPgaes): AxiosPromise<ImagePageResult
   });
 }
 
-export function getImageCategory(params: QueryCategory): AxiosPromise<ImageCategoryResult> {
+export function getImageCategory(params?: QueryCategory): AxiosPromise<ImageCategoryResult> {
   return request({
     url: 'api/image/category',
     method: 'get',
-    params,
+    params
   });
 }

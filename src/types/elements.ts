@@ -1,4 +1,4 @@
-import { ImagePage } from "@/api/image/types"
+import { ImageHits } from "@/api/image/types"
 export const enum ElementNames {
   TEXTBOX = 'textbox',
   TEXT = 'text',
@@ -221,7 +221,9 @@ export const enum LayerCommand {
   BOTTOM = 'bottom',
 }
 
-export interface ImageCategory {
+export interface ImageCategoryData {
+  id: number
   type: string
-  data: ImagePage
+  name: string
+  data: ImageHits[]
 }

@@ -53,5 +53,5 @@ export interface ImagePageResult {
 export interface ImageCategoryResult {
   code: number
   msg: string
-  data: ImagePage
+  data: ImageHits[]
 }
