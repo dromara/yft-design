@@ -1,5 +1,5 @@
 export interface QueryPgaes {
-  q: string
+  t: string
   page: number
 }
 
@@ -47,7 +47,7 @@ export interface ImagePage {
 export interface ImagePageResult {
   code: number
   msg: string
-  data: ImagePage
+  data: ImageHit[]
 }
 
 export interface ImageCategoryResult {

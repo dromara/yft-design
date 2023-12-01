@@ -1,38 +1,42 @@
 <template>
-  <div class="category-container" ref="containerRef" @scroll="onContainerScroll">
-    <div v-for="item in imageCategoryData" v-show="categoryRef === 'all' || categoryRef === item.type">
-      <el-row class="category-tip mt-5" v-if="categoryRef === 'all'">
-        <el-col :span="5" class="category-name">
-          <el-tag>{{ item.name }}</el-tag>
-        </el-col>
-        <el-col :span="7" class="category-name">
-          <el-button text @click="showTotal(item.type)">全部<IconRight/></el-button>
+  <div>
+    <div class="category-container" ref="categoryRef" @scroll="onCategoryScroll" v-if="typeRef === 'all'">
+      <div v-for="item in imageCategoryData">
+        <el-row class="col-tip mt-5" >
+          <el-col :span="5" class="col-name">
+            <el-tag>{{ item.name }}</el-tag>
+          </el-col>
+          <el-col :span="7" class="col-name">
+            <el-button text @click="showTotal(item.type)">全部<IconRight/></el-button>
+          </el-col>
+        </el-row>
+        <el-row class="category-box mt-5" v-loading="item.category.length === 0">
+          <div class="box-image" :style="{width: (img.previewHeight <= 120 ? img.previewWidth / img.previewHeight * 120 : img.previewWidth) + 'px'}" v-for="img in item.category">
+            <img :src="img.previewURL" :alt="img.tags" @click="createImage(img)">
+          </div>
+        </el-row>
+      </div>
+    </div>
+    <div class="category-container" ref="totalRef" @scroll="onTotalScroll" v-else>
+      <el-row class="col-tip mt-5">
+        <el-col :span="7" class="col-name">
+          <el-button text @click="hideTotal()"><IconLeft/>{{ categoryData.name }}</el-button>
         </el-col>
       </el-row>
-      <el-row class="category-tip mt-5" v-else>
-        <el-col :span="7" class="category-name">
-          <el-button text @click="hideTotal()"><IconLeft/>{{ item.name }}</el-button>
-        </el-col>
-      </el-row>
-      <el-row class="category-box mt-5" v-loading="item.category.length === 0" v-if="categoryRef === 'all'">
-        <div :style="{width: (img.previewHeight <= 120 ? img.previewWidth / img.previewHeight * 120 : img.previewWidth) + 'px'}" v-for="img in item.category" class="box-image">
-          <img :src="img.previewURL" :alt="img.tags" @click="createImage(img)">
-        </div>
-      </el-row>
-      <el-row class="category-box mt-5" v-loading="item.total.length === 0" v-else>
-        <div :style="{width: (img.previewHeight <= 120 ? img.previewWidth / img.previewHeight * 120 : img.previewWidth) + 'px'}" v-for="img in item.total" class="box-image">
+      <el-row class="total-box mt-5" v-loading="categoryData.total.length === 0">
+        <div class="box-image" v-for="(img, index) in categoryData.total" :style="{justifyContent: index % 2 === 0 ? 'flex-start' : 'flex-end'}">
           <img :src="img.previewURL" :alt="img.tags" @click="createImage(img)">
         </div>
       </el-row>
     </div>
-    <el-row class="category-bottom">到底了~</el-row>
+    <el-row class="image-bottom">到底了~</el-row>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import { debounce, throttle } from 'lodash'
-import { getImageCategory } from '@/api/image'
+import { getImageCategory, getImagePages } from '@/api/image'
 import { ImageHit } from '@/api/image/types'
 import { useMainStore } from '@/store'
 import { storeToRefs } from 'pinia'
@@ -41,26 +45,36 @@ const mainStore = useMainStore()
 const { imageCategoryType, imageCategoryData } = storeToRefs(mainStore)
 const { createImageElement } = useHandleCreate()
 
-const containerRef = ref<HTMLDivElement>();
-const containerTop = ref(0)
-const categoryRef = ref('all')
-
-const getImageCategoryData = debounce( async (type: string) => {
-  const res = await getImageCategory({t: type})
+const categoryRef = ref<HTMLDivElement>();
+const totalRef = ref<HTMLDivElement>();
+const categoryTop = ref(0)
+const typeRef = ref('all')
+const categoryData = computed(() => {
+  return imageCategoryData.value.filter(ele => ele.type === typeRef.value)[0]
+})
+const getImageCategoryData = throttle( async (t: string) => {
+  const res = await getImageCategory({t})
   if (res && res.data.code === 200) {
-    imageCategoryData.value.filter(item => item.type === type).map(ele => ele.category = res.data.data.slice(0, 2))
+    imageCategoryData.value.filter(item => item.type === t).map(ele => ele.category = res.data.data.slice(0, 2))
   }
-}, 300, { trailing: true })
+}, 100, { leading: true, trailing: false  })
+
+const getImagePageData = throttle( async (t: string, page: 1) => {
+  const res = await getImagePages({t, page})
+  if (res && res.data.code === 200) {
+    imageCategoryData.value.filter(item => item.type === t).map(ele => ele.total = res.data.data)
+  }
+}, 100, { leading: true, trailing: false })
 
 const getContainScroll = () => {
   let startIndex = 0, endIndex = 2
-  if (!containerRef.value) 
+  if (!categoryRef.value) 
   return {
     startIndex,
     endIndex
   }
-  const scrollTop = containerRef.value.scrollTop;
-  const containerHeight = containerRef.value.clientHeight;
+  const scrollTop = categoryRef.value.scrollTop;
+  const containerHeight = categoryRef.value.clientHeight;
   const itemHeight = 132;
   startIndex = Math.floor(scrollTop / itemHeight);
   endIndex = Math.ceil((scrollTop + containerHeight) / itemHeight);
@@ -70,7 +84,7 @@ const getContainScroll = () => {
   }
 }
 
-const onContainerScroll = async () => {
+const onCategoryScroll = async () => {
   const { startIndex, endIndex } = getContainScroll()
   for (let i = startIndex; i < endIndex; i++) {
     const item = imageCategoryData.value[i]
@@ -85,18 +99,32 @@ const onContainerScroll = async () => {
   }
 }
 
-const showTotal = (type: string) => {
-  if (!containerRef.value) return
-  containerTop.value = containerRef.value.scrollTop
-  categoryRef.value = type
-  console.log('show-containerTop.value:', containerTop.value)
+const onTotalScroll = async () => {
+  const { startIndex, endIndex } = getContainScroll()
+  for (let i = startIndex; i < endIndex; i++) {
+    const item = imageCategoryData.value[i]
+    if (!item) return
+    if (!imageCategoryType.value.includes(item.type)) {
+      imageCategoryType.value.push(item.type)
+      await getImageCategoryData(item.type)
+    }
+    // if (item.category.length === 0) {
+    //   await getImageCategoryData(item.type)
+    // }
+  }
+}
+
+const showTotal = async (type: string) => {
+  if (!categoryRef.value) return
+  categoryTop.value = categoryRef.value.scrollTop
+  typeRef.value = type
+  await getImagePageData(type, 1)
 }
 
 const hideTotal = () => {
-  categoryRef.value = 'all'
-  if (!containerRef.value) return
-  console.log('hide-containerTop.value:', containerTop.value)
-  containerRef.value.scrollTo({top: containerTop.value, behavior: 'smooth'})
+  typeRef.value = 'all'
+  if (!categoryRef.value) return
+  categoryRef.value.scrollTo({top: categoryTop.value, behavior: 'smooth'})
 }
 
 const createImage = (item: ImageHit) => {
@@ -104,18 +132,18 @@ const createImage = (item: ImageHit) => {
 }
 
 onMounted(() => {
-  if (!containerRef.value) return
-  onContainerScroll()
+  if (!categoryRef.value) return
+  onCategoryScroll()
 })
 
 </script>
 
 <style lang="scss" scoped>
-.category-tip {
+.col-tip {
   justify-content: space-between;
   align-items: center;
 }
-.category-name {
+.col-name {
   text-align: center;
 }
 .mt-5 {
@@ -126,29 +154,42 @@ onMounted(() => {
   flex-wrap: nowrap;
   overflow: hidden;
   height: 100px;
+  .box-image {
+    display: flex;
+    align-items: center;
+    padding: 0 2px;
+    &:first-child {
+      justify-content: flex-start;
+    }
+    &:last-child {
+      justify-content: flex-end;
+    }
+    img {
+      max-width: 100%;
+      cursor: pointer;
+    }
+  }
 }
-.box-image {
-  display: flex;
-  align-items: center;
-  padding: 0 2px;
-  &:first-child {
-    justify-content: flex-start;
-  }
-  &:last-child {
-    justify-content: flex-end;
-  }
-  img {
-    max-width: 100%;
-    cursor: pointer;
-  }
-  
-}
+
 .category-container {
   overflow-y: scroll;
   height: 100vh;
   align-items: center;
 }
-.category-bottom {
+.total-box {
+  align-items: center;
+  height: 100px;
+  .box-image {
+    width: 50%;
+    height: 120px;
+    overflow: hidden;
+    display: flex;
+    img {
+      max-width: 100%;
+    }
+  }
+}
+.image-bottom {
   justify-content: center;
   padding-top: 20px;
   margin-bottom: 130px;

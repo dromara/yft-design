@@ -15,7 +15,7 @@
       </el-col>
     </el-row>
     <div>
-    <el-tabs v-model="activeMaterial" class="layout-tabs">
+    <el-tabs v-model="activeMaterial" class="layout-tabs material-tab">
       <el-tab-pane label="推荐素材" name="data">
         <LinePool @select="(line: LinePoolItem) => drawLine(line)"/>
         <PathPool @select="(path: PathPoolItem) => drawPath(path)"/>
@@ -112,8 +112,7 @@ const drawMaterial = async (files: File[]) => {
   justify-content: space-around;
   width: 100%;
 }
-
-.el-tabs .el-tabs__content {
+.material-tab .el-tabs__content {
   height: 100vh;
   overflow-y: scroll;
 }
