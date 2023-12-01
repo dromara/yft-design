@@ -27,9 +27,9 @@ export default () => {
     const { currentTemplate } = storeToRefs(templatesStore)
     const { clip, safe, diagonal, opacity, showClip, showSafe } = storeToRefs(fabricStore)
 
-    const workWidth = currentTemplate.value.width / currentTemplate.value.zoom
-    const workHeight = currentTemplate.value.height / currentTemplate.value.zoom
-
+    // const workWidth = currentTemplate.value.width / currentTemplate.value.zoom
+    // const workHeight = currentTemplate.value.height / currentTemplate.value.zoom
+    const workWidth = workSpaceDraw.width, workHeight = workSpaceDraw.height
     const Padding = 50000, PaddingHalf = Padding / 2
     const clipPX = clip.value * DefaultDPI / DefaultRatio
     const diagonalPX = diagonal.value * DefaultDPI / DefaultRatio
@@ -39,8 +39,8 @@ export default () => {
     const workSpaceClip = new Rect({
       left: left,
       top: top,
-      width: workWidth,
-      height: workHeight,
+      width: workWidth - 2 * clipPX,
+      height: workHeight - 2 * clipPX,
       fill: TransparentFill,
       stroke: WorkSpaceClipColor, // 边框颜色
       strokeWidth: 1, // 边框大小
