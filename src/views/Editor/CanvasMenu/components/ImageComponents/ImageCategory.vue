@@ -14,8 +14,13 @@
           <el-button text @click="hideTotal()"><IconLeft/>{{ item.name }}</el-button>
         </el-col>
       </el-row>
-      <el-row class="category-box mt-5" v-loading="item.data.length === 0">
-        <div :style="{width: (img.previewHeight <= 120 ? img.previewWidth / img.previewHeight * 120 : img.previewWidth) + 'px'}" v-for="img in item.data" class="box-image">
+      <el-row class="category-box mt-5" v-loading="item.category.length === 0" v-if="categoryRef === 'all'">
+        <div :style="{width: (img.previewHeight <= 120 ? img.previewWidth / img.previewHeight * 120 : img.previewWidth) + 'px'}" v-for="img in item.category" class="box-image">
+          <img :src="img.previewURL" :alt="img.tags" @click="createImage(img)">
+        </div>
+      </el-row>
+      <el-row class="category-box mt-5" v-loading="item.total.length === 0" v-else>
+        <div :style="{width: (img.previewHeight <= 120 ? img.previewWidth / img.previewHeight * 120 : img.previewWidth) + 'px'}" v-for="img in item.total" class="box-image">
           <img :src="img.previewURL" :alt="img.tags" @click="createImage(img)">
         </div>
       </el-row>
@@ -26,7 +31,7 @@
 
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
-import { ImageCategoryInfo } from '@/configs/images'
+import { debounce, throttle } from 'lodash'
 import { getImageCategory } from '@/api/image'
 import { ImageHit } from '@/api/image/types'
 import { useMainStore } from '@/store'
@@ -40,12 +45,12 @@ const containerRef = ref<HTMLDivElement>();
 const containerTop = ref(0)
 const categoryRef = ref('all')
 
-const getImageCategoryData = async (type: string) => {
+const getImageCategoryData = debounce( async (type: string) => {
   const res = await getImageCategory({t: type})
   if (res && res.data.code === 200) {
-    imageCategoryData.value.filter(item => item.type === type).map(ele => ele.data = res.data.data.slice(0, 2))
+    imageCategoryData.value.filter(item => item.type === type).map(ele => ele.category = res.data.data.slice(0, 2))
   }
-}
+}, 300, { trailing: true })
 
 const getContainScroll = () => {
   let startIndex = 0, endIndex = 2
@@ -68,10 +73,13 @@ const getContainScroll = () => {
 const onContainerScroll = async () => {
   const { startIndex, endIndex } = getContainScroll()
   for (let i = startIndex; i < endIndex; i++) {
-    const item = ImageCategoryInfo[i]
+    const item = imageCategoryData.value[i]
     if (!item) return
     if (!imageCategoryType.value.includes(item.type)) {
       imageCategoryType.value.push(item.type)
+      await getImageCategoryData(item.type)
+    }
+    if (item.category.length === 0) {
       await getImageCategoryData(item.type)
     }
   }

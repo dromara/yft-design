@@ -226,5 +226,6 @@ export interface ImageCategoryData {
   id: number
   type: string
   name: string
-  data: ImageHit[]
+  category: ImageHit[]
+  total: ImageHit[]
 }
