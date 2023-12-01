@@ -277,4 +277,6 @@ export const ImageCategoryInfo = [
   {id: 13, name: '旅游', type: 'travel', category: [], total: []},
   {id: 14, name: '建筑', type: 'buildings', category: [], total: []},
   {id: 15, name: '商业', type: 'business', category: [], total: []},
+  {id: 16, name: '时尚', type: 'fashion', category: [], total: []},
+  {id: 17, name: '人物', type: 'people', category: [], total: []},
 ]

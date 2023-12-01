@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="category-container" ref="categoryRef" @scroll="onCategoryScroll" v-if="typeRef === 'all'">
-      <div v-for="item in imageCategoryData">
+      <div v-for="item in illustrationCategoryData">
         <el-row class="col-tip mt-5" >
           <el-col :span="5" class="col-name">
             <el-tag>{{ item.name }}</el-tag>
@@ -36,13 +36,13 @@
 <script lang="ts" setup>
 import { onMounted, ref, computed } from 'vue'
 import { debounce, throttle } from 'lodash'
-import { getImageCategory, getImagePages } from '@/api/image'
+import { getIllustrationPages, getIllustrationCategory } from '@/api/image'
 import { ImageHit } from '@/api/image/types'
 import { useMainStore } from '@/store'
 import { storeToRefs } from 'pinia'
 import useHandleCreate from '@/hooks/useHandleCreate'
 const mainStore = useMainStore()
-const { imageCategoryType, imageCategoryData } = storeToRefs(mainStore)
+const { illustrationCategoryType, illustrationCategoryData } = storeToRefs(mainStore)
 const { createImageElement } = useHandleCreate()
 
 const categoryRef = ref<HTMLDivElement>();
@@ -50,19 +50,19 @@ const totalRef = ref<HTMLDivElement>();
 const categoryTop = ref(0)
 const typeRef = ref('all')
 const categoryData = computed(() => {
-  return imageCategoryData.value.filter(ele => ele.type === typeRef.value)[0]
+  return illustrationCategoryData.value.filter(ele => ele.type === typeRef.value)[0]
 })
 const getImageCategoryData = throttle( async (t: string) => {
-  const res = await getImageCategory({t})
+  const res = await getIllustrationCategory({t})
   if (res && res.data.code === 200) {
-    imageCategoryData.value.filter(item => item.type === t).map(ele => ele.category = res.data.data.slice(0, 2))
+    illustrationCategoryData.value.filter(item => item.type === t).map(ele => ele.category = res.data.data.slice(0, 2))
   }
 }, 100, { leading: true, trailing: false  })
 
 const getImagePageData = throttle( async (t: string, page: 1) => {
-  const res = await getImagePages({t, page})
+  const res = await getIllustrationPages({t, page})
   if (res && res.data.code === 200) {
-    imageCategoryData.value.filter(item => item.type === t).map(ele => ele.total = res.data.data)
+    illustrationCategoryData.value.filter(item => item.type === t).map(ele => ele.total = res.data.data)
   }
 }, 100, { leading: true, trailing: false })
 
@@ -87,25 +87,25 @@ const getContainScroll = () => {
 const onCategoryScroll = async () => {
   const { startIndex, endIndex } = getContainScroll()
   for (let i = startIndex; i < endIndex; i++) {
-    const item = imageCategoryData.value[i]
+    const item = illustrationCategoryData.value[i]
     if (!item) return
-    if (!imageCategoryType.value.includes(item.type)) {
-      imageCategoryType.value.push(item.type)
+    if (!illustrationCategoryType.value.includes(item.type)) {
+      illustrationCategoryType.value.push(item.type)
       await getImageCategoryData(item.type)
     }
-    if (item.category.length === 0) {
-      await getImageCategoryData(item.type)
-    }
+    // if (item.category.length === 0) {
+    //   await getImageCategoryData(item.type)
+    // }
   }
 }
 
 const onTotalScroll = async () => {
   const { startIndex, endIndex } = getContainScroll()
   for (let i = startIndex; i < endIndex; i++) {
-    const item = imageCategoryData.value[i]
+    const item = illustrationCategoryData.value[i]
     if (!item) return
-    if (!imageCategoryType.value.includes(item.type)) {
-      imageCategoryType.value.push(item.type)
+    if (!illustrationCategoryType.value.includes(item.type)) {
+      illustrationCategoryType.value.push(item.type)
       await getImageCategoryData(item.type)
     }
     // if (item.category.length === 0) {

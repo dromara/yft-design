@@ -16,12 +16,12 @@
     </el-row>
     <el-tabs v-model="activeImage" class="layout-tabs">
       <el-tab-pane label="推荐图片" name="data">
-        <ImageCategory/>
+        <IllustrationCategory/>
       </el-tab-pane>
       <el-tab-pane label="我的收藏" name="self">
-        
+        我的收藏
       </el-tab-pane>
-      <el-tab-pane label="我的购买" name="team">团队模板</el-tab-pane>
+      <el-tab-pane label="团队模板" name="team">团队收藏</el-tab-pane>
     </el-tabs>
     
   </div>
@@ -34,6 +34,7 @@ import { getImageDataURL } from '@/utils/image'
 
 import useHandleCreate from '@/hooks/useHandleCreate'
 import ImageCategory from './ImageComponents/ImageCategory.vue'
+import IllustrationCategory from './ImageComponents/IllustrationCategory.vue'
 const { createImageElement } = useHandleCreate()
 
 

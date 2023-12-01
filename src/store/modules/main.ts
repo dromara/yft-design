@@ -18,6 +18,8 @@ export interface MainState {
   rightState: RightStates
   imageCategoryType: string[]
   imageCategoryData: ImageCategoryData[]
+  illustrationCategoryType: string[]
+  illustrationCategoryData: ImageCategoryData[]
   activeElementIdList: string[]
   handleElementId: string
   sizeMode: number
@@ -48,6 +50,8 @@ export const useMainStore = defineStore('main', {
     rightState: RightStates.ELEMENT_WORKER,
     imageCategoryType: [],
     imageCategoryData: ImageCategoryInfo,
+    illustrationCategoryType: [],
+    illustrationCategoryData: ImageCategoryInfo,
     activeElementIdList: [], // 被选中的元素ID集合，包含 handleElementId
     handleElementId: '', // 正在操作的元素ID
     sizeMode: 0,  // 模板样式
