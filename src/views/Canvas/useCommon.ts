@@ -88,19 +88,19 @@ export default () => {
       [PaddingHalf, PaddingHalf - diagonalHalfPX, PaddingHalf, PaddingHalf - diagonalHalfPX / 2],
 
       // 左下水平
-      [PaddingHalf - diagonalHalfPX - clipPX, PaddingHalf + workHeight + clipPX, PaddingHalf - diagonalHalfPX / 2 - clipPX, PaddingHalf + workHeight + clipPX],
+      [PaddingHalf - diagonalHalfPX - clipPX, PaddingHalf + workHeight - clipPX, PaddingHalf - diagonalHalfPX / 2 - clipPX, PaddingHalf + workHeight - clipPX],
       // 左下垂直
-      [PaddingHalf, PaddingHalf + diagonalHalfPX + workHeight + 2 * clipPX, PaddingHalf, PaddingHalf + workHeight + diagonalHalfPX / 2 + 2 * clipPX],
+      [PaddingHalf, PaddingHalf + diagonalHalfPX + workHeight, PaddingHalf, PaddingHalf + workHeight + diagonalHalfPX / 2],
 
       // 右上水平
-      [PaddingHalf + workWidth + diagonalHalfPX + clipPX, PaddingHalf + clipPX, PaddingHalf + workWidth + diagonalHalfPX / 2 + clipPX, PaddingHalf + clipPX],
+      [PaddingHalf + workWidth + clipPX, PaddingHalf + clipPX, PaddingHalf + workWidth + diagonalHalfPX / 2 + clipPX, PaddingHalf + clipPX],
       // 右上垂直
       [PaddingHalf + workWidth, PaddingHalf - diagonalHalfPX, PaddingHalf + workWidth, PaddingHalf - diagonalHalfPX / 2],
 
       // 右下水平
       [PaddingHalf + workWidth + diagonalHalfPX + clipPX, PaddingHalf + workHeight + clipPX, PaddingHalf + workWidth + diagonalHalfPX / 2 + clipPX, PaddingHalf + workHeight + clipPX],
       // 右下垂直
-      [PaddingHalf + workWidth, PaddingHalf + diagonalHalfPX + workHeight + 2 * clipPX, PaddingHalf + workWidth, PaddingHalf + workHeight + diagonalHalfPX / 2 + 2 * clipPX]
+      [PaddingHalf + workWidth, PaddingHalf + diagonalHalfPX + workHeight, PaddingHalf + workWidth, PaddingHalf + workHeight + diagonalHalfPX / 2]
     ]
     const diagonalLines: Line[] = []
     diagonals.forEach(line => {
