@@ -1,4 +1,5 @@
-import { ImageHits } from "@/api/image/types"
+import { ImageHit } from "@/api/image/types"
+
 export const enum ElementNames {
   TEXTBOX = 'textbox',
   TEXT = 'text',
@@ -225,5 +226,5 @@ export interface ImageCategoryData {
   id: number
   type: string
   name: string
-  data: ImageHits[]
+  data: ImageHit[]
 }

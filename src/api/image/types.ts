@@ -13,7 +13,7 @@ export enum ImageType {
   vector,
 }
 
-export interface ImageHits {
+export interface ImageHit {
   id: number
   pageURL: string
   type: ImageType
@@ -41,7 +41,7 @@ export interface ImageHits {
 export interface ImagePage {
   total: number
   totalHits: number
-  hits: ImageHits[]
+  hits: ImageHit[]
 }
 
 export interface ImagePageResult {
@@ -53,5 +53,5 @@ export interface ImagePageResult {
 export interface ImageCategoryResult {
   code: number
   msg: string
-  data: ImageHits[]
+  data: ImageHit[]
 }
