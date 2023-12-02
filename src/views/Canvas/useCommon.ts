@@ -44,7 +44,7 @@ export default () => {
       fill: TransparentFill,
       stroke: WorkSpaceClipColor, // 边框颜色
       strokeWidth: 1, // 边框大小
-      visible: showClip.value,
+      visible: true,
       id: WorkSpaceClipType,
       ...WorkSpaceCommonOption
     })
@@ -95,12 +95,12 @@ export default () => {
       // 右上水平
       [PaddingHalf + workWidth + clipPX, PaddingHalf + clipPX, PaddingHalf + workWidth + diagonalHalfPX / 2 + clipPX, PaddingHalf + clipPX],
       // 右上垂直
-      [PaddingHalf + workWidth, PaddingHalf - diagonalHalfPX, PaddingHalf + workWidth, PaddingHalf - diagonalHalfPX / 2],
+      [PaddingHalf + workWidth - clipPX * 2, PaddingHalf - diagonalHalfPX, PaddingHalf + workWidth - clipPX * 2, PaddingHalf - diagonalHalfPX / 2],
 
       // 右下水平
-      [PaddingHalf + workWidth + diagonalHalfPX + clipPX, PaddingHalf + workHeight + clipPX, PaddingHalf + workWidth + diagonalHalfPX / 2 + clipPX, PaddingHalf + workHeight + clipPX],
+      [PaddingHalf + workWidth + clipPX, PaddingHalf + workHeight - clipPX, PaddingHalf + workWidth + diagonalHalfPX / 2 + clipPX, PaddingHalf + workHeight - clipPX],
       // 右下垂直
-      [PaddingHalf + workWidth, PaddingHalf + diagonalHalfPX + workHeight, PaddingHalf + workWidth, PaddingHalf + workHeight + diagonalHalfPX / 2]
+      [PaddingHalf + workWidth - clipPX * 2, PaddingHalf + diagonalHalfPX + workHeight, PaddingHalf + workWidth - clipPX * 2, PaddingHalf + workHeight + diagonalHalfPX / 2]
     ]
     const diagonalLines: Line[] = []
     diagonals.forEach(line => {
@@ -122,7 +122,7 @@ export default () => {
       id: WorkSpaceClipType,
       left: left - diagonalHalfPX - clipPX,
       top: top - diagonalHalfPX - clipPX,
-      visible: showClip.value,
+      visible: true,
       ...WorkSpaceCommonOption
     })
     canvas.add(workSpaceClip)
