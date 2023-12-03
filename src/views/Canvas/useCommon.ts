@@ -34,17 +34,17 @@ export default () => {
     const clipPX = clip.value * DefaultDPI / DefaultRatio
     const diagonalPX = diagonal.value * DefaultDPI / DefaultRatio
     const safePX = 2 * safe.value * DefaultDPI / DefaultRatio
-    const left = workSpaceDraw.left + clipPX, top = workSpaceDraw.top + clipPX
+    const left = workSpaceDraw.left, top = workSpaceDraw.top
 
     const workSpaceClip = new Rect({
-      left: left,
-      top: top,
+      left: left + clipPX,
+      top: top + clipPX,
       width: workWidth - 2 * clipPX,
       height: workHeight - 2 * clipPX,
       fill: TransparentFill,
       stroke: WorkSpaceClipColor, // 边框颜色
       strokeWidth: 1, // 边框大小
-      visible: true,
+      visible: showClip.value,
       id: WorkSpaceClipType,
       ...WorkSpaceCommonOption
     })
@@ -120,9 +120,9 @@ export default () => {
     const workLineGroup = new Group([...diagonalLines], {
       // @ts-ignore
       id: WorkSpaceClipType,
-      left: left - diagonalHalfPX - clipPX,
-      top: top - diagonalHalfPX - clipPX,
-      visible: true,
+      left: left - diagonalHalfPX,
+      top: top - diagonalHalfPX,
+      visible: showClip.value,
       ...WorkSpaceCommonOption
     })
     canvas.add(workSpaceClip)
