@@ -1,8 +1,13 @@
 <template>
   <div>
     <div class="left-top-tabs">
+      <div class="top-tab">
+        <IconAllApplication/>
+      </div>
+    </div>
+    <div class="left-center-tabs">
       <div 
-        class="top-tab" 
+        class="center-tab" 
         :class="{ 'left-active': tab.key === poolType }"
         v-for="tab in topTabs"
         :key="tab.key"
@@ -118,16 +123,24 @@ const hideHelp = () => {
 </script>
 
 <style lang="scss" scoped>
-.left-top {
-  display: flex;
-  height: 40px;
-}
-.left-top-tabs {
+
+.left-center-tabs {
   display: flex;
   flex-direction: column;
   width: 100%;
 }
 .top-tab {
+  width: 100%;
+  height: 40px;
+  text-align: center;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-bottom: 1px solid $borderColor;
+}
+.center-tab {
   width: 100%;
   height: 60px;
   text-align: center;
