@@ -4,8 +4,6 @@ import { croppingControlSet, flipXCropControls, flipXYCropControls, flipYCropCon
 import { Image, Point, Path, Object as FabricObject, config, util, classRegistry, TPointerEventInfo, TPointerEvent, ImageProps, TClassProperties, ImageSource } from 'fabric'
 
 
-
-
 export class CropImage extends Image {
   public isCropping?: false
   public cropKey?: ClipPathType

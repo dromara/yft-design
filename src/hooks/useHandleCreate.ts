@@ -5,13 +5,12 @@ import { RightStates, ElementNames } from '@/types/elements'
 import { nanoid } from 'nanoid'
 import { QRCodeElement, PolygonElement, QRCodeOption, CanvasElement } from '@/types/canvas'
 import { getImageSize } from '@/utils/image'
-import { classRegistry } from 'fabric'
 import JsBarcode from 'jsbarcode'
-import { Object as FabricObject, Textbox, Path } from "fabric"
+import { Object as FabricObject, Textbox, Path, classRegistry, Image } from "fabric"
+import { CropImage } from '@/extension/object/CropImage'
 import useCenter from '@/views/Canvas/useCenter'
 import useCanvas from '@/views/Canvas/useCanvas'
 import useCanvasZindex from './useCanvasZindex'
-
 
 
 export default () => {
@@ -163,7 +162,7 @@ export default () => {
       else if (height > currentTemplateHeight.value) {
         imageScale = currentTemplateHeight.value / height
       }
-      const CropImage = classRegistry.getClass('CropImage')
+      // const CropImage = classRegistry.getClass('CropImage') as CropImage
       const imageElement = await CropImage.fromURL(url, {
         id: nanoid(10),
         angle: 0,
@@ -178,7 +177,8 @@ export default () => {
         originY: 'center',
         borderColor: '#ff8d23',
         type: 'CropImage',
-        name: ElementNames.IMAGE
+        name: ElementNames.IMAGE,
+        crossOrigin: 'anonymous'
       })
       renderCanvas(imageElement)
     })
