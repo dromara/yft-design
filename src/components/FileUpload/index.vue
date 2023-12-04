@@ -1,6 +1,6 @@
 <template>
   <el-dialog v-model="dialogVisible" title="导入文件" width="35%" class="upload-dialog" :before-close="closeUpload">
-    <el-upload class="upload-demo" drag action="http" :http-request="uploadHandle" :limit="1" accept=".pdf, .psd, .cdr, .svg, .jpg, .jpeg, .png">
+    <el-upload class="upload-demo" ref="uploadRef" :on-exceed="handleExceed" drag action="http" :http-request="uploadHandle" :limit="1" :accept="fileAccept">
       <el-icon :size="50">
         <UploadFilled />
       </el-icon>
@@ -19,10 +19,12 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue'
 import { UploadFilled } from '@element-plus/icons-vue'
+import { ElMessage, genFileId, UploadInstance, UploadProps, UploadRawFile } from "element-plus"
 import { storeToRefs } from 'pinia'
 import { uploadFile } from '@/api/file'
 const dialogVisible = ref(false)
-
+const fileAccept = ref('.pdf, .psd, .cdr, .svg, .jpg, .jpeg, .png')
+const uploadRef = ref<UploadInstance>()
 const props = defineProps({
   visible: {
     type: Boolean,
@@ -43,7 +45,17 @@ const closeUpload = () => {
 }
 
 const uploadHandle = async (option: any) => {
-  await uploadFile(option.file, 'pdf')
+  const filename = option.file.name
+  const fileSuffix = filename.split('.').pop()
+  if (!fileAccept.value.split(',').includes(`.${fileSuffix}`)) return
+  await uploadFile(option.file, fileSuffix)
+}
+
+const handleExceed: UploadProps['onExceed'] = (files: File[]) => {
+  uploadRef.value!.clearFiles()
+  const file = files[0] as UploadRawFile
+  file.uid = genFileId()
+  uploadRef.value!.handleStart(file)
 }
 
 </script>
@@ -57,5 +69,12 @@ const uploadHandle = async (option: any) => {
 }
 .upload-dialog .el-upload__tip {
   text-align: left;
+}
+.upload-dialog .el-upload-list__item-name {
+  padding: 0;
+}
+.upload-dialog .el-upload-list__item-info {
+  width: 100%;
+  margin-left: 0;
 }
 </style>
