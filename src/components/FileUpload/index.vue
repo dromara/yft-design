@@ -23,7 +23,7 @@ import { ElMessage, genFileId, UploadInstance, UploadProps, UploadRawFile } from
 import { storeToRefs } from 'pinia'
 import { uploadFile } from '@/api/file'
 const dialogVisible = ref(false)
-const fileAccept = ref('.pdf, .psd, .cdr, .svg, .jpg, .jpeg, .png')
+const fileAccept = ref('.pdf,.psd,.cdr,.svg,.jpg,.jpeg,.png')
 const uploadRef = ref<UploadInstance>()
 const props = defineProps({
   visible: {
