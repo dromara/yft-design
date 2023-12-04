@@ -19,54 +19,25 @@
         </div>
       </div>
       <div class="bottom-tabs">
-        <el-affix position="bottom" :offset="110" style="width: calc(100%); height: 0;">
-          <div 
-            class="bottom-tab" 
-            :class="{ 'left-active': 'layer' === poolType }"
-            @click="setPoolType('layer')"
-            >
-            <div><SvgIcon icon-class="layer" className="svg-size"/></div>
-            <div class="left-name">图层</div>
-          </div>
-        </el-affix>
-        <el-affix position="bottom" :offset="60" style="width: calc(100%); height: 0;">
-          <div 
-            class="bottom-tab" 
-            :class="{ 'left-active': 'help' === poolType }"
-            ref="helpRef"
-            @click="setPoolType('help')"
-            >
-            <div><SvgIcon icon-class="help" className="svg-size"/></div>
-            <div class="left-name">帮助</div>
-          </div>
-        </el-affix>
-
-        <el-popover placement="right" trigger="click" :popper-style="{padding: 0}" @before-enter="setHelp(true)" @hide="setHelp(false)" ref="helpPopoverRef" :virtual-ref="helpRef" virtual-triggering>
-          <el-row class="help-pop-row">
-            <IconGuideBoard class="help-pop-icon"/>
-            <span class="help-pop-text">新手入门</span>
-          </el-row>
-          <el-row class="help-pop-row">
-            <IconVideoTwo class="help-pop-icon"/>
-            <span class="help-pop-text">使用教程</span>
-          </el-row>
-          <el-row class="help-pop-row" @click="hasHotkey = true">
-            <IconKeyboardOne class="help-pop-icon"/>
-            <span class="help-pop-text">快捷键</span>
-          </el-row>
-          <el-row class="help-pop-row">
-            <IconEdit class="help-pop-icon"/>
-            <span class="help-pop-text">反馈建议</span>
-          </el-row>
-          <el-row class="help-pop-row">
-            <IconHeadsetOne class="help-pop-icon"/>
-            <span class="help-pop-text">在线客服</span>
-          </el-row>
-        </el-popover>
-
-        <el-drawer v-model="hasHotkey" :with-header="false" size="320">
-          <HotkeyDoc/>
-        </el-drawer>
+        <div 
+          class="bottom-tab" 
+          :class="{ 'left-active': 'layer' === poolType }"
+          @click="setPoolType('layer')"
+          >
+          <div><SvgIcon icon-class="layer" className="svg-size"/></div>
+          <div class="left-name">图层</div>
+        </div>
+        <div 
+          class="bottom-tab" 
+          :class="{ 'left-active': 'help' === poolType }"
+          ref="helpRef"
+          @click="setPoolType('help')"
+          >
+          <div><SvgIcon icon-class="help" className="svg-size"/></div>
+          <div class="left-name">帮助</div>
+        </div>
+        <HelpPopover :help-ref="helpRef" :help-popover-ref="helpPopoverRef"/>
+        <HotkeyDrawer :has-hotkey="hasHotkey"/>
       </div>
     </div>
   </div>
@@ -77,13 +48,13 @@ import { useMainStore } from '@/store'
 import { PoolType } from '@/types/common'
 import { storeToRefs } from 'pinia'
 import { ref } from 'vue'
-import HotkeyDoc from './components/HotkeyDoc.vue'
+import HotkeyDrawer from './components/HotkeyDrawer.vue'
+import HelpPopover from './components/HelpPopover.vue'
 
 const mainStore = useMainStore()
 
 const { poolType, poolShow } = storeToRefs(mainStore)
 
-const hasHelp = ref(false)
 const helpRef = ref()
 const helpPopoverRef = ref()
 const hasHotkey = ref(false)
@@ -112,10 +83,6 @@ const setPoolType = (tab: PoolType) => {
     poolShow.value = tab !== 'editor' && tab !== 'help' ? true : false
   }
   mainStore.setPoolType(tab)
-}
-
-const setHelp = (val: boolean) => {
-  hasHelp.value = val
 }
 </script>
 
@@ -148,7 +115,7 @@ const setHelp = (val: boolean) => {
 }
 .center-tab {
   width: 100%;
-  height: 60px;
+  height: 50px;
   text-align: center;
   font-size: 12px;
   cursor: pointer;
@@ -219,9 +186,13 @@ const setHelp = (val: boolean) => {
   border-bottom: 1px solid $borderColor;
   border-right: 1px solid $borderColor;
 }
+.bottom-tabs {
+  position: absolute;
+  bottom: 0;
+  width: 49px;
+}
 .bottom-tab {
   height: 50px;
-  padding-bottom: 10px;
   display: flex;
   flex-direction: column;
   justify-content: center;
