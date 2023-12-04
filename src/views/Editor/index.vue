@@ -45,9 +45,6 @@ import CanvasDom from './CanvasDom/index.vue'
   z-index: 10;
   background: #fff;
   border-right: solid 1px $borderColor;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
 }
 .layout-content-thumb {
   width: 160px;

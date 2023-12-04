@@ -3,8 +3,8 @@
     <div class="menu-content" :class="{ 'menu-close': poolShow !== true }">
       <component :is="currentComponent" class="menu-pool"></component>
       <div class="layout-toggle" @click="leftToggle" v-show="poolType !== 'editor'">
-        <IconLeft v-if="poolShow"/>
-        <IconRight v-else/>
+        <IconLeft  class="toggle-icon" v-if="poolShow"/>
+        <IconRight class="toggle-icon" v-else/>
       </div>
     </div>
   </div>
@@ -73,7 +73,7 @@ const leftToggle = () => {
   // z-index: 1;
 }
 .layout-toggle {
-  background: #fff;
+  background: $themeColor;
   cursor: pointer;
   height: 88px;
   position: absolute;
@@ -90,5 +90,8 @@ const leftToggle = () => {
   border-top: 1px solid $borderColor;
   border-bottom: 1px solid $borderColor;
   border-right: 1px solid $borderColor;
+}
+.toggle-icon {
+  color: #fff;
 }
 </style>

@@ -2,70 +2,72 @@
   <div>
     <div class="left-top-tabs">
       <div class="top-tab">
-        <IconAllApplication/>
-      </div>
-    </div>
-    <div class="left-center-tabs">
-      <div 
-        class="center-tab" 
-        :class="{ 'left-active': tab.key === poolType }"
-        v-for="tab in topTabs"
-        :key="tab.key"
-        @click="setPoolType(tab.key)"
-        >
-        <div><SvgIcon :icon-class="tab.icon" className="svg-size"/></div>
-        <div class="left-name">{{tab.label}}</div>
+        <IconAllApplication class="handler-item"/>
       </div>
     </div>
     <div class="left-bottom-tabs">
-      <el-affix position="bottom" :offset="110" style="width: calc(100%); height: 0;">
+      <div class="center-tabs">
         <div 
-          class="bottom-tab" 
-          :class="{ 'left-active': 'layer' === poolType }"
-          @click="setPoolType('layer')"
+          class="center-tab" 
+          :class="{ 'left-active': tab.key === poolType }"
+          v-for="tab in topTabs"
+          :key="tab.key"
+          @click="setPoolType(tab.key)"
           >
-          <div><SvgIcon icon-class="layer" className="svg-size"/></div>
-          <div class="left-name">图层</div>
+          <div><SvgIcon :icon-class="tab.icon" className="svg-size"/></div>
+          <div class="left-name">{{tab.label}}</div>
         </div>
-      </el-affix>
-      <el-affix position="bottom" :offset="60" style="width: calc(100%); height: 0;">
-        <div 
-          class="bottom-tab" 
-          :class="{ 'left-active': 'help' === poolType }"
-          ref="helpRef"
-          @click="setPoolType('help')"
-          >
-          <div><SvgIcon icon-class="help" className="svg-size"/></div>
-          <div class="left-name">帮助</div>
-        </div>
-      </el-affix>
+      </div>
+      <div class="bottom-tabs">
+        <el-affix position="bottom" :offset="110" style="width: calc(100%); height: 0;">
+          <div 
+            class="bottom-tab" 
+            :class="{ 'left-active': 'layer' === poolType }"
+            @click="setPoolType('layer')"
+            >
+            <div><SvgIcon icon-class="layer" className="svg-size"/></div>
+            <div class="left-name">图层</div>
+          </div>
+        </el-affix>
+        <el-affix position="bottom" :offset="60" style="width: calc(100%); height: 0;">
+          <div 
+            class="bottom-tab" 
+            :class="{ 'left-active': 'help' === poolType }"
+            ref="helpRef"
+            @click="setPoolType('help')"
+            >
+            <div><SvgIcon icon-class="help" className="svg-size"/></div>
+            <div class="left-name">帮助</div>
+          </div>
+        </el-affix>
 
-      <el-popover placement="right" trigger="click" :popper-style="{padding: 0}" @before-enter="showHelp" @hide="hideHelp" ref="helpPopoverRef" :virtual-ref="helpRef" virtual-triggering>
-        <el-row class="help-pop-row">
-          <IconGuideBoard class="help-pop-icon"/>
-          <span class="help-pop-text">新手入门</span>
-        </el-row>
-        <el-row class="help-pop-row">
-          <IconVideoTwo class="help-pop-icon"/>
-          <span class="help-pop-text">使用教程</span>
-        </el-row>
-        <el-row class="help-pop-row" @click="hasHotkey = true">
-          <IconKeyboardOne class="help-pop-icon"/>
-          <span class="help-pop-text">快捷键</span>
-        </el-row>
-        <el-row class="help-pop-row">
-          <IconEdit class="help-pop-icon"/>
-          <span class="help-pop-text">反馈建议</span>
-        </el-row>
-        <el-row class="help-pop-row">
-          <IconHeadsetOne class="help-pop-icon"/>
-          <span class="help-pop-text">在线客服</span>
-        </el-row>
-      </el-popover>
+        <el-popover placement="right" trigger="click" :popper-style="{padding: 0}" @before-enter="setHelp(true)" @hide="setHelp(false)" ref="helpPopoverRef" :virtual-ref="helpRef" virtual-triggering>
+          <el-row class="help-pop-row">
+            <IconGuideBoard class="help-pop-icon"/>
+            <span class="help-pop-text">新手入门</span>
+          </el-row>
+          <el-row class="help-pop-row">
+            <IconVideoTwo class="help-pop-icon"/>
+            <span class="help-pop-text">使用教程</span>
+          </el-row>
+          <el-row class="help-pop-row" @click="hasHotkey = true">
+            <IconKeyboardOne class="help-pop-icon"/>
+            <span class="help-pop-text">快捷键</span>
+          </el-row>
+          <el-row class="help-pop-row">
+            <IconEdit class="help-pop-icon"/>
+            <span class="help-pop-text">反馈建议</span>
+          </el-row>
+          <el-row class="help-pop-row">
+            <IconHeadsetOne class="help-pop-icon"/>
+            <span class="help-pop-text">在线客服</span>
+          </el-row>
+        </el-popover>
 
-      <el-drawer v-model="hasHotkey" :with-header="false" size="320">
-        <HotkeyDoc/>
-      </el-drawer>
+        <el-drawer v-model="hasHotkey" :with-header="false" size="320">
+          <HotkeyDoc/>
+        </el-drawer>
+      </div>
     </div>
   </div>
 </template>
@@ -112,33 +114,37 @@ const setPoolType = (tab: PoolType) => {
   mainStore.setPoolType(tab)
 }
 
-const showHelp = () => {
-  hasHelp.value = true
+const setHelp = (val: boolean) => {
+  hasHelp.value = val
 }
-
-const hideHelp = () => {
-  hasHelp.value = false
-}
-
 </script>
 
 <style lang="scss" scoped>
 
-.left-center-tabs {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-}
 .top-tab {
   width: 100%;
   height: 40px;
   text-align: center;
-  font-size: 12px;
+  font-size: 20px;
   cursor: pointer;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   border-bottom: 1px solid $borderColor;
+  .handler-item {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 2px;
+    border-radius: $borderRadius;
+
+    &:not(.group-btn):hover {
+      background-color: #f1f1f1;
+    }
+  }
 }
 .center-tab {
   width: 100%;
@@ -195,7 +201,7 @@ const hideHelp = () => {
   // z-index: 1;
 }
 .layout-toggle {
-  background: #fff;
+  background: $themeColor;
   cursor: pointer;
   height: 88px;
   position: absolute;
