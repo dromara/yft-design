@@ -155,7 +155,10 @@ import {
   ExcludeSelection,
   SubtractSelection,
   SubtractSelectionOne,
-  AllApplication
+  AllApplication,
+  Home,
+  Newlybuild,
+  DividingLine
 } from '@icon-park/vue-next'
 
 export const icons = {
@@ -312,7 +315,10 @@ export const icons = {
   IconExcludeSelection: ExcludeSelection,
   IconSubtractSelection: SubtractSelection,
   IconSubtractSelectionOne: SubtractSelectionOne,
-  IconAllApplication: AllApplication
+  IconAllApplication: AllApplication,
+  IconHome: Home,
+  IconNewlybuild: Newlybuild,
+  IconDividingLine: DividingLine
 }
 
 export default {

@@ -2,7 +2,7 @@
   <div>
     <div class="menu-content" :class="{ 'menu-close': poolShow !== true }">
       <component :is="currentComponent" class="menu-pool"></component>
-      <div class="layout-toggle" @click="leftToggle" v-show="poolType !== 'editor'">
+      <div class="layout-toggle" @click="leftToggle" v-show="currentComponent">
         <IconLeft  class="toggle-icon" v-if="poolShow"/>
         <IconRight class="toggle-icon" v-else/>
       </div>
@@ -23,24 +23,30 @@ import LayerPool from './components/LayerPool.vue'
 import CodePool from './components/CodePool.vue'
 
 const mainStore = useMainStore()
+const { lastHelp, lastEdit, poolType, poolShow } = storeToRefs(mainStore)
 
-const { poolType, poolShow } = storeToRefs(mainStore)
-
+const leftMap = {
+  'editor': null,
+  'template': TemplatePool,
+  'material': MaterialPool,
+  'text': TextboxPool,
+  'image': ImagePool,
+  'illustration': ImagePool,
+  'code': CodePool,
+  'toolkit': ToolkitPool,
+  'layer': LayerPool,
+  'help': null,
+}
 const currentComponent = computed(() => {
-  const leftMap = {
-    'template': TemplatePool,
-    'material': MaterialPool,
-    'text': TextboxPool,
-    'image': ImagePool,
-    'code': CodePool,
-    'toolkit': ToolkitPool,
-    'layer': LayerPool,
-  }
+  if (poolType.value === 'help') return leftMap[lastHelp.value]
+  if (poolType.value === 'editor') return leftMap[lastEdit.value]
   return leftMap[poolType.value] || null
 })
 
+
+
 const leftToggle = () => {
-  if (poolType.value === 'editor' && !poolShow.value) return
+  // if (poolType.value === 'editor' && !poolShow.value) return
   poolShow.value = !poolShow.value
 }
 
@@ -69,6 +75,8 @@ const leftToggle = () => {
 .menu-close {
   cursor: default;
   left: -251px;
+  top: 50%;
+  transform: translateY(-50%);
   position: absolute;;
   // z-index: 1;
 }

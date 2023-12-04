@@ -32,6 +32,8 @@ export interface MainState {
   systemFonts: SystemFont[]
   disableHotkeys: boolean
   exportType: ExportTypes
+  lastHelp: PoolType
+  lastEdit: PoolType
   poolType: PoolType
   poolShow: boolean
   rulerShow: boolean
@@ -64,6 +66,8 @@ export const useMainStore = defineStore('main', {
     systemFonts: SYS_FONTS, // 系统字体
     disableHotkeys: false, // 禁用快捷键
     exportType: 'image', // 导出面板
+    lastEdit: 'editor', // 左边栏
+    lastHelp: 'editor', // 左边栏
     poolType: 'editor', // 左边栏
     poolShow: false, // 显示左边栏
     rulerShow: true,
@@ -126,6 +130,8 @@ export const useMainStore = defineStore('main', {
     //   this.canvasDragged = isDragged
     // },
     setPoolType(poolType: PoolType) {
+      if (poolType === 'help') this.lastHelp = this.poolType
+      if (poolType === 'editor') this.lastEdit = this.poolType
       this.poolType = poolType
     },
 

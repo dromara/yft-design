@@ -2,7 +2,8 @@
   <div>
     <div class="left-top-tabs">
       <div class="top-tab">
-        <IconAllApplication class="handler-item"/>
+        <IconAllApplication class="handler-item" ref="menuRef"/>
+        <HomePopover :menu-ref="menuRef" :menu-popover-ref="menuPopoverRef"/>
       </div>
     </div>
     <div class="left-bottom-tabs">
@@ -50,13 +51,16 @@ import { storeToRefs } from 'pinia'
 import { ref } from 'vue'
 import HotkeyDrawer from './components/HotkeyDrawer.vue'
 import HelpPopover from './components/HelpPopover.vue'
+import HomePopover from './components/HomePopover.vue'
 
 const mainStore = useMainStore()
 
 const { poolType, poolShow } = storeToRefs(mainStore)
 
 const helpRef = ref()
+const menuRef = ref()
 const helpPopoverRef = ref()
+const menuPopoverRef = ref()
 const hasHotkey = ref(false)
 
 interface TabItem {
@@ -164,7 +168,8 @@ const setPoolType = (tab: PoolType) => {
 .left-close {
   cursor: default;
   left: -320px;
-  position: relative;;
+  position: relative;
+  top: 50%;
   // z-index: 1;
 }
 .layout-toggle {

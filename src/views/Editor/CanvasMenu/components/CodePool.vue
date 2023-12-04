@@ -51,7 +51,6 @@ import {
   rendererDSJ,
   rendererRandRect,
   rendererImage,
-  rendererResImage,
   rendererCircle,
   rendererLine,
   rendererLine2,
