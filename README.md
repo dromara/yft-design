@@ -1,5 +1,5 @@
 # yft-design
-一幅图设计，使用 Vue3 + TypeScript + Fabric.js + Element-Plus，支持 文字、图片、形状、线条、二维码 、条形码几种最常用的元素类型，每一种元素都拥有高度可编辑能力，缩略图显示，模板，支持导出json，svg, image文件。  
+基于fabric.js的图片设计，使用 Vue3 + TypeScript + Fabric.js + Element-Plus，支持 文字、图片、形状、线条、二维码 、条形码几种最常用的元素类型，每一种元素都拥有高度可编辑能力，缩略图显示，模板，支持导出json，svg, image文件。  
 <b>快速体验：[https://yft.design](https://yft.design)</b>  
 <b>体验Demo：[https://dromara.org/yft-design](https://dromara.org/yft-design)</b>
 

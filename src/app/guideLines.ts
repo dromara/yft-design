@@ -2,7 +2,6 @@
 import { StaticCanvas, Canvas, ActiveSelection, Object as FabricObject, Group, Point, util } from 'fabric'
 import { Disposable } from '@/utils/lifecycle'
 import { check } from '@/utils/check'
-import { CanvasElement } from '@/types/canvas'
 
 type VerticalLineCoords = {
   x: number

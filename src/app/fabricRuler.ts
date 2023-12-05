@@ -3,10 +3,12 @@ import { Keybinding } from './keybinding'
 import { Disposable } from '@/utils/lifecycle'
 import { computed, watchEffect } from 'vue'
 // import { useThemes } from '@/hooks/useThemes'
+import { DesignUnitMode } from '@/configs/background'
 import { PiBy180 } from '@/utils/common'
 import { TAxis, Canvas } from 'fabric'
 import { useMainStore } from '@/store'
 import { storeToRefs } from 'pinia'
+import { px2mm } from '@/utils/image'
 
 type Rect = { left: number; top: number; width: number; height: number }
 
@@ -51,6 +53,11 @@ export interface RulerOptions {
    * 高亮颜色
    */
   highlightColor?: string
+  /**
+   * 高亮颜色
+   */
+  unitName: string
+
 }
 
 export type HighlightRect = {skip?: TAxis} & Rect
@@ -83,32 +90,36 @@ export class FabricRuler extends Disposable {
 
     // const { isDark } = useThemes()
     const isDark = false
-    const { rulerShow } = storeToRefs(useMainStore())
-    // watchEffect(() => {
-      
-    this.options = {
-      ...this.options,
-      ...(isDark 
-        ? {
-            backgroundColor: '#242424',
-            borderColor: '#555',
-            highlightColor: '#165dff3b',
-            textColor: '#ddd',
-          }
-        : {
-            backgroundColor: '#fff',
-            borderColor: '#ccc',
-            highlightColor: '#165dff3b',
-            textColor: '#444',
-          }),
-    }
-    //   this.enabled = rulerShow.value
-    //   this.render({ ctx: this.canvas.contextContainer })
-    // })
-    computed(() => {
+    
+    const { rulerShow, unitMode } = storeToRefs(useMainStore())
+    watchEffect(() => {
+      const unitName = DesignUnitMode.filter(ele => ele.id === unitMode.value)[0].name
+      this.options = {
+        ...this.options,
+        ...(isDark 
+          ? {
+              backgroundColor: '#242424',
+              borderColor: '#555',
+              highlightColor: '#165dff3b',
+              textColor: '#ddd',
+              unitName: unitName,
+            }
+          : {
+              backgroundColor: '#fff',
+              borderColor: '#ccc',
+              highlightColor: '#165dff3b',
+              textColor: '#444',
+              unitName: unitName,
+            }),
+      }
       this.enabled = rulerShow.value
       this.render({ ctx: this.canvas.contextContainer })
     })
+    // computed(() => {
+    //   this.enabled = rulerShow.value
+    //   this.options.unit = unitName
+    //   this.render({ ctx: this.canvas.contextContainer })
+    // })
 
     this.canvasEvents = {
       'after:render': this.render.bind(this),
@@ -177,7 +188,7 @@ export class FabricRuler extends Disposable {
     })
 
     this.darwText(ctx, {
-      text: 'px',
+      text: this.options.unitName,
       left: ruleSize / 2,
       top: ruleSize / 2,
       align: 'center',
@@ -254,8 +265,10 @@ export class FabricRuler extends Disposable {
     // 标尺文字显示
     for (let pos = 0; pos + startOffset <= unitLength; pos += gap) {
       const position = (startOffset + pos) * zoom
-      const textValue = (startValue + pos).toString()
-
+      let textValue = (startValue + pos).toString()
+      if (this.options.unitName === 'mm') {
+        textValue = px2mm(startValue + pos).toFixed(0)
+      }
       const [left, top, angle] = isHorizontal ? [position + 6, padding, 0] : [padding, position - 6, -90]
 
       this.darwText(ctx, {
