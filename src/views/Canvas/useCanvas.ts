@@ -1,7 +1,8 @@
+import { watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { Canvas, Object as FabricObject, Textbox, Group, Point } from 'fabric'
+import { WorkSpaceThumbType } from "@/configs/canvas"
 import { useFabricStore } from '@/store/modules/fabric'
-import { watch } from 'vue'
 import { useElementBounding } from '@vueuse/core'
 import { FabricTool } from '@/app/fabricTool'
 import { GuideLines } from '@/app/guideLines'
@@ -72,7 +73,7 @@ const setCanvasTransform = () => {
   const { zoom, wrapperRef, scalePercentage } = storeToRefs(fabricStore)
   const { width, height } = useElementBounding(wrapperRef.value)
   canvas.setDimensions({width: width.value, height: height.value})
-  const objects = canvas.getObjects()
+  const objects = canvas.getObjects().filter(ele => !WorkSpaceThumbType.includes(ele.id))
   const boundingBox = Group.prototype.getObjectsBoundingBox(objects)
   if (!boundingBox) return
   zoom.value = Math.min(canvas.getWidth() / boundingBox.width, canvas.getHeight() / boundingBox.height,) * scalePercentage.value / 100

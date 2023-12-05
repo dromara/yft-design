@@ -125,9 +125,11 @@ export default () => {
       visible: showClip.value,
       ...WorkSpaceCommonOption
     })
+    
     canvas.add(workSpaceClip)
     canvas.add(workSpaceSafe)
     canvas.add(workLineGroup)
+    canvas.add(workSpaceMask)
     canvas.renderAll()
   }
 

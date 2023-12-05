@@ -292,7 +292,7 @@ watch(gridColorRecent, () => {
 
 const changeMaskOpacity = () => {
   const [ canvas ] = useCanvas()
-  const workMask = canvas.getObjects(WorkSpaceMaskType)[0]
+  const workMask = canvas.getObjects().filter(ele => ele.id === WorkSpaceMaskType)[0]
   if (!workMask) return
   workMask.set('opacity', opacity.value)
   canvas.renderAll()

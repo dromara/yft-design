@@ -1,18 +1,14 @@
 import useCanvas from "./useCanvas"
-import { WorkSpaceDrawType } from "@/configs/canvas"
+import { WorkSpaceDrawType, WorkSpaceThumbType } from "@/configs/canvas"
 import { CanvasElement } from "@/types/canvas"
 import { Group, Point } from "fabric"
 
 export default () => {
   const [ canvas ] = useCanvas()
   const workSpaceDraw = canvas.getObjects().filter(item => (item as CanvasElement).id === WorkSpaceDrawType)[0] as CanvasElement
-  const objects = canvas.getObjects()
-  // const centerPoint = workSpaceDraw.getCenterPoint()
-  // const originPoint = workSpaceDraw.getPointByOrigin('left', 'top')
+  const objects = canvas.getObjects().filter(ele => !WorkSpaceThumbType.includes(ele.id))
   const boundingBox = Group.prototype.getObjectsBoundingBox(objects)
-  // if (boundingBox) {
-  //   console.log(boundingBox.centerX, boundingBox.centerY, centerPoint)
-  // }
+
   let left = 0, top = 0
   let centerPoint = canvas.getCenterPoint()
   let width = canvas.getWidth(), height = canvas.getHeight()
