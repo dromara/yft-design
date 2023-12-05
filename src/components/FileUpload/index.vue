@@ -21,7 +21,9 @@ import { computed, ref, watch } from 'vue'
 import { UploadFilled } from '@element-plus/icons-vue'
 import { ElMessage, genFileId, UploadInstance, UploadProps, UploadRawFile } from "element-plus"
 import { storeToRefs } from 'pinia'
+import { loadSVGFromString } from 'fabric'
 import { uploadFile } from '@/api/file'
+import useCanvas from '@/views/Canvas/useCanvas'
 const dialogVisible = ref(false)
 const fileAccept = ref('.pdf,.psd,.cdr,.svg,.jpg,.jpeg,.png')
 const uploadRef = ref<UploadInstance>()
@@ -45,10 +47,20 @@ const closeUpload = () => {
 }
 
 const uploadHandle = async (option: any) => {
+  const [ canvas ] = useCanvas()
   const filename = option.file.name
   const fileSuffix = filename.split('.').pop()
   if (!fileAccept.value.split(',').includes(`.${fileSuffix}`)) return
-  await uploadFile(option.file, fileSuffix)
+  const res = await uploadFile(option.file, fileSuffix)
+  if (res && res.data.code === 200) {
+    const svg = res.data.svg
+    if (!svg) return
+    const content = await loadSVGFromString(svg[0].svg)
+    canvas.clear()
+    canvas.add(...content.objects)
+    canvas.renderAll()
+    emit('close')
+  }
 }
 
 const handleExceed: UploadProps['onExceed'] = (files: File[]) => {
