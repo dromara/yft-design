@@ -63,11 +63,11 @@ export default () => {
     })
 
     const maskPath = `M0 0 L${Padding} 0 L${Padding} ${Padding} L0 ${Padding} L0 0 Z 
-    M${PaddingHalf + left - clipPX} ${PaddingHalf + top - clipPX} 
-    L${PaddingHalf + left - clipPX} ${PaddingHalf + top + workHeight + clipPX} 
-    L${PaddingHalf + left + workWidth + clipPX} ${PaddingHalf + top + workHeight + clipPX} 
-    L${PaddingHalf + left + workWidth + clipPX} ${PaddingHalf + top - clipPX} 
-    L${PaddingHalf + left - clipPX} ${PaddingHalf + top - clipPX} Z`
+    M${PaddingHalf + left} ${PaddingHalf + top} 
+    L${PaddingHalf + left} ${PaddingHalf + top + workHeight} 
+    L${PaddingHalf + left + workWidth} ${PaddingHalf + top + workHeight} 
+    L${PaddingHalf + left + workWidth} ${PaddingHalf + top} 
+    L${PaddingHalf + left} ${PaddingHalf + top} Z`
 
     const workSpaceMask = new Path(maskPath, {
       left: -PaddingHalf,
