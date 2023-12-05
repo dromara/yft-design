@@ -15,6 +15,10 @@
 import { usePointerSwipe, useVModel, isDefined, useMagicKeys } from '@vueuse/core'
 import { useSlots, watch, ref, computed } from 'vue'
 import { toFixed } from '@/utils/common'
+import { useMainStore } from '@/store';
+import { storeToRefs } from 'pinia';
+import { mm2px, px2mm } from '@/utils/image';
+
 
 const props = withDefaults(
   defineProps<{

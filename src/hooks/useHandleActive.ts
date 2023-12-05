@@ -5,19 +5,29 @@ import { clampAngle, toFixed } from '@/utils/common'
 import { isEqual, isNumber } from 'lodash'
 import { check } from '@/utils/check'
 import { ref, watchEffect, computed } from 'vue'
+import { useMainStore } from '@/store'
+import { storeToRefs } from 'pinia'
+import { px2mm } from '@/utils/image'
 import type { WritableComputedRef } from 'vue'
 import NP from 'number-precision'
 import useCanvas from '@/views/Canvas/useCanvas'
 
-export default () => {
 
+
+export default () => {
+  const mainStore = useMainStore()
+  const { unitMode } = storeToRefs(mainStore)
+
+  const handleUnit = (val: number) => {
+    return unitMode.value === 0 ? px2mm(val) : val
+  }
   const handleActive = <K extends keyof ObjectRef, T = ObjectRef[K] | undefined>(key: K): WritableComputedRef<{
     modelValue: T
     onSwipe: (value: T) => void
     onChange: (value: T) => void
   }> => {
     const [ canvas ] = useCanvas()
-
+    
     const modelValue = ref()
 
     // input组件在修改后不回车确定,切换object时,会触发onChange,导致修改错object值
@@ -36,11 +46,11 @@ export default () => {
       let value
       switch (key) {
         case 'width':
-          value = activeObject.getWidth()
+          value = handleUnit(activeObject.getWidth())
           break
 
         case 'height':
-          value = activeObject.getHeight()
+          value = handleUnit(activeObject.getHeight())
           break
 
         case 'opacity':
@@ -52,19 +62,11 @@ export default () => {
           break
 
         case 'left':
-          if (activeObject.getParent(true)) {
-            value = activeObject.getLeftTop().x
-          } else {
-            value = activeObject.left
-          }
+          value = activeObject.getParent(true) ? handleUnit(activeObject.getLeftTop().x) : handleUnit(activeObject.left)
           break
 
         case 'top':
-          if (activeObject.getParent(true)) {
-            value = activeObject.getLeftTop().y
-          } else {
-            value = activeObject.top
-          }
+          value = activeObject.getParent(true) ? handleUnit(activeObject.getLeftTop().y) : handleUnit(activeObject.top)
           break
 
         case 'fontSize':

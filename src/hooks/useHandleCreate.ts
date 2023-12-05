@@ -3,11 +3,13 @@ import { useFabricStore, useTemplatesStore } from "@/store"
 import { useMainStore } from '@/store/modules/main'
 import { RightStates, ElementNames } from '@/types/elements'
 import { nanoid } from 'nanoid'
-import { QRCodeElement, PolygonElement, QRCodeOption, CanvasElement } from '@/types/canvas'
+import { QRCodeElement, QRCodeOption } from '@/types/canvas'
 import { getImageSize } from '@/utils/image'
 import JsBarcode from 'jsbarcode'
-import { Object as FabricObject, Textbox, Path, classRegistry, Image } from "fabric"
+import { Object as FabricObject, Textbox, Path, classRegistry } from "fabric"
 import { CropImage } from '@/extension/object/CropImage'
+import { QRCode } from '@/extension/object/QRCode'
+import { BarCode } from '@/extension/object/BarCode'
 import useCenter from '@/views/Canvas/useCenter'
 import useCanvas from '@/views/Canvas/useCanvas'
 import useCanvasZindex from './useCanvasZindex'
@@ -46,8 +48,8 @@ export default () => {
       charSpacing: 3,
       opacity: 1,
       lineHeight: 1.3,
-      originX: 'center',
-      originY: 'center',
+      originX: 'left',
+      originY: 'top',
       textAlign: 'justify-center',
       name: ElementNames.TEXTBOX,
       splitByGrapheme: textStyle === 'direction' ? true : false,
@@ -69,8 +71,8 @@ export default () => {
       hasControls: true,
       hasBorders: true,
       opacity: 1,
-      originX: 'center',
-      originY: 'center',
+      originX: 'left',
+      originY: 'top',
       fill: '#ff5e17',
       name: ElementNames.PATH,
     })
@@ -88,8 +90,8 @@ export default () => {
     //   stroke: 'green',
     //   scaleX: 1,
     //   scaleY: 1,
-    //   originX: 'center',
-    //   originY: 'center',
+    //   originX: 'left',
+    //   originY: 'top',
     //   transparentCorners: false,
     // }) as LineElement
     // canvas.add(lineElement)
@@ -114,8 +116,8 @@ export default () => {
       stroke: 'green',
       scaleX: 1,
       scaleY: 1,
-      originX: 'center',
-      originY: 'center',
+      originX: 'left',
+      originY: 'top',
       hasBorders: false,
       objectCaching: false,
       transparentCorners: false,
@@ -138,8 +140,8 @@ export default () => {
       stroke: 'red',
       scaleX: 1,
       scaleY: 1,
-      originX: 'center',
-      originY: 'center',
+      originX: 'left',
+      originY: 'top',
       objectCaching: false,
       hasBorders: false,
       transparentCorners: false,
@@ -173,8 +175,8 @@ export default () => {
         hasControls: true,
         hasBorders: true,
         opacity: 1,
-        originX: 'center',
-        originY: 'center',
+        originX: 'left',
+        originY: 'top',
         borderColor: '#ff8d23',
         type: 'CropImage',
         name: ElementNames.IMAGE,
@@ -185,10 +187,9 @@ export default () => {
   }
 
   const createQRCodeElement = async (url: string, codeOption: QRCodeOption, codeContent?: string) => {
-    const [ canvas ] = useCanvas()
     const { centerPoint } = useCenter()
-    const QRCode = classRegistry.getClass('QRCode')
-    const codeObject = await QRCode.fromURL(url, {crossOrigin: 'anonymous'}, {
+    // const QRCode = classRegistry.getClass('QRCode')
+    const codeObject = await QRCode.fromURL(url, {
       id: nanoid(10),
       name: ElementNames.QRCODE,
       angle: 0,
@@ -197,19 +198,20 @@ export default () => {
       hasControls: true,
       hasBorders: true,
       opacity: 1,
-      originX: 'center',
-      originY: 'center',
+      originX: 'left',
+      originY: 'top',
       borderColor: '#ff8d23',
       codeContent,
       codeOption,
+      crossOrigin: 'anonymous'
     }) as QRCodeElement
     renderCanvas(codeObject)
   }
 
   const createBarCodeElement = async (url: string, codeContent: string, codeOption: JsBarcode.BaseOptions) => {
     const { centerPoint } = useCenter()
-    const Barcode = classRegistry.getClass('BarCode')
-    const barcodeObject = await Barcode.fromURL(url,  {crossOrigin: 'anonymous'}, {
+    // const Barcode = classRegistry.getClass('BarCode')
+    const barcodeObject = await BarCode.fromURL(url, {
       id: nanoid(10),
       name: ElementNames.BARCODE,
       angle: 0,
@@ -218,11 +220,12 @@ export default () => {
       hasControls: true,
       hasBorders: true,
       opacity: 1,
-      originX: 'center',
-      originY: 'center',
+      originX: 'left',
+      originY: 'top',
       borderColor: '#ff8d23',
       codeContent,
       codeOption,
+      crossOrigin: 'anonymous'
     })
     renderCanvas(barcodeObject)
   }

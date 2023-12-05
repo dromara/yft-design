@@ -113,30 +113,15 @@
           </el-col>
         </el-tooltip>
       </el-row>
-      <!-- <el-tooltip placement="top" :hide-after="0" content="置顶">
-        <el-button @click="layerElement(LayerCommand.TOP)"><IconSendToBack/></el-button>
-      </el-tooltip>
-      <el-tooltip placement="top" :hide-after="0" content="置底">
-        <el-button @click="layerElement(LayerCommand.BOTTOM)"><IconBringToFrontOne/></el-button>
-      </el-tooltip>
-      <el-tooltip placement="top" :hide-after="0" content="下移">
-        <el-button @click="layerElement(LayerCommand.DOWN)"><IconSendBackward/></el-button>
-      </el-tooltip>
-      <el-tooltip placement="top" :hide-after="0" content="上移">
-        <el-button @click="layerElement(LayerCommand.UP)"><IconBringForward/></el-button>
-      </el-tooltip> -->
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, watchEffect, watch } from 'vue'
+import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
-import { ElementNames, AlignCommand, LayerCommand } from '@/types/elements'
+import { AlignCommand, LayerCommand } from '@/types/elements'
 import { useMainStore, useTemplatesStore } from '@/store'
-import { CanvasElement } from '@/types/canvas'
-import { getWidthHeight } from '@/app/fabricControls'
-import { Object as FabricObject } from 'fabric'
 import useCanvas from '@/views/Canvas/useCanvas'
 import useHandleTool from '@/hooks/useHandleTool'
 import useHandleActive from '@/hooks/useHandleActive'

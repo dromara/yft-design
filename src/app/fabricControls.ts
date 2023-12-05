@@ -2,8 +2,10 @@ import { noop } from '@vueuse/core'
 import { TControlSet } from '@/types/fabric'
 import { PolygonElement } from '@/types/canvas'
 import { PiBy180, toFixed } from '@/utils/common'
+import { px2mm } from '@/utils/image'
 import { Control, Object as FabricObject, controlsUtils, Point, TPointerEvent, Transform, TDegree, util,TransformActionHandler } from 'fabric'
-
+import { storeToRefs } from 'pinia'
+import { useMainStore } from '@/store'
 
 
 export const changeObjectHeight: TransformActionHandler = (eventData: TPointerEvent, transform: Transform, x: number, y: number) => {
@@ -217,11 +219,13 @@ export const defaultControls = (): TControlSet => ({
       ctx.textBaseline = 'middle'
 
       const { x, y } = getWidthHeight(fabricObject)
-      const text = `${x} × ${y}`
+      const { unitMode } = storeToRefs(useMainStore())
+      let text = unitMode.value === 0 ? `${toFixed(px2mm(x))} × ${toFixed(px2mm(y))}` : `${x} × ${y}`
       const width = ctx.measureText(text).width + 8
       const height = fontSize + 6
 
       // 背景
+      //@ts-ignore
       ctx.roundRect(-width / 2, -height / 2, width, height, 4)
       ctx.fillStyle = '#0066ff'
       ctx.fill()

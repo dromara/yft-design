@@ -117,8 +117,8 @@ const createTriangleElement = (mode: 'start' | 'end') => {
     left: triangleLeft, 
     height: 10, 
     width: 20, 
-    originX: 'center', 
-    originY: 'center', 
+    originX: 'left', 
+    originY: 'top', 
     selectable: false,
     name: 'triangle'
   })
@@ -146,8 +146,8 @@ const createCircleElement = (mode: 'start' | 'end') => {
     top: handleElement.value.top, 
     left: triangleLeft, 
     radius: 10,
-    originX: 'center', 
-    originY: 'center', 
+    originX: 'left', 
+    originY: 'top', 
     selectable: false,
     name: 'circle'
   })
