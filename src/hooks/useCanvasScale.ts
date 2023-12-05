@@ -5,6 +5,7 @@ import { useElementBounding } from '@vueuse/core'
 import { Group, Point } from 'fabric'
 import useCanvas from '@/views/Canvas/useCanvas'
 import useCenter from '@/views/Canvas/useCenter'
+import { WorkSpaceThumbType } from '@/configs/canvas'
 
 export default () => {
   const fabricStore = useFabricStore()
@@ -88,7 +89,7 @@ export default () => {
     // canvas.setDimensions({width: width.value, height: height.value})
     // canvas.renderAll()
     const { zoom } = storeToRefs(fabricStore)
-    const objects = canvas.getObjects()
+    const objects = canvas.getObjects().filter(ele => !WorkSpaceThumbType.includes(ele.id))
     const boundingBox = Group.prototype.getObjectsBoundingBox(objects)
     if (!boundingBox) return
     zoom.value = Math.min(canvas.getWidth() / boundingBox.width, canvas.getHeight() / boundingBox.height,) * scalePercentage.value / 100
