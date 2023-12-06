@@ -23,7 +23,11 @@ import { ElMessage, genFileId, UploadInstance, UploadProps, UploadRawFile } from
 import { storeToRefs } from 'pinia'
 import { loadSVGFromString } from 'fabric'
 import { uploadFile } from '@/api/file'
+import { useTemplatesStore } from '@/store'
 import useCanvas from '@/views/Canvas/useCanvas'
+
+const templatesStore = useTemplatesStore()
+
 const dialogVisible = ref(false)
 const fileAccept = ref('.pdf,.psd,.cdr,.svg,.jpg,.jpeg,.png')
 const uploadRef = ref<UploadInstance>()
@@ -47,18 +51,14 @@ const closeUpload = () => {
 }
 
 const uploadHandle = async (option: any) => {
-  const [ canvas ] = useCanvas()
   const filename = option.file.name
   const fileSuffix = filename.split('.').pop()
   if (!fileAccept.value.split(',').includes(`.${fileSuffix}`)) return
   const res = await uploadFile(option.file, fileSuffix)
   if (res && res.data.code === 200) {
-    const svg = res.data.svg
-    if (!svg) return
-    const content = await loadSVGFromString(svg[0].svg)
-    canvas.clear()
-    canvas.add(...content.objects)
-    canvas.renderAll()
+    const template = res.data.data
+    if (!template) return
+    templatesStore.addTemplate(template)
     emit('close')
   }
 }

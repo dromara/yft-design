@@ -119,13 +119,12 @@ export const useTemplatesStore = defineStore('Templates', {
       this.templateIndex = index
     },
 
-    addTemplate(template: Template | Template[]) {
-      const { addHistorySnapshot } = useHistorySnapshot()
+    async addTemplate(template: Template | Template[]) {
       const templates = Array.isArray(template) ? template : [template]
       const addIndex = this.templateIndex + 1
       this.templates.splice(addIndex, 0, ...templates)
       this.templateIndex = addIndex
-      addHistorySnapshot()
+      await this.renderTemplate()
     },
 
     updateTemplate(props: Partial<Template>) {

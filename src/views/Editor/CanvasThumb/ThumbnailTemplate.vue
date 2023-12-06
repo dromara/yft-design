@@ -66,9 +66,11 @@ const setThumbnailElement = async () => {
   })
   thumbCanvas.value.setZoom(thumbZoom)
   const thumbViewportTransform = thumbCanvas.value.viewportTransform
-  thumbViewportTransform[4] = -thumbWorkSpaceDraw.left * thumbZoom
-  thumbViewportTransform[5] = -thumbWorkSpaceDraw.top * thumbZoom
-  thumbCanvas.value.setViewportTransform(thumbViewportTransform)
+  if (thumbWorkSpaceDraw) {
+    thumbViewportTransform[4] = -thumbWorkSpaceDraw.left * thumbZoom
+    thumbViewportTransform[5] = -thumbWorkSpaceDraw.top * thumbZoom
+    thumbCanvas.value.setViewportTransform(thumbViewportTransform)
+  }
   thumbCanvas.value.renderAll()
 }
 </script>

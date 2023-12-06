@@ -28,7 +28,7 @@ const Keys = <T extends object>(obj: T): (keyof T)[] => {
   return Object.keys(obj) as (keyof T)[]
 }
 
-export class GuideLines extends Disposable {
+export class FabricGuide extends Disposable {
   private canvasEvents
 
   private aligningLineMargin = 10

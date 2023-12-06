@@ -5,7 +5,7 @@ import { WorkSpaceThumbType } from "@/configs/canvas"
 import { useFabricStore } from '@/store/modules/fabric'
 import { useElementBounding } from '@vueuse/core'
 import { FabricTool } from '@/app/fabricTool'
-import { GuideLines } from '@/app/guideLines'
+import { FabricGuide } from '@/app/fabricGuide'
 import { HoverBorders } from '@/app/hoverBorders'
 import { WheelScroll } from '@/app/wheelScroll'
 import { FabricRuler } from '@/app/fabricRuler'
@@ -93,7 +93,7 @@ const initCanvas = () => {
   })
   // const keybinding = new Keybinding()
   new FabricTool(canvas)
-  new GuideLines(canvas)
+  new FabricGuide(canvas)
   new HoverBorders(canvas)
   new WheelScroll(canvas)
   new FabricRuler(canvas)
