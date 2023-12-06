@@ -79,6 +79,7 @@ import { ImageElement } from '@/types/canvas'
 import { ratioClipOptions } from '@/configs/images'
 import { getImageDataURL } from '@/utils/image'
 import { propertiesToInclude } from '@/configs/canvas'
+import { Image } from 'fabric'
 import ElementPosition from '../Components/ElementPosition.vue'
 import ElementOutline from '../Components/ElementOutline.vue'
 import ElementShadow from '../Components/ElementShadow.vue'
@@ -91,7 +92,7 @@ const mainStore = useMainStore()
 const templatesStore = useTemplatesStore()
 const [ canvas ] = useCanvas()
 const { canvasObject } = storeToRefs(mainStore)
-const handleElement = computed(() => canvasObject.value as ImageElement)
+const handleElement = computed(() => canvasObject.value as Image)
 
 
 // 打开自由裁剪
@@ -147,7 +148,6 @@ const replaceImage = (files: FileList) => {
   getImageDataURL(imageFile).then(dataURL => {
     const props = { src: dataURL }
     handleElement.value.setSrc(dataURL)
-    // @ts-ignore
     templatesStore.updateElement({ id: handleElement.value.id, props })
   })
   

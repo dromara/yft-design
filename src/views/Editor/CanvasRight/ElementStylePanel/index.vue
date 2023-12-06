@@ -22,6 +22,7 @@ import GroupStylePanel from './GroupStylePanel.vue'
 const panelMap = {
   [ElementNames.TEXTBOX]: TextboxStylePanel,
   [ElementNames.TEXT]: TextboxStylePanel,
+  [ElementNames.ITEXT]: TextboxStylePanel,
   [ElementNames.IMAGE]: ImageStylePanel,
   [ElementNames.CROPIMAGE]: ImageStylePanel,
   [ElementNames.PATH]: PathStylePanel,
@@ -39,6 +40,7 @@ const { canvasObject } = storeToRefs(useMainStore())
 
 const currentPanelComponent = computed(() => {
   if (!canvasObject.value) return null
+  console.log('canvasObject:', canvasObject.value.name)
   const canvasType = canvasObject.value.name ? canvasObject.value.name : canvasObject.value.type
   return panelMap[canvasType.toLowerCase() as ElementNames.TEXT]
 })

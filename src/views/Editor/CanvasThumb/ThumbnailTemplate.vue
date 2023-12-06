@@ -14,9 +14,10 @@
 
 <script lang="ts" setup>
 import { computed, onMounted, PropType, ref, watch } from 'vue'
-import { StaticCanvas } from 'fabric'
+import { StaticCanvas, Group } from 'fabric'
 import { Template, CanvasElement } from '@/types/canvas'
 import { WorkSpaceThumbType, WorkSpaceDrawType } from '@/configs/canvas'
+import { el } from 'element-plus/es/locale';
 
 const props = defineProps({
   template: {
@@ -66,11 +67,20 @@ const setThumbnailElement = async () => {
   })
   thumbCanvas.value.setZoom(thumbZoom)
   const thumbViewportTransform = thumbCanvas.value.viewportTransform
+  const objects = thumbCanvas.value.getObjects().filter(ele => !WorkSpaceThumbType.includes(ele.id))
+  const boundingBox = Group.prototype.getObjectsBoundingBox(objects)
+  let left = 0, top = 0
   if (thumbWorkSpaceDraw) {
-    thumbViewportTransform[4] = -thumbWorkSpaceDraw.left * thumbZoom
-    thumbViewportTransform[5] = -thumbWorkSpaceDraw.top * thumbZoom
-    thumbCanvas.value.setViewportTransform(thumbViewportTransform)
+    left = thumbWorkSpaceDraw.left
+    top = thumbWorkSpaceDraw.top
   }
+  else if (boundingBox) {
+    left = boundingBox.centerX - boundingBox.width / 2
+    top = boundingBox.centerY - boundingBox.height / 2
+  }
+  thumbViewportTransform[4] = -left * thumbZoom
+  thumbViewportTransform[5] = -top * thumbZoom
+  thumbCanvas.value.setViewportTransform(thumbViewportTransform)
   thumbCanvas.value.renderAll()
 }
 </script>

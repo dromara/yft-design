@@ -3,6 +3,7 @@ import { ImageHit } from "@/api/image/types"
 export const enum ElementNames {
   TEXTBOX = 'textbox',
   TEXT = 'text',
+  ITEXT = 'i-text',
   IMAGE = 'image',
   CROPIMAGE = 'cropimage',
   MASK = 'mask',

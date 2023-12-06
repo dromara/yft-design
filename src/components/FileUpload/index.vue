@@ -20,14 +20,12 @@
 import { computed, ref, watch } from 'vue'
 import { UploadFilled } from '@element-plus/icons-vue'
 import { ElMessage, genFileId, UploadInstance, UploadProps, UploadRawFile } from "element-plus"
-import { storeToRefs } from 'pinia'
-import { loadSVGFromString } from 'fabric'
 import { uploadFile } from '@/api/file'
 import { useTemplatesStore } from '@/store'
-import useCanvas from '@/views/Canvas/useCanvas'
+import useCanvasScale from '@/hooks/useCanvasScale'
 
 const templatesStore = useTemplatesStore()
-
+const { setCanvasTransform } = useCanvasScale()
 const dialogVisible = ref(false)
 const fileAccept = ref('.pdf,.psd,.cdr,.svg,.jpg,.jpeg,.png')
 const uploadRef = ref<UploadInstance>()
@@ -58,7 +56,8 @@ const uploadHandle = async (option: any) => {
   if (res && res.data.code === 200) {
     const template = res.data.data
     if (!template) return
-    templatesStore.addTemplate(template)
+    await templatesStore.addTemplate(template)
+    setCanvasTransform()
     emit('close')
   }
 }
