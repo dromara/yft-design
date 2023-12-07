@@ -19,15 +19,21 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue'
 import { UploadFilled } from '@element-plus/icons-vue'
+import { getImageDataURL, getImageText } from '@/utils/image'
 import { ElMessage, genFileId, UploadInstance, UploadProps, UploadRawFile } from "element-plus"
 import { uploadFile } from '@/api/file'
 import { useTemplatesStore } from '@/store'
+import { loadSVGFromString } from 'fabric'
 import useCanvasScale from '@/hooks/useCanvasScale'
+import useHandleCreate from '@/hooks/useHandleCreate'
+import useCanvas from '@/views/Canvas/useCanvas'
+
 
 const templatesStore = useTemplatesStore()
 const { setCanvasTransform } = useCanvasScale()
+const { createImageElement } = useHandleCreate()
 const dialogVisible = ref(false)
-const fileAccept = ref('.pdf,.psd,.cdr,.svg,.jpg,.jpeg,.png')
+const fileAccept = ref('.pdf,.psd,.cdr,.svg,.jpg,.jpeg,.png,.webp')
 const uploadRef = ref<UploadInstance>()
 const props = defineProps({
   visible: {
@@ -49,9 +55,22 @@ const closeUpload = () => {
 }
 
 const uploadHandle = async (option: any) => {
+  const [ canvas ] = useCanvas()
   const filename = option.file.name
   const fileSuffix = filename.split('.').pop()
   if (!fileAccept.value.split(',').includes(`.${fileSuffix}`)) return
+  if (fileSuffix === 'svg') {
+    const dataText = await getImageText(option.file)
+    const content = await loadSVGFromString(dataText)
+    canvas.add(...content.objects)
+    canvas.renderAll()
+    emit('close')
+  }
+  if (['jpg', 'jpeg', 'png', 'webp'].includes(fileSuffix)) {
+    const dataURL = await getImageDataURL(option.file)
+    createImageElement(dataURL)
+    emit('close')
+  }
   const res = await uploadFile(option.file, fileSuffix)
   if (res && res.data.code === 200) {
     const template = res.data.data
