@@ -10,6 +10,10 @@
 
 ![background](/docs/background.gif)
 
+# 📓 pdf解析
+
+![pdf](/docs/pdf_template.gif)
+
 # 🚀 项目运行
 ```
 node >= 16+
