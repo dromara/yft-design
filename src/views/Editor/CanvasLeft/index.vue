@@ -117,15 +117,22 @@ const setPoolType = (tab: PoolType) => {
     }
   }
 }
+.center-tabs {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height: calc(100vh - 160px);
+}
 .center-tab {
   width: 100%;
-  height: 50px;
+  height: 60px;
+  padding-left: 2px;
   text-align: center;
   font-size: 12px;
   cursor: pointer;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  position: relative;
 
   .left-icon {
     font-size: 20px;
@@ -148,7 +155,6 @@ const setPoolType = (tab: PoolType) => {
   height: 41px;
   left: -3px;
   position: absolute;
-  top: calc(var(--index) * 72px + 23px);
   transition: top .2s;
   width: 6px;
   z-index: 20;
@@ -195,9 +201,10 @@ const setPoolType = (tab: PoolType) => {
   position: absolute;
   bottom: 0;
   width: 49px;
+  z-index: 30;
 }
 .bottom-tab {
-  height: 50px;
+  height: 60px;
   display: flex;
   flex-direction: column;
   justify-content: center;
