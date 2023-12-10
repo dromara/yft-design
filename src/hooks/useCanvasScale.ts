@@ -75,26 +75,14 @@ export default () => {
   const setCanvasTransform = () => {
     const [ canvas ] = useCanvas()
     if (!canvas) return
-    // const fabricStore = useFabricStore()
-    // const { zoom, wrapperRef } = storeToRefs(fabricStore)
-    // const { width, height } = useElementBounding(wrapperRef.value)
-    // setWorkSpace(width.value, height.value)
-    // const workSpaceBound = workSpaceDraw.getBoundingRect()
-    // const left = workSpaceDraw.left, top = workSpaceDraw.top
-    // const canvasTransform = canvas.viewportTransform
-    // zoom.value = canvas.getZoom()
-    // canvasTransform[4] = (width.value - workSpaceBound.width) / 2 - left * zoom.value
-    // canvasTransform[5] = (height.value - workSpaceBound.height) / 2 - top * zoom.value
-    // canvas.setViewportTransform(canvasTransform)
-    // canvas.setDimensions({width: width.value, height: height.value})
-    // canvas.renderAll()
     const { zoom } = storeToRefs(fabricStore)
     const objects = canvas.getObjects().filter(ele => !WorkSpaceThumbType.includes(ele.id))
     const boundingBox = Group.prototype.getObjectsBoundingBox(objects)
+    const { width, height, centerPoint } = useCenter()
     if (!boundingBox) return
-    zoom.value = Math.min(canvas.getWidth() / boundingBox.width, canvas.getHeight() / boundingBox.height,) * scalePercentage.value / 100
+    zoom.value = Math.min(canvas.getWidth() / width, canvas.getHeight() / height) * scalePercentage.value / 100
     canvas.setZoom(zoom.value)
-    canvas.absolutePan(new Point(boundingBox.centerX, boundingBox.centerY).scalarMultiply(zoom.value).subtract(canvas.getCenterPoint()))
+    canvas.absolutePan(new Point(centerPoint.x, centerPoint.y).scalarMultiply(zoom.value).subtract(canvas.getCenterPoint()))
   }
 
   /**

@@ -18,6 +18,12 @@ export default () => {
     left = boundingBox.centerX - boundingBox.width / 2
     top = boundingBox.centerY - boundingBox.height / 2
   }
+  if (workSpaceDraw) {
+    centerPoint = new Point(workSpaceDraw.left + workSpaceDraw.width / 2, workSpaceDraw.top + workSpaceDraw.height / 2)
+    width = workSpaceDraw.width, height = workSpaceDraw.height
+    left = workSpaceDraw.left
+    top = workSpaceDraw.top
+  }
   
   return {
     // workSpaceDraw,

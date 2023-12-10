@@ -1,7 +1,7 @@
 import { watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { Canvas, Object as FabricObject, Textbox, Group, Point } from 'fabric'
-import { WorkSpaceThumbType } from "@/configs/canvas"
+import { WorkSpaceThumbType, WorkSpaceDrawType } from "@/configs/canvas"
 import { useFabricStore } from '@/store/modules/fabric'
 import { useElementBounding } from '@vueuse/core'
 import { FabricTool } from '@/app/fabricTool'
@@ -76,9 +76,18 @@ const setCanvasTransform = () => {
   const objects = canvas.getObjects().filter(ele => !WorkSpaceThumbType.includes(ele.id))
   const boundingBox = Group.prototype.getObjectsBoundingBox(objects)
   if (!boundingBox) return
-  zoom.value = Math.min(canvas.getWidth() / boundingBox.width, canvas.getHeight() / boundingBox.height,) * scalePercentage.value / 100
+  let boxWidth = boundingBox.width, boxHeight = boundingBox.height
+  let centerX = boundingBox.centerX, centerY = boundingBox.centerY
+  const workSpaceDraw = canvas.getObjects().filter(item => item.id === WorkSpaceDrawType)[0]
+  if (workSpaceDraw) {
+    boxWidth = workSpaceDraw.width
+    boxHeight = workSpaceDraw.height
+    centerX = workSpaceDraw.left + workSpaceDraw.width / 2
+    centerY = workSpaceDraw.top + workSpaceDraw.height / 2 
+  }
+  zoom.value = Math.min(canvas.getWidth() / boxWidth, canvas.getHeight() / boxHeight) * scalePercentage.value / 100
   canvas.setZoom(zoom.value)
-  canvas.absolutePan(new Point(boundingBox.centerX, boundingBox.centerY).scalarMultiply(zoom.value).subtract(canvas.getCenterPoint()))
+  canvas.absolutePan(new Point(centerX, centerY).scalarMultiply(zoom.value).subtract(canvas.getCenterPoint()))
 }
 
 const initCanvas = () => {
