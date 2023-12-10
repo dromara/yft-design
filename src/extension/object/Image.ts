@@ -1,10 +1,10 @@
 import { ClipPathType } from '@/configs/images'
 import { addCropImageInteractions, isolateObjectForEdit } from '@/extension/mixins/cropping.mixin'
 import { croppingControlSet, flipXCropControls, flipXYCropControls, flipYCropControls } from '@/extension/controls/cropping/cropping.controls'
-import { Image, Point, Path, Object as FabricObject, config, util, classRegistry, TPointerEventInfo, TPointerEvent, ImageProps, TClassProperties, ImageSource } from 'fabric'
+import { Image as OriginImage, Point, Path, Object as FabricObject, config, util, classRegistry, TPointerEventInfo, TPointerEvent, ImageProps, TClassProperties, ImageSource } from 'fabric'
 
 
-export class CropImage extends Image {
+export class Image extends OriginImage {
   public isCropping?: false
   public cropKey?: ClipPathType
   public cropPath?: string
@@ -200,11 +200,11 @@ export class CropImage extends Image {
     }
   }
   
-  static fromURL(url: string, options: any = {}): Promise<CropImage> {
+  static fromURL(url: string, options: any = {}): Promise<Image> {
     return util.loadImage(url, options).then((img) => new this(img, options));
   }
 
-  static fromObject({ filters: f, resizeFilter: rf, src, crossOrigin, ...object }: any, options: { signal: AbortSignal }): Promise<CropImage> {
+  static fromObject({ filters: f, resizeFilter: rf, src, crossOrigin, ...object }: any, options: { signal: AbortSignal }): Promise<Image> {
     return Promise.all([
       util.loadImage(src, { ...options, crossOrigin }),
       f && util.enlivenObjects(f, options),
@@ -223,7 +223,7 @@ export class CropImage extends Image {
   }
 }
 
-const imageDefaultValues: Partial<TClassProperties<CropImage>> = {
+const imageDefaultValues: Partial<TClassProperties<Image>> = {
   type: 'CropImage',
   strokeWidth: 0,
   srcFromAttribute: false,
@@ -233,12 +233,12 @@ const imageDefaultValues: Partial<TClassProperties<CropImage>> = {
   imageSmoothing: true,
 };
 
-Object.assign(CropImage.prototype, {
+Object.assign(Image.prototype, {
   cacheProperties: [...FabricObject.cacheProperties, 'cropX', 'cropY'],
   ...imageDefaultValues,
   ...addCropImageInteractions()
 })
 
-classRegistry.setClass(CropImage, 'CropImage')
+classRegistry.setClass(Image)
 
 

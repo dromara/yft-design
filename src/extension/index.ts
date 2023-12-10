@@ -1,4 +1,4 @@
-import './object/CropImage'
+import './object/Image'
 import './object/Group'
 import './object/Polygon'
 import './object/BarCode'

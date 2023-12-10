@@ -62,11 +62,14 @@ export default () => {
           break
 
         case 'left':
-          value = activeObject.getParent(true) ? handleUnit(activeObject.getLeftTop().x) : handleUnit(activeObject.left)
+          // console.log('activeObject.getParent(true):', activeObject.getParent(true))
+          // value = activeObject.getParent(true) ? handleUnit(activeObject.getLeftTop().x) : handleUnit(activeObject.left)
+          value = handleUnit(activeObject.left)
           break
 
         case 'top':
-          value = activeObject.getParent(true) ? handleUnit(activeObject.getLeftTop().y) : handleUnit(activeObject.top)
+          // value = activeObject.getParent(true) ? handleUnit(activeObject.getLeftTop().y) : handleUnit(activeObject.top)
+          value = handleUnit(activeObject.top)
           break
 
         case 'fontSize':

@@ -7,7 +7,7 @@ import { QRCodeElement, QRCodeOption } from '@/types/canvas'
 import { getImageSize } from '@/utils/image'
 import JsBarcode from 'jsbarcode'
 import { Object as FabricObject, Textbox, Path, classRegistry } from "fabric"
-import { CropImage } from '@/extension/object/CropImage'
+import { Image } from '@/extension/object/Image'
 import { QRCode } from '@/extension/object/QRCode'
 import { BarCode } from '@/extension/object/BarCode'
 import useCenter from '@/views/Canvas/useCenter'
@@ -164,8 +164,7 @@ export default () => {
       else if (height > currentTemplateHeight.value) {
         imageScale = currentTemplateHeight.value / height
       }
-      // const CropImage = classRegistry.getClass('CropImage') as CropImage
-      const imageElement = await CropImage.fromURL(url, {
+      const imageElement = await Image.fromURL(url, {
         id: nanoid(10),
         angle: 0,
         left: centerPoint.x,
@@ -178,7 +177,6 @@ export default () => {
         originX: 'left',
         originY: 'top',
         borderColor: '#ff8d23',
-        type: 'CropImage',
         name: ElementNames.IMAGE,
         crossOrigin: 'anonymous'
       })
