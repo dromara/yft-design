@@ -154,6 +154,7 @@ export declare module 'fabric' {
     toObject(propertiesToInclude?: any[]): any
     _type: string
     type: string
+    _stateProperties: any
     isType<T = boolean>(...types: string[]): this is T
     hideOnLayer: boolean /** 在图层上隐藏 */
   }

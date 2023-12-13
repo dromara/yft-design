@@ -1,6 +1,6 @@
 <template>
   <el-dialog v-model="dialogVisible" title="导入文件" width="35%" class="upload-dialog" :before-close="closeUpload">
-    <el-upload class="upload-demo" ref="uploadRef" :on-exceed="handleExceed" drag action="http" :http-request="uploadHandle" :limit="1" :accept="fileAccept">
+    <el-upload class="upload-demo" ref="uploadRef" :on-exceed="handleExceed" drag action="http" :http-request="uploadHandle" :limit="1" :accept="fileAccept" v-loading="uploading">
       <el-icon :size="50">
         <UploadFilled />
       </el-icon>
@@ -33,6 +33,7 @@ const templatesStore = useTemplatesStore()
 const { setCanvasTransform } = useCanvasScale()
 const { createImageElement } = useHandleCreate()
 const dialogVisible = ref(false)
+const uploading = ref(false)
 const fileAccept = ref('.pdf,.psd,.cdr,.svg,.jpg,.jpeg,.png,.webp')
 const uploadRef = ref<UploadInstance>()
 const props = defineProps({
@@ -71,7 +72,9 @@ const uploadHandle = async (option: any) => {
     createImageElement(dataURL)
     emit('close')
   }
+  uploading.value = true
   const res = await uploadFile(option.file, fileSuffix)
+  uploading.value = false
   if (res && res.data.code === 200) {
     const template = res.data.data
     if (!template) return

@@ -24,6 +24,12 @@ export default ({ command }: ConfigEnv): UserConfigExport => {
           changeOrigin: true,
           rewrite: (path) => path.replace(new RegExp('^'), ''),
         },
+        '/static': {
+          // target: 'https://yft.design',
+          target: 'http://localhost:9292',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(new RegExp('^'), ''),
+        },
       },
     },
     plugins: [

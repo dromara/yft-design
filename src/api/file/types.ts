@@ -12,7 +12,7 @@ export interface UploadResult {
   msg: string
   file: string
   svg: SVGInfo[]
-  data: Template
+  data: Template | Template[]
 }
 
 /**
