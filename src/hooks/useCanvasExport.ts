@@ -70,7 +70,12 @@ export default () => {
 
   const getJSONData = () => {
     const [ canvas ] = useCanvas()
-    return canvas.toObject(propertiesToInclude)
+    const serializer = canvas.toObject(propertiesToInclude)
+    serializer.workSpace = currentTemplate.value.workSpace
+    serializer.zoom = currentTemplate.value.zoom
+    serializer.width = currentTemplate.value.width
+    serializer.height = currentTemplate.value.height
+    return serializer
   }
 
   const exportSVG = () => {
@@ -121,8 +126,8 @@ export default () => {
 
   // 导出json
   const exportJSON = () => {
-    const [ canvas ] = useCanvas()
-    const blob = new Blob([JSON.stringify(canvas.toObject(propertiesToInclude))])
+    const serializer = getJSONData()
+    const blob = new Blob([JSON.stringify(serializer)])
     saveAs(blob, `yft-design-${Date.now()}.json`)
   }
 
