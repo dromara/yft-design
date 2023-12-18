@@ -3,7 +3,7 @@ import { TControlSet } from '@/types/fabric'
 import { PolygonElement } from '@/types/canvas'
 import { PiBy180, toFixed } from '@/utils/common'
 import { px2mm } from '@/utils/image'
-import { Control, Object as FabricObject, controlsUtils, Point, TPointerEvent, Transform, TDegree, util,TransformActionHandler } from 'fabric'
+import { Control, Object as FabricObject, controlsUtils, Point, Polygon, TPointerEvent, Transform, TDegree, util,TransformActionHandler } from 'fabric'
 import { storeToRefs } from 'pinia'
 import { useMainStore } from '@/store'
 
@@ -32,15 +32,20 @@ export const changeObjectHeight: TransformActionHandler = (eventData: TPointerEv
 export function polygonPositionHandler(dim: Point, finalMatrix: number[], fabricObject: any) {
   // @ts-ignore
   const pointIndex = this.pointIndex
+  
   const x = (fabricObject.points[pointIndex].x - fabricObject.pathOffset.x)
   const y = (fabricObject.points[pointIndex].y - fabricObject.pathOffset.y)
-  return util.transformPoint(
+  
+  const point = util.transformPoint(
     { x, y } as Point,
     util.multiplyTransformMatrices(
       fabricObject.canvas.viewportTransform,
       fabricObject.calcTransformMatrix()
     )
   )
+  const snapPoint = fabricObject.pointMoving(pointIndex, point)
+  // console.log('Point:', point, 'x:', x, 'y:', y, snapPoint)
+  return point
 }
 
 function getObjectSizeWithStroke(object: FabricObject) {
@@ -59,7 +64,7 @@ export function anchorWrapper(anchorIndex: number, fn: Function) {
 
   return function(eventData: MouseEvent, transform: any, x: number, y: number) {
 
-    const fabricObject = transform.target as PolygonElement
+    const fabricObject = transform.target as Polygon
     const pointX = fabricObject.points[anchorIndex].x, pointY = fabricObject.points[anchorIndex].y
     const handlePoint = new Point({x: (pointX - fabricObject.pathOffset.x), y: (pointY - fabricObject.pathOffset.y)})
     const absolutePoint = util.transformPoint(handlePoint, fabricObject.calcTransformMatrix()),

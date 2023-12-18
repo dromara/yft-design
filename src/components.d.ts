@@ -168,6 +168,10 @@ export declare module 'fabric' {
     _drawCroppingPath(ctx: CanvasRenderingContext2D): void
   }
 
+  export declare class Polygon {
+    pointMoving(index: number, point: Point): Point
+  }
+
   type ExportedKeys =
     | 'crossOrigin'
     | 'offsetX'

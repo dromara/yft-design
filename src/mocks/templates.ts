@@ -551,6 +551,58 @@ export const Templates: Template[] = [
             ]
           }
         ]
+      },
+      {
+        "id": "3kY42ktAWz",
+        "name": "arrow",
+        "fill": "rgb(0,0,0)",
+        "selectable": true,
+        "evented": true,
+        "lockMovementX": false,
+        "lockMovementY": false,
+        "objectCaching": false,
+        "transparentCorners": false,
+        "hasBorders": false,
+        "type": "Polygon",
+        "version": "6.0.0-beta9",
+        "originX": "left",
+        "originY": "top",
+        "left": 292.9944,
+        "top": 54.7999,
+        "width": 132.0155,
+        "height": 0,
+        "stroke": "red",
+        "strokeWidth": 4,
+        "strokeDashArray": null,
+        "strokeLineCap": "butt",
+        "strokeDashOffset": 0,
+        "strokeLineJoin": "miter",
+        "strokeUniform": false,
+        "strokeMiterLimit": 4,
+        "scaleX": 1,
+        "scaleY": 1,
+        "angle": 0,
+        "flipX": false,
+        "flipY": false,
+        "opacity": 1,
+        "shadow": null,
+        "visible": true,
+        "backgroundColor": "",
+        "fillRule": "nonzero",
+        "paintFirst": "fill",
+        "globalCompositeOperation": "source-over",
+        "skewX": 0,
+        "skewY": 0,
+        "points": [
+          {
+            "x": 4.087701463279259,
+            "y": 6.543266262125684
+          },
+          {
+            "x": -127.9277574835455,
+            "y": 6.543266262125684
+          }
+        ]
       }
     ],
     "background": "",
