@@ -17,7 +17,6 @@ import { computed, onMounted, PropType, ref, watch } from 'vue'
 import { StaticCanvas, Group } from 'fabric'
 import { Template, CanvasElement } from '@/types/canvas'
 import { WorkSpaceThumbType, WorkSpaceDrawType } from '@/configs/canvas'
-import { el } from 'element-plus/es/locale';
 
 const props = defineProps({
   template: {
