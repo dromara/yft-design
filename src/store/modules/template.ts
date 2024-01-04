@@ -98,6 +98,7 @@ export const useTemplatesStore = defineStore('Templates', {
     },
 
     setSize(width: number, height: number, zoom: number) {
+      const { initCommon } = useCommon()
       const { addHistorySnapshot } = useHistorySnapshot()
       this.templates.forEach(template => {
         template.width = width
@@ -108,6 +109,7 @@ export const useTemplatesStore = defineStore('Templates', {
           ele.height = height / zoom
         })
       })
+      initCommon()
       addHistorySnapshot()
     },
 

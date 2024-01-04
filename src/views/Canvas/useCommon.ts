@@ -9,6 +9,7 @@ import {
   WorkSpaceClipColor,
   WorkSpaceSafeColor,
   WorkSpaceMaskColor,
+  WorkSpaceThumbType,
   WorkSpaceCommonOption,
 } from '@/configs/canvas'
 import { Line, Group, Rect, Path } from 'fabric'
@@ -26,7 +27,7 @@ export default () => {
     const templatesStore = useTemplatesStore()
     const { currentTemplate } = storeToRefs(templatesStore)
     const { clip, safe, diagonal, opacity, showClip, showSafe } = storeToRefs(fabricStore)
-
+    canvas.remove(...canvas.getObjects().filter(ele => WorkSpaceThumbType.includes(ele.id)))
     // const workWidth = currentTemplate.value.width / currentTemplate.value.zoom
     // const workHeight = currentTemplate.value.height / currentTemplate.value.zoom
     const workWidth = workSpaceDraw.width, workHeight = workSpaceDraw.height
