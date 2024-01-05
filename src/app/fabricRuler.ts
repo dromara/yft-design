@@ -5,10 +5,11 @@ import { computed, watchEffect } from 'vue'
 // import { useThemes } from '@/hooks/useThemes'
 import { DesignUnitMode } from '@/configs/background'
 import { PiBy180 } from '@/utils/common'
-import { TAxis, Canvas } from 'fabric'
+import { TAxis, Canvas, Point, TPointerEventInfo, TPointerEvent, Rect as fabricRect } from 'fabric'
 import { useMainStore } from '@/store'
 import { storeToRefs } from 'pinia'
 import { px2mm } from '@/utils/image'
+import useCenter from '@/views/Canvas/useCenter'
 
 type Rect = { left: number; top: number; width: number; height: number }
 
@@ -83,8 +84,8 @@ export class FabricRuler extends Disposable {
 
     // 合并默认配置
     this.options = Object.assign({
-      ruleSize: 24,
-      fontSize: 10,
+      ruleSize: 20,
+      fontSize: 8,
       enabled: true,
     })
 
@@ -123,9 +124,38 @@ export class FabricRuler extends Disposable {
 
     this.canvasEvents = {
       'after:render': this.render.bind(this),
+      'mouse:move': this.mouseMove.bind(this),
     }
-
     this.enabled = this.options.enabled
+  }
+
+  public getPointStatus(point: Point): string {
+    
+    if (
+      new fabricRect({
+        left: 0,
+        top: 0,
+        width: this.options.ruleSize,
+        height: this.canvas.getHeight(),
+      }).containsPoint(point)
+    ) {
+      return 'vertical';
+    } else if (
+      new fabricRect({
+        left: 0,
+        top: 0,
+        width: this.canvas.getHeight(), 
+        height: this.options.ruleSize
+      }).containsPoint(point)
+    ) {
+      return 'horizontal';
+    }
+    return '';
+  }
+
+  private mouseMove(e: any) {
+    const status = this.getPointStatus(e.pointer)
+    if (!status) return
   }
 
   public get enabled() {

@@ -125,15 +125,15 @@ const { currentTemplate } = storeToRefs(templatesStore)
 const { clip, safe, zoom, opacity } = storeToRefs(fabricStore)
 
 const templateWidth = computed(() => {
-  const [ canvas ] = useCanvas()
-  if (!canvas || !currentTemplate.value) return 0
+  // const [ canvas ] = useCanvas()
+  // if (!canvas) return 0
   const workWidth = currentTemplate.value.width / currentTemplate.value.zoom
   return unitMode.value === 0 ? px2mm(workWidth) : workWidth
 })
 
 const templateHeight = computed(() => {
-  const [ canvas ] = useCanvas()
-  if (!canvas || !currentTemplate.value) return 0
+  // const [ canvas ] = useCanvas()
+  // if (!canvas) return 0
   const workHeight = currentTemplate.value.height / currentTemplate.value.zoom
   return unitMode.value === 0 ? px2mm(workHeight) : workHeight
 })
