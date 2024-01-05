@@ -1,15 +1,13 @@
-// import { FabricCanvas, IFabricCanvas } from '@/core/canvas/fabricCanvas'
 import { Keybinding } from './keybinding'
 import { Disposable } from '@/utils/lifecycle'
 import { computed, watchEffect } from 'vue'
 // import { useThemes } from '@/hooks/useThemes'
 import { DesignUnitMode } from '@/configs/background'
 import { PiBy180 } from '@/utils/common'
-import { TAxis, Canvas, Point, TPointerEventInfo, TPointerEvent, Rect as fabricRect } from 'fabric'
+import { TAxis, Canvas, Point, Rect as fabricRect } from 'fabric'
 import { useMainStore } from '@/store'
 import { storeToRefs } from 'pinia'
 import { px2mm } from '@/utils/image'
-import useCenter from '@/views/Canvas/useCenter'
 
 type Rect = { left: number; top: number; width: number; height: number }
 

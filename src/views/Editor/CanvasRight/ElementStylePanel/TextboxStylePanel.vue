@@ -222,39 +222,65 @@ const fontOptionGroups = ref<FontGroupOption[]>([
 
 // 修改字体族
 const handleElementFontFamily = (fontFamily: string) => {
-  handleElement.value.set({fontFamily})
+  if (handleElement.value.isEditing) {
+    handleElement.value.setSelectionStyles({fontFamily})
+  }
+  else {
+    handleElement.value.set({fontFamily})
+  }
   templatesStore.modifedElement()
   canvas.renderAll()
 }
 
 // 修改字体大小
 const handleElementFontSize = (fontSize: number) => {
-  handleElement.value.set({fontSize})
+  
+  if (handleElement.value.isEditing) {
+    handleElement.value.setSelectionStyles({fontSize})
+  }
+  else {
+    handleElement.value.set({fontSize})
+  }
   templatesStore.modifedElement()
   canvas.renderAll()
 }
 
 // 修改字体颜色
 const updateFontColor = (fill: string) => {
-  handleElement.value.set({fill, color: fill})
+  
+  if (handleElement.value.isEditing) {
+    handleElement.value.setSelectionStyles({fill})
+  }
+  else {
+    handleElement.value.set({fill, color: fill})
+  }
   templatesStore.modifedElement()
   canvas.renderAll()
 }
 
 // 修改背景颜色
 const updateBackgroundColor = (backgroundColor: string) => {
-  handleElement.value.set({backgroundColor})
+  
+  if (handleElement.value.isEditing) {
+    handleElement.value.setSelectionStyles({backgroundColor})
+  }
+  else {
+    handleElement.value.set({backgroundColor})
+  }
   templatesStore.modifedElement()
   canvas.renderAll()
 }
 
 // 修改字体大小
 const handleElementFontsize = (mode: string) => {
-  if (!handleElement.value.fontSize) {
-    handleElement.value.set({fontSize: 36})
+  if (handleElement.value.fontSize <= 6) return
+  const fontSize = mode === '+' ? handleElement.value.fontSize + 1 : handleElement.value.fontSize - 1
+  if (handleElement.value.isEditing) {
+    handleElement.value.setSelectionStyles({fontSize})
   }
-  const fontSizeNum = mode === '+' ? handleElement.value.fontSize + 1 : handleElement.value.fontSize - 1
-  handleElement.value.set({fontSize: fontSizeNum})
+  else {
+    handleElement.value.set({fontSize})
+  }
   templatesStore.modifedElement()
   canvas.renderAll()
 }
@@ -263,7 +289,7 @@ const handleElementFontsize = (mode: string) => {
 const handleElementBlod = () => {
   const fontBold = 'bold', fontNormal = 'normal'
   if (handleElement.value.isEditing) {
-    console.log('handleElement.value:', handleElement.value)
+    console.log('handleElement.value:', handleElement.value.styles)
     const blodState = handleElement.value.getSelectionStyles().find(item => item.fontWeight !== fontBold)
     if (!blodState || (JSON.stringify(blodState) === '{}' && handleElement.value.fontWeight === fontBold)) {
       handleElement.value.setSelectionStyles({'fontWeight': fontNormal})
@@ -299,28 +325,49 @@ const handleElementBlod = () => {
 // 修改斜体
 const handleElementItalic = () => {
   const fontStyle = handleElement.value.fontStyle === 'italic' ? 'normal': 'italic'
-  handleElement.value.set({fontStyle})
+
+  if (handleElement.value.isEditing) {
+    handleElement.value.setSelectionStyles({fontStyle})
+  }
+  else {
+    handleElement.value.set({fontStyle})
+  }
   templatesStore.modifedElement()
   canvas.renderAll()
 }
 
 // 修改删除线
 const handleElementLinethrough = () => {
-  handleElement.value.set({linethrough: !handleElement.value.linethrough})
+  if (handleElement.value.isEditing) {
+    handleElement.value.setSelectionStyles({linethrough: !handleElement.value.linethrough})
+  }
+  else {
+    handleElement.value.set({linethrough: !handleElement.value.linethrough})
+  }
   templatesStore.modifedElement()
   canvas.renderAll()
 }
 
 // 修改中划线
 const handleElementUnderline = () => {
-  handleElement.value.set({underline: !handleElement.value.underline})
+  if (handleElement.value.isEditing) {
+    handleElement.value.setSelectionStyles({underline: !handleElement.value.underline})
+  }
+  else {
+    handleElement.value.set({underline: !handleElement.value.underline})
+  }
   templatesStore.modifedElement()
   canvas.renderAll()
 }
 
 // 修改字体居中
 const handleTextAlign = (textAlign: string) => {
-  handleElement.value.set({textAlign})
+  if (handleElement.value.isEditing) {
+    handleElement.value.setSelectionStyles({textAlign})
+  }
+  else {
+    handleElement.value.set({textAlign})
+  }
   templatesStore.modifedElement()
   canvas.renderAll()
 }
