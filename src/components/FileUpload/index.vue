@@ -26,15 +26,17 @@ import { useTemplatesStore } from '@/store'
 import { loadSVGFromString } from 'fabric'
 import useCanvasScale from '@/hooks/useCanvasScale'
 import useHandleCreate from '@/hooks/useHandleCreate'
+import useHandleTemplate from '@/hooks/useHandleTemplate'
 import useCanvas from '@/views/Canvas/useCanvas'
 
 
 const templatesStore = useTemplatesStore()
 const { setCanvasTransform } = useCanvasScale()
 const { createImageElement } = useHandleCreate()
+const { addTemplate } = useHandleTemplate()
 const dialogVisible = ref(false)
 const uploading = ref(false)
-const fileAccept = ref('.pdf,.psd,.cdr,.svg,.jpg,.jpeg,.png,.webp')
+const fileAccept = ref('.pdf,.psd,.cdr,.svg,.jpg,.jpeg,.png,.webp,.json')
 const uploadRef = ref<UploadInstance>()
 const props = defineProps({
   visible: {
@@ -65,6 +67,12 @@ const uploadHandle = async (option: any) => {
     const content = await loadSVGFromString(dataText)
     canvas.add(...content.objects)
     canvas.renderAll()
+    emit('close')
+  }
+  if (fileSuffix === 'json') {
+    const dataText = await getImageText(option.file)
+    const template = JSON.parse(dataText)
+    addTemplate(template)
     emit('close')
   }
   if (['jpg', 'jpeg', 'png', 'webp'].includes(fileSuffix)) {

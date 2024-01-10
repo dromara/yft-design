@@ -103,6 +103,12 @@ export default () => {
     templatesStore.renderTemplate()
   }
 
+  const addTemplate = (template: Template) => {
+    templatesStore.addTemplate(template)
+    templatesStore.setTemplateIndex(templateIndex.value)
+    templatesStore.renderTemplate()
+  }
+
   // // 根据模板创建新页面
   // const createSlideByTemplate = (slides: Slide[]) => {
   //   for (let i = 0; i < slides.length; i++) {
@@ -174,7 +180,7 @@ export default () => {
     // copyAndPasteSlide,
     deleteTemplate,
     cutTemplate,
-    // selectAllSlide,
+    addTemplate,
     sortTemplates,
   }
 }

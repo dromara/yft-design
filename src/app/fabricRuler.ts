@@ -4,10 +4,11 @@ import { computed, watchEffect } from 'vue'
 // import { useThemes } from '@/hooks/useThemes'
 import { DesignUnitMode } from '@/configs/background'
 import { PiBy180 } from '@/utils/common'
-import { TAxis, Canvas, Point, Rect as fabricRect } from 'fabric'
+import { TAxis, Canvas, Point, Rect as fabricRect, util, classRegistry } from 'fabric'
 import { useMainStore } from '@/store'
 import { storeToRefs } from 'pinia'
 import { px2mm } from '@/utils/image'
+import { ElementNames } from '@/types/elements'
 
 type Rect = { left: number; top: number; width: number; height: number }
 
@@ -123,18 +124,19 @@ export class FabricRuler extends Disposable {
     this.canvasEvents = {
       'after:render': this.render.bind(this),
       'mouse:move': this.mouseMove.bind(this),
+      'mouse:down': this.mouseDown.bind(this),
     }
     this.enabled = this.options.enabled
   }
 
-  public getPointStatus(point: Point): string {
-    
+  public getPointHover(point: Point): string {
     if (
       new fabricRect({
         left: 0,
         top: 0,
         width: this.options.ruleSize,
-        height: this.canvas.getHeight(),
+        height: this.canvas.height,
+        absolutePositioned: true,
       }).containsPoint(point)
     ) {
       return 'vertical';
@@ -142,8 +144,9 @@ export class FabricRuler extends Disposable {
       new fabricRect({
         left: 0,
         top: 0,
-        width: this.canvas.getHeight(), 
-        height: this.options.ruleSize
+        width: this.canvas.width, 
+        height: this.options.ruleSize,
+        absolutePositioned: true,
       }).containsPoint(point)
     ) {
       return 'horizontal';
@@ -152,8 +155,36 @@ export class FabricRuler extends Disposable {
   }
 
   private mouseMove(e: any) {
-    const status = this.getPointStatus(e.pointer)
+    const status = this.getPointHover(e.absolutePointer)
     if (!status) return
+    // this.canvas.defaultCursor = status === 'horizontal' ? 'ns-resize' : 'ew-resize';
+  }
+
+  private mouseDown(e: any) {
+    const pointHover = this.getPointHover(e.absolutePointer)
+    if (!pointHover) return
+    this.canvas.selection = false
+    // this.canvas.renderAll()
+    const GuideLine = classRegistry.getClass('GuideLine')
+    const guideLine = new GuideLine(
+      pointHover === 'horizontal' ? e.absolutePointer.y : e.absolutePointer.x,
+      {
+        axis: pointHover,
+        // visible: ,
+        name: 'GuideLine',
+        // selectable: false,
+        hasControls: false,
+        hasBorders: false,
+        stroke: 'pink',
+        fill: 'pink',
+        originX: 'center',
+        originY: 'center',
+        padding: 4, // 填充，让辅助线选择范围更大，方便选中
+        globalCompositeOperation: 'difference',
+      }
+    );
+    // this.canvas.add(guideLine)
+    // this.canvas.setActiveObject(guideLine)
   }
 
   public get enabled() {
@@ -422,6 +453,11 @@ export class FabricRuler extends Disposable {
   private calcObjectRect() {
     const activeObjects = this.canvas.getActiveObjects()
     if (activeObjects.length === 0) {
+      this.objectRect = undefined
+      return
+    }
+    console.log('activeObjects[0].type:', activeObjects[0].type)
+    if (activeObjects[0].name.toLowerCase() === ElementNames.GUIDELINE) {
       this.objectRect = undefined
       return
     }

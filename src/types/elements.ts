@@ -17,7 +17,8 @@ export const enum ElementNames {
   BARCODE = 'barcode',
   GROUP = 'group',
   ACTIVE = 'activeselection',
-  CIRCLE = 'circle'
+  CIRCLE = 'circle',
+  GUIDELINE = 'guideline',
 }
 
 export interface ColorStop {

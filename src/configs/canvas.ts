@@ -65,6 +65,7 @@ export const propertiesToInclude = [
   'isShow',
   'isCheck',
   'color', 
+  'axis',
   'cropKey', 
   'cropPath', 
   'cropSize', 

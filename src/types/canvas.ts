@@ -132,6 +132,11 @@ export interface QRCodeProps extends ImageProps {
   codeOption: QRCodeOption
 }
 
+export interface GuideLineProps extends Line {
+  type: string
+  axis: 'horizontal' | 'vertical' | ''
+}
+
 export interface ImageElement extends SerializedImageProps, CommenElement {
   type: string
   isCropping?: boolean
