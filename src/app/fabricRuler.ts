@@ -456,7 +456,7 @@ export class FabricRuler extends Disposable {
       this.objectRect = undefined
       return
     }
-    console.log('activeObjects[0].type:', activeObjects[0].type)
+    // console.log('activeObjects[0].type:', activeObjects[0].type)
     if (activeObjects[0].name.toLowerCase() === ElementNames.GUIDELINE) {
       this.objectRect = undefined
       return

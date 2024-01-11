@@ -51,6 +51,9 @@ const emit = defineEmits<{
 
 watch(() => props.visible, (val) => {
   dialogVisible.value = val
+  if (val) {
+    uploadRef.value?.clearFiles()
+  }
 })
 
 const closeUpload = () => {
