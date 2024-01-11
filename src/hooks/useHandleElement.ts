@@ -282,11 +282,11 @@ export default () => {
     canvas.renderAll()
   }
 
-  const visibleElement = (eid: string, status: boolean) => {
+  const visibleElement = (eid: string, visible: boolean) => {
     const [ canvas ] = useCanvas()
     const element = queryElement(eid)
     if (!element) return
-    element.visible = status
+    element.set({visible})
     
     canvas.discardActiveObject()
     canvas.renderAll()

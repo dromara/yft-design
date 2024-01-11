@@ -7,9 +7,11 @@ export function clipperPath(fabricObjects: FabricObject[]) {
   const clipPath = fabricObjects[1] as Path
   
   const x = clipPath.left - subjPath.left, y = clipPath.top - subjPath.top
-  console.log('x:', x, 'y:', y, 'clipPath:', clipPath, 'subjPath:', subjPath)
+  const pathOffsetX = clipPath.pathOffset.x - subjPath.pathOffset.x
+  const pathOffsetY = clipPath.pathOffset.y - subjPath.pathOffset.y
+  console.log('x:', x, 'y:', y, 'pathOffsetX:', (x-pathOffsetX)/2, 'pathOffsetY:', (y-pathOffsetY)/2)
   const subjPathPoints = getPathPoints(subjPath)
-  const clipPathPoints = getPathPoints(clipPath, x, y)
+  const clipPathPoints = getPathPoints(clipPath, (x-pathOffsetX), (y-pathOffsetY))
   const scale = 100;
   ClipperLib.JS.ScaleUpPaths(subjPathPoints, scale);
   ClipperLib.JS.ScaleUpPaths(clipPathPoints, scale);

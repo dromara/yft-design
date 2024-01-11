@@ -1,5 +1,4 @@
 import { useMainStore, useTemplatesStore } from '@/store'
-import { CanvasElement } from '@/types/canvas'
 import { Canvas, Object as FabricObject } from 'fabric'
 import { shallowRef } from 'vue'
 import { toRef } from './attribute/toRef'
