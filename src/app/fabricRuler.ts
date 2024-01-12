@@ -3,7 +3,7 @@ import { Disposable } from '@/utils/lifecycle'
 import { computed, watchEffect } from 'vue'
 // import { useThemes } from '@/hooks/useThemes'
 import { DesignUnitMode } from '@/configs/background'
-import { PiBy180 } from '@/utils/common'
+import { PiBy180, isMobile } from '@/utils/common'
 import { TAxis, Canvas, Point, Rect as fabricRect, util, classRegistry } from 'fabric'
 import { useMainStore } from '@/store'
 import { storeToRefs } from 'pinia'
@@ -112,7 +112,7 @@ export class FabricRuler extends Disposable {
               unitName: unitName,
             }),
       }
-      this.enabled = rulerShow.value
+      this.enabled = rulerShow.value && !isMobile()
       this.render({ ctx: this.canvas.contextContainer })
     })
     // computed(() => {

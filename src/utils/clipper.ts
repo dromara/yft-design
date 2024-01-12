@@ -3,15 +3,16 @@ import ClipperLib from 'clipper-lib'
 import Raphael from 'raphael'
 
 export function clipperPath(fabricObjects: FabricObject[]) {
+  changePathPosition(fabricObjects, 'center')
   const subjPath = fabricObjects[0] as Path
   const clipPath = fabricObjects[1] as Path
   
   const x = clipPath.left - subjPath.left, y = clipPath.top - subjPath.top
   const pathOffsetX = clipPath.pathOffset.x - subjPath.pathOffset.x
   const pathOffsetY = clipPath.pathOffset.y - subjPath.pathOffset.y
-  console.log('x:', x, 'y:', y, 'pathOffsetX:', (x-pathOffsetX)/2, 'pathOffsetY:', (y-pathOffsetY)/2)
+  // console.log('x:', x, 'y:', y, 'pathOffsetX:', (x-pathOffsetX)/2, 'pathOffsetY:', (y-pathOffsetY)/2)
   const subjPathPoints = getPathPoints(subjPath)
-  const clipPathPoints = getPathPoints(clipPath, (x-pathOffsetX), (y-pathOffsetY))
+  const clipPathPoints = getPathPoints(clipPath, -pathOffsetX+x, -pathOffsetY+y)
   const scale = 100;
   ClipperLib.JS.ScaleUpPaths(subjPathPoints, scale);
   ClipperLib.JS.ScaleUpPaths(clipPathPoints, scale);
@@ -38,6 +39,7 @@ export function clipperPath(fabricObjects: FabricObject[]) {
 
   // cont.innerHTML += "<br>" + clipTypesTexts;
   // console.log('solution_paths:', solutionPaths)
+  changePathPosition(fabricObjects, 'left')
   return path2str(solutionPaths, scale)
 }
 
@@ -60,7 +62,7 @@ const getPathPoints = (item: Path, x = 0, y = 0) : ArrayLike<any> => {
 
 // Converts Paths to SVG path string
 // and scales down the coordinates
-function path2str(paths: any, scale: any) {
+const path2str = (paths: any, scale: any) => {
   var svgpath = "", i, j;
   if (!scale) scale = 1;
   for (i = 0; i < paths.length; i++) {
@@ -73,4 +75,17 @@ function path2str(paths: any, scale: any) {
   }
   if (svgpath == "") svgpath = "M0,0";
   return svgpath;
+}
+
+const changePathPosition = (fabricObjects: FabricObject[], position: string) => {
+  fabricObjects.forEach(item => {
+    const left = position === 'center' ? item.left + item.width / 2 : item.left - item.width / 2
+    const top = position === 'center' ? item.top + item.height / 2 : item.top - item.height / 2
+    item.set({
+      originX: position,
+      originY: position,
+      left,
+      top,
+    })
+  })
 }
