@@ -158,7 +158,7 @@ import {
   AllApplication,
   Home,
   Newlybuild,
-  DividingLine
+  DividingLine,
 } from '@icon-park/vue-next'
 
 export const icons = {

@@ -2,13 +2,22 @@
   <div>
     <!-- <div class="resize-handler"></div> -->
     <div class="footer-left">
-      <el-tooltip placement="top" :hide-after="0" content="邀请协同">
-        <IconPeoples class="footer-button"/>
-      </el-tooltip>
+      <div class="left-handle">
+        <el-tooltip placement="top" :hide-after="0" content="邀请协同">
+          <IconPeoples class="footer-button"/>
+        </el-tooltip>
+      </div>
+      <div class="left-handle">
+        <a href="https://github.com/dromara/yft-design" target="_blank" rel="noopener noreferrer">
+          <el-tooltip placement="top" :hide-after="0" content="欢迎Star">
+            <IconGithub class="footer-button"></IconGithub>
+          </el-tooltip>
+        </a>
+      </div>
     </div>
     <div class="footer-right">
       <div class="right-handle" v-if="isChecked">
-        <FileInput :accept="'.json'" @change="files => loadFile(files)">
+        <FileInput :accept="'.json'" @change="(files: FileList) => loadFile(files)">
           <el-tooltip placement="top" :hide-after="0" content="上传文件">
             <IconUploadOne class="footer-button"/>
           </el-tooltip>
@@ -56,7 +65,6 @@ const exportFile = () => {
 
 const loadFile = (files: FileList) => {
   const jsonFile = files[0]
-  const { createElement } = useHandleElement()
   if (!jsonFile) return
   const reader = new FileReader()
   const [ canvas ] = useCanvas()
@@ -74,9 +82,22 @@ const loadFile = (files: FileList) => {
 
 <style lang="scss" scoped>
 .footer-left {
-  position: relative;
-  width: 40px;
+  display: flex;
+  width: 80px;
   cursor: pointer;
+  align-items: center;
+}
+.left-handle {
+  height: 24px;
+  flex: 1;
+  position: relative;
+  border-radius: $borderRadius;
+  &:hover{
+    background-color: #f1f1f1;
+  }
+  a {
+    color: inherit;
+  }
 }
 
 .footer-right {
