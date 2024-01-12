@@ -147,6 +147,7 @@ import {
   BarCode,
   PayCodeTwo,
   TextStyleOne,
+  DifferenceSet,
   Intersection,
   SendBackward,
   BringForward,

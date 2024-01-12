@@ -20,10 +20,31 @@
     </div>
 
     <div class="center-handler">
-      <el-tooltip placement="top" :hide-after="0">
-        <template #content>交叉</template>
-        <IconIntersection class="handler-item" @click="intersection()"/>
-      </el-tooltip>
+      <el-dropdown trigger="click">
+        <span class="handler-dropdown">
+          <el-tooltip placement="top" :hide-after="0">
+            <template #content>并集</template>
+            <IconUnionSelection class="handler-icon"/>
+          </el-tooltip>
+          <IconDown class="handler-icon icon-down"/>
+        </span>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item>
+              <IconUnionSelection class="handler-item"/>并集
+            </el-dropdown-item>
+            <el-dropdown-item>
+              <IconSubtractSelectionOne class="handler-item"/>减去顶层
+            </el-dropdown-item>
+            <el-dropdown-item>
+              <IconIntersectSelection class="handler-item"/>交集
+            </el-dropdown-item>
+            <el-dropdown-item>
+              <IconExcludeSelection class="handler-item"/>排除重叠
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
     </div>
     <div class="right-handler">
       <IconMinus class="handler-item" @click="scaleCanvas('-')" />
@@ -46,16 +67,16 @@
 
 <script lang="ts" setup>
 import { ref, computed } from 'vue'
-import { ElementNames, AlignCommand, LayerCommand } from '@/types/elements'
+import { ElementNames } from '@/types/elements'
 import { storeToRefs } from 'pinia'
-import { CanvasElement } from '@/types/canvas'
+import { Object as FabricObject } from 'fabric'
 import { useFabricStore, useMainStore, useSnapshotStore, useTemplatesStore } from "@/store"
 import useCanvas from '@/views/Canvas/useCanvas'
 import useHandleTool from '@/hooks/useHandleTool'
 import useCanvasScale from '@/hooks/useCanvasScale'
 import useHandleElement from '@/hooks/useHandleElement'
 import useHistorySnapshot from '@/hooks/useHistorySnapshot'
-import { Object as FabricObject } from 'fabric'
+
 
 const fabricStore = useFabricStore()
 const mainStore = useMainStore()
@@ -65,16 +86,7 @@ const { setCanvasScalePercentage, scaleCanvas, resetCanvas } = useCanvasScale()
 const { combineElements, uncombineElements, intersectElements } = useHandleElement()
 const { zoom } = storeToRefs(fabricStore)
 const { canvasObject } = storeToRefs(mainStore)
-const layerRef = ref()
-const layerPopoverRef = ref()
 
-const alignRef = ref()
-const alignPopoverRef = ref()
-
-const rotateRef = ref()
-const rotatePopoverRef = ref()
-
-const rotate = ref(0)
 
 const scaleRef = ref()
 const canvasZoom = computed(() => Math.round(zoom.value * 100) + '%')
@@ -95,16 +107,13 @@ const canUnGroup = computed(() => {
   return handleElement.value.type === ElementNames.GROUP
 })
 
-const lock = computed(() => {
+const canIntersection = computed(() => {
+  const [ canvas ] = useCanvas()
   if (!handleElement.value) return false
-  return handleElement.value.lockMovementX && handleElement.value.lockMovementY ? true : false
+  if (handleElement.value.type !== ElementNames.ACTIVE) return false
+  const activeObjects = canvas.getActiveObjects()
+  return activeObjects.length === 2 && activeObjects.filter(ele => ele.type === ElementNames.PATH).length === 2
 })
-
-// // 锁定解锁
-const changeElementLock = (status: boolean) => {
-  if (!handleElement.value) return
-  handleElement.value.lockMovementY = handleElement.value.lockMovementX = status
-}
 
 // 组合
 const group = () => {
@@ -123,30 +132,6 @@ const intersection = () => {
   intersectElements()
 }
 
-// // 修改旋转
-// const changeRotate = (value: number) => {
-//   const [ canvas ] = useCanvas()
-//   if (!handleElement.value || !canvas) return
-//   handleElement.value.set({angle: value})
-//   canvas.renderAll()
-//   templatesStore.modifedElement()
-// }
-
-// 修改旋转45度（顺时针或逆时针）
-// const changeRotate45 = (command: '+' | '-') => {
-//   const [ canvas ] = useCanvas()
-//   if (!handleElement.value || !canvas) return
-//   let _rotate = Math.floor(rotate.value / 45) * 45
-//   if (command === '+') _rotate = _rotate + 45
-//   else if (command === '-') _rotate = _rotate - 45
-//   if (_rotate < -180) _rotate = -180
-//   if (_rotate > 180) _rotate = 180
-//   rotate.value = _rotate
-//   handleElement.value.angle = _rotate
-//   canvas.renderAll()
-//   templatesStore.modifedElement()
-// }
-
 const applyCanvasPresetScale = (value: number) => {
   setCanvasScalePercentage(value)
 }
@@ -164,7 +149,13 @@ const applyCanvasPresetScale = (value: number) => {
   left: 50%;
   transform: translate(-50%, -50%);
   display: flex;
-
+  .handler-icon {
+    font-size: 14px;
+    width: 18px;
+  }
+  .icon-down {
+    transition: margin-top 0.1s;
+  }
   .handler-item {
     width: 32px;
     height: 24px;
@@ -172,77 +163,6 @@ const applyCanvasPresetScale = (value: number) => {
     justify-content: center;
     align-items: center;
     margin: 0 2px;
-    border-radius: $borderRadius;
-
-    &:not(.group-btn):hover {
-      background-color: #f1f1f1;
-    }
-
-    &.active {
-      color: $themeColor;
-    }
-
-    &.group-btn {
-      width: auto;
-      margin-right: 4px;
-
-      &:hover {
-        background-color: #f3f3f3;
-      }
-
-      .icon, .arrow {
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-
-      .icon {
-        width: 26px;
-        padding: 0 2px;
-
-        &:hover {
-          background-color: #e9e9e9;
-        }
-        &.active {
-          color: $themeColor;
-        }
-      }
-      .arrow {
-        font-size: 12px;
-
-        &:hover {
-          background-color: #e9e9e9;
-        }
-      }
-    }
-  }
-}
-.handler-icon-row {
-  justify-content: center;
-}
-.mt-10 {
-  margin-top: 10px;
-}
-.position-text {
-  display: flex;
-  align-items: center;
-}
-.position-input {
-  display: flex;
-}
-.position-num {
-  display: flex;
-  justify-content: flex-end;
-}
-.text-btn {
-  height: 30px;
-  line-height: 30px;
-  text-align: center;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #efefef;
     border-radius: $borderRadius;
   }
 }
@@ -266,10 +186,6 @@ const applyCanvasPresetScale = (value: number) => {
     text-align: center;
     cursor: pointer;
   }
-
-  .viewport-size {
-    font-size: 13px;
-  }
 }
 .preset-item {
   padding: 8px 20px;
@@ -280,16 +196,19 @@ const applyCanvasPresetScale = (value: number) => {
     color: $themeColor;
   }
 }
-.text-type-item {
-  padding: 5px 10px;
-  cursor: pointer;
-
+.center-handler .handler-dropdown {
+  display: flex;
+  width: 42px;
+  height: 24px;
+  align-items: center;
+  padding: 2px;
+  justify-content: center;
+  border-radius: $borderRadius;
   &:hover {
-    background-color: #f1f1f1;
-  }
-
-  & + .text-type-item {
-    margin-top: 3px;
+    background: #f1f1f1;
+    .icon-down {
+      margin-top: 3px;
+    }
   }
 }
 </style>

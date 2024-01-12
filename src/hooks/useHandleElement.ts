@@ -201,14 +201,10 @@ export default () => {
     const [ canvas ] = useCanvas()
     const activeObjects = canvas.getActiveObjects()
     if (!activeObjects) return
-    // activeObject.set({globalCompositeOperation: 'xor'})
-    // if (activeObjects.length !== 2) return
     const res = clipperPath(activeObjects)
     const path = new Path(res)
     canvas.add(path)
     canvas.renderAll()
-    // canvas.renderAll()
-    // templatesStore.modifedElement()
   }
 
   const uncombineElements = () => {
