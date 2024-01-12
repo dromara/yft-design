@@ -197,11 +197,14 @@ export default () => {
     templatesStore.renderElement()
   }
 
-  const intersectElements = () => {
+  const intersectElements = (val: number) => {
     const [ canvas ] = useCanvas()
-    const activeObjects = canvas.getActiveObjects()
+    let activeObjects = canvas.getActiveObjects()
     if (!activeObjects) return
-    const res = clipperPath(activeObjects)
+    if (activeObjects.length === 1 && activeObjects[0].type === ElementNames.GROUP) {
+      activeObjects = (activeObjects[0] as Group)._objects
+    }
+    const res = clipperPath(activeObjects, val)
     const path = new Path(res)
     canvas.add(path)
     canvas.renderAll()

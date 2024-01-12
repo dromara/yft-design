@@ -107,8 +107,10 @@ export default () => {
         activeElement.forEachObject(item => {
           deleteElement((item as CanvasElement).id)
         })
+      } 
+      else {
+        deleteElement(canvasObject.value.id)
       }
-      deleteElement((canvasObject.value as CanvasElement).id)
     }
     else if (thumbnailsFocus.value) deleteTemplate()
   }

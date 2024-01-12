@@ -19,7 +19,7 @@
       </el-tooltip>
     </div>
 
-    <div class="center-handler">
+    <div class="center-handler" v-show="canIntersection">
       <el-dropdown trigger="click">
         <span class="handler-dropdown">
           <el-tooltip placement="top" :hide-after="0">
@@ -30,16 +30,16 @@
         </span>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item>
+            <el-dropdown-item @click="intersection(0)">
               <IconUnionSelection class="handler-item"/>并集
             </el-dropdown-item>
-            <el-dropdown-item>
+            <el-dropdown-item @click="intersection(1)">
               <IconSubtractSelectionOne class="handler-item"/>减去顶层
             </el-dropdown-item>
-            <el-dropdown-item>
+            <el-dropdown-item @click="intersection(2)">
               <IconIntersectSelection class="handler-item"/>交集
             </el-dropdown-item>
-            <el-dropdown-item>
+            <el-dropdown-item @click="intersection(3)">
               <IconExcludeSelection class="handler-item"/>排除重叠
             </el-dropdown-item>
           </el-dropdown-menu>
@@ -69,14 +69,13 @@
 import { ref, computed } from 'vue'
 import { ElementNames } from '@/types/elements'
 import { storeToRefs } from 'pinia'
-import { Object as FabricObject } from 'fabric'
+import { Object as FabricObject, Group } from 'fabric'
 import { useFabricStore, useMainStore, useSnapshotStore, useTemplatesStore } from "@/store"
 import useCanvas from '@/views/Canvas/useCanvas'
 import useHandleTool from '@/hooks/useHandleTool'
 import useCanvasScale from '@/hooks/useCanvasScale'
 import useHandleElement from '@/hooks/useHandleElement'
 import useHistorySnapshot from '@/hooks/useHistorySnapshot'
-
 
 const fabricStore = useFabricStore()
 const mainStore = useMainStore()
@@ -110,7 +109,14 @@ const canUnGroup = computed(() => {
 const canIntersection = computed(() => {
   const [ canvas ] = useCanvas()
   if (!handleElement.value) return false
+  if (handleElement.value.type === ElementNames.GROUP) {
+    const groupObject = handleElement.value as Group
+    const sonObjects = groupObject._objects.filter(ele => ele.type === ElementNames.PATH)
+    if (groupObject._objects.length === 2 && sonObjects && sonObjects.length === 2) return true
+    return false
+  }
   if (handleElement.value.type !== ElementNames.ACTIVE) return false
+  
   const activeObjects = canvas.getActiveObjects()
   return activeObjects.length === 2 && activeObjects.filter(ele => ele.type === ElementNames.PATH).length === 2
 })
@@ -127,9 +133,9 @@ const ungroup = () => {
   uncombineElements()
 }
 
-const intersection = () => {
+const intersection = (val: number) => {
   if (!handleElement.value) return
-  intersectElements()
+  intersectElements(val)
 }
 
 const applyCanvasPresetScale = (value: number) => {
@@ -154,7 +160,7 @@ const applyCanvasPresetScale = (value: number) => {
     width: 18px;
   }
   .icon-down {
-    transition: margin-top 0.1s;
+    transition: margin-top 0.05s;
   }
   .handler-item {
     width: 32px;

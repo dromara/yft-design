@@ -2,7 +2,8 @@ import { Path, Object as FabricObject, Group } from 'fabric'
 import ClipperLib from 'clipper-lib'
 import Raphael from 'raphael'
 
-export function clipperPath(fabricObjects: FabricObject[]) {
+export function clipperPath(fabricObjects: FabricObject[], type: number) {
+  // 0: 并集 1：减去顶层  2：交集  3：排除重叠
   changePathPosition(fabricObjects, 'center')
   const subjPath = fabricObjects[0] as Path
   const clipPath = fabricObjects[1] as Path
@@ -10,7 +11,6 @@ export function clipperPath(fabricObjects: FabricObject[]) {
   const x = clipPath.left - subjPath.left, y = clipPath.top - subjPath.top
   const pathOffsetX = clipPath.pathOffset.x - subjPath.pathOffset.x
   const pathOffsetY = clipPath.pathOffset.y - subjPath.pathOffset.y
-  // console.log('x:', x, 'y:', y, 'pathOffsetX:', (x-pathOffsetX)/2, 'pathOffsetY:', (y-pathOffsetY)/2)
   const subjPathPoints = getPathPoints(subjPath)
   const clipPathPoints = getPathPoints(clipPath, -pathOffsetX+x, -pathOffsetY+y)
   const scale = 100;
@@ -25,8 +25,9 @@ export function clipperPath(fabricObjects: FabricObject[]) {
   // var clipTypesTexts = "Union, Difference, Xor, Intersection";
   // var solution_paths, svg, cont = document.getElementById('svgcontainer');
   // var i;
+  const clipTypes = [ClipperLib.ClipType.ctUnion, ClipperLib.ClipType.ctDifference, ClipperLib.ClipType.ctIntersection, ClipperLib.ClipType.ctXor];
   let solutionPaths = new ClipperLib.Paths() as ArrayLike<any>;
-  cpr.Execute(ClipperLib.ClipType.ctXor, solutionPaths, subjFillType, clipFillType);
+  cpr.Execute(clipTypes[type], solutionPaths, subjFillType, clipFillType);
   // for (i = 0; i < clipTypes.length; i++) {
   //   solution_paths = new ClipperLib.Paths();
   //   cpr.Execute(clipTypes[i], solution_paths, subject_fillType, clip_fillType);
