@@ -1,4 +1,4 @@
-import { Path, Object as FabricObject, Group } from 'fabric'
+import { Path, Object as FabricObject } from 'fabric'
 import ClipperLib from 'clipper-lib'
 import Raphael from 'raphael'
 
@@ -11,8 +11,8 @@ export function clipperPath(fabricObjects: FabricObject[], type: number) {
   const x = clipPath.left - subjPath.left, y = clipPath.top - subjPath.top
   const pathOffsetX = clipPath.pathOffset.x - subjPath.pathOffset.x
   const pathOffsetY = clipPath.pathOffset.y - subjPath.pathOffset.y
-  const subjPathPoints = getPathPoints(subjPath)
-  const clipPathPoints = getPathPoints(clipPath, -pathOffsetX+x, -pathOffsetY+y)
+  const subjPathPoints = getPathPoints(subjPath, subjPath.scaleX, subjPath.scaleY)
+  const clipPathPoints = getPathPoints(clipPath, clipPath.scaleX, clipPath.scaleY, -pathOffsetX+x, -pathOffsetY+y)
   const scale = 100;
   ClipperLib.JS.ScaleUpPaths(subjPathPoints, scale);
   ClipperLib.JS.ScaleUpPaths(clipPathPoints, scale);
@@ -45,7 +45,7 @@ export function clipperPath(fabricObjects: FabricObject[], type: number) {
 }
 
 
-const getPathPoints = (item: Path, x = 0, y = 0) : ArrayLike<any> => {
+const getPathPoints = (item: Path, scaleX: number, scaleY: number, x = 0, y = 0) : ArrayLike<any> => {
   const itemPath = item.path.toString().replaceAll(',', ' ').split('Z')
   let pathPoints: any = []
   for (let i = 0; i < itemPath.length; i++) {
@@ -54,7 +54,7 @@ const getPathPoints = (item: Path, x = 0, y = 0) : ArrayLike<any> => {
     if (!item) continue
     for (let c = 0; c < Raphael.getTotalLength(item.trim() + ' Z'); c += 1) {
       let point = Raphael.getPointAtLength(item.trim() + ' Z', c)
-      pathPoint.push({X: point.x + x, Y: point.y + y})
+      pathPoint.push({X: point.x * scaleX + x, Y: point.y * scaleY + y})
     }
     pathPoints.push(pathPoint)
   }
