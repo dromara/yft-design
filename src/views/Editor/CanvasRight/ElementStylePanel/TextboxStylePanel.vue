@@ -11,7 +11,7 @@
         </el-select>
       </el-col>
       <el-col :span="12">
-        <el-select v-model="handleElement.fontSize" placement="left" @change="handleElementFontSize">
+        <el-select class="fontsize" filterable allow-create default-first-option v-model="handleElement.fontSize" placement="left" @change="handleElementFontSize">
           <el-option v-for="item in FontSizeLibs" :key="item" :label="item" :value="item"></el-option>
         </el-select>
       </el-col>
@@ -174,7 +174,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { useMainStore, useTemplatesStore } from '@/store'
 import { storeToRefs } from 'pinia'
 import { ElMessage } from 'element-plus'
@@ -209,6 +209,7 @@ const hasUnderline = computed(() => handleElement.value.underline)
 const hasLinethrough = computed(() => handleElement.value.linethrough)
 const textAlign = computed(() => handleElement.value.textAlign)
 const elementFontFamily = ref<string>(hasFontFamily.value)
+const fontSizeRef = ref<Element>()
 const fontOptionGroups = ref<FontGroupOption[]>([
   {
     label: '系统字体',
@@ -415,6 +416,14 @@ const handleElementStyleClear = () => {
   templatesStore.modifedElement()
   canvas.renderAll()
 }
+
+onMounted(() => {
+  const fontsizeSelect = document.querySelector('.fontsize input')
+  if (!fontsizeSelect) return
+  fontsizeSelect.addEventListener('input', (val: any) => {
+    val.target.value = val.target.value.replace(/[^\d]/g,'')
+  })
+})
 </script>
 
 <style lang="scss" scoped>

@@ -1,4 +1,3 @@
-import { onMounted, onUnmounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useMainStore, useTemplatesStore, useKeyboardStore } from '@/store'
 // import { ElementOrderCommands } from '@/types/edit'
