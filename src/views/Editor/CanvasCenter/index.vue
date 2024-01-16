@@ -16,6 +16,7 @@ import { useFabricStore, useMainStore } from '@/store'
 
 import { contextMenus } from '@/configs/contextMenu'
 import { initEditor } from '@/views/Canvas/useCanvas'
+import { initFilter } from '@/views/Canvas/useFilter'
 import useCanvasHotkey from '@/hooks/useCanvasHotkey'
 const fabricStore = useFabricStore()
 const mainStore = useMainStore()
@@ -25,6 +26,7 @@ const { keydownListener, keyupListener } = useCanvasHotkey()
 
 onMounted(() => {
   initEditor()
+  initFilter()
   document.addEventListener('keydown', keydownListener)
   document.addEventListener('keyup', keyupListener)
   window.addEventListener('blur', keyupListener)

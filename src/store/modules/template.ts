@@ -1,13 +1,15 @@
 import { defineStore } from 'pinia'
 import { Templates } from '@/mocks/templates'
-import { Template, CanvasElement } from '@/types/canvas'
-import { Object as FabricObject, SerializedImageProps } from 'fabric'
+import { Template, CanvasElement, ImageElement, GroupElement } from '@/types/canvas'
+import { Object as FabricObject, SerializedImageProps, Image, Group } from 'fabric'
 import { WorkSpaceDrawType, propertiesToInclude } from '@/configs/canvas'
 import { useMainStore } from './main'
+import { ElementNames } from '@/types/elements'
 import useCanvasScale from '@/hooks/useCanvasScale'
 import useCanvas from '@/views/Canvas/useCanvas'
 import useHistorySnapshot from '@/hooks/useHistorySnapshot'
 import useCommon from '@/views/Canvas/useCommon'
+import useFilter from '@/views/Canvas/useFilter'
 
 
 interface UpdateElementData {
@@ -63,20 +65,22 @@ export const useTemplatesStore = defineStore('Templates', {
       const { initCommon } = useCommon()
       const { setCanvasSize } = useCanvasScale()
       await canvas.loadFromJSON(this.currentTemplate)
+      this.setObjectFilter(this.currentTemplate.objects as CanvasElement[])
       setCanvasSize()
       initCommon()
     },
 
     async renderElement() {
-      const mainStore = useMainStore()
-      const { setCanvasSize } = useCanvasScale()
       const [ canvas ] = useCanvas()
-      const { initCommon } = useCommon()
+      // const { initCommon } = useCommon()
+      // const { setCanvasSize } = useCanvasScale()
+      const mainStore = useMainStore()
       canvas.discardActiveObject()
       mainStore.setCanvasObject(undefined)
-      await canvas.loadFromJSON(this.currentTemplate)
-      setCanvasSize()
-      initCommon()
+      // await canvas.loadFromJSON(this.currentTemplate)
+      // setCanvasSize()
+      // initCommon()
+      await this.renderTemplate()
     },
 
     modifedElement() {
@@ -111,6 +115,27 @@ export const useTemplatesStore = defineStore('Templates', {
       })
       initCommon()
       addHistorySnapshot()
+    },
+
+    setObjectFilter(objects: CanvasElement[]) {
+      objects.forEach(ele => {
+        if (ele.type === ElementNames.IMAGE) {
+          this.setImageFilter(ele as ImageElement)
+        }
+        if (ele.type === ElementNames.GROUP) {
+          this.setObjectFilter(((ele as GroupElement).objects) as CanvasElement[])
+        }
+      })
+    },
+
+    setImageFilter(image: ImageElement) {
+      if (!image.filter) return
+      const [ filter ] = useFilter()
+      filter.postMessage({type: "filter", src: image.src, filter: JSON.stringify(image.filter)});
+      filter.addEventListener('message', (event) => {
+        const originalUint8Array = event.data;
+        console.log('Received data from worker: ', originalUint8Array);
+      });
     },
 
     setTemplates(templates: Template[]) {

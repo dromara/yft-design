@@ -16,7 +16,7 @@
   "dependencies": {
     "@element-plus/icons-vue": "^2.0.10",
     "@icon-park/vue-next": "^1.4.2",
-    "@svgdotjs/svg.js": "^3.1.2",
+    "@pixi/webworker": "^7.3.3",
     "@vueuse/core": "^10.2.1",
     "@vueuse/shared": "^10.6.1",
     "axios": "^1.6.0",
@@ -43,6 +43,8 @@
     "pdf-lib": "^1.17.1",
     "perfect-freehand": "^1.2.0",
     "pinia": "^2.0.28",
+    "pixi-filters": "^5.2.1",
+    "pixi.js": "^7.3.3",
     "raphael": "^2.3.0",
     "register-service-worker": "^1.7.2",
     "tinycolor2": "^1.6.0",

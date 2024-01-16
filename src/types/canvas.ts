@@ -139,6 +139,7 @@ export interface GuideLineProps extends Line {
 
 export interface ImageElement extends SerializedImageProps, CommenElement {
   type: string
+  filter: []
   isCropping?: boolean
   originId?: string
   cropPath?: FabricObject
