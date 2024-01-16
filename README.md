@@ -1,5 +1,5 @@
 # yft-design
-基于fabric.js的图片设计，使用 Vue3 + TypeScript + Fabric.js + Element-Plus，支持 文字、图片、形状、线条、二维码 、条形码几种最常用的元素类型，每一种元素都拥有高度可编辑能力，缩略图显示，模板，支持导出json，svg, image文件。  
+基于fabric.js的多页面图片设计，使用 Vue3 + TypeScript + Fabric.js + Element-Plus，支持 文字、图片、形状、线条、二维码 、条形码几种最常用的元素类型，每一种元素都拥有高度可编辑能力，缩略图显示，模板，支持导出json，svg, image文件。  
 <b>快速体验：[https://yft.design](https://yft.design)</b>  
 <b>体验Demo：[https://dromara.org/yft-design](https://dromara.org/yft-design)</b>
 
@@ -54,7 +54,9 @@ npm run build
 - 历史记录（撤销、重做）
 - 快捷键
 - 右键菜单
-- 导入PDF(完美还原格式，不支持图片裁切导入), PSD(开发中), SVG, CDR(未启动)
+- 导入PDF(完美还原格式，不支持图片裁切导入)
+- 导入PSD(完美还原格式，不支持特效还原)
+- 导入SVG(不支持tspan字体)
 - 导出本地文件（SVG、图片、PDF(TODO)）
 ### 页面编辑
 - 页面添加、删除
@@ -67,7 +69,7 @@ npm run build
 - 画布缩放、移动
 - 页面模板
 - 选择面板（隐藏元素、层级排序、元素命名）(TODO)
-### 页面元素编辑
+### 元素编辑
 - 元素添加、删除
 - 元素复制粘贴
 - 元素拖拽移动
@@ -95,6 +97,7 @@ npm run build
 - 翻转
 - 边框
 - 阴影
+- 裁切
 #### 形状
 - 填充色
 - 边框
@@ -106,3 +109,10 @@ npm run build
 - 颜色
 - 宽度
 - 样式
+
+## 联系作者
+15972699417@163.com
+
+## License
+
+Licensed under the MIT License.
