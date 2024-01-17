@@ -129,12 +129,15 @@ export const useTemplatesStore = defineStore('Templates', {
     },
 
     setImageFilter(image: ImageElement) {
-      if (!image.filter) return
+      if (!image.pixiFilters) return
       const [ filter ] = useFilter()
-      filter.postMessage({type: "filter", src: image.src, filter: JSON.stringify(image.filter)});
-      filter.addEventListener('message', (event) => {
-        const originalUint8Array = event.data;
-        console.log('Received data from worker: ', originalUint8Array);
+      filter.postMessage({
+        id: image.id,
+        type: "filter", 
+        src: image.src, 
+        pixiFilters: JSON.stringify(image.pixiFilters), 
+        width: image.width, 
+        height: image.height
       });
     },
 
