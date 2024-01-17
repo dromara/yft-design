@@ -2,6 +2,10 @@ import filterWorker from "@/worker/filter?worker"
 import useCanvas from "./useCanvas"
 import useHandleElement from "@/hooks/useHandleElement"
 import { Image } from "fabric"
+import { useTemplatesStore } from "@/store"
+import { storeToRefs } from "pinia"
+import { CanvasElement, GroupElement, ImageElement } from "@/types/canvas"
+import { ElementNames } from "@/types/elements"
 
 let filter: Worker | undefined = undefined
 
@@ -19,16 +23,32 @@ export const initFilter = () => {
   document.body.removeChild(canvas)
 }
 
+const findElement = (eid: string, elements: CanvasElement[] | undefined): CanvasElement | undefined => {
+  if (!elements) return
+  for (let i = 0; i < elements.length; i++) {
+    const item = elements[i] as CanvasElement
+    if (item.id === eid) {
+      return item
+    }
+    if (item.type === ElementNames.GROUP) {
+      return findElement(eid, ((item as GroupElement).objects) as CanvasElement[])
+    }
+  }
+  return
+}
+
 export const handleFilter = (filter: Worker) => {
-  const [ canvas ] = useCanvas()
-  const { queryElement } = useHandleElement()
-  filter.addEventListener('message', (event) => {
+  const templatesStore = useTemplatesStore()
+  const { currentTemplate } = storeToRefs(templatesStore)
+  
+  filter.addEventListener('message', async (event) => {
     const data = event.data
-    console.log('data:', event.data)
-    const element = queryElement(data.id) as Image
+    const element = findElement(data.id, currentTemplate.value.objects as CanvasElement[]) as ImageElement
+    console.log('element:', element)
     if (!element) return
-    element.setSrc(data.res)
-    canvas.renderAll()
+    element.src = data.res
+    await templatesStore.renderElement()
+    templatesStore.modifedElement()
   });
 }
 

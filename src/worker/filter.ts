@@ -1,6 +1,6 @@
 import { Application, Texture, Sprite, Container } from '@pixi/webworker';
-import { PixiFilter, PixiGlowFilter } from '@/types/pixiFilter';
-import { GlowFilter } from 'pixi-filters'
+import { PixiFilter, PixiGlowFilter, PixiColorOverlayFilter } from '@/types/pixiFilter';
+import { GlowFilter, ColorOverlayFilter } from 'pixi-filters'
 
 let app: Application | undefined = undefined
 
@@ -16,22 +16,31 @@ self.onmessage = async (e) => {
     app?.renderer.resize(width, height)
     const texture = await Texture.fromURL(src)
     const sprite = new Sprite(texture)
+    sprite.filters = []
     const imagefilters = JSON.parse(pixiFilters) as PixiFilter[]
     for (let i = 0; i < imagefilters.length; i++) {
-      const ele = imagefilters[i] as PixiGlowFilter
+      const ele = imagefilters[i]
       if (ele.type === 'GlowFilter') {
+        const item = ele as PixiGlowFilter
         const glowFilter = new GlowFilter({
-          distance: ele.distance, 
-          outerStrength: ele.outerStrength,
-          color: ele.color,
-          quality: ele.quality,
-          alpha: ele.alpha
+          distance: item.distance, 
+          outerStrength: item.outerStrength,
+          color: item.color,
+          quality: item.quality,
+          alpha: item.alpha
         })
-        sprite.filters?.push(glowFilter)
+        // sprite.filters.push(glowFilter)
+      }
+      if (ele.type === 'ColorOverlayFilter') {
+        const item = ele as PixiColorOverlayFilter
+        const colorOverlayFilter = new ColorOverlayFilter(0xD12323, 1)
+        
+        sprite.filters.push(colorOverlayFilter)
       }
     }
     app?.stage.addChild(sprite)
     const res = await app?.renderer.plugins.extract.base64(sprite)
+    console.log('img:', `<img src="${res}" alt=""/>`)
     const data = {res, id}
     postMessage(data)
   }
