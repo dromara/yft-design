@@ -5,6 +5,7 @@ export interface PixiFilter {
 export interface PixiGlowFilter extends PixiFilter {
   distance: number
   outerStrength: number
+  innerStrength?: number
   color: number
   quality: number
   alpha: number

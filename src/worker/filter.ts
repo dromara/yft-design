@@ -22,25 +22,25 @@ self.onmessage = async (e) => {
       const ele = imagefilters[i]
       if (ele.type === 'GlowFilter') {
         const item = ele as PixiGlowFilter
+        console.log('item:', item)
         const glowFilter = new GlowFilter({
-          distance: item.distance, 
-          outerStrength: item.outerStrength,
+          distance: 15, 
+          outerStrength: 2,
+          innerStrength: 2,
           color: item.color,
-          quality: item.quality,
           alpha: item.alpha
         })
-        // sprite.filters.push(glowFilter)
+        sprite.filters.push(glowFilter)
       }
       if (ele.type === 'ColorOverlayFilter') {
         const item = ele as PixiColorOverlayFilter
-        const colorOverlayFilter = new ColorOverlayFilter(0xD12323, 1)
-        
+        const colorOverlayFilter = new ColorOverlayFilter(item.color, item.alpha)
         sprite.filters.push(colorOverlayFilter)
       }
     }
     app?.stage.addChild(sprite)
     const res = await app?.renderer.plugins.extract.base64(sprite)
-    console.log('img:', `<img src="${res}" alt=""/>`)
+    // console.log('img:', `<img src="${res}" alt=""/>`)
     const data = {res, id}
     postMessage(data)
   }
