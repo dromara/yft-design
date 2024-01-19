@@ -1,6 +1,6 @@
-import { Application, Texture, Sprite, Container } from '@pixi/webworker';
-import { PixiFilter, PixiGlowFilter, PixiColorOverlayFilter } from '@/types/pixiFilter';
-import { GlowFilter, ColorOverlayFilter } from 'pixi-filters'
+import { Application, Texture, Sprite, Container, Filter } from '@pixi/webworker';
+import { PixiFilter, PixiGlowFilter, PixiColorOverlayFilter, PixiColorGradientFilter } from '@/types/pixiFilter';
+import { GlowFilter, ColorOverlayFilter, ColorGradientFilter } from 'pixi-filters'
 
 let app: Application | undefined = undefined
 
@@ -21,27 +21,46 @@ self.onmessage = async (e) => {
     for (let i = 0; i < imagefilters.length; i++) {
       const ele = imagefilters[i]
       if (ele.type === 'GlowFilter') {
-        const item = ele as PixiGlowFilter
-        console.log('item:', item)
-        const glowFilter = new GlowFilter({
-          distance: 15, 
-          outerStrength: 2,
-          innerStrength: 2,
-          color: item.color,
-          alpha: item.alpha
-        })
-        sprite.filters.push(glowFilter)
+        handleGlowFilter(ele as PixiGlowFilter, sprite.filters)
       }
       if (ele.type === 'ColorOverlayFilter') {
-        const item = ele as PixiColorOverlayFilter
-        const colorOverlayFilter = new ColorOverlayFilter(item.color, item.alpha)
-        sprite.filters.push(colorOverlayFilter)
+        handleColorOverlayFilter(ele as PixiColorOverlayFilter, sprite.filters)
+      }
+      if (ele.type === 'ColorGradientFilter') {
+        handleColorGradientFilter(ele as PixiColorGradientFilter, sprite.filters)
       }
     }
     app?.stage.addChild(sprite)
     const res = await app?.renderer.plugins.extract.base64(sprite)
-    // console.log('img:', `<img src="${res}" alt=""/>`)
     const data = {res, id}
     postMessage(data)
   }
+}
+
+const handleGlowFilter = (item: PixiGlowFilter, filters: Filter[]) => {
+  const glowFilter = new GlowFilter({
+    distance: 15, 
+    outerStrength: 2,
+    innerStrength: 2,
+    color: item.color,
+    alpha: item.alpha
+  })
+  filters.push(glowFilter)
+}
+
+const handleColorOverlayFilter = (item: PixiColorOverlayFilter, filters: Filter[]) => {
+  const colorOverlayFilter = new ColorOverlayFilter(item.color, item.alpha)
+  filters.push(colorOverlayFilter)
+}
+
+const handleColorGradientFilter = (item: PixiColorGradientFilter, filters: Filter[]) => {
+  console.log('item:', item)
+  const colorGradientFilter = new ColorGradientFilter({
+    type: item.gradientType,
+    angle: item.angle,
+    alpha: item.alpha,
+    maxColors: item.maxColors,
+    stops: item.stops
+  })
+  filters.push(colorGradientFilter)
 }

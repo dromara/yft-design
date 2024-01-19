@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 // import { propTypes } from '@/utils/propTypes'
 // import { useDesign } from '@/hooks/web/useDesign'
-import { PixabayImageDetail } from '@/api/image/types'
+import { ImageHit } from '@/api/image/types'
 import { ref, nextTick, unref, onMounted, watch } from 'vue'
 import { useEventListener, useIntersectionObserver } from '@vueuse/core'
 import { debounce } from 'lodash-es'
@@ -14,7 +14,7 @@ const emit = defineEmits(['loadMore'])
 
 const props = defineProps({
   data: {
-    type: Array<PixabayImageDetail>,
+    type: Array<ImageHit>,
     default: []
   },
   reset: {
