@@ -223,15 +223,15 @@ const changeTemplateHeight = () => {
 }
 
 // 修改出血尺寸
-const changeTemplateClip = () => {
+const changeTemplateClip = async () => {
   templatesStore.setClip(clip.value)
-  templatesStore.renderTemplate()
+  await templatesStore.renderTemplate()
 }
 
 // 修改安全尺寸
-const changeTemplateSafe = () => {
+const changeTemplateSafe = async () => {
   safe.value = Number(safe.value)
-  templatesStore.renderTemplate()
+  await templatesStore.renderTemplate()
 }
 
 // 修改固定宽高比
@@ -251,22 +251,22 @@ const changeWorkRound = (roundStatus: boolean) => {
 }
 
 // 修改尺寸单位
-const changeUnitMode = () => {
+const changeUnitMode = async () => {
+  const width = currentTemplate.value.width / currentTemplate.value.zoom
+  const heigth = currentTemplate.value.height / currentTemplate.value.zoom
   if (unitMode.value === 0) {
-    canvasWidth.value = px2mm(currentTemplate.value.width / currentTemplate.value.zoom)
-    canvasHeight.value = px2mm(currentTemplate.value.height / currentTemplate.value.zoom)
+    canvasWidth.value = px2mm(width)
+    canvasHeight.value = px2mm(heigth)
     clip.value = 2
     safe.value = 3
-    changeTemplateClip()
-    changeTemplateSafe()
   } 
   else {
-    canvasWidth.value = currentTemplate.value.width / currentTemplate.value.zoom
-    canvasHeight.value = currentTemplate.value.height / currentTemplate.value.zoom
+    canvasWidth.value = width
+    canvasHeight.value = heigth
     clip.value = safe.value = 0
-    changeTemplateClip()
-    changeTemplateSafe()
   }
+  await changeTemplateClip()
+  await changeTemplateSafe()
 }
 
 // 应用背景到所有页面
