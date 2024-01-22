@@ -19,7 +19,7 @@ export default () => {
   const { templates, templateIndex, currentTemplate } = storeToRefs(templatesStore)
   // const mainStore = useMainStore()
   // const slidesStore = useSlidesStore()
-  const { selectedTemplatesIndex: _selectedTemplatesIndex, activeElementIdList } = storeToRefs(mainStore)
+  const { selectedTemplatesIndex: _selectedTemplatesIndex } = storeToRefs(mainStore)
   // const { currentSlide, templates, theme, slideIndex } = storeToRefs(templatesStore)
 
   const selectedTemplatesIndex = computed(() => [..._selectedTemplatesIndex.value, templateIndex.value])
@@ -51,11 +51,10 @@ export default () => {
   }
 
   // // 重置页面
-  const resetTemplate = () => {
+  const resetTemplate = async () => {
     templatesStore.setTemplateIndex(0)
-    mainStore.setActiveElementIdList([])
     templatesStore.setTemplates([getEmptyTemplate()])
-    templatesStore.renderTemplate()
+    await templatesStore.renderTemplate()
   }
 
   /**
@@ -64,11 +63,9 @@ export default () => {
    */
   const updateTemplateIndex = (command: string) => {
     if (command === KEYS.UP && templateIndex.value > 0) {
-      if (activeElementIdList.value.length) mainStore.setActiveElementIdList([])
       templatesStore.setTemplateIndex(templateIndex.value - 1)
     }
     else if (command === KEYS.DOWN && templateIndex.value < templates.value.length - 1) {
-      if (activeElementIdList.value.length) mainStore.setActiveElementIdList([])
       templatesStore.setTemplateIndex(templateIndex.value + 1)
     }
     templatesStore.renderTemplate()
@@ -96,11 +93,10 @@ export default () => {
   }
 
   // 创建一页空白页并添加到下一页
-  const createTemplate = () => {
-    mainStore.setActiveElementIdList([])
-    templatesStore.addTemplate(getEmptyTemplate())
+  const createTemplate = async () => {
+    await templatesStore.addTemplate(getEmptyTemplate())
     templatesStore.setTemplateIndex(templateIndex.value)
-    templatesStore.renderTemplate()
+    await templatesStore.renderTemplate()
   }
 
   const addTemplate = (template: Template) => {
@@ -123,7 +119,6 @@ export default () => {
   //       ...slide,
   //       id: nanoid(10),
   //     }
-  //     mainStore.setActiveElementIdList([])
   //     slidesStore.addSlide(newSlide)
   //     
   //   }
@@ -153,7 +148,6 @@ export default () => {
   // 选中全部页面
   const selectAllSlide = () => {
     const newSelectedSlidesIndex = Array.from(Array(templates.value.length), (item, index) => index)
-    mainStore.setActiveElementIdList([])
     mainStore.updateSelectedTemplatesIndex(newSelectedSlidesIndex)
   }
 

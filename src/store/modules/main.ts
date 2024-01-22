@@ -20,7 +20,6 @@ export interface MainState {
   imageCategoryData: ImageCategoryData[]
   illustrationCategoryType: string[]
   illustrationCategoryData: ImageCategoryData[]
-  activeElementIdList: string[]
   handleElementId: string
   sizeMode: number
   unitMode: number
@@ -54,7 +53,6 @@ export const useMainStore = defineStore('main', {
     imageCategoryData: ImageCategoryInfo,
     illustrationCategoryType: [],
     illustrationCategoryData: ImageCategoryInfo,
-    activeElementIdList: [], // 被选中的元素ID集合，包含 handleElementId
     handleElementId: '', // 正在操作的元素ID
     sizeMode: 0,  // 模板样式
     unitMode: 0,  // 单位
@@ -78,7 +76,6 @@ export const useMainStore = defineStore('main', {
     //   const slidesStore = useSlidesStore()
     //   const currentSlide = slidesStore.currentSlide
     //   if (!currentSlide || !currentSlide.elements) return []
-    //   return currentSlide.elements.filter(element => state.activeElementIdList.includes(element.id))
     },
   
     handleElement() {
@@ -90,12 +87,6 @@ export const useMainStore = defineStore('main', {
   },
 
   actions: {
-    setActiveElementIdList(activeElementIdList: string[]) {
-      if (activeElementIdList.length === 1) this.handleElementId = activeElementIdList[0]
-      else this.handleElementId = ''
-      
-      this.activeElementIdList = activeElementIdList
-    },
     
     setCanvasObject(canvasObject: FabricObject | undefined) {
       this.canvasObject = canvasObject

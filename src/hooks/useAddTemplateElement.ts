@@ -31,7 +31,6 @@ export default () => {
       if (element.type === ElementNames.GROUP) element.id = groupIdMap[element.id]
     }
     templatesStore.addElement(elements)
-    mainStore.setActiveElementIdList(Object.values(elIdMap))
   }
 
   /**

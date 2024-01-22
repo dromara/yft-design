@@ -135,11 +135,9 @@ const handleClickTemplateThumbnail = (e: MouseEvent, index: number) => {
 
 // 切换页面
 const changeSlideIndex = (index: number) => {
-  mainStore.setActiveElementIdList([])
   if (templateIndex.value === index) return
   templatesStore.setTemplateIndex(index)
   templatesStore.renderTemplate()
-  canvasObject.value = null
 }
 
 const thumbToggle = () => {

@@ -1,6 +1,5 @@
 import { storeToRefs } from 'pinia'
 import { useMainStore, useTemplatesStore, useKeyboardStore } from '@/store'
-// import { ElementOrderCommands } from '@/types/edit'
 import { KEYS } from '@/configs/hotkey'
 import useHandleTemplate from './useHandleTemplate'
 import useHandleElement from './useHandleElement'
@@ -8,22 +7,11 @@ import useHistorySnapshot from './useHistorySnapshot'
 import { CanvasElement, GroupElement } from '@/types/canvas'
 import { ElementNames } from '@/types/elements'
 
-// import useSlideHandler from './useSlideHandler'
-// import useCombineElement from './useCombineElement'
-// import useCopyAndPasteElement from './useCopyAndPasteElement'
-// import useSelectAllElement from './useSelectAllElement'
-// import useMoveElement from './useMoveElement'
-// import useOrderElement from './useOrderElement'
-// import useHistorySnapshot from './useHistorySnapshot'
-// import useScreening from './useScreening'
-// import useScaleCanvas from './useScaleCanvas'
-
 export default () => {
   const mainStore = useMainStore()
   const keyboardStore = useKeyboardStore()
   const templatesStore = useTemplatesStore()
   const {
-    activeElementIdList,
     disableHotkeys,
     handleElement,
     canvasObject,
@@ -138,14 +126,12 @@ export default () => {
   //   if (!currentSlide.value.elements.length) return
   //   if (!handleElementId.value) {
   //     const firstElement = currentSlide.value.elements[0]
-  //     mainStore.setActiveElementIdList([firstElement.id])
   //     return
   //   }
   //   const currentIndex = currentSlide.value.elements.findIndex(el => el.id === handleElementId.value)
   //   const nextIndex = currentIndex >= currentSlide.value.elements.length - 1 ? 0 : currentIndex + 1
   //   const nextElementId = currentSlide.value.elements[nextIndex].id
 
-  //   mainStore.setActiveElementIdList([nextElementId])
   // }
 
   const keydownListener = (e: KeyboardEvent) => {
