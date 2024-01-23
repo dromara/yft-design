@@ -12,7 +12,7 @@ self.onmessage = async (e) => {
   }
   else if (type === 'filter') {
     const { src, pixiFilters, width, height, id } = e.data
-    // app?.renderer.clear()
+    app?.renderer.clear()
     app?.renderer.resize(width, height)
     const texture = await Texture.fromURL(src)
     const sprite = new Sprite(texture)
@@ -30,6 +30,7 @@ self.onmessage = async (e) => {
         handleColorGradientFilter(ele as PixiColorGradientFilter, sprite.filters)
       }
     }
+    console.log('sprite.filters:', sprite.filters)
     app?.stage.addChild(sprite)
     const res = await app?.renderer.plugins.extract.base64(sprite)
     const data = {res, id}

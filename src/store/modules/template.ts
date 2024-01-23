@@ -118,10 +118,10 @@ export const useTemplatesStore = defineStore('Templates', {
 
     setObjectFilter(objects: CanvasElement[]) {
       objects.forEach(ele => {
-        if (ele.type === ElementNames.IMAGE) {
+        if (ele.type.toLowerCase() === ElementNames.IMAGE) {
           this.setImageFilter(ele as ImageElement)
         }
-        if (ele.type === ElementNames.GROUP) {
+        if (ele.type.toLowerCase() === ElementNames.GROUP) {
           this.setObjectFilter(((ele as GroupElement).objects) as CanvasElement[])
         }
       })

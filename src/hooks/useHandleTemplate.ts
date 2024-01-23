@@ -61,14 +61,14 @@ export default () => {
    * 移动页面焦点
    * @param command 移动页面焦点命令：上移、下移
    */
-  const updateTemplateIndex = (command: string) => {
+  const updateTemplateIndex = async (command: string) => {
     if (command === KEYS.UP && templateIndex.value > 0) {
       templatesStore.setTemplateIndex(templateIndex.value - 1)
     }
     else if (command === KEYS.DOWN && templateIndex.value < templates.value.length - 1) {
       templatesStore.setTemplateIndex(templateIndex.value + 1)
     }
-    templatesStore.renderTemplate()
+    await templatesStore.renderTemplate()
   }
 
   // 将当前页面数据加密后复制到剪贴板
@@ -99,10 +99,10 @@ export default () => {
     await templatesStore.renderTemplate()
   }
 
-  const addTemplate = (template: Template) => {
-    templatesStore.addTemplate(template)
+  const addTemplate = async (template: Template) => {
+    await templatesStore.addTemplate(template)
     templatesStore.setTemplateIndex(templateIndex.value)
-    templatesStore.renderTemplate()
+    await templatesStore.renderTemplate()
   }
 
   // // 根据模板创建新页面

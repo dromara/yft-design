@@ -30,7 +30,7 @@ const findElement = (eid: string, elements: CanvasElement[] | undefined): Canvas
     if (item.id === eid) {
       return item
     }
-    if (item.type === ElementNames.GROUP) {
+    if (item.type.toLowerCase() === ElementNames.GROUP) {
       return findElement(eid, ((item as GroupElement).objects) as CanvasElement[])
     }
   }
