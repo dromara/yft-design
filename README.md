@@ -6,6 +6,10 @@
 
 ![image](/docs/example.png)
 
+# 🎉 PSD解析
+
+![psd-parse](/docs/psd-parse.gif)
+
 # 📋 色彩演示
 
 ![background](/docs/background.gif)
