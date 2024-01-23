@@ -3,7 +3,7 @@
     <ElementPosition/>
     <el-divider />
     
-    <div class="origin-image" :style="{ backgroundImage: `url(${handleElement.getSrc()})` }"></div>
+    <div class="origin-image" :style="{ backgroundImage: `url(${handleElement.originSrc ? handleElement.originSrc : handleElement.getSrc()})` }"></div>
 
     <ElementFlip />
 

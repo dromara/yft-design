@@ -140,6 +140,7 @@ export interface GuideLineProps extends Line {
 export interface ImageElement extends SerializedImageProps, CommenElement {
   type: string
   pixiFilters: []
+  originSrc?: string 
   isCropping?: boolean
   originId?: string
   cropPath?: FabricObject

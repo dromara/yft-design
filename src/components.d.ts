@@ -160,6 +160,7 @@ export declare module 'fabric' {
   }
 
   export declare class Image {
+    originSrc?: string 
     lastEventTop: number
     lastEventLeft: number
     setupDragMatrix(): void

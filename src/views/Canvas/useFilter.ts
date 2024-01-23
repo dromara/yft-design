@@ -44,8 +44,8 @@ export const handleFilter = (filter: Worker) => {
   filter.addEventListener('message', async (event) => {
     const data = event.data
     const element = findElement(data.id, currentTemplate.value.objects as CanvasElement[]) as ImageElement
-    console.log('element:', element)
     if (!element) return
+    element.originSrc = element.src
     element.src = data.res
     await templatesStore.renderElement()
     templatesStore.modifedElement()
