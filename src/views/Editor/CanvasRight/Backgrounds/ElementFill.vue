@@ -74,14 +74,14 @@
         </el-col>
         <el-col :span="4" class="slider-num">{{ gradientRotate }}</el-col>
       </el-row>
-      <el-row class="mb-10" v-if="background.gradientType === 'linear'">
+      <el-row>
         <el-col :span="7" class="slider-name">水平位置：</el-col>
         <el-col :span="13">
           <el-slider class="common-slider" :min="0" :max="1" :step="0.01" v-model="gradientOffsetX" @change="generateGradientBackground"/>
         </el-col>
         <el-col :span="4" class="slider-num">{{ gradientOffsetX }}</el-col>
       </el-row>
-      <el-row class="mb-10" v-else>
+      <el-row>
         <el-col :span="7" class="slider-name">垂直位置：</el-col>
         <el-col :span="13">
           <el-slider class="common-slider" :min="0" :max="1" :step="0.01" v-model="gradientOffsetY" @change="generateGradientBackground"/>
