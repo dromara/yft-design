@@ -118,7 +118,7 @@
     </el-row>
 
     <el-row class="mt-10">
-      <el-col :span="18">
+      <el-col :span="24">
         <el-radio-group class="full-ratio" v-model="textAlign" @change="handleTextAlign">
           <el-tooltip placement="top" content="左对齐" :hide-after="0">
             <el-radio-button label="justify-left">
@@ -135,12 +135,27 @@
               <IconAlignTextRight />
             </el-radio-button>
           </el-tooltip>
+          <el-tooltip placement="top" content="两边对齐" :hide-after="0">
+            <el-radio-button label="justify-right">
+              <IconAlignTextBoth />
+            </el-radio-button>
+          </el-tooltip>
         </el-radio-group>
       </el-col>
-      <el-col :span="6">
+    </el-row>
+
+    <el-row class="mt-10">
+      <el-col :span="12">
         <el-tooltip placement="top" content="转曲" :hide-after="0">
           <el-button class="full-button" @click="handleElementCurve">
             <IconTextStyleOne />
+          </el-button>
+        </el-tooltip>
+      </el-col>
+      <el-col :span="12">
+        <el-tooltip placement="top" content="变形" :hide-after="0">
+          <el-button class="full-button" @click="handleElementDeformation">
+            <IconDistortion />
           </el-button>
         </el-tooltip>
       </el-col>
@@ -409,6 +424,10 @@ const handleElementCurve = async () => {
   createPathElement(path.toPathData(2), handleElement.value.left, handleElement.value.top)
   canvas.remove(handleElement.value)
   canvas.renderAll()
+}
+
+const handleElementDeformation = () => {
+  
 }
 
 const handleElementStyleClear = () => {

@@ -160,6 +160,8 @@ import {
   Home,
   Newlybuild,
   DividingLine,
+  AlignTextBoth,
+  Distortion,
 } from '@icon-park/vue-next'
 
 export const icons = {
@@ -319,7 +321,9 @@ export const icons = {
   IconAllApplication: AllApplication,
   IconHome: Home,
   IconNewlybuild: Newlybuild,
-  IconDividingLine: DividingLine
+  IconDividingLine: DividingLine,
+  IconAlignTextBoth: AlignTextBoth,
+  IconDistortion: Distortion,
 }
 
 export default {
