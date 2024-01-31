@@ -15,6 +15,7 @@ import { Keybinding } from '@/app/keybinding'
 import { defaultControls, textboxControls } from '@/app/fabricControls'
 import { useTemplatesStore } from '@/store'
 import useCommon from './useCommon'
+import useHammer from './useHammer'
 
 
 
@@ -115,10 +116,12 @@ const initTemplate = async () => {
   if (!canvas) return
   const templatesStore = useTemplatesStore()
   const { initCommon } = useCommon()
+  const { initHammer } = useHammer()
   const { currentTemplate } = storeToRefs(templatesStore)
   await canvas.loadFromJSON(currentTemplate.value)
   setCanvasTransform()
   initCommon()
+  initHammer()
 }
 
 export const initEditor = async () => {
