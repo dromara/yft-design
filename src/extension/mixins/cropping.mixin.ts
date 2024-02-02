@@ -83,7 +83,7 @@ function canvasMouseDown(e: TPointerEventInfo<TPointerEvent>) {
 export function canvasMouseMove({ e }: TPointerEventInfo<MouseEvent>) {
    // @ts-ignore
   const activeObject = this.getActiveObject() as Image
-  if (!activeObject.canvas?.__targetlessCanvasDrag || e.type !== 'mousemove' || !activeObject) {
+  if (!activeObject || !activeObject.canvas?.__targetlessCanvasDrag || e.type !== 'mousemove' || !activeObject) {
     return;
   }
   const point = {
