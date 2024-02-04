@@ -83,4 +83,5 @@ export const propertiesToInclude = [
   'codeContent',
   'background',
   'hasBorders',
+  'originSrc',
 ]
