@@ -5,10 +5,11 @@ import { storeToRefs } from 'pinia'
 import { useFabricStore, useTemplatesStore } from '@/store'
 import { WorkSpaceThumbType, WorkSpaceClipType, WorkSpaceCommonType, WorkSpaceSafeType, propertiesToInclude } from '@/configs/canvas'
 import { ImageFormat } from 'fabric'
-import { downloadSVGFile } from '@/utils/download'
+import { downloadSVGFile, downloadLinkFile } from '@/utils/download'
 import useCanvas from '@/views/Canvas/useCanvas'
 import useCenter from '@/views/Canvas/useCenter'
 import { handleMessage } from "@/worker/pdf"
+import { exportFile } from '@/api/file'
 // const worker = new PDFWorker()
 
 export default () => {
@@ -91,37 +92,17 @@ export default () => {
     canvas.renderAll()
   }
 
-  // const generatePDF = () => {
-  //   const doc = new PDFDocument();
-  //   // 添加内容到PDF
-  //   doc.text('Hello, World!');
-  
-  //   return new Promise<any>((resolve) => {
-  //     let chunks: any[] = [];
-  //     doc.on('data', (chunk) => chunks.push(chunk));
-  //     doc.on('end', () => resolve(new Blob(chunks, { type: 'application/pdf' })));
-  //     doc.end();
-  //   });
-  // };
-
   // 导出PDF
   const exportPDF = async () => {
-    const [ canvas ] = useCanvas()
-    // worker.postMessage({
-    //   type: "convert",
-    //   template: JSON.stringify(currentTemplate.value)
-    // });
-    // worker.addEventListener('message', (event) => {
-    //   // 获取来自 Web Worker 的 Uint8Array 数据
-    //   const originalUint8Array = event.data;
-    //   console.log('Received data from worker: ', originalUint8Array);
-    //   const blob = new Blob([originalUint8Array], { type: 'application/pdf' })
-    //   saveAs(blob, `yft-design-${Date.now()}.pdf`)
-    // });
-    // var document = new mupdf.Document.openDocument("my_pdf.pdf", "application/pdf");
-    const pdfUintArray = await handleMessage(currentTemplate.value)
-    const blob = new Blob([pdfUintArray], { type: 'application/pdf' })
-    saveAs(blob, `yft-design-${Date.now()}.pdf`)
+    const content = {
+      data: getSVGData(),
+      width: currentTemplate.value.width / currentTemplate.value.zoom,
+      height: currentTemplate.value.height / currentTemplate.value.zoom,
+    }
+    const result = await exportFile(content)
+    if (result && result.data.link) {
+      downloadLinkFile(result.data.link, `yft-design-${Date.now()}.pdf`)
+    }
   }
 
   // 导出json

@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 import { AxiosPromise } from 'axios'
-import { UploadResult } from './types'
+import { UploadResult, ExportData, ExportResult } from './types'
 
 /**
  * 上传文件
@@ -18,5 +18,19 @@ export function uploadFile(file: File, type: string): AxiosPromise<UploadResult>
     headers: {
       'Content-Type': 'multipart/form-data',
     },
+  })
+}
+
+/**
+ * 导出文件
+ *
+ * @param file
+ */
+export function exportFile(data: ExportData): AxiosPromise<ExportResult> {
+
+  return request({
+    url: '/api/export/file',
+    method: 'post',
+    data,
   })
 }

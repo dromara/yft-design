@@ -15,6 +15,24 @@ export interface UploadResult {
   data: Template | Template[]
 }
 
+export interface ExportContent {
+  data: string
+  width: number
+  height: number
+}
+
+export interface ExportData {
+  data: string
+  width: number
+  height: number
+}
+
+export interface ExportResult {
+  code: number
+  msg: string
+  link: string
+}
+
 /**
  * 文件API类型声明
  */
