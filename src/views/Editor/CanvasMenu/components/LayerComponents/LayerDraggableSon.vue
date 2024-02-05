@@ -51,6 +51,10 @@ const props = defineProps({
   width: 68%;
   padding: 20px 10px 10px;
 }
+.layer-draggable {
+  overflow-y: scroll;
+  height: calc(100% - 100px);
+}
 .layer-content {
   padding: 0 10px;
   .element-content {
