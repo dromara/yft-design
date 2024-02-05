@@ -1,6 +1,8 @@
 # yft-design
-基于fabric.js的多页面图片设计，使用 Vue3 + TypeScript + Fabric.js + Element-Plus，支持 文字、图片、形状、线条、二维码 、条形码几种最常用的元素类型，每一种元素都拥有高度可编辑能力，缩略图显示，模板，支持导出json，svg, image文件。  
-<b>快速体验：[https://yft.design](https://yft.design)</b>  
+1，基于fabric.js的多页面图片设计，使用 Vue3 + TypeScript + Fabric.js + Element-Plus，支持 文字、图片、形状、线条、二维码 、条形码几种最常用的元素类型，每一种元素都拥有高度可编辑能力，缩略图显示，模板，支持导出json，svg, image文件。  
+2，完美适配稿定设计导出pdf还原  
+3，完美适配pdf，psd格式导入  
+<b>体验Demo：[https://yft.design](https://yft.design)</b>  
 <b>体验Demo：[https://dromara.org/yft-design](https://dromara.org/yft-design)</b>
 
 
@@ -59,9 +61,9 @@ npm run build
 - 快捷键
 - 右键菜单
 - 导入PDF(完美还原格式，不支持图片裁切导入)
-- 导入PSD(完美还原格式，不支持特效还原)
+- 导入PSD(完美还原格式，支持部分特效还原，亮度，对比度，颜色覆盖)
 - 导入SVG(不支持tspan字体)
-- 导出本地文件（SVG、图片、PDF(TODO)）
+- 导出本地文件（SVG、图片、PDF）
 ### 页面编辑
 - 页面添加、删除
 - 页面顺序调整
@@ -115,7 +117,8 @@ npm run build
 - 样式
 
 ## 联系作者
-15972699417@163.com
+wechat: 15972699417  
+email:  15972699417@163.com
 
 ## License
 
