@@ -36,7 +36,7 @@ const { createImageElement } = useHandleCreate()
 const { addTemplate } = useHandleTemplate()
 const dialogVisible = ref(false)
 const uploading = ref(false)
-const fileAccept = ref('.pdf,.psd,.cdr,.svg,.jpg,.jpeg,.png,.webp,.json')
+const fileAccept = ref('.pdf,.psd,.cdr,.ai,.svg,.jpg,.jpeg,.png,.webp,.json')
 const uploadRef = ref<UploadInstance>()
 const props = defineProps({
   visible: {
