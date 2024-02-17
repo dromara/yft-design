@@ -5,8 +5,8 @@
     <ElementFill />
     <el-divider />
     <ElementFlip />
-    <el-divider />
-    <ElementClip />
+    <!-- <el-divider />
+    <ElementClip /> -->
     <el-divider />
     <ElementOutline />
     <el-divider />

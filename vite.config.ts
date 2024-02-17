@@ -20,19 +20,19 @@ export default ({ command }: ConfigEnv): UserConfigExport => {
       proxy: {
         '/api': {
           // target: 'https://yft.design',
-          target: 'http://localhost:9292',
+          target: 'http://127.0.0.1:9292',
           changeOrigin: true,
           rewrite: (path) => path.replace(new RegExp('^'), ''),
         },
         '/static': {
           // target: 'https://yft.design',
-          target: 'http://localhost:9292',
+          target: 'http://127.0.0.1:9292',
           changeOrigin: true,
           rewrite: (path) => path.replace(new RegExp('^'), ''),
         },
       },
     },
-    plugins: [
+    plugins: [                                                                                                                                                                                                                            
       vue(),
       visualizer({ open: true }),
       viteCompression({
