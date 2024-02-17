@@ -198,6 +198,7 @@ import { WEB_FONTS } from '@/configs/fonts'
 import { TextboxElement } from '@/types/canvas'
 import { FontGroupOption } from '@/types/elements'
 import { loadFont } from '@/utils/fonts'
+import { Path } from 'fabric'
 import opentype from "opentype.js"
 import ElementPosition from '../Components/ElementPosition.vue'
 import ElementStroke from '../Components/ElementStroke.vue'
@@ -427,7 +428,20 @@ const handleElementCurve = async () => {
 }
 
 const handleElementDeformation = () => {
-  
+  const textWidth = handleElement.value.width
+  const halfWidth = textWidth / 2, quarterWidth = textWidth / 4
+  const pathElement = new Path(`M 0 ${halfWidth} A ${quarterWidth} ${quarterWidth} 0 1 1 ${textWidth} ${halfWidth}`, {
+    visible: false,
+    opacity: 1,
+    originX: 'left',
+    originY: 'top',
+    fill: '',
+    stroke: '#ff5e17',
+    strokeWidth: 1
+  })
+  handleElement.value.set({path: pathElement})
+  templatesStore.modifedElement()
+  canvas.renderAll()
 }
 
 const handleElementStyleClear = () => {
