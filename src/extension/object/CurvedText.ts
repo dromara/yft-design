@@ -1,6 +1,7 @@
-import { Object as FabricObject, IText, Group, CollectionEvents, classRegistry, TPointerEventInfo, TPointerEvent, GroupProps } from 'fabric'
+import { Object as FabricObject, IText, Group, CollectionEvents, classRegistry, TPointerEventInfo, TPointerEvent, TSVGReviver } from 'fabric'
 
-const stateProperties = IText.prototype._stateProperties
+// const stateProperties = Group.stateProperties
+// const delegatedProperties = Group.prototype.getObjectOpacity
 
 export class CurvedText extends IText {
   public letters: Group
@@ -15,13 +16,17 @@ export class CurvedText extends IText {
   constructor(text: string, options: object) {
     super(text, options)
     this.on('mousedblclick', this.doubleClickHandler.bind(this))
-    this.letters= new Group([], { selectable: false, padding: 0});
-    this.__skipDimension=true;
-    this.setOptions(options);
-    this.__skipDimension=false;
+    this.letters = new Group([], { selectable: false, padding: 0});
+    // this.__skipDimension=true;
+    this.set(options);
+    // this.__skipDimension=false;
 
     this.setText(text);
     this._render();
+  }
+
+  public initialize(text: string, options: object) {
+
   }
 
   public setText(text: string) {
@@ -34,13 +39,13 @@ export class CurvedText extends IText {
   public addDeselectedEvent(target: FabricObject) {
     target.once('deselected', () => {
       const activeObject = this.canvas?.getActiveObject()
-      if (!activeObject || !activeObject.getAncestors(true).includes(this)) {
-        // 关闭
-        this.set({interactive: false, objectCaching: true,})
-      } else {
-        // 事件传递
-        this.addDeselectedEvent(activeObject)
-      }
+      // if (!activeObject || !activeObject.getAncestors(true).includes(this)) {
+      //   // 关闭
+      //   this.set({interactive: false, objectCaching: true,})
+      // } else {
+      //   // 事件传递
+      //   this.addDeselectedEvent(activeObject)
+      // }
     })
   }
 
@@ -61,7 +66,7 @@ export class CurvedText extends IText {
    * 双击后启用interactive，离开组后关闭
    */
   public doubleClickHandler(e: TPointerEventInfo<TPointerEvent>) {
-    if (!this.canvas || !e.target || e.target !== this || !e.subTargets || e.subTargets.length === 0 || this.interactive) return
+    if (!this.canvas || !e.target || e.target !== this || !e.subTargets || e.subTargets.length === 0) return
 
     // 启用
     this.set({interactive: true, objectCaching: false})
@@ -78,13 +83,222 @@ export class CurvedText extends IText {
   }
 
   // 空子元素，自动移除组本身
-  override _onObjectRemoved(object: FabricObject, removeParentTransform?: boolean): void {
-    super._onObjectRemoved(object, removeParentTransform)
-    if (this.size() === 0) {
-      const parent = this.getParent() as Group
-      parent && parent.remove(this)
+  // override _onObjectRemoved(object: FabricObject, removeParentTransform?: boolean): void {
+  //   super._onObjectRemoved(object, removeParentTransform)
+  //   if (this.size() === 0) {
+  //     const parent = this.getParent() as Group
+  //     parent && parent.remove(this)
+  //   }
+  // }
+
+  _renderOld(ctx: CanvasRenderingContext2D){
+    if(this.letters){
+      let currentAngle = 0, angleRadians = 0, align = 0, rev = 0;
+      if(this.reverse) rev=0.5
+      if(this.textAlign === 'center' || this.textAlign === 'justify'){
+        align = this.spacing / 2 * (this.text.length - rev);	// Remove '-1' after this.text.length for proper angle rendering
+      } 
+      else if(this.textAlign === 'right') {
+        align = this.spacing * (this.text.length - rev);	// Remove '-1' after this.text.length for proper angle rendering
+      }
+      var multiplier = this.reverse ? 1: -1;
+      for(var i = 0, len = this.text.length; i<len; i++){
+        // Find coords of each letters (radians : angle*(Math.PI / 180)
+        currentAngle = multiplier * (-i * this.spacing + align);
+        angleRadians = currentAngle * (Math.PI / 180);
+
+        // for(var key in this.delegatedProperties){
+        //   this.letters.item(i).set(key, this.get(key));
+        // }
+        this.letters.item(i).set({
+          left: multiplier + Math.sin(angleRadians) * this.radius,
+          top: multiplier - Math.cos(angleRadians) * this.radius,
+          angle: currentAngle,
+          padding: 0,
+          selectable: false,
+        })
+      }
+      // Update group coords
+      // this.letters._calcBounds();
+      if (this.reverse) {
+        this.letters.top = this.letters.top-this.height*2.5;
+      }
+      else {
+        this.letters.top = 0;
+      }
+      this.letters.left = this.letters.left-this.width/2; // Change here, for proper group display
+      // this.letters._updateObjectsCoords();					// Commented off this line for group misplacement
+      // this.letters.saveCoords();
+      // this.letters.render(ctx);
+      this.width = this.letters.width;
+      this.height = this.letters.height;
+      this.letters.left = -(this.letters.width/2);
+      this.letters.top = -(this.letters.height/2);
     }
   }
+
+  _render() {
+    if (this.letters) {
+      let currentAngle = 0, currentAngleROtation = 0, angleRadians = 0, align = 0, space = this.spacing, textWidth = 0, fixedLetterAngle = 0
+      if (this.effect === 'curved') {
+        for (let i = 0; this.text.length; i++) {
+          textWidth += this.letters.item(i).width + space
+        }
+        textWidth -= space
+      }
+      else if (this.effect === 'arc') {
+        const itemLetter = this.letters.item(0) as IText
+        fixedLetterAngle = ((itemLetter.fontSize + space) / this.radius) / (Math.PI / 180)
+        textWidth = (this.text.length + 1 ) * (itemLetter.fontSize + space)
+      }
+
+      if (this.textAlign === 'right') {
+        currentAngle = 90 - ((textWidth / 2) / this.radius) / (Math.PI / 180)
+      }
+      else if (this.textAlign === 'left') {
+        currentAngle = -90 - ((textWidth / 2) / this.radius) / (Math.PI / 180)
+      }
+      else {
+        currentAngle = -((textWidth / 2) / this.radius) / (Math.PI / 180)
+      }
+
+      if (this.reverse) currentAngle = -currentAngle
+
+      let width = 0, multiplier = this.reverse ? -1 : 1, thisLetterAngle = 0, lastLetterAngle = 0
+      for (let i = 0; i < this.text.length; i++) {
+        // for(var key in this.delegatedProperties){
+        //   this.letters.item(i).set(key, this.get(key));
+        // }
+
+        this.letters.item(i).set({left: width, top: 0, angle: 0, padding: 0})
+        if (this.effect === 'curved') {
+          thisLetterAngle=((this.letters.item(i).width + space) / this.radius) / (Math.PI / 180)
+          currentAngle = multiplier * ((multiplier * currentAngle) + lastLetterAngle)
+          angleRadians = currentAngle*(Math.PI/180);
+          lastLetterAngle = thisLetterAngle;
+          this.letters.item(i).set({
+            angle: currentAngle, 
+            padding: 0,
+            selectable: false,
+            left: multiplier * (Math.sin(angleRadians)*this.radius),
+            top: multiplier * -1 * (Math.cos(angleRadians) * this.radius),
+          })
+        }
+        else if (this.effect === 'arc') {
+          currentAngle = multiplier * ((multiplier * currentAngle) + fixedLetterAngle);
+          angleRadians = currentAngle * (Math.PI / 180);
+          this.letters.item(i).set({
+            angle: currentAngle, 
+            padding: 0,
+            selectable: false,
+            left: multiplier * (Math.sin(angleRadians) * this.radius),
+            top: multiplier * -1 * (Math.cos(angleRadians) * this.radius),
+          })
+        }
+        else if (this.effect === 'STRAIGHT') {
+          this.letters.item(i).set({
+            left: width,
+            top: 0,
+            angle: 0,
+            padding: 0,
+            borderColor: 'red',
+            cornerColor: 'green',
+            cornerSize: 6,
+            transparentCorners: false,
+            selectable: false,
+          });
+          width += this.letters.item(i).width;
+        }
+        else if (this.effect === 'smallToLarge') {
+          const small = this.smallFont;
+          const large = this.largeFont;
+          const difference = large - small;
+          // var center = Math.ceil(this.text.length / 2);
+          const step = difference / (this.text.length);
+          this.letters.item(i).set({
+            fontSize: small + (i * step),
+            left: width,
+            top: -1 * this.letters.item(i).get('fontSize') + i,
+            padding: 0,
+            selectable: false,
+          });
+          width += this.letters.item(i).width;
+        }
+        else if (this.effect === 'largeToSmallTop') {
+          var small=this.largeFont;
+          var large=this.smallFont;
+          var difference=large-small;
+          var center=Math.ceil(this.text.length/2);
+          var step=difference/(this.text.length);
+          var newfont=small+(i*step);
+          //var newfont=((this.text.length-i)*this.smallFont)+12;
+          this.letters.item(i).set('fontSize', (newfont));
+          this.letters.item(i).set('left', (width));
+          width+=this.letters.item(i).get('width');
+          this.letters.item(i).set('padding', 0);
+          this.letters.item(i).set({
+            borderColor: 'red',
+            cornerColor: 'green',
+            cornerSize: 6,
+            transparentCorners: false
+          });
+          this.letters.item(i).set('padding', 0);
+          this.letters.item(i).set('selectable', false);
+          this.letters.item(i).top=-1*this.letters.item(i).get('fontSize')+(i/this.text.length);
+        }
+      }
+
+      const scaleX = this.letters.get('scaleX');
+      const scaleY = this.letters.get('scaleY');
+      const angle = this.letters.get('angle');
+
+      this.letters.set('scaleX', 1);
+      this.letters.set('scaleY', 1);
+      this.letters.set('angle', 0);
+
+      // Update group coords
+      // this.letters._calcBounds();
+      // this.letters._updateObjectsCoords();
+      // this.letters.saveCoords();
+      // this.letters.render(ctx);
+
+      this.letters.set('scaleX', scaleX);
+      this.letters.set('scaleY', scaleY);
+      this.letters.set('angle', angle);
+
+      this.width = this.letters.width;
+      this.height = this.letters.height;
+      this.letters.left = -(this.letters.width/2);
+      this.letters.top = -(this.letters.height/2);
+    }
+  }
+
+  override render(ctx: CanvasRenderingContext2D){
+    ctx.save();
+    this.transform(ctx);
+    //The array is now sorted in order of highest first, so start from end.
+    for(let i = 0, len = this.letters.size(); i<len; i++){
+      this.letters.item(i).render(ctx)
+    }
+    ctx.restore();
+    this.setCoords();
+  }
+
+  toSVG(reviver: TSVGReviver | undefined): string{
+    var markup=[
+      '<g ',
+      'transform="', this.getSvgTransform(),
+      '">'
+    ];
+    if(this.letters){
+      for(let i = 0, len = this.letters.size(); i < len; i++){
+        markup.push(this.letters.item(i).toSVG(reviver));
+      }
+    }
+    markup.push('</g>');
+    return reviver ? reviver(markup.join('')) : markup.join('');
+  }
+  
 }
 
 classRegistry.setClass(CurvedText, 'curvedtext')
