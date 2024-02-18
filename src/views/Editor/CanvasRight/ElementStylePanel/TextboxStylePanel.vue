@@ -429,8 +429,19 @@ const handleElementCurve = async () => {
 
 const handleElementDeformation = () => {
   const textWidth = handleElement.value.width
-  const halfWidth = textWidth / 2, quarterWidth = textWidth / 4
-  const pathElement = new Path(`M 0 ${halfWidth} A ${quarterWidth} ${quarterWidth} 0 1 1 ${textWidth} ${halfWidth}`, {
+  const quarterWidth = textWidth / 4
+  /*
+  A(rx, ry, xr, laf, sf, x, y) - 绘制弧线
+  rx - (radius-x)：弧线所在椭圆的 x 半轴长
+  ry - (radius-y)：弧线所在椭圆的 y 半轴长
+  xr - (xAxis-rotation)：弧线所在椭圆的长轴角度
+  laf - (large-arc-flag)：是否选择弧长较长的那一段弧
+  sf - (sweep-flag)：是否选择逆时针方向的那一段弧
+  x, y：弧的终点位置
+  */
+  const pathItem = `M 0 0 A ${quarterWidth + 200} ${quarterWidth} 0 0 1 ${textWidth} 0`
+  console.log('pathItem:', pathItem)
+  const pathElement = new Path(pathItem, {
     visible: false,
     opacity: 1,
     originX: 'left',
@@ -439,7 +450,7 @@ const handleElementDeformation = () => {
     stroke: '#ff5e17',
     strokeWidth: 1
   })
-  handleElement.value.set({path: pathElement})
+  handleElement.value.set({path: pathElement, height: handleElement.value.height + 200})
   templatesStore.modifedElement()
   canvas.renderAll()
 }
