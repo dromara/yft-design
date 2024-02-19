@@ -13,6 +13,7 @@ export class CurvedText extends IText {
   public spacing = 20
   public reverse = false
   public _isRendering = 0
+  public _textLines: any = []
   constructor(text: string, options: any) {
     super(text, options)
     
@@ -22,13 +23,12 @@ export class CurvedText extends IText {
   }
 
   public initialize(text: string, options: any) {
-    
     // this.__skipDimension = true
-    this.setOptions(options);
+    this.setOptions(options)
     // this.__skipDimension = false
     // this.callSuper('initialize', text, options)
-    this.setText(text);
-    // this._render();
+    this.setText(text)
+    this._render()
   }
 
   public setText(text: string) {
@@ -37,6 +37,7 @@ export class CurvedText extends IText {
       //   const item = this.letters.item(this.letters.size() - 1)
       //   this.letters.remove(item)
       // }
+      this.letters._objects = []
       for (let i = 0; i < text.length; i++) {
         if (this.letters._objects[i] === undefined) {
           this.letters.add(new Text(text[i], {}))
@@ -46,30 +47,25 @@ export class CurvedText extends IText {
         }
       }
     }
-    // this._render()
+    this._render()
   }
 
-  // public _initDimensions (ctx?: CanvasRenderingContext2D){
-  //   // from fabric.Text.prototype._initDimensions
-  //   // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-  //   // if(this.__skipDimension){
-  //   //   return;
-  //   // }
-  //   // if(!ctx){
-  //   //   ctx = this.canvas?.getContext() 
-  //   //   if (!ctx) return
-  //   //   this._setTextStyles(ctx);
-  //   // }
-  //   // this._textLines=this.text.split(this._reNewline);
-  //   this._clearCache();
-  //   var currentTextAlign=this.textAlign;
-  //   this.textAlign = 'left';
-  //   this.width = this.getWidth();
-  //   this.textAlign = currentTextAlign;
-  //   this.height = this.getHeight();
-  //   // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-  //   // this._render();
-  // }
+  public _initDimensions (ctx?: CanvasRenderingContext2D){
+    // from fabric.Text.prototype._initDimensions
+    // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+    if (!ctx) {
+      ctx = this.canvas?.getContext();
+      if (ctx) this._setTextStyles(ctx);
+    }
+    this._textLines = this.text.split(this._reNewline);
+    this._clearCache()
+    var currentTextAlign = this.textAlign
+    this.textAlign = 'left'
+    this.width = this.getWidth()
+    this.textAlign = currentTextAlign
+    this.height = this.getHeight()
+    this._render();
+  }
 
   // /**
   //  * 绑定target的deselected事件，在target被取消激活后，关闭组的interactive
@@ -325,13 +321,16 @@ export class CurvedText extends IText {
     this.setCoords();
   }
 
-  // override _set(key: string, value: any): any {
-  //   if (this.letters) {
-  //     this.letters.set(key, value)
-  //     this._initDimensions()
-  //     this.setCoords()
-  //   }
-  // }
+  _set(key: string, value: any): any {
+    super._set(key, value)
+    console.log('this.letters:', this.letters)
+    if (this.letters) {
+      this.letters.set(key, value)
+      this._initDimensions()
+      this.setCoords()
+    }
+    return this
+  }
 
   // toSVG(reviver: TSVGReviver | undefined): string{
   //   var markup=[

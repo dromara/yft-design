@@ -122,6 +122,7 @@ export declare module 'fabric' {
     group: this | undefined
     isShow: boolean
     objects: FabricObject[]
+    subTargets: FabricObject[]
     _objects: FabricObject[]
     setDirty(): void
     updateLayout(): void
