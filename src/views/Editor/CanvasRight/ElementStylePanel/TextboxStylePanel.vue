@@ -195,10 +195,11 @@ import { storeToRefs } from 'pinia'
 import { ElMessage } from 'element-plus'
 import { FontSizeLibs, LineHeightLibs, CharSpaceLibs } from '@/configs/texts'
 import { WEB_FONTS } from '@/configs/fonts'
+import { propertiesToInclude } from '@/configs/canvas'
 import { TextboxElement } from '@/types/canvas'
 import { FontGroupOption } from '@/types/elements'
 import { loadFont } from '@/utils/fonts'
-import { Path } from 'fabric'
+import { Path, classRegistry, Text } from 'fabric'
 import opentype from "opentype.js"
 import ElementPosition from '../Components/ElementPosition.vue'
 import ElementStroke from '../Components/ElementStroke.vue'
@@ -428,8 +429,8 @@ const handleElementCurve = async () => {
 }
 
 const handleElementDeformation = () => {
-  const textWidth = handleElement.value.width
-  const quarterWidth = textWidth / 4
+  // const textWidth = handleElement.value.width
+  // const quarterWidth = textWidth / 4
   /*
   A(rx, ry, xr, laf, sf, x, y) - 绘制弧线
   rx - (radius-x)：弧线所在椭圆的 x 半轴长
@@ -439,18 +440,35 @@ const handleElementDeformation = () => {
   sf - (sweep-flag)：是否选择逆时针方向的那一段弧
   x, y：弧的终点位置
   */
-  const pathItem = `M 0 0 A ${quarterWidth + 200} ${quarterWidth} 0 0 1 ${textWidth} 0`
-  console.log('pathItem:', pathItem)
-  const pathElement = new Path(pathItem, {
-    visible: false,
-    opacity: 1,
-    originX: 'left',
-    originY: 'top',
-    fill: '',
-    stroke: '#ff5e17',
-    strokeWidth: 1
-  })
-  handleElement.value.set({path: pathElement, height: handleElement.value.height + 200})
+  // const pathItem = `M 0 0 A ${quarterWidth + 200} ${quarterWidth} 0 0 1 ${textWidth} 0`
+  // console.log('pathItem:', pathItem)
+  // const pathElement = new Path(pathItem, {
+  //   visible: false,
+  //   opacity: 1,
+  //   originX: 'left',
+  //   originY: 'top',
+  //   fill: '',
+  //   stroke: '#ff5e17',
+  //   strokeWidth: 1
+  // })
+  // handleElement.value.set({path: pathElement, height: handleElement.value.height + 200})
+  // const textPath = new Text('Text on a path', {
+  //     top: 150,
+  //     left: 150,
+  //     textAlign: 'center',
+  //     charSpacing: -50,
+  //     path: new Path('M 0 0 C 50 -100 150 -100 200 0', {
+  //       strokeWidth: 1,
+  //       visible: false
+  //     }),
+  //     pathSide: 'left',
+  //     pathStartOffset: 0
+  // });
+  const CurvedText = classRegistry.getClass('CurvedText')
+  const options = handleElement.value.toObject(propertiesToInclude) as any
+  delete options.type
+  const curvedText = new CurvedText(handleElement.value.text, options)
+  canvas.add(curvedText)
   templatesStore.modifedElement()
   canvas.renderAll()
 }
