@@ -12,7 +12,7 @@ export class CurvedText extends IText {
   public effect = 'curved'
   public spacing = 20
   public reverse = false
-  declare text: string;
+  public _isRendering = 0
   constructor(text: string, options: any) {
     super(text, options)
     
@@ -176,7 +176,8 @@ export class CurvedText extends IText {
   // }
 
   _render() {
-    console.log('this.letters:', this.letters)
+    const renderingCode = util.getRandomInt(100, 999)
+    this._isRendering = renderingCode
     if (this.letters && this.letters.size()) {
       let currentAngle = 0, currentAngleROtation = 0, angleRadians = 0, align = 0, space = this.spacing, textWidth = 0, fixedLetterAngle = 0
       if (this.effect === 'curved') {
@@ -206,6 +207,7 @@ export class CurvedText extends IText {
 
       let width = 0, multiplier = this.reverse ? -1 : 1, thisLetterAngle = 0, lastLetterAngle = 0
       for (let i = 0; i < this.text.length; i++) {
+        if (this._isRendering !== renderingCode) return
         // for(var key in this.delegatedProperties){
         //   this.letters._objects[i].set(key, this.get(key));
         // }
@@ -297,8 +299,7 @@ export class CurvedText extends IText {
       this.letters.set('angle', 0);
 
       // Update group coords
-      // this.letters._calcBounds();
-      // this.letters._updateObjectsCoords();
+      this.letters.setCoords()
       // this.letters.saveCoords();
       // this.letters.render(ctx);
 
