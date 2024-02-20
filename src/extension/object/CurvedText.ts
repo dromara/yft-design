@@ -211,15 +211,15 @@ export class CurvedText extends IText {
         this.letters._objects[i].set({left: width, top: 0, angle: 0, padding: 0})
         if (this.effect === 'curved') {
           thisLetterAngle = ((this.letters._objects[i].width + space) / this.radius) / (Math.PI / 180)
-          currentAngle = multiplier * ((multiplier * currentAngle) + lastLetterAngle)
-          angleRadians = currentAngle*(Math.PI/180);
+          currentAngle = multiplier * (multiplier * currentAngle + lastLetterAngle)
+          angleRadians = currentAngle * Math.PI / 180;
           lastLetterAngle = thisLetterAngle;
           this.letters._objects[i].set({
             angle: currentAngle, 
             padding: 0,
             selectable: false,
-            left: multiplier * (Math.sin(angleRadians)*this.radius),
-            top: multiplier * -1 * (Math.cos(angleRadians) * this.radius),
+            left: multiplier * (Math.sin(angleRadians) * this.radius),
+            top: -multiplier * (Math.cos(angleRadians) * this.radius),
           })
         }
         else if (this.effect === 'arc') {
@@ -295,9 +295,10 @@ export class CurvedText extends IText {
       this.letters.set('angle', 0);
 
       // Update group coords
-      this.letters.setCoords()
+      // this.letters._calcBounds();
+			// this.letters._updateObjectsCoords();
       // this.letters.saveCoords();
-      // this.letters.render(ctx);
+      // this.letters.render();
 
       this.letters.set('scaleX', scaleX);
       this.letters.set('scaleY', scaleY);

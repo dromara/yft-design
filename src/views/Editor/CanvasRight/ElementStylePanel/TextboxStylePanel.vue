@@ -200,6 +200,7 @@ import { TextboxElement } from '@/types/canvas'
 import { FontGroupOption } from '@/types/elements'
 import { loadFont } from '@/utils/fonts'
 import { Path, classRegistry, Text } from 'fabric'
+import { nanoid } from 'nanoid'
 import opentype from "opentype.js"
 import ElementPosition from '../Components/ElementPosition.vue'
 import ElementStroke from '../Components/ElementStroke.vue'
@@ -464,12 +465,13 @@ const handleElementDeformation = () => {
   //     pathSide: 'left',
   //     pathStartOffset: 0
   // });
-  const CurvedText = classRegistry.getClass('CurvedText')
+  // const CurvedText = classRegistry.getClass('CurvedText')
   const options = handleElement.value.toObject(propertiesToInclude) as any
   delete options.type
-  const curvedText = new CurvedText(handleElement.value.text, options)
-  canvas.add(curvedText)
-  templatesStore.modifedElement()
+  options.id = nanoid(8)
+  // const curvedText = new CurvedText(handleElement.value.text, options)
+  // canvas.add(curvedText)
+  // templatesStore.modifedElement()
   canvas.renderAll()
 }
 
