@@ -1,14 +1,15 @@
 // @ts-nocheck
-import { Object as FabricObject } from "fabric"; 
-const getParentScaleX = (el: FabricObject) => {
+import { Object as FabricObject, Text, IText, Textbox, util, Pattern, Shadow } from "fabric"
+
+const getParentScaleX = (el: FabricObject): number => {
   return el.scaleX * (el.group ? getParentScaleX(el.group) : 1)//: this.canvas.viewportTransform[0])
 }
 
 let SyncTextMixin = {
   //this options order required to have correct textLines on setText. all text dimension affection properties shoul be initialized first
   optionsOrder: ["fontWeight", "fontStyle", "fontSize", "fontFamily", "styles", "width","height", "text",  "*"],
-  set(key, value , callback) {
-    fabric.Object.prototype.set.call(this, key, value, callback);
+  set(key: string, value: any, callback: Function) {
+    FabricObject.prototype.set.call(this, key, value);
     var needsDims = false;
     if (typeof key === 'object') {
       for (var _key in key) {
@@ -18,15 +19,17 @@ let SyncTextMixin = {
       needsDims = this._dimensionAffectingProps.indexOf(key) !== -1;
     }
     if (needsDims) {
+      // @ts-ignore
       this.initDimensions();
+      // @ts-ignore
       this.setCoords();
     }
     return this;
   },
-  onInput_overwritten: fabric.IText.prototype.onInput,
-  onInput: function(e) {
-    this.saveStates(["text","styles"]);
-    this.onInput_overwritten(e);
+  onInputOverwritten: IText.prototype.onInput,
+  onInput: function(e: any) {
+    // this.saveStates(["text","styles"]);
+    this.onInputOverwritten(e);
   },
   decreaseFontSize: function () {
     this.setStyle('fontSize', parseInt(this.getStyle('fontSize')) - 1);
@@ -42,7 +45,7 @@ let SyncTextMixin = {
     return Math.ceil(this.getFontSize() / 10);
   },
 
-  // initDimensions_overwritten: fabric.Text.prototype.initDimensions,
+  // initDimensions_overwritten: Text.prototype.initDimensions,
   // initDimensions: function() {
   //   this.initDimensions_overwritten();
   //   this.width = Math.floor(this.width)
@@ -324,11 +327,11 @@ let SyncTextMixin = {
   }
 }
 
-Object.assign(fabric.Object.prototype, {
+Object.assign(FabricObject.prototype, {
   _translatedY: 0,
   _translatedX: 0,
-  _translate(leftOverflow,topOverflow){
-    let rad = fabric.util.degreesToRadians(this.angle);
+  _translate(leftOverflow, topOverflow){
+    let rad = util.degreesToRadians(this.angle);
     this.top -= (topOverflow - this._translatedY) * Math.cos(rad) *  this.scaleY;
     this.left += (topOverflow - this._translatedY)  * Math.sin(rad)* this.scaleY;
     this.top -= (leftOverflow - this._translatedX) * Math.sin(rad) *  this.scaleX;
@@ -338,7 +341,7 @@ Object.assign(fabric.Object.prototype, {
   }
 })
 
-Object.assign(fabric.Text.prototype, SyncTextMixin, {
+Object.assign(Text.prototype, SyncTextMixin, {
   /**
    * @private
    * @param {Object} prevStyle
@@ -605,7 +608,7 @@ Object.assign(fabric.Text.prototype, SyncTextMixin, {
         text = text.toLowerCase()
       }
       if(this.textTransform === "capitalize"){
-        text = fabric.util.string.capitalize(text)
+        text = util.string.capitalize(text)
       }
     }
     var newLines = this._splitTextIntoLines(text);
@@ -947,8 +950,8 @@ Object.assign(fabric.Text.prototype, SyncTextMixin, {
       this.setStyle('fill');
     } else {
       // var _texture = _.findWhere(this.project.textures, {id: url});
-      fabric.util.loadImage(url,  (img) => {
-        this.setStyle('fill', new fabric.Pattern({
+      util.loadImage(url,  (img) => {
+        this.setStyle('fill', new Pattern({
           source: img,
           repeat: 'repeat'
         }));
@@ -965,7 +968,7 @@ Object.assign(fabric.Text.prototype, SyncTextMixin, {
   //   return this.get('radius');
   // },
   setShadow: function (options) {
-    return this.setProperty('shadow', options ? new fabric.Shadow(options) : null);
+    return this.setProperty('shadow', options ? new Shadow(options) : null);
   },
   // setRadius: function (value) {
   //   this.setProperty('radius', value);
@@ -993,7 +996,7 @@ Object.assign(fabric.Text.prototype, SyncTextMixin, {
     if(value && this.renderOnFontsLoaded){
 
       let fontsArray = [value];
-      // let fontsArray = fabric.fonts.fallbacks
+      // let fontsArray = fonts.fallbacks
       // if(!fontsArray.includes(fontsArray)){
       //   fontsArray.push(value)
       // }
@@ -1144,14 +1147,13 @@ Object.assign(fabric.Text.prototype, SyncTextMixin, {
     }
   },
   fontSizeOptions: [6,7,8,9,10,12,14,18,24,36,48,64],
-  //overwritten. Assign _measuringContext property to Editor. not to global Fabric. To avoid text measuring problems on Nodes.
+  //overwritten. Assign _measuringContext property to Editor. not to global  To avoid text measuring problems on Nodes.
   //_measuringContext will be individual for every editor.
   getMeasuringContext: function() {
     let context = this.editor || fabric;
     // if we did not return we have to measure something.
     if (!context._measuringContext) {
-      context._measuringContext = this.canvas && this.canvas.contextCache ||
-        fabric.util.createCanvasElement().getContext('2d');
+      context._measuringContext = this.canvas && this.canvas.contextCache || util.createCanvasElement().getContext('2d');
     }
     return context._measuringContext;
   },
@@ -1247,7 +1249,7 @@ Object.assign(fabric.Text.prototype, SyncTextMixin, {
   //       width += spacing.left + spacing.right
   //       height += spacing.top + spacing.bottom
   //
-  //       let rad = fabric.util.degreesToRadians(this.angle)
+  //       let rad = util.degreesToRadians(this.angle)
   //       top -= spacing.top * Math.cos(rad) * this.scaleY
   //       left += spacing.top * Math.sin(rad) * this.scaleY
   //       top -= spacing.left * Math.sin(rad) *  this.scaleX
@@ -1266,9 +1268,9 @@ Object.assign(fabric.Text.prototype, SyncTextMixin, {
   // }
 });
 
-Object.assign(fabric.IText.prototype,SyncTextMixin,  {
+Object.assign(IText.prototype,SyncTextMixin,  {
   initialize: function(options,callback) {
-    fabric.Text.prototype.initialize.call(this, options,callback);
+    Text.prototype.initialize.call(this, options,callback);
     this.initBehavior();
   },
 
@@ -1523,7 +1525,7 @@ Object.assign(fabric.IText.prototype,SyncTextMixin,  {
       delete options.e._group;
     }
   },
-  // stateProperties: fabric.IText.prototype.stateProperties.concat(["styles"]),
+  // stateProperties: IText.prototype.stateProperties.concat(["styles"]),
   getStyles: function () {
     if (!Object.keys(this.styles).length) return null;
     let _styles = {};
@@ -1537,7 +1539,7 @@ Object.assign(fabric.IText.prototype,SyncTextMixin,  {
               _styles[row] = {};
               _row_empty = false;
             }
-            _styles[row][char] = fabric.util.object.clone(this.styles[row][char]);
+            _styles[row][char] = util.object.clone(this.styles[row][char]);
           }
         }
         if (!_row_empty) {
@@ -1547,23 +1549,13 @@ Object.assign(fabric.IText.prototype,SyncTextMixin,  {
     }
     return _is_not_empty && _styles || null;
   },
-  initHiddenTextarea_native: fabric.IText.prototype.initHiddenTextarea,
+  initHiddenTextareaNative: IText.prototype.initHiddenTextarea,
   initHiddenTextarea: function () {
-    this.initHiddenTextarea_native();
+    this.initHiddenTextareaNative();
     this.hiddenTextarea.style.width = "9999px";
     this.hiddenTextarea.style["margin-left"] = "-9999px";
   },
-  /**
-   * Exits from editing state
-   * @return {fabric.IText} thisArg
-   * @chainable
-   */
 
-  /**
-   * Exits from editing state
-   * @return {fabric.IText} thisArg
-   * @chainable
-   */
   exitEditing: function() {
     var isTextChanged = (this._textBeforeEdit !== this.text);
     this.selected = false;
@@ -1607,12 +1599,12 @@ Object.assign(fabric.IText.prototype,SyncTextMixin,  {
   }
 });
 
-Object.assign(fabric.Textbox.prototype,SyncTextMixin,{
+Object.assign(Textbox.prototype,SyncTextMixin,{
   initialize: function(options,callback) {
-    fabric.Text.prototype.initialize.call(this, options,callback);
+    Text.prototype.initialize.call(this, options,callback);
     this.initBehavior();
   },
-  isEmptyStyles_overwritten: fabric.Textbox.prototype.isEmptyStyles,
+  isEmptyStylesOverwritten: Textbox.prototype.isEmptyStyles,
   /**
    * Returns true if object has no styling or no styling in a line
    * @param {Number} lineIndex , lineIndex is on wrapped lines.
@@ -1620,7 +1612,7 @@ Object.assign(fabric.Textbox.prototype,SyncTextMixin,{
    */
   isEmptyStyles: function(lineIndex) {
     if(!this._styleMap)return true;
-    return this.isEmptyStyles_overwritten(lineIndex)
+    return this.isEmptyStylesOverwritten(lineIndex)
   },
   getStylePosition(index){
     var loc = this.get2DCursorLocation(index);

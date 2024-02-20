@@ -1,14 +1,18 @@
-// @ts-nocheck
+
 import { IText, Control, Group, controlsUtils, classRegistry, Transform, TPointerEvent, TSVGReviver, util, Point } from 'fabric'
 export class ArcText extends IText {
-  static type: 'arctext'
+  static type: 'ArcText'
   public curvature = 0
+  public radius = 66
+  private _linesRads: number[] = []
+  private __lineInfo = []
   private _contentOffsetX: number = 0
   private _contentOffsetY: number = 0
-  private _curvingCenter: Point = new Point()
+  private _curvingCenter: Point
   _charTransformations = []
   constructor(text: string, options: any) {
     super(text, options)
+    this._curvingCenter = new Point()
   }
 
   get type(): string {
@@ -43,13 +47,13 @@ export class ArcText extends IText {
 
     this.on("scaling", this.updateCurvingControl)
   }
-  updateCurvingControl() {
+  updateCurvingControl () {
     this.controls.c.offsetX =  - this._contentOffsetX * this.scaleX
     this.controls.c.offsetY = (this._curvingCenter.y - this._contentOffsetY)  * this.scaleY
     this.canvas && this.setCoords()
   }
 
-  const changeCurvature = (eventData: TPointerEvent, transform: Transform, x: number, y: number) => {
+  changeCurvature (eventData: TPointerEvent, transform: Transform, x: number, y: number) {
     const target = transform.target as ArcText;
     let localPoint = controlsUtils.getLocalPoint(transform, transform.originX, transform.originY, x, y),
       strokePadding = target.strokeWidth / (target.strokeUniform ? target.scaleX : 1),
@@ -271,7 +275,7 @@ export class ArcText extends IText {
 
     let yMin = Infinity, yMax = -Infinity, xMin = Infinity, xMax = -Infinity
 
-    for(let i =0 ; i< this.__charBounds.length; i++) {
+    for(let i = 0; i < this.__charBounds.length; i++) {
       cts[i] = []
       let row = this.__charBounds[i]
 
@@ -358,25 +362,24 @@ export class ArcText extends IText {
         }
 
         if(ct.char?.trim() && this.useRenderBoundingBoxes && bounds.contour) {
-          let cos = fabric.util.cos(-charAngle),
-            sin = fabric.util.sin(-charAngle);
+          let cos = util.cos(-charAngle), sin = util.sin(-charAngle);
 
           let rotateMatrix = [cos, sin, -sin, cos, 0, 0]
-          let matrix = fabric.util.multiplyTransformMatrices([1, 0, 0, 1, ct.lc.x, ct.lc.y], rotateMatrix);
+          let matrix = util.multiplyTransformMatrices([1, 0, 0, 1, ct.lc.x, ct.lc.y], rotateMatrix);
           let y = ct.contour.y
           if (this.curvature > 0) {
             let x = ct.contour.x - this.__charBounds[i][j].width / 2
-            ct.contour.br = fabric.util.transformPoint({x: x + ct.contour.w, y: -y}, matrix);
-            ct.contour.bl = fabric.util.transformPoint({x: x, y: -y}, matrix);
-            ct.contour.tl = fabric.util.transformPoint({x: x, y: -y - ct.contour.h}, matrix);
-            ct.contour.tr = fabric.util.transformPoint({x: x + ct.contour.w, y: -y - ct.contour.h}, matrix);
+            ct.contour.br = util.transformPoint({x: x + ct.contour.w, y: -y}, matrix);
+            ct.contour.bl = util.transformPoint({x: x, y: -y}, matrix);
+            ct.contour.tl = util.transformPoint({x: x, y: -y - ct.contour.h}, matrix);
+            ct.contour.tr = util.transformPoint({x: x + ct.contour.w, y: -y - ct.contour.h}, matrix);
           } else {
             let x = - ct.contour.x + this.__charBounds[i][j].width / 2
 
-            ct.contour.br = fabric.util.transformPoint({x: x - ct.contour.w, y: y}, matrix);
-            ct.contour.bl = fabric.util.transformPoint({x: x, y: y}, matrix);
-            ct.contour.tl = fabric.util.transformPoint({x: x, y: y + ct.contour.h}, matrix);
-            ct.contour.tr = fabric.util.transformPoint({x: x - ct.contour.w, y: y + ct.contour.h}, matrix);
+            ct.contour.br = util.transformPoint({x: x - ct.contour.w, y: y}, matrix);
+            ct.contour.bl = util.transformPoint({x: x, y: y}, matrix);
+            ct.contour.tl = util.transformPoint({x: x, y: y + ct.contour.h}, matrix);
+            ct.contour.tr = util.transformPoint({x: x - ct.contour.w, y: y + ct.contour.h}, matrix);
           }
 
 
@@ -400,8 +403,8 @@ export class ArcText extends IText {
         bbox2 = sectorBoundingBox(cta.nl, ctb.nr, this._curvingCenter, this._linesRads[i])
       }
       else{
-        bbox = sectorBoundingBox(ctb.tr,cta.tl , this._curvingCenter, this._linesRads[i] - this.__lineHeights[i])
-        bbox2 = sectorBoundingBox( ctb.nr,cta.nl, this._curvingCenter, this._linesRads[i])
+        bbox = sectorBoundingBox(ctb.tr, cta.tl, this._curvingCenter, this._linesRads[i] - this.__lineHeights[i])
+        bbox2 = sectorBoundingBox(ctb.nr, cta.nl, this._curvingCenter, this._linesRads[i])
       }
       // this._linesBboxes.push(bbox,bbox2)
 
@@ -429,7 +432,7 @@ export class ArcText extends IText {
     this._translate(_translateX, topOverflow)
     this.updateCurvingControl()
     this.fire("dimensions:calculated")
-    this.saveState({propertySet: '_dimensionAffectingProps'});
+    // this.saveState({propertySet: '_dimensionAffectingProps'});
   }
   _enableFontFeatures(){
     let detectedFeaturesLines = []
