@@ -428,20 +428,20 @@ export class CurvedText extends IText {
     object.setCoords()
   }
 
-  // toSVG(reviver: TSVGReviver | undefined): string{
-  //   var markup=[
-  //     '<g ',
-  //     'transform="', this.getSvgTransform(),
-  //     '">'
-  //   ];
-  //   if(this.letters){
-  //     for(let i = 0, len = this.letters.size(); i < len; i++){
-  //       markup.push(this.letters._objects[i].toSVG(reviver));
-  //     }
-  //   }
-  //   markup.push('</g>');
-  //   return reviver ? reviver(markup.join('')) : markup.join('');
-  // }
+  toSVG(reviver: TSVGReviver | undefined): string{
+    var markup=[
+      '<g ',
+      'transform="', this.getSvgTransform(),
+      '">'
+    ];
+    if(this.letters){
+      for(let i = 0, len = this.letters.size(); i < len; i++){
+        markup.push(this.letters._objects[i].toSVG(reviver));
+      }
+    }
+    markup.push('</g>');
+    return reviver ? reviver(markup.join('')) : markup.join('');
+  }
 }
 
 classRegistry.setClass(CurvedText, 'CurvedText')
