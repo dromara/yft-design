@@ -1,11 +1,49 @@
-import { Object as FabricObject, IText, Text, Group, CollectionEvents, classRegistry, TPointerEventInfo, TPointerEvent, TSVGReviver, util } from 'fabric'
+import { Object as FabricObject, IText, Text, Group, Point, classRegistry, TPointerEventInfo, TPointerEvent, TSVGReviver, util } from 'fabric'
 
 // const stateProperties = Group.stateProperties
 // const delegatedProperties = Group.prototype.getObjectOpacity
 
+function max(array: number[], byProperty?: string) {
+  return find(array, byProperty, function(value1: number, value2: number) {
+    return value1 >= value2;
+  });
+}
+
+function min(array: number[], byProperty?: string) {
+  return find(array, byProperty, function(value1: number, value2: number) {
+    return value1 < value2;
+  });
+}
+
+// @ts-ignore
+function find(array, byProperty, condition) {
+  if (!array || array.length === 0) {
+    return;
+  }
+
+  var i = array.length - 1,
+      result = byProperty ? array[i][byProperty] : array[i];
+  if (byProperty) {
+    while (i--) {
+      if (condition(array[i][byProperty], result)) {
+        result = array[i][byProperty];
+      }
+    }
+  }
+  else {
+    while (i--) {
+      if (condition(array[i], result)) {
+        result = array[i];
+      }
+    }
+  }
+  return result;
+}
+
 export class CurvedText extends IText {
+  static type: string = 'CurvedText'
   public letters: Group
-  public radius = 50
+  public radius = 100
   public range = 5
   public smallFont = 10
   public largeFont = 30
@@ -16,7 +54,7 @@ export class CurvedText extends IText {
   public _textLines: any = []
   constructor(text: string, options: any) {
     super(text, options)
-    
+
     // this.on('mousedblclick', this.doubleClickHandler.bind(this))
     this.letters = new Group([], { selectable: false, padding: 0})
     this.initialize(text, options)
@@ -295,8 +333,8 @@ export class CurvedText extends IText {
       this.letters.set('angle', 0);
 
       // Update group coords
-      // this.letters._calcBounds();
-			// this.letters._updateObjectsCoords();
+      this._calcBounds();
+			this._updateObjectsCoords();
       // this.letters.saveCoords();
       // this.letters.render();
 
@@ -331,6 +369,63 @@ export class CurvedText extends IText {
       this.setCoords()
     }
     return this
+  }
+
+  _calcBounds (onlyWidthHeight?: number) {
+    let aX: number[] = [],
+        aY: number[] = [],
+        o, prop,
+        props = ['tr', 'br', 'bl', 'tl'],
+        i = 0, iLen = this.letters._objects.length,
+        j, jLen = props.length;
+
+    for ( ; i < iLen; ++i) {
+      o = this.letters._objects[i] as any
+      o.aCoords = o.calcACoords();
+      for (j = 0; j < jLen; j++) {
+        prop = props[j];
+        aX.push(o.aCoords[prop].x);
+        aY.push(o.aCoords[prop].y);
+      }
+    }
+
+    this._getBounds(aX, aY, onlyWidthHeight);
+  }
+
+  /**
+   * @private
+   */
+  _getBounds (aX: number[], aY: number[], onlyWidthHeight?: number) {
+    var minXY = new Point(min(aX), min(aY)),
+        maxXY = new Point(max(aX), max(aY)),
+        top = minXY.y || 0, left = minXY.x || 0,
+        width = (maxXY.x - minXY.x) || 0,
+        height = (maxXY.y - minXY.y) || 0;
+    this.letters.width = width;
+    this.letters.height = height;
+    if (!onlyWidthHeight) {
+      // the bounding box always finds the topleft most corner.
+      // whatever is the group origin, we set up here the left/top position.
+      this.letters.setPositionByOrigin({ x: left, y: top } as Point, 'left', 'top');
+    }
+  }
+
+  _updateObjectsCoords (center?: Point) {
+    let centerPoint = center || this.letters.getCenterPoint()
+    for (var i = this.letters._objects.length; i--; ) { 
+      this._updateObjectCoords(this.letters._objects[i], centerPoint);
+    }
+  }
+
+  _updateObjectCoords (object: FabricObject, center: Point) {
+    const objectLeft = object.left, objectTop = object.top, skipControls = true;
+
+    object.set({
+      left: objectLeft - center.x,
+      top: objectTop - center.y
+    });
+    object.group = this.letters
+    object.setCoords()
   }
 
   // toSVG(reviver: TSVGReviver | undefined): string{
