@@ -43,7 +43,7 @@ function find(array, byProperty, condition) {
 export class CurvedText extends IText {
   static type: string = 'CurvedText'
   public letters: Group
-  public radius = 100
+  public radius = 200
   public range = 5
   public smallFont = 10
   public largeFont = 30
@@ -55,7 +55,7 @@ export class CurvedText extends IText {
   constructor(text: string, options: any) {
     super(text, options)
 
-    // this.on('mousedblclick', this.doubleClickHandler.bind(this))
+    this.on('mousedblclick', this.doubleClickHandler.bind(this))
     this.letters = new Group([], { selectable: false, padding: 0})
     this.initialize(text, options)
   }
@@ -137,22 +137,21 @@ export class CurvedText extends IText {
   // /**
   //  * 双击后启用interactive，离开组后关闭
   //  */
-  // public doubleClickHandler(e: TPointerEventInfo<TPointerEvent>) {
-  //   if (!this.canvas || !e.target || e.target !== this || !e.subTargets || e.subTargets.length === 0) return
+  public doubleClickHandler(e: TPointerEventInfo<TPointerEvent>) {
+    if (!this.canvas || !e.target || e.target !== this) return
 
-  //   // 启用
-  //   this.set({interactive: true, objectCaching: false})
+    // 启用
+    // this.set({interactive: true, objectCaching: false})
 
-  //   // 绑定事件
-  //   this.addDeselectedEvent(this)
+    // 绑定事件
+    // this.addDeselectedEvent(this)
 
-  //   // 搜索被双击的目标并激活
-  //   const index = e.subTargets.indexOf(this)
-  //   const prevTarget = e.subTargets[index - 1] ?? e.subTargets[e.subTargets.length - 1]
-  //   this.canvas.setActiveObject(prevTarget)
+    // 搜索被双击的目标并激活
+    // this.canvas.setActiveObject(prevTarget)
+    this.canvas.remove(this)
 
-  //   this.canvas.requestRenderAll()
-  // }
+    this.canvas.requestRenderAll()
+  }
 
   // // 空子元素，自动移除组本身
   // // override _onObjectRemoved(object: FabricObject, removeParentTransform?: boolean): void {
@@ -362,8 +361,19 @@ export class CurvedText extends IText {
 
   _set(key: string, value: any): any {
     super._set(key, value)
-    console.log('this.letters:', this.letters)
+    // if (this._isRendering) return
+    // console.log('this.letters:', this.letters, key)
     if (this.letters) {
+      // if (key in this.delegatedProperties) {
+      //   var i = this.letters.size();
+      //   while (i--) {
+      //     this.letters.item(i).set(key, value);
+      //   }
+      // }
+      // if (key in this._dimensionAffectingProps){
+      //   this._initDimensions();
+      //   this.setCoords();
+      // }
       this.letters.set(key, value)
       this._initDimensions()
       this.setCoords()
@@ -396,7 +406,7 @@ export class CurvedText extends IText {
    * @private
    */
   _getBounds (aX: number[], aY: number[], onlyWidthHeight?: number) {
-    var minXY = new Point(min(aX), min(aY)),
+    const minXY = new Point(min(aX), min(aY)),
         maxXY = new Point(max(aX), max(aY)),
         top = minXY.y || 0, left = minXY.x || 0,
         width = (maxXY.x - minXY.x) || 0,
@@ -428,11 +438,9 @@ export class CurvedText extends IText {
     object.setCoords()
   }
 
-  toSVG(reviver: TSVGReviver | undefined): string{
+  toSVG(reviver: TSVGReviver | undefined): string {
     var markup=[
-      '<g ',
-      'transform="', this.getSvgTransform(),
-      '">'
+      '<g ', this.getSvgTransform(), '>'
     ];
     if(this.letters){
       for(let i = 0, len = this.letters.size(); i < len; i++){
