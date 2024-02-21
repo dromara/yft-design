@@ -465,12 +465,8 @@ const handleElementDeformation = () => {
   //     pathSide: 'left',
   //     pathStartOffset: 0
   // });
-  const CurvedText = classRegistry.getClass('CurvedText')
-  const options = handleElement.value.toObject(propertiesToInclude) as any
-  delete options.type
-  options.id = nanoid(8)
-  const curvedText = new CurvedText(handleElement.value.text, options)
-  canvas.add(curvedText)
+  // const CurvedText = classRegistry.getClass('CurvedText')
+  // handleElement.value.set({'__curvature': true})
   templatesStore.modifedElement()
   canvas.renderAll()
 }

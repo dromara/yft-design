@@ -1,41 +1,16 @@
 // @ts-nocheck
-import { Object as FabricObject, Text, IText, Textbox, util, Pattern, Shadow } from "fabric"
+import { Object as FabricObject, Text, IText, Textbox, util, Pattern, Shadow, Point } from "fabric"
 
 const getParentScaleX = (el: FabricObject): number => {
   return el.scaleX * (el.group ? getParentScaleX(el.group) : 1)//: this.canvas.viewportTransform[0])
 }
 
-let SyncTextMixin = {
+export const SyncTextMixin = {
   //this options order required to have correct textLines on setText. all text dimension affection properties shoul be initialized first
   optionsOrder: ["fontWeight", "fontStyle", "fontSize", "fontFamily", "styles", "width","height", "text",  "*"],
-  set(key: string, value: any, callback: Function) {
-    FabricObject.prototype.set.call(this, key, value);
-    var needsDims = false;
-    if (typeof key === 'object') {
-      for (var _key in key) {
-        needsDims = needsDims || this._dimensionAffectingProps.indexOf(_key) !== -1;
-      }
-    } else {
-      needsDims = this._dimensionAffectingProps.indexOf(key) !== -1;
-    }
-    if (needsDims) {
-      // @ts-ignore
-      this.initDimensions();
-      // @ts-ignore
-      this.setCoords();
-    }
-    return this;
-  },
   onInputOverwritten: IText.prototype.onInput,
   onInput: function(e: any) {
-    // this.saveStates(["text","styles"]);
     this.onInputOverwritten(e);
-  },
-  decreaseFontSize: function () {
-    this.setStyle('fontSize', parseInt(this.getStyle('fontSize')) - 1);
-  },
-  increaseFontSize: function () {
-    this.setStyle('fontSize', parseInt(this.getStyle('fontSize')) + 1);
   },
   minFontSize: 2,
   maxFontSize: 250,
@@ -67,18 +42,10 @@ let SyncTextMixin = {
     this.text += text;
     // this.styles;
   },
-  // _checkModifiedText: function (prop, value) {
-  //   if (this.isEditing) {
-  //     var isTextChanged = (this._textBeforeEdit !== this.text);
-  //     if (isTextChanged) {
-  //       this.canvas.fire("object:modified", {target: this});
-  //     }
-  //   }
-  // },
 
-  renderSelection: function(boundaries, ctx) {
+  renderSelection (ctx: CanvasRenderingContext2D, boundaries: CursorBoundaries) {
 
-    var selectionStart = this.inCompositionMode ? this.hiddenTextarea.selectionStart : this.selectionStart,
+    let selectionStart = this.inCompositionMode ? this.hiddenTextarea.selectionStart : this.selectionStart,
       selectionEnd = this.inCompositionMode ? this.hiddenTextarea.selectionEnd : this.selectionEnd,
       isJustify = this.textAlign.indexOf('justify') !== -1,
       start = this.get2DCursorLocation(selectionStart),
@@ -88,8 +55,8 @@ let SyncTextMixin = {
       startChar = start.charIndex < 0 ? 0 : start.charIndex,
       endChar = end.charIndex < 0 ? 0 : end.charIndex;
 
-    for (var i = startLine; i <= endLine; i++) {
-      var lineOffset = this._getLineLeftOffset(i) || 0,
+    for (let i = startLine; i <= endLine; i++) {
+      let lineOffset = this._getLineLeftOffset(i) || 0,
         lineHeight = this.getHeightOfLine(i),
         realLineHeight = 0, boxStart = 0, boxEnd = 0;
 
@@ -110,7 +77,7 @@ let SyncTextMixin = {
           boxEnd = this.__charBounds[endLine][endChar].left;
         }
         else {
-          var charSpacing = this._getWidthOfCharSpacing();
+          let charSpacing = this._getWidthOfCharSpacing();
           boxEnd = this.__charBounds[endLine][endChar - 1].left + this.__charBounds[endLine][endChar - 1].width - charSpacing;
         }
         if(this.__lineInfo && this.__lineInfo[i]){
@@ -154,8 +121,8 @@ let SyncTextMixin = {
   /*
   @override
    */
-  renderCursor: function(boundaries, ctx) {
-    var cursorLocation = this.get2DCursorLocation(),
+  renderCursor (ctx: CanvasRenderingContext2D, boundaries: CursorBoundaries) {
+    let cursorLocation = this.get2DCursorLocation(),
       lineIndex = cursorLocation.lineIndex,
       charIndex = cursorLocation.charIndex > 0 ? cursorLocation.charIndex - 1 : 0,
       charHeight = this.getValueOfPropertyAt(lineIndex, charIndex, 'fontSize'),
@@ -168,7 +135,7 @@ let SyncTextMixin = {
       - charHeight * (1 - this._fontSizeFraction);
 
     if (this.inCompositionMode) {
-      this.renderSelection(boundaries, ctx);
+      this.renderSelection(ctx, boundaries);
     }
 
     let lineOffset = 0;
@@ -184,6 +151,7 @@ let SyncTextMixin = {
 
     ctx.fillStyle = this.getValueOfPropertyAt(lineIndex, charIndex, 'fill');
     ctx.globalAlpha = this.__isMousedown ? 1 : this._currentCursorOpacity;
+    console.log('ctx.fillRect:', ctx.fillRect, 'ctx:', ctx)
     ctx.fillRect(
       boundaries.left + boundaries.leftOffset - cursorWidth / 2 + lineOffset,
       topOffset + boundaries.top + dy,
@@ -191,14 +159,8 @@ let SyncTextMixin = {
       charHeight)
   },
   setProperty: function (property, value) {
-    if (this.canvas && this.canvas.stateful) {
-      // this._checkModifiedText();
-      this.saveStates([property]);
-    }
 
-    this[property] = value;
-
-    this.updateState();
+    this[property] = value
 
     // this.fire("modified", {});
     // if (this.canvas) {
@@ -215,7 +177,7 @@ let SyncTextMixin = {
     }
   },
   _removeStyleAt: function (propertyToRemove,index) {
-    var loc = this.getStylePosition(index);
+    let loc = this.getStylePosition(index);
     if (!this._getLineStyle(loc.lineIndex) || !this._getStyleDeclaration(loc.lineIndex, loc.charIndex)) {
       return;
     }
@@ -260,11 +222,6 @@ let SyncTextMixin = {
     }
   },
   setStyle: function (styleName, value) {
-    if (this.canvas && this.canvas.stateful) {
-      // this._checkModifiedText();
-      this.saveStates([
-        "styles", styleName]);
-    }
     this.__selectionStart = this.selectionStart;
     this.__selectionEnd = this.selectionEnd;
     this.__changedProperty = styleName;
@@ -304,8 +261,6 @@ let SyncTextMixin = {
       this.dirty = true;
     }
 
-    this.updateState();
-
     // this.fire("modified", {});
     // if (this.canvas) {
     //   this.canvas.fire("object:modified", {target: this});
@@ -327,19 +282,19 @@ let SyncTextMixin = {
   }
 }
 
-Object.assign(FabricObject.prototype, {
-  _translatedY: 0,
-  _translatedX: 0,
-  _translate(leftOverflow, topOverflow){
-    let rad = util.degreesToRadians(this.angle);
-    this.top -= (topOverflow - this._translatedY) * Math.cos(rad) *  this.scaleY;
-    this.left += (topOverflow - this._translatedY)  * Math.sin(rad)* this.scaleY;
-    this.top -= (leftOverflow - this._translatedX) * Math.sin(rad) *  this.scaleX;
-    this.left -= (leftOverflow - this._translatedX)  * Math.cos(rad)* this.scaleX;
-    this._translatedY = topOverflow
-    this._translatedX = leftOverflow
-  }
-})
+// Object.assign(FabricObject.prototype, {
+//   _translatedY: 0,
+//   _translatedX: 0,
+//   _translate(leftOverflow, topOverflow){
+//     let rad = util.degreesToRadians(this.angle);
+//     this.top -= (topOverflow - this._translatedY) * Math.cos(rad) *  this.scaleY;
+//     this.left += (topOverflow - this._translatedY)  * Math.sin(rad)* this.scaleY;
+//     this.top -= (leftOverflow - this._translatedX) * Math.sin(rad) *  this.scaleX;
+//     this.left -= (leftOverflow - this._translatedX)  * Math.cos(rad)* this.scaleX;
+//     this._translatedY = topOverflow
+//     this._translatedX = leftOverflow
+//   }
+// })
 
 Object.assign(Text.prototype, SyncTextMixin, {
   /**
@@ -362,8 +317,8 @@ Object.assign(Text.prototype, SyncTextMixin, {
    * Calculate text box height
    */
   calcTextHeight: function() {
-    var lineHeight, height = 0;
-    for (var i = 0, len = this._textLines.length; i < len; i++) {
+    let lineHeight, height = 0;
+    for (let i = 0, len = this._textLines.length; i < len; i++) {
       lineHeight = this.getHeightOfLine(i);
       height += (i === len - 1 ? lineHeight / this.lineHeight : lineHeight);
     }
@@ -374,7 +329,7 @@ Object.assign(Text.prototype, SyncTextMixin, {
     if (!this[type] && !this.styleHas(type)) {
       return;
     }
-    var heightOfLine, size, _size,
+    let heightOfLine, size, _size,
       lineLeftOffset, dy, _dy,
       line, lastDecoration,
       leftOffset = this._getLeftOffset(),
@@ -383,7 +338,7 @@ Object.assign(Text.prototype, SyncTextMixin, {
       maxHeight, currentFill, lastFill,
       charSpacing = this._getWidthOfCharSpacing();
 
-    for (var i = 0, len = this._textLines.length; i < len; i++) {
+    for (let i = 0, len = this._textLines.length; i < len; i++) {
       heightOfLine = this.getHeightOfLine(i);
       if (!this[type] && !this.styleHas(type, i)) {
         topOffset += heightOfLine;
@@ -402,7 +357,7 @@ Object.assign(Text.prototype, SyncTextMixin, {
       top = topOffset + maxHeight * (1 - this._fontSizeFraction);
       size = this.getHeightOfChar(i, 0);
       dy = this.getValueOfPropertyAt(i, 0, 'deltaY');
-      for (var j = 0, jlen = line.length; j < jlen; j++) {
+      for (let j = 0, jlen = line.length; j < jlen; j++) {
         charBox = this.__charBounds[i][j];
         currentDecoration = this.getValueOfPropertyAt(i, j, type);
         currentFill = this.getValueOfPropertyAt(i, j, 'fill');
@@ -446,14 +401,14 @@ Object.assign(Text.prototype, SyncTextMixin, {
     if (!this.textBackgroundColor && !this.styleHas('textBackgroundColor')) {
       return;
     }
-    var lineTopOffset = 0, heightOfLine,
+    let lineTopOffset = 0, heightOfLine,
       lineLeftOffset, originalFill = ctx.fillStyle,
       line, lastColor,
       leftOffset = this._getLeftOffset(),
       topOffset = this._getTopOffset(),
       boxStart = 0, boxWidth = 0, charBox, currentColor;
 
-    for (var i = 0, len = this._textLines.length; i < len; i++) {
+    for (let i = 0, len = this._textLines.length; i < len; i++) {
       heightOfLine = this.getHeightOfLine(i);
       if (!this.textBackgroundColor && !this.styleHas('textBackgroundColor', i)) {
         lineTopOffset += heightOfLine;
@@ -468,7 +423,7 @@ Object.assign(Text.prototype, SyncTextMixin, {
       boxWidth = 0;
       boxStart = 0;
       lastColor = this.getValueOfPropertyAt(i, 0, 'textBackgroundColor');
-      for (var j = 0, jlen = line.length; j < jlen; j++) {
+      for (let j = 0, jlen = line.length; j < jlen; j++) {
         charBox = this.__charBounds[i][j];
         currentColor = this.getValueOfPropertyAt(i, j, 'textBackgroundColor');
         if (currentColor !== lastColor) {
@@ -509,7 +464,7 @@ Object.assign(Text.prototype, SyncTextMixin, {
       return this.__lineWidths[lineIndex];
     }
 
-    var width, line = this._textLines[lineIndex], lineInfo;
+    let width, line = this._textLines[lineIndex], lineInfo;
 
     if (line === '') {
       width = 0;
@@ -557,7 +512,6 @@ Object.assign(Text.prototype, SyncTextMixin, {
       this.height += paddingBottom - this.__renderOffsetTop
       this._translate(0,-this.__renderOffsetTop)
     }
-    this.saveState({ propertySet: '_dimensionAffectingProps' });
 
     this.fire("dimensions:calculated")
   },
@@ -568,10 +522,10 @@ Object.assign(Text.prototype, SyncTextMixin, {
    */
   _renderTextCommon: function(ctx, method) {
     ctx && ctx.save();
-    var lineHeights = 0, left = this._getLeftOffset(), top = this._getTopOffset(),
+    let lineHeights = 0, left = this._getLeftOffset(), top = this._getTopOffset(),
       offsets = this._applyPatternGradientTransform(ctx, method === 'fillText' ? this.fill : this.stroke);
 
-    for (var i = 0, len = this._textLines.length; i < len; i++) {
+    for (let i = 0, len = this._textLines.length; i < len; i++) {
 
 
       let lineOffsetX = 0
@@ -582,7 +536,7 @@ Object.assign(Text.prototype, SyncTextMixin, {
       }
 
 
-      var heightOfLine = this.getHeightOfLine(i),
+      let heightOfLine = this.getHeightOfLine(i),
         maxHeight = heightOfLine / this.lineHeight,
         leftOffset = this._getLineLeftOffset(i);
       this._renderTextLine(
@@ -611,7 +565,7 @@ Object.assign(Text.prototype, SyncTextMixin, {
         text = util.string.capitalize(text)
       }
     }
-    var newLines = this._splitTextIntoLines(text);
+    let newLines = this._splitTextIntoLines(text);
     this.textLines = newLines.lines;
     this._textLines = newLines.graphemeLines;
     this._unwrappedTextLines = newLines._unwrappedLines;
@@ -757,7 +711,7 @@ Object.assign(Text.prototype, SyncTextMixin, {
   },
   _renderChars: function(method, ctx, line, left, top, lineIndex) {
     // set proper line offset
-    var lineHeight = this.getHeightOfLine(lineIndex),
+    let lineHeight = this.getHeightOfLine(lineIndex),
       charBox,
       boxWidth = 0;
 
@@ -784,7 +738,7 @@ Object.assign(Text.prototype, SyncTextMixin, {
     ctx && ctx.restore();
   },
   _renderChar: function(method, ctx, lineIndex, charIndex, endCharIndex, left, top) {
-    var decl = this._getStyleDeclaration(lineIndex, charIndex),
+    let decl = this._getStyleDeclaration(lineIndex, charIndex),
       fullDecl = this.getCompleteStyleDeclaration(lineIndex, charIndex),
       shouldFill = method === 'fillText' && fullDecl.fill,
       shouldStroke = method === 'strokeText' && fullDecl.stroke && fullDecl.strokeWidth;
@@ -794,7 +748,9 @@ Object.assign(Text.prototype, SyncTextMixin, {
     }
     ctx && decl && ctx.save();
 
-    ctx && this._applyCharStyles(method, ctx, lineIndex, charIndex, fullDecl);
+    // ctx && this._applyCharStyles(method, ctx, lineIndex, charIndex, fullDecl);
+    shouldFill && (fillOffsets = this._setFillStyles(ctx, fullDecl));
+    shouldStroke && (strokeOffsets = this._setStrokeStyles(ctx, fullDecl));
 
     if (decl && decl.textBackgroundColor) {
       this._removeShadow(ctx);
@@ -829,7 +785,7 @@ Object.assign(Text.prototype, SyncTextMixin, {
     if (!this.backgroundColor && !this.backgroundStroke) {
       return;
     }
-    var dim = this._getNonTransformedDimensions();
+    let dim = this._getNonTransformedDimensions();
 
 
     if(this.backgroundColor) {
@@ -949,7 +905,7 @@ Object.assign(Text.prototype, SyncTextMixin, {
     if (!url) {
       this.setStyle('fill');
     } else {
-      // var _texture = _.findWhere(this.project.textures, {id: url});
+      // let _texture = _.findWhere(this.project.textures, {id: url});
       util.loadImage(url,  (img) => {
         this.setStyle('fill', new Pattern({
           source: img,
@@ -1044,28 +1000,20 @@ Object.assign(Text.prototype, SyncTextMixin, {
    * re- redner group when text is modified
    * @private
    */
-  _shouldClearDimensionCache: function() {
-    var shouldClear = this._forceClearCache;
-    shouldClear || (shouldClear = this.hasStateChanged('_dimensionAffectingProps'));
-    if (shouldClear) {
-      this.dirty = true;
-      this._forceClearCache = false;
-      if(this.group){
-        this.group.dirty = true;
-      }
-    }
-    return shouldClear;
-  },
+  // _shouldClearDimensionCache: function() {
+  //   let shouldClear = this._forceClearCache;
+  //   shouldClear || (shouldClear = this.hasStateChanged('_dimensionAffectingProps'));
+  //   if (shouldClear) {
+  //     this.dirty = true;
+  //     this._forceClearCache = false;
+  //     if(this.group){
+  //       this.group.dirty = true;
+  //     }
+  //   }
+  //   return shouldClear;
+  // },
   storeProperties: ["type", "clipPath","frame","deco",'textLines','textTransform'],
-  eventListeners: {
-    'editing:entered': function() {
-      this.saveStates(["text","styles"]);
-    },
-    'editing:exited': function () {
-      this.updateState();
-    }
-  },
-
+  eventListeners: {},
   textCase: "none",
   isText: true,
   getStylePosition(index){
@@ -1091,14 +1039,14 @@ Object.assign(Text.prototype, SyncTextMixin, {
     if (!this.styles || !property || property === '') {
       return false;
     }
-    var obj = this.styles, stylesCount = 0, letterCount, stylePropertyValue,
+    let obj = this.styles, stylesCount = 0, letterCount, stylePropertyValue,
       allStyleObjectPropertiesMatch = true, graphemeCount = 0, styleObject;
     // eslint-disable-next-line
-    for (var p1 in obj) {
+    for (let p1 in obj) {
       letterCount = 0;
       // eslint-disable-next-line
-      for (var p2 in obj[p1]) {
-        var styleObject = obj[p1][p2],
+      for (let p2 in obj[p1]) {
+        let styleObject = obj[p1][p2],
           stylePropertyHasBeenSet = styleObject.hasOwnProperty(property);
 
         stylesCount++;
@@ -1133,7 +1081,7 @@ Object.assign(Text.prototype, SyncTextMixin, {
     }
     // if every grapheme has the same style set then
     // delete those styles and set it on the parent
-    for (var i = 0; i < this._textLines.length; i++) {
+    for (let i = 0; i < this._textLines.length; i++) {
       graphemeCount += this._textLines[i].length;
     }
 
@@ -1170,11 +1118,11 @@ Object.assign(Text.prototype, SyncTextMixin, {
       return this.__lineHeights[lineIndex];
     }
 
-    var line = this._textLines[lineIndex],
+    let line = this._textLines[lineIndex],
       // char 0 is measured before the line cycle because it nneds to char
       // emptylines
       maxHeight = this.getHeightOfChar(lineIndex, 0);
-    for (var i = 1, len = line.length; i < len; i++) {
+    for (let i = 1, len = line.length; i < len; i++) {
       maxHeight = Math.max(this.getHeightOfChar(lineIndex, i), maxHeight);
     }
 
@@ -1182,7 +1130,6 @@ Object.assign(Text.prototype, SyncTextMixin, {
   },
 
   _render: function(ctx) {
-
     ctx.save()
     ctx.translate(-this._contentOffsetX, -this._contentOffsetY)
 
@@ -1192,85 +1139,16 @@ Object.assign(Text.prototype, SyncTextMixin, {
     this._setTextStyles(ctx);
     this._renderTextLinesBackground(ctx);
     this._renderTextDecoration(ctx, 'underline');
-
-
-    //todo
-
     this._renderText(ctx);
-    //
-    // if(this._overflow){
-    //   this.spacing = this._overflow
-    //
-    //   // let overflowedLeft = this._overflow.left - this._translatedX;
-    //   // let overflowedTop = this._overflow.top - this._translatedY;
-    //   //
-    //   // // this.spacingding = this._overflow
-    //   // // console.log("!")f
-    //   //
-    //   //
-    //   //
-    //   //
-    //   // this.width = this.width + overflowedLeft + this._overflow.right
-    //   // this.height = this.height + overflowedTop + this._overflow.bottom
-    //   //
-    //   // this._contentOffsetY = -this._overflow.top
-    //   // this._contentOffsetX = -this._overflow.left
-    //   //
-    //   // // this._translate(overflowedLeft,overflowedTop)
-    //   // this._translate(this._overflow.left,this._overflow.top)
-    // }else{
-    //   delete this.spacing
-    // }
-
     this._renderTextDecoration(ctx, 'overline');
     this._renderTextDecoration(ctx, 'linethrough');
     ctx.restore()
   },
-  // setSpacingBox(options){
-  //   if(!options){
-  //     if(this._spacingBoxNoImplementedWarning)return
-  //     this._spacingBoxNoImplementedWarning = true
-  //     console.log("spacing box set to null is not implemented")
-  //     return;
-  //   }
-  //
-  //   this.spacingBox = this.canvas.createObject(options)
-  //
-  //   this.on("scaling skewing modified dimensions:calculated",(e)=>{
-  //     this.spacing = null;
-  //     this._renderTextCommon(null, 'calc');
-  //   })
-  //
-  //   this.on("rotating moving scaling skewing modified dimensions:calculated",(e)=>{
-  //     let spacing = this.spacing;
-  //     let width = this.width, height = this.height, left = this.left, top = this.top
-  //
-  //     if(spacing){
-  //       width += spacing.left + spacing.right
-  //       height += spacing.top + spacing.bottom
-  //
-  //       let rad = util.degreesToRadians(this.angle)
-  //       top -= spacing.top * Math.cos(rad) * this.scaleY
-  //       left += spacing.top * Math.sin(rad) * this.scaleY
-  //       top -= spacing.left * Math.sin(rad) *  this.scaleX
-  //       left -= spacing.left  * Math.cos(rad)* this.scaleX
-  //     }
-  //
-  //     this.spacingBox.set({
-  //       width, height, left, top,
-  //       scaleX: this.scaleX,
-  //       scaleY: this.scaleY,
-  //       angle: this.angle,
-  //       originX: this.originX,
-  //       originY: this.originY
-  //     })
-  //   })
-  // }
 });
 
-Object.assign(IText.prototype,SyncTextMixin,  {
-  initialize: function(options,callback) {
-    Text.prototype.initialize.call(this, options,callback);
+Object.assign(IText.prototype, SyncTextMixin, {
+  constructor: function(options,callback) {
+    Text.prototype.constructor.call(this, options,callback);
     this.initBehavior();
   },
 
@@ -1279,14 +1157,14 @@ Object.assign(IText.prototype,SyncTextMixin,  {
    * @param {Event} e Event object
    */
   onInput: function(e) {
-    var fromPaste = this.fromPaste;
+    let fromPaste = this.fromPaste;
     this.fromPaste = false;
     e && e.stopPropagation();
     if (!this.isEditing) {
       return;
     }
     // decisions about style changes.
-    var nextText = this._splitTextIntoLines(this.hiddenTextarea.value).graphemeText,
+    let nextText = this._splitTextIntoLines(this.hiddenTextarea.value).graphemeText,
         charCount = this._text.length,
         nextCharCount = nextText.length,
         removedText, insertedText,
@@ -1313,12 +1191,12 @@ Object.assign(IText.prototype,SyncTextMixin,  {
       return;
     }
 
-    var textareaSelection = this.fromStringToGraphemeSelection(
+    let textareaSelection = this.fromStringToGraphemeSelection(
         this.hiddenTextarea.selectionStart,
         this.hiddenTextarea.selectionEnd,
         this.hiddenTextarea.value
     );
-    var backDelete = selectionStart > textareaSelection.selectionStart;
+    let backDelete = selectionStart > textareaSelection.selectionStart;
     if (selection) {
       removedText = this._text.slice(selectionStart, selectionEnd);
       charDiff += selectionEnd - selectionStart;
@@ -1379,9 +1257,7 @@ Object.assign(IText.prototype,SyncTextMixin,  {
    * @param {Event} e Event object
    */
   onKeyDown: function(e) {
-    if (!this.isEditing || this.inCompositionMode) {
-      return;
-    }
+    if (!this.isEditing || this.inCompositionMode) return
     let action;
     if (e.keyCode in this.keysMap) {
       action = this.keysMap[e.keyCode];
@@ -1407,26 +1283,35 @@ Object.assign(IText.prototype,SyncTextMixin,  {
     }
   },
 
-
+  getLocalPointer: function(e, pointer) {
+    pointer = pointer || this.canvas.getPointer(e);
+    var pClicked = new Point(pointer.x, pointer.y),
+        objectLeftTop = this._getLeftTopCoords();
+    if (this.angle) {
+      pClicked = util.rotatePoint(pClicked, objectLeftTop, degreesToRadians(-this.angle));
+    }
+    return {
+      x: pClicked.x - objectLeftTop.x,
+      y: pClicked.y - objectLeftTop.y
+    };
+  },
 
   //todo do not render ursor here
-  render: function(ctx,ignoreTopLayer) {
-    this.callSuper('render', ctx);
+  // render (ctx, ignoreTopLayer) {
+  //   console.log('render:', ctx, 'ignoreTopLayer:', ignoreTopLayer)
+  //   if(ignoreTopLayer && this.group){
+  //     this.group._transformDone = false;
+  //   }
 
-    if(ignoreTopLayer && this.group){
-      this.group._transformDone = false;
-    }
+  //   this.clearContextTop();
+  //   this.cursorOffsetCache = { };
+  //   this.renderCursorOrSelection();
 
-    this.clearContextTop();
-    // clear the cursorOffsetCache, so we ensure to calculate once per renderCursor
-    // the correct position but not at every cursor animation.
-    this.cursorOffsetCache = { };
-    this.renderCursorOrSelection();
-
-    if(ignoreTopLayer && this.group){
-      this.group._transformDone = true;
-    }
-  },
+  //   if(ignoreTopLayer && this.group){
+  //     this.group._transformDone = true;
+  //   }
+    
+  // },
   _setEditingProps: function() {
     this.hoverCursor = 'text';
 
@@ -1442,7 +1327,7 @@ Object.assign(IText.prototype,SyncTextMixin,  {
   },
   lockOnEdit: true,
   getSelectionStartFromPointer: function(e) {
-    var mouseOffset = this.getLocalPointer(e),
+    let mouseOffset = this.getLocalPointer(e),
       prevWidth = 0,
       width = 0,
       height = 0,
@@ -1451,7 +1336,7 @@ Object.assign(IText.prototype,SyncTextMixin,  {
       lineLeftOffset,
       line;
 
-    for (var i = 0, len = this._textLines.length; i < len; i++) {
+    for (let i = 0, len = this._textLines.length; i < len; i++) {
       if (height <= mouseOffset.y) {
         height += this.getHeightOfLine(i) * this.scaleY;
         lineIndex = i;
@@ -1470,9 +1355,10 @@ Object.assign(IText.prototype,SyncTextMixin,  {
       lineLeftOffset += this.__lineInfo[lineIndex].renderedLeft
     }
 
-    width = lineLeftOffset * this.scaleX;
-    line = this._textLines[lineIndex];
-    for (var j = 0, jlen = line.length; j < jlen; j++) {
+    width = lineLeftOffset * this.scaleX
+    line = this._textLines[lineIndex]
+    const jlen = line.length
+    for (let j = 0; j < jlen; j++) {
       prevWidth = width;
       // i removed something about flipX here, check.
       width += this.__charBounds[lineIndex][j].kernedWidth * this.scaleX;
@@ -1496,7 +1382,7 @@ Object.assign(IText.prototype,SyncTextMixin,  {
     if(this.group){
       options.e._group = this.group;
     }
-    var newSelectionStart = this.getSelectionStartFromPointer(options.e),
+    let newSelectionStart = this.getSelectionStartFromPointer(options.e),
       currentStart = this.selectionStart,
       currentEnd = this.selectionEnd;
     if (
@@ -1532,7 +1418,7 @@ Object.assign(IText.prototype,SyncTextMixin,  {
     let _is_not_empty = false;
     for (let row in this.styles) {
       if (Object.keys(this.styles[row]).length) {
-        var _row_empty = true;
+        let _row_empty = true;
         for (let char in this.styles[row]) {
           if (Object.keys(this.styles[row][char]).length) {
             if (_row_empty) {
@@ -1556,8 +1442,8 @@ Object.assign(IText.prototype,SyncTextMixin,  {
     this.hiddenTextarea.style["margin-left"] = "-9999px";
   },
 
-  exitEditing: function() {
-    var isTextChanged = (this._textBeforeEdit !== this.text);
+  exitEditing () {
+    let isTextChanged = (this._textBeforeEdit !== this.text);
     this.selected = false;
     this.isEditing = false;
 
@@ -1572,34 +1458,22 @@ Object.assign(IText.prototype,SyncTextMixin,  {
     this.abortCursorAnimation();
     this._restoreEditingProps();
     this._currentCursorOpacity = 0;
-    if (this._shouldClearDimensionCache()) {
+    if (this._forceClearCache) {
       this.initDimensions();
       this.setCoords();
     }
     this.fire('editing:exited');
 
-
-    this.updateState();
     if (this.canvas) {
       this.canvas.off('mouse:move', this.mouseMoveHandler);
       this.canvas.fire('text:editing:exited', { target: this });
-    }
-
-
-
-    if(isTextChanged){
-      this.updateState();
-      // this.fire('modified');
-      // if (this.canvas) {
-      //   this.canvas.fire('object:modified', { target: this });
-      // }
     }
 
     return this;
   }
 });
 
-Object.assign(Textbox.prototype,SyncTextMixin,{
+Object.assign(Textbox.prototype, SyncTextMixin, {
   initialize: function(options,callback) {
     Text.prototype.initialize.call(this, options,callback);
     this.initBehavior();
@@ -1615,9 +1489,9 @@ Object.assign(Textbox.prototype,SyncTextMixin,{
     return this.isEmptyStylesOverwritten(lineIndex)
   },
   getStylePosition(index){
-    var loc = this.get2DCursorLocation(index);
+    let loc = this.get2DCursorLocation(index);
     if (this._styleMap && !this.isWrapping) {
-      var map = this._styleMap[loc.lineIndex];
+      let map = this._styleMap[loc.lineIndex];
       if (!map) {
         return null;
       }

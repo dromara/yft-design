@@ -52,6 +52,7 @@ export class CurvedText extends IText {
   public reverse = false
   public _isRendering = 0
   public _textLines: any = []
+  public _dimensionAffectingProps = ['fontSize', 'fontWeight', 'fontFamily', 'fontStyle', 'lineHeight', 'text', 'charSpacing', 'textAlign', 'styles']
   constructor(text: string, options: any) {
     super(text, options)
 
@@ -370,13 +371,13 @@ export class CurvedText extends IText {
       //     this.letters.item(i).set(key, value);
       //   }
       // }
-      // if (key in this._dimensionAffectingProps){
-      //   this._initDimensions();
-      //   this.setCoords();
-      // }
+      if (key in this._dimensionAffectingProps){
+        this._initDimensions();
+        this.setCoords();
+      }
       this.letters.set(key, value)
-      this._initDimensions()
-      this.setCoords()
+      // this._initDimensions()
+      // this.setCoords()
     }
     return this
   }
