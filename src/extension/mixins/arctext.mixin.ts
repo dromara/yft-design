@@ -1026,10 +1026,10 @@ Object.assign(Text.prototype, SyncTextMixin, {
     return this.__lineHeights[lineIndex] = maxHeight * this.lineHeight * this._fontSizeMult;
   },
 
-  _render: function(ctx) {
+  _render(ctx) {
     ctx.save()
     ctx.translate(-this._contentOffsetX, -this._contentOffsetY)
-
+    console.log('ctx:', this._contentOffsetX, 'this._contentOffsetY', this._contentOffsetY)
     if(!this.__lineHeights){
       this.initDimensions();
     }
@@ -1055,7 +1055,6 @@ Object.assign(IText.prototype, SyncTextMixin, {
    * @param {Event} e Event object
    */
   onInput: function(e) {
-    console.log('e:', e)
     let fromPaste = this.fromPaste;
     this.fromPaste = false;
     e && e.stopPropagation();
@@ -1194,23 +1193,7 @@ Object.assign(IText.prototype, SyncTextMixin, {
       y: pClicked.y - objectLeftTop.y
     };
   },
-
   //todo do not render ursor here
-  // render (ctx, ignoreTopLayer) {
-  //   console.log('render:', ctx, 'ignoreTopLayer:', ignoreTopLayer)
-  //   if(ignoreTopLayer && this.group){
-  //     this.group._transformDone = false;
-  //   }
-
-  //   this.clearContextTop();
-  //   this.cursorOffsetCache = { };
-  //   this.renderCursorOrSelection();
-
-  //   if(ignoreTopLayer && this.group){
-  //     this.group._transformDone = true;
-  //   }
-    
-  // },
   _setEditingProps: function() {
     this.hoverCursor = 'text';
 

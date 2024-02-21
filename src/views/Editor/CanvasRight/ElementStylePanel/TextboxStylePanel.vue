@@ -467,7 +467,6 @@ const handleElementDeformation = () => {
   // });
   // const CurvedText = classRegistry.getClass('CurvedText')
   handleElement.value.set({__isCurvature: true})
-  // templatesStore.modifedElement()
   canvas.renderAll()
 }
 

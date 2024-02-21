@@ -101,6 +101,19 @@ export class IText extends OriginIText {
     }
   }
 
+  render (ctx: CanvasRenderingContext2D) {
+    super.render(ctx)
+    if(this.group){
+      this.group._transformDone = false;
+    }
+    this.clearContextTop();
+    this.cursorOffsetCache = {};
+    this.renderCursorOrSelection();
+    if(this.group){
+      this.group._transformDone = true;
+    }
+  }
+
   runCharRendering(method: any, ctx: CanvasRenderingContext2D, _char: string, left: number, top: number, angle: number, fullDecl: any, alignment: any){
     if(ctx){
       ctx.save();
@@ -108,6 +121,7 @@ export class IText extends OriginIText {
       ctx.rotate(angle)
     }
     for(let i in this.textRenders){
+      // @ts-ignore
       let result = this[this.textRenders[i]](method, ctx, _char, fullDecl, alignment, left, top, angle)
       if (result === true)break;
     }
@@ -201,7 +215,8 @@ export class IText extends OriginIText {
         if (currentDecoration !== lastDecoration || currentFill !== lastFill || _size !== size || _dy !== dy) {
 
           if (lastDecoration && lastFill) {
-            let offset = this.offsets[type] * size + dy
+            // @ts-ignore
+            let offset = this.offsets[type] as any * size + dy
             this._drawTextLinesDecorationSector(ctx, lastFill, offset, i, charStart, j)
           }
 
@@ -213,6 +228,7 @@ export class IText extends OriginIText {
         }
       }
       if (currentDecoration && currentFill) {
+        // @ts-ignore
         let offset = this.offsets[type] * size + dy
         this._drawTextLinesDecorationSector(ctx, currentFill, offset, i, charStart, j)
       }
@@ -330,8 +346,8 @@ export class IText extends OriginIText {
       this._linesRads.push(rowOffset)
 
       for (let j = 0; j < row.length; j++) {
-        let bounds = row[j]
-        let decl = this.getCompleteStyleDeclaration(i, j);
+        let bounds = row[j] as any
+        let decl = this.getCompleteStyleDeclaration(i, j) as any;
         let deltaY = decl && decl.deltaY || 0
 
         let bottomRadius, topRadius, charRadius, lineRadius, leftAngle, charAngle, rightAngle, renderLeftAngle, renderRightAngle;
@@ -476,7 +492,7 @@ export class IText extends OriginIText {
   }
 
   interateTextChunks(lineIndex: number, foo: Function, iteratorFn?: Function){
-    let actualStyle, nextStyle, firstChar = 0;
+    let actualStyle: any, nextStyle, firstChar = 0;
     let specs = this._specialArray
     let line = this._textLines[lineIndex]
     let isJustify = this.textAlign.indexOf('justify') !== -1;
@@ -504,7 +520,7 @@ export class IText extends OriginIText {
       if (!timeToRender) {
         // if we have charSpacing, we render char by char
         actualStyle = actualStyle || this.getCompleteStyleDeclaration(lineIndex, i);
-        nextStyle = this.getCompleteStyleDeclaration(lineIndex, i + 1);
+        nextStyle = this.getCompleteStyleDeclaration(lineIndex, i + 1) as any;
 
         timeToRender = (specs && specs[lineIndex] && specs[lineIndex][i] !== specs[lineIndex][i + 1]) || this._hasStyleChanged(actualStyle, nextStyle)
       }
@@ -565,6 +581,7 @@ export class IText extends OriginIText {
     for (let i in cts) {
       for (let j in cts[i]) {
         if (cts[i][j].char && diacritics.includes(cts[i][j].char)) {
+          // @ts-ignore
           for (let k = j; k--;) {
             if (cts[i][k].char) {
               cts[i][k].char += cts[i][j].char
@@ -587,9 +604,9 @@ export class IText extends OriginIText {
 
     ctx.beginPath()
     if (this.curvature < 0) {
-      ctx.arc(this._curvingCenter.x, this._curvingCenter.y, startChar.charRadius + 1 + offset, -startChar.leftAngle - Math.PI / 2, -endChar.rightAngle - Math.PI / 2, 1)
+      ctx.arc(this._curvingCenter.x, this._curvingCenter.y, startChar.charRadius + 1 + offset, -startChar.leftAngle - Math.PI / 2, -endChar.rightAngle - Math.PI / 2, true)
     } else {
-      ctx.arc(this._curvingCenter.x, this._curvingCenter.y, startChar.charRadius - 1 - offset, -startChar.leftAngle - Math.PI / 2, -endChar.rightAngle - Math.PI / 2, 0)
+      ctx.arc(this._curvingCenter.x, this._curvingCenter.y, startChar.charRadius - 1 - offset, -startChar.leftAngle - Math.PI / 2, -endChar.rightAngle - Math.PI / 2, false)
 
     }
     ctx.stroke()
@@ -656,28 +673,25 @@ export class IText extends OriginIText {
     this._removeShadow(ctx);
   }
 
-  // _set(key: string, value: any) {
-  //   super._set(key, value)
-  //   const _dimensionAffectingProps = ['fontSize', 'fontWeight', 'fontFamily','fontStyle','lineHeight','text','charSpacing','textAlign','styles']
-  //   let needsDims = false;
-  //   if (typeof key === 'object') {
-  //     const keys = key as Object
-  //     for (let _key in keys) {
-  //       needsDims = needsDims || _dimensionAffectingProps.indexOf(_key) !== -1;
-  //     }
-  //   } else {
-  //     needsDims = _dimensionAffectingProps.indexOf(key) !== -1;
-  //   }
-  //   if (needsDims) {
-  //     this.initDimensions();
-  //     this.setCoords();
-  //   }
-  //   return this;
-  // }
+  _set(key: string, value: any) {
+    super._set(key, value)
+    const _dimensionAffectingProps = ['fontSize', 'fontWeight', 'fontFamily','fontStyle','lineHeight','text','charSpacing','textAlign','styles']
+    let needsDims = false;
+    if (typeof key === 'object') {
+      const keys = key as Object
+      for (let _key in keys) {
+        needsDims = needsDims || _dimensionAffectingProps.indexOf(_key) !== -1;
+      }
+    } else {
+      needsDims = _dimensionAffectingProps.indexOf(key) !== -1;
+    }
+    console.log('needsDims:', needsDims)
+    if (needsDims) {
 
-  render (ctx: CanvasRenderingContext2D) {
-    ctx.save();
-    ctx.restore();
+      this.initDimensions();
+      this.setCoords();
+    }
+    return this;
   }
 
   renderSelection(ctx: CanvasRenderingContext2D, boundaries: any) {
