@@ -466,8 +466,8 @@ const handleElementDeformation = () => {
   //     pathStartOffset: 0
   // });
   // const CurvedText = classRegistry.getClass('CurvedText')
-  // handleElement.value.set({'__curvature': true})
-  templatesStore.modifedElement()
+  handleElement.value.set({__isCurvature: true})
+  // templatesStore.modifedElement()
   canvas.renderAll()
 }
 

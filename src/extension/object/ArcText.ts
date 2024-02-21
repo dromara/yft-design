@@ -1,8 +1,9 @@
 
 import '../mixins/arctext.mixin'
-import { IText, Textbox as OriginTextbox, Control, controlsUtils, classRegistry, Transform, TPointerEvent, TSVGReviver, util, Point, TMat2D } from 'fabric'
+import { IText as OriginIText, Textbox as OriginTextbox, Control, controlsUtils, classRegistry, Transform, TPointerEvent, TSVGReviver, util, Point, TMat2D } from 'fabric'
 import { sectorBoundingBox } from '@/utils/geometry'
-export class Textbox extends OriginTextbox {
+export class IText extends OriginIText {
+  public isCurvature?: false
   public curvature = 0
   public radius = 66
   public textRenders: any
@@ -34,13 +35,17 @@ export class Textbox extends OriginTextbox {
     this.on("scaling", this.updateCurvingControl)
   }
 
-  public get __curvature() {
-    return this.curvature
+  public get __isCurvature() {
+    return this.isCurvature
   }
 
-  public set __curvature(value) {
-    this.curvature = value
-    if (this.__curvature) this.createCurvatureControl()
+  public set __isCurvature(value) {
+    console.log('__curvature:', value)
+    this.isCurvature = value
+    
+    if (this.isCurvature) {
+      this.createCurvatureControl()
+    }
   }
 
   updateCurvingControl () {
@@ -52,7 +57,7 @@ export class Textbox extends OriginTextbox {
   }
 
   changeCurvature (eventData: TPointerEvent, transform: Transform, x: number, y: number) {
-    const target = transform.target as Textbox;
+    const target = transform.target as IText;
     let localPoint = controlsUtils.getLocalPoint(transform, transform.originX, transform.originY, x, y),
       strokePadding = target.strokeWidth / (target.strokeUniform ? target.scaleX : 1),
       multiplier = transform.originY === 'center' ? 2 : 1,
@@ -72,10 +77,10 @@ export class Textbox extends OriginTextbox {
     return false
   }
 
-  renderCharCallback(method, ctx, lineIndex, charIndex, endCharIndex, left, top, fullDecl) {
+  renderCharCallback(method: any, ctx: CanvasRenderingContext2D, lineIndex: number, charIndex: number, endCharIndex: number, left: number, top: number, fullDecl: any) {
     for (let index = charIndex; index <= endCharIndex; index++) {
       let tr = this._charTransformations[lineIndex][index];
-      if (ctx) ctx.textAlign = "center"
+      ctx.textAlign = "center"
       if (tr.char) {
         let angle = this.curvature > 0 ? -tr.charAngle : -tr.charAngle - Math.PI
         if(tr.contour && fullDecl.contourStroke){
@@ -272,23 +277,6 @@ export class Textbox extends OriginTextbox {
     return newLines;
   }
 
-  setTextTransform(value) {
-    this.textTransform = value
-    this.setText(this.text)
-    this.dirty = true
-    this.initDimensions()
-    this.canvas && this.canvas.requestRenderAll()
-  }
-
-  setText(value: string) {
-    this.setProperty('text', "" + value);
-  }
-
-  setProperty(property: any, value: any) {
-    this[property] = value
-    this._textBeforeEdit = this.text;
-  }
-
   initDimensions() {
     this._splitText();
     this._clearCache();
@@ -300,18 +288,13 @@ export class Textbox extends OriginTextbox {
     let textWidth = this.calcTextWidth();
     this.radius = 10000 / (this.curvature || 1)
 
-    let cx = 0,
-      cy = this.curvature > 0 ? textHeight / 2 + this.radius : -textHeight / 2 + this.radius
+    let cx = 0, cy = this.curvature > 0 ? textHeight / 2 + this.radius : -textHeight / 2 + this.radius
     this._curvingCenter = {x: cx, y: cy}
 
-    let globalOffset
+    let globalOffset = 0
     if (this.curvature > 0) {
       globalOffset = textHeight
     } 
-    else {
-      globalOffset = 0
-    }
-
     this._linesRads = []
 
     if (this.textAlign.indexOf('justify') !== -1) {
@@ -442,8 +425,6 @@ export class Textbox extends OriginTextbox {
         cts[i][j] = ct
       }
     }
-
-    // this._linesBboxes = []
     for(let i = 0; i< cts.length; i++) {
       let ctsl = cts[i] as any, cta = ctsl[0], ctb = ctsl[ctsl.length - 1], bbox, bbox2
 
@@ -455,7 +436,6 @@ export class Textbox extends OriginTextbox {
         bbox = sectorBoundingBox(ctb.tr, cta.tl, this._curvingCenter, this._linesRads[i] - this.__lineHeights[i])
         bbox2 = sectorBoundingBox(ctb.nr, cta.nl, this._curvingCenter, this._linesRads[i])
       }
-      // this._linesBboxes.push(bbox,bbox2)
 
       xMin = Math.min(xMin, bbox.x, bbox2.x)
       xMax = Math.max(xMax, bbox.x+ bbox.width, bbox2.x + bbox2.width)
@@ -493,36 +473,6 @@ export class Textbox extends OriginTextbox {
       }
     }
     return false;
-  }
-
-  _renderTextCommon(ctx: CanvasRenderingContext2D, method: Function) {
-    ctx && ctx.save();
-    let lineHeights = 0, left = this._getLeftOffset(), top = this._getTopOffset(),
-      offsets = this._applyPatternGradientTransform(ctx, method === 'fillText' ? this.fill : this.stroke);
-
-    for (let i = 0, len = this._textLines.length; i < len; i++) {
-      let lineOffsetX = 0
-      let lineOffsetY = 0
-      if(this.__lineInfo && this.__lineInfo[i]){
-        lineOffsetX = this.__lineInfo[i].renderedLeft
-        lineOffsetY = this.__renderOffsetTop
-      }
-
-
-      let heightOfLine = this.getHeightOfLine(i),
-        maxHeight = heightOfLine / this.lineHeight,
-        leftOffset = this._getLineLeftOffset(i);
-      this._renderTextLine(
-        method,
-        ctx,
-        this._textLines[i],
-        left + leftOffset - offsets.offsetX + lineOffsetX,
-        top + lineHeights + maxHeight - offsets.offsetY- lineOffsetY,
-        i
-      );
-      lineHeights += heightOfLine;
-    }
-    ctx && ctx.restore();
   }
 
   interateTextChunks(lineIndex: number, foo: Function, iteratorFn?: Function){
@@ -795,4 +745,4 @@ export class Textbox extends OriginTextbox {
 }
 
 // classRegistry.setClass(ArcText, 'ArcText')
-classRegistry.setClass(Textbox)
+classRegistry.setClass(IText)

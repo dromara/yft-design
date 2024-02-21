@@ -87,7 +87,7 @@ export const Templates: Template[] = [
         "objectCaching": false,
         "transparentCorners": false,
         "hasBorders": true,
-        "type": "Textbox",
+        "type": "i-text",
         "version": "6.0.0-beta9",
         "originX": "left",
         "originY": "top",

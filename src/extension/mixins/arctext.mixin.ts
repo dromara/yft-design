@@ -20,12 +20,6 @@ export const SyncTextMixin = {
     return Math.ceil(this.getFontSize() / 10);
   },
 
-  // initDimensions_overwritten: Text.prototype.initDimensions,
-  // initDimensions: function() {
-  //   this.initDimensions_overwritten();
-  //   this.width = Math.floor(this.width)
-  //   this.height = Math.floor(this.height)
-  // },
   addText: function (text, options) {
     let match = this.text.match(/\n/g);
     let lineIndex = match && match.length || 0;
@@ -40,10 +34,9 @@ export const SyncTextMixin = {
     }
     Object.assign(this.styles[lineIndex][charIndex], options);
     this.text += text;
-    // this.styles;
   },
 
-  renderSelection (ctx: CanvasRenderingContext2D, boundaries: CursorBoundaries) {
+  renderSelection(ctx: CanvasRenderingContext2D, boundaries: CursorBoundaries) {
 
     let selectionStart = this.inCompositionMode ? this.hiddenTextarea.selectionStart : this.selectionStart,
       selectionEnd = this.inCompositionMode ? this.hiddenTextarea.selectionEnd : this.selectionEnd,
@@ -88,10 +81,7 @@ export const SyncTextMixin = {
             boxEnd += this.__lineInfo[i].renderedRight
           }
         }
-
       }
-
-
       realLineHeight = lineHeight;
       if (this.lineHeight < 1 || (i === endLine && this.lineHeight > 1)) {
         lineHeight /= this.lineHeight;
@@ -112,8 +102,6 @@ export const SyncTextMixin = {
           boxEnd - boxStart,
           lineHeight);
       }
-
-
       boundaries.topOffset += realLineHeight;
     }
   },
@@ -131,8 +119,7 @@ export const SyncTextMixin = {
       topOffset = boundaries.topOffset,
       dy = this.getValueOfPropertyAt(lineIndex, charIndex, 'deltaY');
 
-    topOffset += (1 - this._fontSizeFraction) * this.getHeightOfLine(lineIndex) / this.lineHeight
-      - charHeight * (1 - this._fontSizeFraction);
+    topOffset += (1 - this._fontSizeFraction) * this.getHeightOfLine(lineIndex) / this.lineHeight - charHeight * (1 - this._fontSizeFraction);
 
     if (this.inCompositionMode) {
       this.renderSelection(ctx, boundaries);
@@ -143,33 +130,21 @@ export const SyncTextMixin = {
       if( cursorLocation.charIndex!== 0 && this.__lineInfo[lineIndex].renderedLeft){
         lineOffset += this.__lineInfo[lineIndex].renderedLeft
       }
-//       if( cursorLocation.charIndex == this.__charBounds[lineIndex].length - 1 && this.__lineInfo[lineIndex].renderedRight){
-//         lineOffset += this.__lineInfo[lineIndex].renderedRight
-//       }
     }
-
-
     ctx.fillStyle = this.getValueOfPropertyAt(lineIndex, charIndex, 'fill');
     ctx.globalAlpha = this.__isMousedown ? 1 : this._currentCursorOpacity;
-    console.log('ctx.fillRect:', ctx.fillRect, 'ctx:', ctx)
     ctx.fillRect(
       boundaries.left + boundaries.leftOffset - cursorWidth / 2 + lineOffset,
       topOffset + boundaries.top + dy,
       cursorWidth,
-      charHeight)
+      charHeight
+    )
   },
-  setProperty: function (property, value) {
-
+  setProperty (property, value) {
     this[property] = value
-
-    // this.fire("modified", {});
-    // if (this.canvas) {
-    //   this.canvas.fire("object:modified", {target: this});
-    //   this.canvas.renderAll();
-    // }
     this._textBeforeEdit = this.text;
   },
-  _removeStyle: function (styleName) {
+  _removeStyle (styleName) {
     for(let row in this.styles) {
       for (let index in this.styles[row]) {
         delete this.styles[row][index][styleName]
@@ -190,23 +165,23 @@ export const SyncTextMixin = {
       }
     }
   },
-  _modifyObjectStyleProperty (styleName,value){
+  _modifyObjectStyleProperty (styleName,value) {
     let count = 0;
-    for(let row in this.styles) {
+    for (let row in this.styles) {
       for (let index in this.styles[row]) {
-        if(this.styles[row][index] === undefined || this.styles[row][index][styleName] === value){
+        if (this.styles[row][index] === undefined || this.styles[row][index][styleName] === value){
           count++;
         }else{
           return;
         }
       }
     }
-    if(count === this.text.length){
+    if (count === this.text.length) {
       this._removeStyle(styleName);
       this[styleName] = value;
     }
   },
-  setStyleInterval: function (styleName, value, start ,end) {
+  setStyleInterval(styleName, value, start ,end) {
     if (value === undefined || this[styleName] === value){
       for (let i = start; i < end; i++) {
         this._removeStyleAt(styleName,i);
@@ -217,27 +192,14 @@ export const SyncTextMixin = {
     }
     this._modifyObjectStyleProperty(styleName,value);
     this.setCoords();
-    if(styleName === "fontFamily" && value &&  this.renderOnFontsLoaded){
+    if(styleName === "fontFamily" && value && this.renderOnFontsLoaded){
       this.renderOnFontsLoaded([value])
     }
   },
-  setStyle: function (styleName, value) {
+  setStyle(styleName, value) {
     this.__selectionStart = this.selectionStart;
     this.__selectionEnd = this.selectionEnd;
     this.__changedProperty = styleName;
-
-    // let _old = {
-    //   fill: this.fill,
-    //   fontSize: this.fontSize,
-    //   textBackgroundColor: this.textBackgroundColor,
-    //   fontFamily: this.fontFamily,
-    //   fontWeight: this.fontWeight,
-    //   fontStyle: this.fontStyle,
-    //   stroke: this.stroke,
-    //   strokeWidth: this.strokeWidth,
-    //   styles: this.styles
-    // }
-
     if (this.setSelectionStyles && this.isEditing && this.selectionStart !== this.selectionEnd) {
       this.setStyleInterval(styleName, value,this.selectionStart,this.selectionEnd)
     }
@@ -252,25 +214,16 @@ export const SyncTextMixin = {
         this._clearCache();
         this._splitText();
       }
-      // this.cleanStyle(styleName);
     }
-
     this.setCoords();
-
     if (this.caching) {
       this.dirty = true;
     }
-
-    // this.fire("modified", {});
-    // if (this.canvas) {
-    //   this.canvas.fire("object:modified", {target: this});
-    //   this.canvas.renderAll();
-    // }
     delete this.__changedProperty;
     delete this.__selectionStart;
     delete this.__selectionEnd;
   },
-  generateTextStyle: function () {
+  generateTextStyle() {
     return {
       'font-style': this.getStyle('fontStyle'),
       'font-weight': this.getStyle('bold'),
@@ -302,7 +255,7 @@ Object.assign(Text.prototype, SyncTextMixin, {
    * @param {Object} prevStyle
    * @param {Object} thisStyle
    */
-  _hasStyleChanged: function(prevStyle, thisStyle) {
+  _hasStyleChanged(prevStyle, thisStyle) {
     if(Object.keys(prevStyle).length !== Object.keys(thisStyle).length ){
       return true
     }
@@ -316,7 +269,7 @@ Object.assign(Text.prototype, SyncTextMixin, {
   /**
    * Calculate text box height
    */
-  calcTextHeight: function() {
+  calcTextHeight() {
     let lineHeight, height = 0;
     for (let i = 0, len = this._textLines.length; i < len; i++) {
       lineHeight = this.getHeightOfLine(i);
@@ -325,7 +278,7 @@ Object.assign(Text.prototype, SyncTextMixin, {
     return height;
   },
   //added this.__lineInfo support
-  _renderTextDecoration: function(ctx, type) {
+  _renderTextDecoration(ctx, type) {
     if (!this[type] && !this.styleHas(type)) {
       return;
     }
@@ -392,12 +345,9 @@ Object.assign(Text.prototype, SyncTextMixin, {
       );
       topOffset += heightOfLine;
     }
-    // if there is text background color no
-    // other shadows should be casted
     this._removeShadow(ctx);
   },
-  //added this.__lineInfo support
-  _renderTextLinesBackground: function(ctx) {
+  _renderTextLinesBackground(ctx) {
     if (!this.textBackgroundColor && !this.styleHas('textBackgroundColor')) {
       return;
     }
@@ -455,17 +405,13 @@ Object.assign(Text.prototype, SyncTextMixin, {
       lineTopOffset += heightOfLine;
     }
     ctx.fillStyle = originalFill;
-    // if there is text background color no
-    // other shadows should be casted
     this._removeShadow(ctx);
   },
   getLineWidth: function(lineIndex) {
     if (this.__lineWidths[lineIndex]) {
       return this.__lineWidths[lineIndex];
     }
-
     let width, line = this._textLines[lineIndex], lineInfo;
-
     if (line === '') {
       width = 0;
     }
@@ -487,10 +433,7 @@ Object.assign(Text.prototype, SyncTextMixin, {
    * Updates this.width and this.height with the proper values.
    * Does not return dimensions.
    */
-  initDimensions: function() {
-    if (this.__skipDimension) {
-      return;
-    }
+  initDimensions() {
     this._splitText();
     this._clearCache();
 
@@ -498,44 +441,33 @@ Object.assign(Text.prototype, SyncTextMixin, {
     this.width = this.calcTextWidth() || this.cursorWidth || this.MIN_TEXT_WIDTH;
 
     if (this.textAlign.indexOf('justify') !== -1) {
-      // once text is measured we need to make space fatter to make justified text.
       this.enlargeSpaces();
     }
     this.height = this.calcTextHeight();
     if(this.useRenderBoundingBoxes){
       let lf = this.__lineInfo
       this.__renderOffsetTop =  isFinite(lf[0].renderedTop) ? this.__lineHeights[0] / this.lineHeight - lf[0].renderedTop : 0
-
       let paddingBottom = isFinite(lf[lf.length - 1].renderedBottom) ? lf[lf.length - 1].renderedBottom: 0;
-
-
       this.height += paddingBottom - this.__renderOffsetTop
       this._translate(0,-this.__renderOffsetTop)
     }
-
-    this.fire("dimensions:calculated")
   },
   /**
    * @private
    * @param {CanvasRenderingContext2D} ctx Context to render on
    * @param {String} method Method name ("fillText" or "strokeText")
    */
-  _renderTextCommon: function(ctx, method) {
+  _renderTextCommon(ctx, method) {
     ctx && ctx.save();
     let lineHeights = 0, left = this._getLeftOffset(), top = this._getTopOffset(),
       offsets = this._applyPatternGradientTransform(ctx, method === 'fillText' ? this.fill : this.stroke);
-
     for (let i = 0, len = this._textLines.length; i < len; i++) {
-
-
       let lineOffsetX = 0
       let lineOffsetY = 0
       if(this.__lineInfo && this.__lineInfo[i]){
         lineOffsetX = this.__lineInfo[i].renderedLeft
         lineOffsetY = this.__renderOffsetTop
       }
-
-
       let heightOfLine = this.getHeightOfLine(i),
         maxHeight = heightOfLine / this.lineHeight,
         leftOffset = this._getLineLeftOffset(i);
@@ -552,7 +484,7 @@ Object.assign(Text.prototype, SyncTextMixin, {
     ctx && ctx.restore();
   },
   //add textTransform support
-  _splitText: function() {
+  _splitText() {
     let text= this.text
     if(this.textTransform){
       if(this.textTransform === "uppercase"){
@@ -574,7 +506,6 @@ Object.assign(Text.prototype, SyncTextMixin, {
     if(this.useRenderBoundingBoxes){
       this.__lineInfo = []
     }
-
     return newLines;
   },
   setTextTransform(value){
@@ -629,8 +560,7 @@ Object.assign(Text.prototype, SyncTextMixin, {
    * @private
    */
   _wrapSVGTextAndBg: function(textAndBg) {
-    let noShadow = true,
-      textDecoration = this.getSvgTextDecoration(this);
+    let noShadow = true, textDecoration = this.getSvgTextDecoration(this);
     return [
       textAndBg.textBgRects.join(''),
       '\t\t<text xml:space="preserve" ',
@@ -649,7 +579,7 @@ Object.assign(Text.prototype, SyncTextMixin, {
    * @private
    * @param {CanvasRenderingContext2D} ctx Context to render on
    */
-  _renderText: function(ctx) {
+  _renderText(ctx) {
     if(this.useBothRenderingMethod){
       return this._renderTextCommon(ctx, 'both');
     }
@@ -683,10 +613,7 @@ Object.assign(Text.prototype, SyncTextMixin, {
 
     for (let i = 0, len = line.length - 1; i <= len; i++) {
       timeToRender = i === len || this.charSpacing;
-
-
       iteratorFn && iteratorFn(i)
-
       if (isJustify && !timeToRender) {
         if (this._reSpaceAndTab.test(line[i])) {
           timeToRender = true;
@@ -714,11 +641,8 @@ Object.assign(Text.prototype, SyncTextMixin, {
     let lineHeight = this.getHeightOfLine(lineIndex),
       charBox,
       boxWidth = 0;
-
     ctx && ctx.save();
-
     top -= lineHeight * this._fontSizeFraction / this.lineHeight;
-
     this.interateTextChunks(lineIndex,
       (a,b)=>{
         this._renderChar(method, ctx, lineIndex, a,b, left, top, lineHeight);
@@ -734,7 +658,6 @@ Object.assign(Text.prototype, SyncTextMixin, {
           boxWidth += charBox.kernedWidth;
         }
       })
-
     ctx && ctx.restore();
   },
   _renderChar: function(method, ctx, lineIndex, charIndex, endCharIndex, left, top) {
@@ -770,10 +693,6 @@ Object.assign(Text.prototype, SyncTextMixin, {
       let text = this._textLines[lineIndex].slice(charIndex, endCharIndex + 1).join("")
       this.runCharRendering(method, ctx, text, left, top, 0, fullDecl);
     }
-
-
-
-
     ctx && decl && ctx.restore();
   },
   /**
@@ -786,8 +705,6 @@ Object.assign(Text.prototype, SyncTextMixin, {
       return;
     }
     let dim = this._getNonTransformedDimensions();
-
-
     if(this.backgroundColor) {
       ctx.fillStyle = this.backgroundColor;
       ctx.fillRect(
@@ -807,9 +724,6 @@ Object.assign(Text.prototype, SyncTextMixin, {
         dim.y
       )
     }
-
-    // if there is background color no other shadows
-    // should be casted
     this._removeShadow(ctx);
   },
   runCharRendering(method, ctx, _char, left, top, angle, fullDecl, alignment){
@@ -836,7 +750,7 @@ Object.assign(Text.prototype, SyncTextMixin, {
    * @param {String} _char
    * @param {Number} lineHeight Height of the line
    */
-  defaultTextRender: function(method, ctx, _char, decl) {
+  defaultTextRender(method, ctx, _char, decl) {
     if(method === "both"){
       if (decl.fill && this.paintFirst === 'fill') {
         ctx.fillText(_char, 0,0);
@@ -914,21 +828,9 @@ Object.assign(Text.prototype, SyncTextMixin, {
       }, this, this.crossOrigin); //todo
     }
   },
-  /* getOpacity: function () {
-    return this.getStyle('opacity') * 100;
-  },
-  setOpacity: function (value) {
-    this.setStyle('opacity', parseInt(value, 10) / 100);
-  },*/
-  // getRadius: function () {
-  //   return this.get('radius');
-  // },
   setShadow: function (options) {
     return this.setProperty('shadow', options ? new Shadow(options) : null);
   },
-  // setRadius: function (value) {
-  //   this.setProperty('radius', value);
-  // },
   getSpacing: function () {
     return this.get('spacing');
   },
@@ -949,16 +851,11 @@ Object.assign(Text.prototype, SyncTextMixin, {
     this._forceClearCache = true
     this.dirty = true
     this.initDimensions()
-    if(value && this.renderOnFontsLoaded){
-
-      let fontsArray = [value];
-      // let fontsArray = fonts.fallbacks
-      // if(!fontsArray.includes(fontsArray)){
-      //   fontsArray.push(value)
-      // }
+    if (value && this.renderOnFontsLoaded){
+      let fontsArray = [value]
       this.renderOnFontsLoaded(fontsArray, callback)
     }
-    else{
+    else {
       callback && callback()
     }
   },
@@ -1016,13 +913,13 @@ Object.assign(Text.prototype, SyncTextMixin, {
   eventListeners: {},
   textCase: "none",
   isText: true,
-  getStylePosition(index){
+  getStylePosition(index) {
     return this.get2DCursorLocation(index);
   },
-  getTextLines(){
+  getTextLines() {
     return this.textLines.map(line => line.length);
   },
-  setTextLines (val){
+  setTextLines (val) {
     // console.log("text lines",val,this.textLines);
   },
   /**
@@ -1035,7 +932,7 @@ Object.assign(Text.prototype, SyncTextMixin, {
    *
    * @param {string} property The property to compare between characters and text.
    */
-  cleanStyle: function (property) {
+  cleanStyle(property) {
     if (!this.styles || !property || property === '') {
       return false;
     }
@@ -1147,8 +1044,9 @@ Object.assign(Text.prototype, SyncTextMixin, {
 });
 
 Object.assign(IText.prototype, SyncTextMixin, {
-  constructor: function(options,callback) {
-    Text.prototype.constructor.call(this, options,callback);
+  initialize: function(options, callback) {
+    console.log('options:', options)
+    Text.prototype.initialize.call(this, options, callback);
     this.initBehavior();
   },
 
@@ -1157,6 +1055,7 @@ Object.assign(IText.prototype, SyncTextMixin, {
    * @param {Event} e Event object
    */
   onInput: function(e) {
+    console.log('e:', e)
     let fromPaste = this.fromPaste;
     this.fromPaste = false;
     e && e.stopPropagation();
