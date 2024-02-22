@@ -1,7 +1,6 @@
-import { Object as FabricObject, IText, Text, Group, Point, classRegistry, TPointerEventInfo, TPointerEvent, TSVGReviver, util } from 'fabric'
+import { Object as FabricObject, IText, Text, Group, Point, classRegistry, TPointerEventInfo, TPointerEvent, TSVGReviver, util, Textbox } from 'fabric'
+import { textboxControls } from '@/app/fabricControls'
 
-// const stateProperties = Group.stateProperties
-// const delegatedProperties = Group.prototype.getObjectOpacity
 
 function max(array: number[], byProperty?: string) {
   return find(array, byProperty, function(value1: number, value2: number) {
@@ -56,7 +55,7 @@ export class CurvedText extends IText {
   constructor(text: string, options: any) {
     super(text, options)
     this.radius = options.width / 2
-    // this.on('mousedblclick', this.doubleClickHandler.bind(this))
+    this.on('editing:entered', this.editingEnterdHandler.bind(this))
     this.letters = new Group([], { selectable: false, padding: 0})
     this.initialize(text, options)
   }
@@ -78,12 +77,6 @@ export class CurvedText extends IText {
   }
 
   public _initDimensions (ctx?: CanvasRenderingContext2D){
-    // from fabric.Text.prototype._initDimensions
-    // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-    // if (!ctx) {
-    //   ctx = this.canvas?.getContext();
-    //   if (ctx) this._setTextStyles(ctx);
-    // }
     this._textLines = this.text.split(this._reNewline);
     this._clearCache()
     var currentTextAlign = this.textAlign
@@ -94,26 +87,21 @@ export class CurvedText extends IText {
     this._render();
   }
 
-  public doubleClickHandler(e: TPointerEventInfo<TPointerEvent>) {
-    if (!this.canvas || !e.target || e.target !== this) return
-
-    // 启用
-    // this.set({interactive: true, objectCaching: false})
-
-    // 绑定事件
-    // this.addDeselectedEvent(this)
-
-    // 搜索被双击的目标并激活
-    // this.canvas.setActiveObject(prevTarget)
-    this.canvas.remove(this)
-    this.canvas.requestRenderAll()
+  public editingEnterdHandler(e: TPointerEventInfo<TPointerEvent>) {
+    this.set({effect: 'normal', text: this.text, controls: textboxControls()})
   }
 
   _render() {
+    if (this.effect === 'normal') {
+      if (!this.canvas) return
+      const ctx = this.canvas.contextContainer
+      super._render(ctx)
+      return
+    }
     const renderingCode = util.getRandomInt(100, 999)
     this._isRendering = renderingCode
-    if (this.letters && this.letters.size()) {
-      let currentAngle = 0, currentAngleROtation = 0, angleRadians = 0, align = 0, space = this.spacing, textWidth = 0, fixedLetterAngle = 0
+    if (this.letters && this.letters._objects.length) {
+      let currentAngle = 0, currentAngleRotation = 0, angleRadians = 0, align = 0, space = this.spacing, textWidth = 0, fixedLetterAngle = 0
       if (this.effect === 'curved') {
         for (let i = 0; i < this.text.length; i++) {
           const item = this.letters._objects[i]
@@ -250,15 +238,16 @@ export class CurvedText extends IText {
   }
 
   render(ctx: CanvasRenderingContext2D) {
-    ctx.save();
-    this.transform(ctx);
-    console.log('render:-----')
-    if (this.effect === 'curved') {
-      for(let i = 0, len = this.letters.size(); i< len; i++){
-        this.letters._objects[i].render(ctx)
-      }
+    if (this.effect === 'normal') {
+      super.render(ctx)
+      return
     }
-    ctx.restore();
+    ctx.save()
+    this.transform(ctx)
+    for(let i = 0, len = this.letters.size(); i< len; i++){
+      this.letters._objects[i].render(ctx)
+    }
+    ctx.restore()
   }
 
   _set(key: string, value: any): any {

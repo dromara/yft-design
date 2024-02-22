@@ -1,6 +1,6 @@
 import { watch } from 'vue'
 import { storeToRefs } from 'pinia'
-import { Canvas, Object as FabricObject, Textbox, Group, Point } from 'fabric'
+import { Canvas, Object as FabricObject, Textbox, Group, Point, IText } from 'fabric'
 import { WorkSpaceThumbType, WorkSpaceDrawType } from "@/configs/canvas"
 import { useFabricStore } from '@/store/modules/fabric'
 import { useElementBounding } from '@vueuse/core'
@@ -39,14 +39,13 @@ const initConf = () => {
   FabricObject.ownDefaults.hasRotatingPoint = false
   FabricObject.ownDefaults.controls = defaultControls()
 
-  Object.assign(Textbox.ownDefaults, { controls: textboxControls() } )
+  Object.assign(Textbox.ownDefaults, { controls: textboxControls() })
+  Object.assign(IText.ownDefaults, { controls: textboxControls() })
 
   const mixin = {
     getWidthHeight(noFixed = false): Point {
-      // @ts-ignore
-      const objScale = this.getObjectScaling()
-      // @ts-ignore
-      const point = this._getTransformedDimensions({
+      const objScale = (this as FabricObject).getObjectScaling()
+      const point = (this as FabricObject)._getTransformedDimensions({
         scaleX: objScale.x,
         scaleY: objScale.y,
       })
