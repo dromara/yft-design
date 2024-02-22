@@ -9,18 +9,18 @@ export const SyncTextMixin = {
   //this options order required to have correct textLines on setText. all text dimension affection properties shoul be initialized first
   optionsOrder: ["fontWeight", "fontStyle", "fontSize", "fontFamily", "styles", "width","height", "text",  "*"],
   onInputOverwritten: IText.prototype.onInput,
-  onInput: function(e: any) {
+  onInput(e: any) {
     this.onInputOverwritten(e);
   },
   minFontSize: 2,
   maxFontSize: 250,
   minLineHeight: 2,
   maxLineHeight: 200,
-  maxStrokeWidth: function () {
+  maxStrokeWidth () {
     return Math.ceil(this.getFontSize() / 10);
   },
 
-  addText: function (text, options) {
+  addText (text, options) {
     let match = this.text.match(/\n/g);
     let lineIndex = match && match.length || 0;
     let charIndex = this.text.length - this.text.lastIndexOf("\n") - 1;
@@ -151,7 +151,7 @@ export const SyncTextMixin = {
       }
     }
   },
-  _removeStyleAt: function (propertyToRemove,index) {
+  _removeStyleAt (propertyToRemove,index) {
     let loc = this.getStylePosition(index);
     if (!this._getLineStyle(loc.lineIndex) || !this._getStyleDeclaration(loc.lineIndex, loc.charIndex)) {
       return;
@@ -407,7 +407,7 @@ Object.assign(Text.prototype, SyncTextMixin, {
     ctx.fillStyle = originalFill;
     this._removeShadow(ctx);
   },
-  getLineWidth: function(lineIndex) {
+  getLineWidth(lineIndex) {
     if (this.__lineWidths[lineIndex]) {
       return this.__lineWidths[lineIndex];
     }
@@ -559,7 +559,7 @@ Object.assign(Text.prototype, SyncTextMixin, {
   /**
    * @private
    */
-  _wrapSVGTextAndBg: function(textAndBg) {
+  _wrapSVGTextAndBg(textAndBg) {
     let noShadow = true, textDecoration = this.getSvgTextDecoration(this);
     return [
       textAndBg.textBgRects.join(''),
@@ -636,7 +636,7 @@ Object.assign(Text.prototype, SyncTextMixin, {
       }
     }
   },
-  _renderChars: function(method, ctx, line, left, top, lineIndex) {
+  _renderChars(method, ctx, line, left, top, lineIndex) {
     // set proper line offset
     let lineHeight = this.getHeightOfLine(lineIndex),
       charBox,
@@ -660,7 +660,7 @@ Object.assign(Text.prototype, SyncTextMixin, {
       })
     ctx && ctx.restore();
   },
-  _renderChar: function(method, ctx, lineIndex, charIndex, endCharIndex, left, top) {
+  _renderChar(method, ctx, lineIndex, charIndex, endCharIndex, left, top) {
     let decl = this._getStyleDeclaration(lineIndex, charIndex),
       fullDecl = this.getCompleteStyleDeclaration(lineIndex, charIndex),
       shouldFill = method === 'fillText' && fullDecl.fill,
@@ -700,7 +700,7 @@ Object.assign(Text.prototype, SyncTextMixin, {
    * @private
    * @param {CanvasRenderingContext2D} ctx Context to render on
    */
-  _renderBackground: function(ctx) {
+  _renderBackground(ctx) {
     if (!this.backgroundColor && !this.backgroundStroke) {
       return;
     }
@@ -786,7 +786,7 @@ Object.assign(Text.prototype, SyncTextMixin, {
   accepts: {
     role: "fontFamily"
   },
-  setData: function (data) {
+  setData (data) {
     if (data.role === "fontFamily") {
       this.setFontFamily(data.fontFamily)
     }
@@ -797,7 +797,7 @@ Object.assign(Text.prototype, SyncTextMixin, {
   // setBoldStyle(value){
   //   target.setStyle("fontWeight", value ? "bold" : "normal");
   // },
-  getStyle: function (styleName) {
+  getStyle (styleName) {
     if (this.getSelectionStyles && this.isEditing){
       let selectionPosition;
       if(this.selectionStart === this.selectionEnd){
@@ -811,11 +811,11 @@ Object.assign(Text.prototype, SyncTextMixin, {
       return (this[styleName] === undefined ? this['__' + styleName] : this[styleName]);
     }
   },
-  getPattern: function (url) {
+  getPattern (url) {
     let _fill = this.getStyle('fill ');
     return _fill && _fill.source;
   },
-  setPattern: function (url) {
+  setPattern (url) {
     if (!url) {
       this.setStyle('fill');
     } else {
@@ -828,25 +828,25 @@ Object.assign(Text.prototype, SyncTextMixin, {
       }, this, this.crossOrigin); //todo
     }
   },
-  setShadow: function (options) {
+  setShadow(options) {
     return this.setProperty('shadow', options ? new Shadow(options) : null);
   },
-  getSpacing: function () {
+  getSpacing() {
     return this.get('spacing');
   },
-  setSpacing: function (value) {
+  setSpacing (value) {
     this.setProperty('spacing', value);
   },
-  getReverted: function () {
+  getReverted() {
     return this.get('reverted');
   },
-  setReverted: function (value) {
+  setReverted(value) {
     this.setProperty('reverted', value);
   },
-  getText: function () {
+  getText() {
     return this.get('text');
   },
-  setFontFamily: function (value,callback) {
+  setFontFamily(value,callback) {
     this.setProperty('fontFamily', "" + value);
     this._forceClearCache = true
     this.dirty = true
@@ -859,7 +859,7 @@ Object.assign(Text.prototype, SyncTextMixin, {
       callback && callback()
     }
   },
-  setStyles: function(value,callback){
+  setStyles(value,callback) {
     this.styles = value ? JSON.parse(JSON.stringify(value)) : {}
     this._forceClearCache = true
     this.dirty = true
@@ -872,32 +872,32 @@ Object.assign(Text.prototype, SyncTextMixin, {
       callback && callback()
     }
   },
-  setText: function (value) {
+  setText (value) {
     this.setProperty('text', "" + value);
   },
-  getTextAlign: function () {
+  getTextAlign () {
     return this.get('textAlign');
   },
-  setTextAlign: function (value) {
+  setTextAlign (value) {
     this.setProperty('textAlign', value.toLowerCase());
   },
-  getBgColor: function () {
+  getBgColor () {
     return this.get('backgroundColor');
   },
-  setBgColor: function (value) {
+  setBgColor (value) {
     this.setProperty('backgroundColor', value);
   },
-  getTextBgColor: function () {
+  getTextBgColor () {
     return this.get('textBackgroundColor');
   },
-  setTextBgColor: function (value) {
+  setTextBgColor (value) {
     this.setProperty('textBackgroundColor', value);
   },
   /**
    * re- redner group when text is modified
    * @private
    */
-  // _shouldClearDimensionCache: function() {
+  // _shouldClearDimensionCache() {
   //   let shouldClear = this._forceClearCache;
   //   shouldClear || (shouldClear = this.hasStateChanged('_dimensionAffectingProps'));
   //   if (shouldClear) {
@@ -994,7 +994,7 @@ Object.assign(Text.prototype, SyncTextMixin, {
   fontSizeOptions: [6,7,8,9,10,12,14,18,24,36,48,64],
   //overwritten. Assign _measuringContext property to Editor. not to global  To avoid text measuring problems on Nodes.
   //_measuringContext will be individual for every editor.
-  getMeasuringContext: function() {
+  getMeasuringContext() {
     let context = this.editor || fabric;
     // if we did not return we have to measure something.
     if (!context._measuringContext) {
@@ -1007,7 +1007,7 @@ Object.assign(Text.prototype, SyncTextMixin, {
    * @param {Number} lineIndex index of line to calculate
    * @return {Number}
    */
-  getHeightOfLine: function(lineIndex) {
+  getHeightOfLine(lineIndex) {
     if(!this.__lineHeights){
       this.initDimensions();
     }
@@ -1029,7 +1029,6 @@ Object.assign(Text.prototype, SyncTextMixin, {
   _render(ctx) {
     ctx.save()
     ctx.translate(-this._contentOffsetX, -this._contentOffsetY)
-    console.log('ctx:', this._contentOffsetX, 'this._contentOffsetY', this._contentOffsetY)
     if(!this.__lineHeights){
       this.initDimensions();
     }
@@ -1044,9 +1043,9 @@ Object.assign(Text.prototype, SyncTextMixin, {
 });
 
 Object.assign(IText.prototype, SyncTextMixin, {
-  initialize: function(options, callback) {
+  initialize(options, callback) {
     console.log('options:', options)
-    Text.prototype.initialize.call(this, options, callback);
+    IText.prototype.initialize.call(this, options, callback);
     this.initBehavior();
   },
 
@@ -1054,7 +1053,7 @@ Object.assign(IText.prototype, SyncTextMixin, {
    * Handles onInput event
    * @param {Event} e Event object
    */
-  onInput: function(e) {
+  onInput(e) {
     let fromPaste = this.fromPaste;
     this.fromPaste = false;
     e && e.stopPropagation();
@@ -1154,7 +1153,7 @@ Object.assign(IText.prototype, SyncTextMixin, {
    * Handles keyup event
    * @param {Event} e Event object
    */
-  onKeyDown: function(e) {
+  onKeyDown(e) {
     if (!this.isEditing || this.inCompositionMode) return
     let action;
     if (e.keyCode in this.keysMap) {
@@ -1181,7 +1180,7 @@ Object.assign(IText.prototype, SyncTextMixin, {
     }
   },
 
-  getLocalPointer: function(e, pointer) {
+  getLocalPointer(e, pointer) {
     pointer = pointer || this.canvas.getPointer(e);
     var pClicked = new Point(pointer.x, pointer.y),
         objectLeftTop = this._getLeftTopCoords();
@@ -1194,7 +1193,7 @@ Object.assign(IText.prototype, SyncTextMixin, {
     };
   },
   //todo do not render ursor here
-  _setEditingProps: function() {
+  _setEditingProps() {
     this.hoverCursor = 'text';
 
     if (this.canvas) {
@@ -1208,7 +1207,7 @@ Object.assign(IText.prototype, SyncTextMixin, {
     }
   },
   lockOnEdit: true,
-  getSelectionStartFromPointer: function(e) {
+  getSelectionStartFromPointer(e) {
     let mouseOffset = this.getLocalPointer(e),
       prevWidth = 0,
       width = 0,
@@ -1256,7 +1255,7 @@ Object.assign(IText.prototype, SyncTextMixin, {
   /**
    * @private aded options.e._group for editing texts inside groups
    */
-  mouseMoveHandler: function(options) {
+  mouseMoveHandler(options) {
     if (!this.__isMousedown || !this.isEditing) {
       return;
     }
@@ -1294,7 +1293,7 @@ Object.assign(IText.prototype, SyncTextMixin, {
     }
   },
   // stateProperties: IText.prototype.stateProperties.concat(["styles"]),
-  getStyles: function () {
+  getStyles () {
     if (!Object.keys(this.styles).length) return null;
     let _styles = {};
     let _is_not_empty = false;
@@ -1318,7 +1317,7 @@ Object.assign(IText.prototype, SyncTextMixin, {
     return _is_not_empty && _styles || null;
   },
   initHiddenTextareaNative: IText.prototype.initHiddenTextarea,
-  initHiddenTextarea: function () {
+  initHiddenTextarea () {
     this.initHiddenTextareaNative();
     this.hiddenTextarea.style.width = "9999px";
     this.hiddenTextarea.style["margin-left"] = "-9999px";
@@ -1356,7 +1355,7 @@ Object.assign(IText.prototype, SyncTextMixin, {
 });
 
 Object.assign(Textbox.prototype, SyncTextMixin, {
-  initialize: function(options,callback) {
+  initialize(options,callback) {
     Text.prototype.initialize.call(this, options,callback);
     this.initBehavior();
   },
@@ -1366,7 +1365,7 @@ Object.assign(Textbox.prototype, SyncTextMixin, {
    * @param {Number} lineIndex , lineIndex is on wrapped lines.
    * @return {Boolean}
    */
-  isEmptyStyles: function(lineIndex) {
+  isEmptyStyles(lineIndex) {
     if(!this._styleMap)return true;
     return this.isEmptyStylesOverwritten(lineIndex)
   },

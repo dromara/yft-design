@@ -1,8 +1,8 @@
 
-import '../mixins/arctext.mixin'
+// import '../mixins/arctext.mixin'
 import { IText as OriginIText, Textbox as OriginTextbox, Control, controlsUtils, classRegistry, Transform, TPointerEvent, TSVGReviver, util, Point, TMat2D } from 'fabric'
 import { sectorBoundingBox } from '@/utils/geometry'
-export class ArcText extends OriginIText {
+export class IText extends OriginIText {
   static type: string = 'ArcText'
   public isCurvature?: false
   public curvature = 0
@@ -36,20 +36,21 @@ export class ArcText extends OriginIText {
     this.on("scaling", this.updateCurvingControl)
   }
 
-  public get __isCurvature() {
+  get _isCurvature() {
+    console.log('this.isCurvature:', this.isCurvature)
     return this.isCurvature
   }
 
-  public set __isCurvature(value) {
+  set _isCurvature(value) {
     console.log('__curvature:', value)
     this.isCurvature = value
     
-    if (this.isCurvature) {
+    if (this._isCurvature) {
       this.createCurvatureControl()
     }
   }
 
-  updateCurvingControl () {
+  updateCurvingControl() {
     if (this.controls.c) {
       this.controls.c.offsetX =  -this._contentOffsetX * this.scaleX
       this.controls.c.offsetY = (this._curvingCenter.y - this._contentOffsetY)  * this.scaleY
@@ -57,8 +58,8 @@ export class ArcText extends OriginIText {
     }
   }
 
-  changeCurvature (eventData: TPointerEvent, transform: Transform, x: number, y: number) {
-    const target = transform.target as ArcText;
+  changeCurvature(eventData: TPointerEvent, transform: Transform, x: number, y: number) {
+    const target = transform.target as IText;
     let localPoint = controlsUtils.getLocalPoint(transform, transform.originX, transform.originY, x, y),
       strokePadding = target.strokeWidth / (target.strokeUniform ? target.scaleX : 1),
       multiplier = transform.originY === 'center' ? 2 : 1,
@@ -102,7 +103,11 @@ export class ArcText extends OriginIText {
     }
   }
 
-  render (ctx: CanvasRenderingContext2D) {
+  _render(ctx: CanvasRenderingContext2D) {
+    super._render(ctx)
+  }
+
+  render(ctx: CanvasRenderingContext2D) {
     super.render(ctx)
     if(this.group){
       this.group._transformDone = false;
@@ -759,5 +764,5 @@ export class ArcText extends OriginIText {
   }
 }
 
-classRegistry.setClass(ArcText, 'ArcText')
-// classRegistry.setClass(IText)
+// classRegistry.setClass(ArcText, 'ArcText')
+classRegistry.setClass(IText)

@@ -196,10 +196,10 @@ import { ElMessage } from 'element-plus'
 import { FontSizeLibs, LineHeightLibs, CharSpaceLibs } from '@/configs/texts'
 import { WEB_FONTS } from '@/configs/fonts'
 import { propertiesToInclude } from '@/configs/canvas'
-import { TextboxElement } from '@/types/canvas'
+import { TextboxElement, ITextElement } from '@/types/canvas'
 import { FontGroupOption } from '@/types/elements'
 import { loadFont } from '@/utils/fonts'
-import { Path, classRegistry, Text } from 'fabric'
+import { Path, classRegistry, Text, Textbox } from 'fabric'
 import { nanoid } from 'nanoid'
 import opentype from "opentype.js"
 import ElementPosition from '../Components/ElementPosition.vue'
@@ -465,8 +465,19 @@ const handleElementDeformation = () => {
   //     pathSide: 'left',
   //     pathStartOffset: 0
   // });
-  // const CurvedText = classRegistry.getClass('CurvedText')
-  handleElement.value.set({__isCurvature: true})
+  const CurvedText = classRegistry.getClass('CurvedText')
+  // const ArcText = classRegistry.getClass('ArcText')
+  const options = handleElement.value.toObject(propertiesToInclude) as any
+  delete options.type
+  options.id = nanoid(10)
+  // const arcText = new ArcText(options.text, options)
+  const curvedText = new CurvedText(options.text, options)
+  // canvas.add(arcText)
+  canvas.add(curvedText)
+  // const _isCurvature = handleElement.value.get('_isCurvature')
+  // console.log('_isCurvature:', _isCurvature)
+  // handleElement.value.set({_isCurvature: true})
+  
   canvas.renderAll()
 }
 

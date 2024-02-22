@@ -1,4 +1,4 @@
-import { Gradient, Pattern, Textbox, SerializedImageProps, Path, Rect, Image, Point, Polygon, Group, Line, Object as FabricObject, ImageProps } from "fabric"
+import { Gradient, Pattern, Textbox, SerializedImageProps, Path, Rect, Image, Point, Polygon, Group, Line, Object as FabricObject, ImageProps, IText } from "fabric"
 import { ColorStop } from "./elements"
 import JsBarcode from "jsbarcode"
 export type LineOption = [number, number, number, number]
@@ -80,6 +80,14 @@ export interface BackgroundElement {
 }
 
 export interface TextboxElement extends Textbox, CommenElement {
+  fontFamily: string
+  color: string
+  fillRepeat: TPatternRepeat
+  fillURL: string
+  isCheck?: boolean
+}
+
+export interface ITextElement extends IText, CommenElement {
   fontFamily: string
   color: string
   fillRepeat: TPatternRepeat

@@ -56,34 +56,22 @@ export class CurvedText extends IText {
   constructor(text: string, options: any) {
     super(text, options)
 
-    this.on('mousedblclick', this.doubleClickHandler.bind(this))
+    // this.on('mousedblclick', this.doubleClickHandler.bind(this))
     this.letters = new Group([], { selectable: false, padding: 0})
     this.initialize(text, options)
   }
 
   public initialize(text: string, options: any) {
-    // this.__skipDimension = true
     this.setOptions(options)
-    // this.__skipDimension = false
-    // this.callSuper('initialize', text, options)
-    this.setText(text)
+    this.setText(text, options)
     this._render()
   }
 
-  public setText(text: string) {
+  public setText(text: string, options: any) {
     if (this.letters) {
-      // while(text.length !== 0 && this.letters.size() >= text.length) {
-      //   const item = this.letters.item(this.letters.size() - 1)
-      //   this.letters.remove(item)
-      // }
       this.letters._objects = []
       for (let i = 0; i < text.length; i++) {
-        if (this.letters._objects[i] === undefined) {
-          this.letters.add(new Text(text[i], {}))
-        }
-        else {
-          this.letters._objects[i].set({text: text[i]})
-        }
+        this.letters.add(new Text(text[i], options))
       }
     }
     this._render()
@@ -92,10 +80,10 @@ export class CurvedText extends IText {
   public _initDimensions (ctx?: CanvasRenderingContext2D){
     // from fabric.Text.prototype._initDimensions
     // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-    if (!ctx) {
-      ctx = this.canvas?.getContext();
-      if (ctx) this._setTextStyles(ctx);
-    }
+    // if (!ctx) {
+    //   ctx = this.canvas?.getContext();
+    //   if (ctx) this._setTextStyles(ctx);
+    // }
     this._textLines = this.text.split(this._reNewline);
     this._clearCache()
     var currentTextAlign = this.textAlign
@@ -106,38 +94,6 @@ export class CurvedText extends IText {
     this._render();
   }
 
-  // /**
-  //  * 绑定target的deselected事件，在target被取消激活后，关闭组的interactive
-  //  */
-  // public addDeselectedEvent(target: FabricObject) {
-  //   target.once('deselected', () => {
-  //     const activeObject = this.canvas?.getActiveObject()
-  //     // if (!activeObject || !activeObject.getAncestors(true).includes(this)) {
-  //     //   // 关闭
-  //     //   this.set({interactive: false, objectCaching: true,})
-  //     // } else {
-  //     //   // 事件传递
-  //     //   this.addDeselectedEvent(activeObject)
-  //     // }
-  //   })
-  // }
-
-  // /**
-  //  * 组内元素被激活
-  //  */
-  // public onActiveTarget(target: FabricObject) {
-  //   if (!this.canvas || !target.group || target.group.interactive) return
-  //   target.getAncestors(true).forEach((_group) => {
-  //     const group = _group as Group
-  //     if (group.interactive) return
-  //     group.set({ interactive: true, objectCaching: false,})
-  //     group.addDeselectedEvent(target)
-  //   })
-  // }
-
-  // /**
-  //  * 双击后启用interactive，离开组后关闭
-  //  */
   public doubleClickHandler(e: TPointerEventInfo<TPointerEvent>) {
     if (!this.canvas || !e.target || e.target !== this) return
 
@@ -150,64 +106,8 @@ export class CurvedText extends IText {
     // 搜索被双击的目标并激活
     // this.canvas.setActiveObject(prevTarget)
     this.canvas.remove(this)
-
     this.canvas.requestRenderAll()
   }
-
-  // // 空子元素，自动移除组本身
-  // // override _onObjectRemoved(object: FabricObject, removeParentTransform?: boolean): void {
-  // //   super._onObjectRemoved(object, removeParentTransform)
-  // //   if (this.size() === 0) {
-  // //     const parent = this.getParent() as Group
-  // //     parent && parent.remove(this)
-  // //   }
-  // // }
-
-  // _renderOld(ctx: CanvasRenderingContext2D){
-  //   if(this.letters){
-  //     let currentAngle = 0, angleRadians = 0, align = 0, rev = 0;
-  //     if(this.reverse) rev=0.5
-  //     if(this.textAlign === 'center' || this.textAlign === 'justify'){
-  //       align = this.spacing / 2 * (this.text.length - rev);	// Remove '-1' after this.text.length for proper angle rendering
-  //     } 
-  //     else if(this.textAlign === 'right') {
-  //       align = this.spacing * (this.text.length - rev);	// Remove '-1' after this.text.length for proper angle rendering
-  //     }
-  //     var multiplier = this.reverse ? 1: -1;
-  //     for(var i = 0, len = this.text.length; i<len; i++){
-  //       // Find coords of each letters (radians : angle*(Math.PI / 180)
-  //       currentAngle = multiplier * (-i * this.spacing + align);
-  //       angleRadians = currentAngle * (Math.PI / 180);
-
-  //       // for(var key in this.delegatedProperties){
-  //       //   this.letters._objects[i].set(key, this.get(key));
-  //       // }
-  //       this.letters._objects[i].set({
-  //         left: multiplier + Math.sin(angleRadians) * this.radius,
-  //         top: multiplier - Math.cos(angleRadians) * this.radius,
-  //         angle: currentAngle,
-  //         padding: 0,
-  //         selectable: false,
-  //       })
-  //     }
-  //     // Update group coords
-  //     // this.letters._calcBounds();
-  //     if (this.reverse) {
-  //       this.letters.top = this.letters.top-this.height*2.5;
-  //     }
-  //     else {
-  //       this.letters.top = 0;
-  //     }
-  //     this.letters.left = this.letters.left-this.width/2; // Change here, for proper group display
-  //     // this.letters._updateObjectsCoords();					// Commented off this line for group misplacement
-  //     // this.letters.saveCoords();
-  //     // this.letters.render(ctx);
-  //     this.width = this.letters.width;
-  //     this.height = this.letters.height;
-  //     this.letters.left = -(this.letters.width/2);
-  //     this.letters.top = -(this.letters.height/2);
-  //   }
-  // }
 
   _render() {
     const renderingCode = util.getRandomInt(100, 999)
@@ -240,11 +140,11 @@ export class CurvedText extends IText {
       if (this.reverse) currentAngle = -currentAngle
 
       let width = 0, multiplier = this.reverse ? -1 : 1, thisLetterAngle = 0, lastLetterAngle = 0
+      if (this._isRendering !== renderingCode) return
       for (let i = 0; i < this.text.length; i++) {
-        if (this._isRendering !== renderingCode) return
-        // for(var key in this.delegatedProperties){
-        //   this.letters._objects[i].set(key, this.get(key));
-        // }
+        for (var key in this._dimensionAffectingProps) {
+          this.letters._objects[i].set(key, this.get(key));
+        }
 
         this.letters._objects[i].set({left: width, top: 0, angle: 0, padding: 0})
         if (this.effect === 'curved') {
@@ -331,7 +231,7 @@ export class CurvedText extends IText {
       this.letters.set('scaleX', 1);
       this.letters.set('scaleY', 1);
       this.letters.set('angle', 0);
-
+      console.log('_calcBounds: ---')
       // Update group coords
       this._calcBounds();
 			this._updateObjectsCoords();
@@ -344,53 +244,44 @@ export class CurvedText extends IText {
 
       this.width = this.letters.width;
       this.height = this.letters.height;
-      this.letters.left = -(this.letters.width/2);
-      this.letters.top = -(this.letters.height/2);
+      this.letters.left = -this.letters.width / 2;
+      this.letters.top = -this.letters.height / 2;
     }
   }
 
-  override render(ctx: CanvasRenderingContext2D) {
+  render(ctx: CanvasRenderingContext2D) {
     ctx.save();
     this.transform(ctx);
-    //The array is now sorted in order of highest first, so start from end.
-    for(let i = 0, len = this.letters.size(); i< len; i++){
-      this.letters._objects[i].render(ctx)
+    console.log('render:-----')
+    if (this.effect === 'curved') {
+      for(let i = 0, len = this.letters.size(); i< len; i++){
+        this.letters._objects[i].render(ctx)
+      }
     }
     ctx.restore();
-    this.setCoords();
   }
 
   _set(key: string, value: any): any {
     super._set(key, value)
-    // if (this._isRendering) return
-    // console.log('this.letters:', this.letters, key)
     if (this.letters) {
-      // if (key in this.delegatedProperties) {
-      //   var i = this.letters.size();
-      //   while (i--) {
-      //     this.letters.item(i).set(key, value);
-      //   }
-      // }
-      if (key in this._dimensionAffectingProps){
+      if (this._dimensionAffectingProps.includes(key)) {
         this._initDimensions();
         this.setCoords();
+        this.letters._objects.forEach(item => item.set(key, value))
       }
-      this.letters.set(key, value)
-      // this._initDimensions()
-      // this.setCoords()
     }
     return this
   }
 
-  _calcBounds (onlyWidthHeight?: number) {
+  _calcBounds(onlyWidthHeight?: number) {
     let aX: number[] = [],
         aY: number[] = [],
         o, prop,
         props = ['tr', 'br', 'bl', 'tl'],
-        i = 0, iLen = this.letters._objects.length,
+        iLen = this.letters._objects.length,
         j, jLen = props.length;
 
-    for ( ; i < iLen; ++i) {
+    for (let i = 0; i < iLen; ++i) {
       o = this.letters._objects[i] as any
       o.aCoords = o.calcACoords();
       for (j = 0; j < jLen; j++) {
@@ -423,14 +314,13 @@ export class CurvedText extends IText {
 
   _updateObjectsCoords (center?: Point) {
     let centerPoint = center || this.letters.getCenterPoint()
-    for (var i = this.letters._objects.length; i--; ) { 
+    for (let i = this.letters._objects.length; i--; ) { 
       this._updateObjectCoords(this.letters._objects[i], centerPoint);
     }
   }
 
   _updateObjectCoords (object: FabricObject, center: Point) {
     const objectLeft = object.left, objectTop = object.top, skipControls = true;
-
     object.set({
       left: objectLeft - center.x,
       top: objectTop - center.y
