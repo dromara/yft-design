@@ -84,4 +84,7 @@ export const propertiesToInclude = [
   'background',
   'hasBorders',
   'originSrc',
+  'radius',
+  'effect',
+  'reverse'
 ]

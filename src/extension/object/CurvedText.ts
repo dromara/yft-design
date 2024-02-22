@@ -52,10 +52,10 @@ export class CurvedText extends IText {
   public reverse = false
   public _isRendering = 0
   public _textLines: any = []
-  public _dimensionAffectingProps = ['fontSize', 'fontWeight', 'fontFamily', 'fontStyle', 'lineHeight', 'text', 'charSpacing', 'textAlign', 'styles']
+  public _dimensionAffectingProps = ['fontSize', 'fontWeight', 'fontFamily', 'fontStyle', 'lineHeight', 'text', 'charSpacing', 'textAlign', 'styles', 'scaleX', 'scaleY']
   constructor(text: string, options: any) {
     super(text, options)
-
+    this.radius = options.width / 2
     // this.on('mousedblclick', this.doubleClickHandler.bind(this))
     this.letters = new Group([], { selectable: false, padding: 0})
     this.initialize(text, options)
