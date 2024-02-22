@@ -37,7 +37,7 @@ const isPattern = (thing: unknown): thing is Pattern => {
 const isTextObject = (thing?: FabricObject): thing is Text => {
 // we could use instanceof but that would mean pulling in Text code for a simple check
 // @todo discuss what to do and how to do
-    return !!thing && thing.isType('Text', 'IText', 'Textbox')
+    return !!thing && thing.isType('Text', 'IText', 'Textbox', 'ArcText')
 }
   
 // const isFiller = (filler: TFiller | string | null): filler is TFiller => {

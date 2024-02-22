@@ -42,7 +42,8 @@ function find(array, byProperty, condition) {
 export class CurvedText extends IText {
   static type: string = 'CurvedText'
   public letters: Group
-  public radius = 200
+  public hasEffect = false
+  public radius = 100
   public range = 5
   public smallFont = 10
   public largeFont = 30
@@ -56,18 +57,20 @@ export class CurvedText extends IText {
     super(text, options)
     this.radius = options.width / 2
     this.on('editing:entered', this.editingEnterdHandler.bind(this))
+    // this.on('editing:exited', this.editingExitedHandler.bind(this))
     this.letters = new Group([], { selectable: false, padding: 0})
     this.initialize(text, options)
   }
 
   public initialize(text: string, options: any) {
+    this.hasEffect = true
     this.setOptions(options)
     this.setText(text, options)
     this._render()
   }
 
   public setText(text: string, options: any) {
-    if (this.letters) {
+    if (this.letters && this.hasEffect) {
       this.letters._objects = []
       for (let i = 0; i < text.length; i++) {
         this.letters.add(new Text(text[i], options))
@@ -87,12 +90,21 @@ export class CurvedText extends IText {
     this._render();
   }
 
+  get type () {
+    return 'CurvedText'
+  }
+
   public editingEnterdHandler(e: TPointerEventInfo<TPointerEvent>) {
-    this.set({effect: 'normal', text: this.text, controls: textboxControls()})
+    this.set({effect: 'normal', text: this.text, controls: textboxControls(), hasEffect: false})
+  }
+
+  public editingExitedHandler(e: TPointerEventInfo<TPointerEvent>) {
+    console.log(this.text)
+    this.set({effect: 'curved', hasEffect: true})
   }
 
   _render() {
-    if (this.effect === 'normal') {
+    if (this.effect === 'normal' && !this.hasEffect) {
       if (!this.canvas) return
       const ctx = this.canvas.contextContainer
       super._render(ctx)
@@ -102,6 +114,7 @@ export class CurvedText extends IText {
     this._isRendering = renderingCode
     if (this.letters && this.letters._objects.length) {
       let currentAngle = 0, currentAngleRotation = 0, angleRadians = 0, align = 0, space = this.spacing, textWidth = 0, fixedLetterAngle = 0
+      const halfPI = Math.PI / 180
       if (this.effect === 'curved') {
         for (let i = 0; i < this.text.length; i++) {
           const item = this.letters._objects[i]
@@ -111,18 +124,18 @@ export class CurvedText extends IText {
       }
       else if (this.effect === 'arc') {
         const itemLetter = this.letters._objects[0] as IText
-        fixedLetterAngle = ((itemLetter.fontSize + space) / this.radius) / (Math.PI / 180)
+        fixedLetterAngle = ((itemLetter.fontSize + space) / this.radius) / halfPI
         textWidth = (this.text.length + 1 ) * (itemLetter.fontSize + space)
       }
 
       if (this.textAlign === 'right') {
-        currentAngle = 90 - ((textWidth / 2) / this.radius) / (Math.PI / 180)
+        currentAngle = 90 - ((textWidth / 2) / this.radius) / halfPI
       }
       else if (this.textAlign === 'left') {
-        currentAngle = -90 - ((textWidth / 2) / this.radius) / (Math.PI / 180)
+        currentAngle = -90 - ((textWidth / 2) / this.radius) / halfPI
       }
       else {
-        currentAngle = -((textWidth / 2) / this.radius) / (Math.PI / 180)
+        currentAngle = -((textWidth / 2) / this.radius) / halfPI
       }
 
       if (this.reverse) currentAngle = -currentAngle
@@ -136,9 +149,9 @@ export class CurvedText extends IText {
 
         this.letters._objects[i].set({left: width, top: 0, angle: 0, padding: 0})
         if (this.effect === 'curved') {
-          thisLetterAngle = ((this.letters._objects[i].width + space) / this.radius) / (Math.PI / 180)
+          thisLetterAngle = ((this.letters._objects[i].width + space) / this.radius) / halfPI
           currentAngle = multiplier * (multiplier * currentAngle + lastLetterAngle)
-          angleRadians = currentAngle * Math.PI / 180;
+          angleRadians = currentAngle * halfPI;
           lastLetterAngle = thisLetterAngle;
           this.letters._objects[i].set({
             angle: currentAngle, 
@@ -150,7 +163,7 @@ export class CurvedText extends IText {
         }
         else if (this.effect === 'arc') {
           currentAngle = multiplier * ((multiplier * currentAngle) + fixedLetterAngle);
-          angleRadians = currentAngle * (Math.PI / 180);
+          angleRadians = currentAngle * halfPI;
           this.letters._objects[i].set({
             angle: currentAngle, 
             padding: 0,
@@ -191,14 +204,14 @@ export class CurvedText extends IText {
         else if (this.effect === 'largeToSmallTop') {
           var small = this.largeFont
           var large = this.smallFont
-          var difference = large-small
+          var difference = large - small
           var center = Math.ceil(this.text.length / 2)
-          var step = difference/(this.text.length)
+          var step = difference / (this.text.length)
           var newfont = small + (i * step)
           //var newfont=((this.text.length-i)*this.smallFont)+12;
           this.letters._objects[i].set('fontSize', (newfont));
           this.letters._objects[i].set('left', (width));
-          width+=this.letters._objects[i].get('width');
+          width += this.letters._objects[i].get('width');
           this.letters._objects[i].set('padding', 0);
           this.letters._objects[i].set({
             borderColor: 'red',
