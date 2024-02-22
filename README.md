@@ -56,7 +56,7 @@ npm run build
 ```
 
 # 🧾 API接口文档
-### 使用fabric.js的编辑器文件解析器可以查看如下 [接口文档](/docs/API.md)
+### 使用fabric.js的编辑器文件解析器可以查看如下 [接口文档](/docs/api.md)
   - 支持pdf
   - 支持psd
   - 支持ai(pdf结构)
