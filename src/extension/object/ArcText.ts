@@ -8,7 +8,6 @@ export class ArcText extends OriginIText {
   public curvature = 100
   public radius = 66
   public textRenders: any
-  private __isinit = false
   private __isMousedown: boolean = false
   private _linesRads: number[] = []
   private __lineInfo: any = []
@@ -30,11 +29,11 @@ export class ArcText extends OriginIText {
   public fontSizeOptions = [6,7,8,9,10,12,14,18,24,36,48,64]
   constructor(text: string, options: any) {
     super(text, options)
-    this.initCurvature()
+    this.createCurvatureControl()
   }
 
-  initCurvature() {
-    this.__isinit = true
+  get type() {
+    return 'ArcText'
   }
 
   createCurvatureControl() {
@@ -138,7 +137,7 @@ export class ArcText extends OriginIText {
     for(let i in this.textRenders){
       // @ts-ignore
       let result = this[this.textRenders[i]](method, ctx, _char, fullDecl, alignment, left, top, angle)
-      if (result === true)break;
+      if (result === true) break;
     }
     if(ctx) {
       ctx.restore()
@@ -474,7 +473,7 @@ export class ArcText extends OriginIText {
 
     this._translate(_translateX, topOverflow)
     this.updateCurvingControl()
-    // this.fire("dimensions:calculated")
+    console.log('updateCurvingControl:', 'this:', this)
   }
 
   _hasStyleChanged (prevStyle: string[], thisStyle: string[]) {
@@ -626,7 +625,8 @@ export class ArcText extends OriginIText {
       }
       charStart = 0
       lastColor = this.getValueOfPropertyAt(i, 0, 'textBackgroundColor');
-      for (let j = 0; j < this._textLines[i].length; j++) {
+      let j = 0
+      for (j = 0; j < this._textLines[i].length; j++) {
         currentColor = this.getValueOfPropertyAt(i, j, 'textBackgroundColor');
         if (currentColor !== lastColor) {
           if (lastColor) {
@@ -660,30 +660,28 @@ export class ArcText extends OriginIText {
     } else {
       needsDims = _dimensionAffectingProps.indexOf(key) !== -1;
     }
-    console.log('__isinit:', this.__isinit, 'needsDims:', needsDims, 'key:', key)
-    if (needsDims && this.__isinit) {
+    if (needsDims && this.initialized) {
       this.initDimensions();
       this.setCoords();
     }
     return this;
   }
 
-  _render(ctx: CanvasRenderingContext2D) {
-    console.log('render:', this)
-    super._render(ctx)
-    ctx.save()
-    ctx.translate(-this._contentOffsetX, -this._contentOffsetY)
-    if(!this.__lineHeights){
-      this.initDimensions();
-    }
-    this._setTextStyles(ctx);
-    this._renderTextLinesBackground(ctx);
-    this._renderTextDecoration(ctx, 'underline');
-    this._renderText(ctx);
-    this._renderTextDecoration(ctx, 'overline');
-    this._renderTextDecoration(ctx, 'linethrough');
-    ctx.restore()
-  }
+  // _render(ctx: CanvasRenderingContext2D) {
+  //   console.log('render:', this)
+  //   ctx.save()
+  //   ctx.translate(-this._contentOffsetX, -this._contentOffsetY)
+  //   if(!this.__lineHeights){
+  //     this.initDimensions();
+  //   }
+  //   this._setTextStyles(ctx);
+  //   this._renderTextLinesBackground(ctx);
+  //   this._renderTextDecoration(ctx, 'underline');
+  //   this._renderText(ctx);
+  //   this._renderTextDecoration(ctx, 'overline');
+  //   this._renderTextDecoration(ctx, 'linethrough');
+  //   ctx.restore()
+  // }
 
   renderSelection(ctx: CanvasRenderingContext2D, boundaries: any) {
     let selectionStart = this.inCompositionMode ? this.hiddenTextarea!.selectionStart : this.selectionStart,

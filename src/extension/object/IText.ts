@@ -21,6 +21,7 @@ export class IText extends OriginIText {
   private _charTransformations: any = []
   constructor(text: string, options: any) {
     super(text, options)
+    this.createCurvatureControl()
   }
 
   createCurvatureControl() {
