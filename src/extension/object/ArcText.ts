@@ -1,13 +1,14 @@
 
-import { ArcTextMixin, addArcTextInteractions } from  '../mixins/arctext.mixin'
+import '../mixins/arctext.mixin'
 import { IText as OriginIText, Textbox as OriginTextbox, Control, controlsUtils, classRegistry, Transform, TPointerEvent, TSVGReviver, util, Point, TMat2D } from 'fabric'
 import { sectorBoundingBox } from '@/utils/geometry'
 export class ArcText extends OriginIText {
   static type: string = 'ArcText'
-  public isCurvature?: false
+  public isCurvature? = false
   public curvature = 0
   public radius = 66
   public textRenders: any
+  private __isinit = false
   private __isMousedown: boolean = false
   private _linesRads: number[] = []
   private __lineInfo: any = []
@@ -29,7 +30,11 @@ export class ArcText extends OriginIText {
   public fontSizeOptions = [6,7,8,9,10,12,14,18,24,36,48,64]
   constructor(text: string, options: any) {
     super(text, options)
-    this.initBehavior()
+    this.initCurvature()
+  }
+
+  initCurvature() {
+    this.__isinit = true
   }
 
   createCurvatureControl() {
@@ -665,8 +670,7 @@ export class ArcText extends OriginIText {
 
   _set(key: string, value: any) {
     super._set(key, value)
-    console.log('key:', key, 'value:', value)
-    const _dimensionAffectingProps = ['fontSize', 'fontWeight', 'fontFamily','fontStyle','lineHeight','text','charSpacing','textAlign','styles']
+    const _dimensionAffectingProps = ['fontSize', 'fontWeight', 'fontFamily', 'fontStyle', 'lineHeight', 'text', 'charSpacing', 'textAlign', 'styles']
     let needsDims = false;
     if (typeof key === 'object') {
       const keys = key as Object
@@ -676,13 +680,26 @@ export class ArcText extends OriginIText {
     } else {
       needsDims = _dimensionAffectingProps.indexOf(key) !== -1;
     }
-    console.log('needsDims:', needsDims)
-    if (needsDims) {
-
+    if (needsDims && this.__isinit) {
       this.initDimensions();
       this.setCoords();
     }
     return this;
+  }
+
+  _render(ctx: CanvasRenderingContext2D) {
+    ctx.save()
+    ctx.translate(-this._contentOffsetX, -this._contentOffsetY)
+    if(!this.__lineHeights){
+      this.initDimensions();
+    }
+    this._setTextStyles(ctx);
+    this._renderTextLinesBackground(ctx);
+    this._renderTextDecoration(ctx, 'underline');
+    this._renderText(ctx);
+    this._renderTextDecoration(ctx, 'overline');
+    this._renderTextDecoration(ctx, 'linethrough');
+    ctx.restore()
   }
 
   renderSelection(ctx: CanvasRenderingContext2D, boundaries: any) {
@@ -733,9 +750,4 @@ export class ArcText extends OriginIText {
   }
 }
 
-Object.assign(ArcText.prototype, {
-  ...addArcTextInteractions()
-})
-
 classRegistry.setClass(ArcText, 'ArcText')
-// classRegistry.setClass(IText)

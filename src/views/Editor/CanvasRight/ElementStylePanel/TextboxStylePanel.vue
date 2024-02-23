@@ -474,9 +474,9 @@ const handleElementDeformation = () => {
   // const curvedText = new CurvedText(options.text, options)
   canvas.add(arcText)
   // canvas.add(curvedText)
-  // const _isCurvature = handleElement.value.get('_isCurvature')
-  // console.log('_isCurvature:', _isCurvature)
-  // handleElement.value.set({_isCurvature: true})
+  const _isCurvature = handleElement.value.get('_isCurvature')
+  console.log('_isCurvature:', _isCurvature)
+  handleElement.value.set({_isCurvature: true})
   
   canvas.renderAll()
 }
