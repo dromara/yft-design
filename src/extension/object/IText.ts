@@ -1,10 +1,10 @@
 
-// import '../mixins/arctext.mixin'
+import '../mixins/arctext.mixin'
 import { IText as OriginIText, Textbox as OriginTextbox, Control, controlsUtils, classRegistry, Transform, TPointerEvent, TSVGReviver, util, Point, TMat2D } from 'fabric'
 import { sectorBoundingBox } from '@/utils/geometry'
 export class IText extends OriginIText {
   static type: string = 'ArcText'
-  public isCurvature?: false
+  public isCurvature = false
   public curvature = 0
   public radius = 66
   public textRenders: any
@@ -36,16 +36,15 @@ export class IText extends OriginIText {
     this.on("scaling", this.updateCurvingControl)
   }
 
-  get _isCurvature() {
+  get __isCurvature() {
     console.log('this.isCurvature:', this.isCurvature)
     return this.isCurvature
   }
 
-  set _isCurvature(value) {
+  set __isCurvature(value) {
     console.log('__curvature:', value)
     this.isCurvature = value
-    
-    if (this._isCurvature) {
+    if (this.isCurvature) {
       this.createCurvatureControl()
     }
   }
@@ -691,9 +690,8 @@ export class IText extends OriginIText {
     } else {
       needsDims = _dimensionAffectingProps.indexOf(key) !== -1;
     }
-    console.log('needsDims:', needsDims)
-    if (needsDims) {
-
+    console.log('needsDims:', needsDims, 'key:', key)
+    if (needsDims && this.isCurvature) {
       this.initDimensions();
       this.setCoords();
     }

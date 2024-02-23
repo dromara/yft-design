@@ -5,7 +5,7 @@ import { sectorBoundingBox } from '@/utils/geometry'
 export class ArcText extends OriginIText {
   static type: string = 'ArcText'
   public isCurvature? = false
-  public curvature = 0
+  public curvature = 100
   public radius = 66
   public textRenders: any
   private __isinit = false
@@ -497,7 +497,6 @@ export class ArcText extends OriginIText {
     let shortCut = !isJustify && this.charSpacing === 0 && (!specs || !specs[lineIndex]) && this.isEmptyStyles(lineIndex);
 
     if (shortCut) {
-      // render all the line in one pass without checking
       foo(0, line.length, null)
       return;
     }
@@ -513,7 +512,6 @@ export class ArcText extends OriginIText {
         }
       }
       if (!timeToRender) {
-        // if we have charSpacing, we render char by char
         actualStyle = actualStyle || this.getCompleteStyleDeclaration(lineIndex, i);
         nextStyle = this.getCompleteStyleDeclaration(lineIndex, i + 1) as any;
 
@@ -522,7 +520,6 @@ export class ArcText extends OriginIText {
 
       if (timeToRender) {
         foo(firstChar, i, actualStyle)
-
         firstChar = i + 1;
         actualStyle = nextStyle;
       }
@@ -538,7 +535,6 @@ export class ArcText extends OriginIText {
         if (this._specialArray?.[li]?.[position]) {
           detectedFeaturesLines[li].push({components,position})
         } else {
-
           let ff = style?.fontFamily || this?.styles[li]?.[position]?.fontFamily || this.fontFamily;
           // let detected = fabric.fonts.getTextFeatures(components.join(""), ff, this.features)
           // for (let detectedInstance of detected) {
@@ -548,20 +544,15 @@ export class ArcText extends OriginIText {
         }
       })
     }
-
     let cts = this._charTransformations
-    //detected font Features
     for (let li in detectedFeaturesLines) {
       for (let feature of detectedFeaturesLines[li]) {
-
         let first = cts[li][feature.position];
         let last = cts[li][feature.position + feature.components.length - 1]
         first.char = feature.components
         first.charAngle = (first.charAngle + last.charAngle) / 2
-
         let midAngle = (first.leftAngle + last.rightAngle) / 2
         first.cl = {x: this._curvingCenter.cx - first.charRadius * Math.sin(midAngle), y: this._curvingCenter.cy - first.charRadius * Math.cos(midAngle)};
-
         for (let fci = 1; fci < feature.components.length; fci++) {
           delete cts[li][feature.position + fci].char
         }
@@ -593,39 +584,30 @@ export class ArcText extends OriginIText {
   _drawTextLinesDecorationSector(ctx: CanvasRenderingContext2D, currentColor: string, offset: number, line: number, charStart: number, charEnd: number) {
     ctx.fillStyle = currentColor;
     ctx.lineWidth = this.fontSize / 15
-
     let startChar = this._charTransformations[line][charStart]
     let endChar = this._charTransformations[line][charEnd - 1]
-
     ctx.beginPath()
     if (this.curvature < 0) {
       ctx.arc(this._curvingCenter.x, this._curvingCenter.y, startChar.charRadius + 1 + offset, -startChar.leftAngle - Math.PI / 2, -endChar.rightAngle - Math.PI / 2, true)
     } else {
       ctx.arc(this._curvingCenter.x, this._curvingCenter.y, startChar.charRadius - 1 - offset, -startChar.leftAngle - Math.PI / 2, -endChar.rightAngle - Math.PI / 2, false)
-
     }
     ctx.stroke()
   }
 
   _contextSelectBackgroundSector(ctx: CanvasRenderingContext2D, line: number, charStart: number, charEnd: number, fullLineRadius?: boolean) {
-
     ctx.beginPath()
     let startChar = this._charTransformations[line][charStart];
     let endChar = this._charTransformations[line][charEnd];
-
     ctx.moveTo(startChar.tl.x, startChar.tl.y)
-
     let radius = fullLineRadius ? startChar.bottomRadius : startChar.lineRadius
-
     if (this.curvature < 0) {
       ctx.arc(this._curvingCenter.x, this._curvingCenter.y, radius, -startChar.leftAngle - Math.PI / 2, -endChar.rightAngle - Math.PI / 2, true)
     } 
     else {
       ctx.arc(this._curvingCenter.x, this._curvingCenter.y, radius, -startChar.leftAngle - Math.PI / 2, -endChar.rightAngle - Math.PI / 2, false)
     }
-
     ctx.lineTo(endChar.tr.x, endChar.tr.y)
-
     if (this.curvature < 0) {
       ctx.arc(this._curvingCenter.x, this._curvingCenter.y, startChar.topRadius, -endChar.rightAngle - Math.PI / 2, -startChar.leftAngle - Math.PI / 2, false)
     } 
@@ -644,9 +626,7 @@ export class ArcText extends OriginIText {
       }
       charStart = 0
       lastColor = this.getValueOfPropertyAt(i, 0, 'textBackgroundColor');
-
-      let j
-      for (j = 0; j < this._textLines[i].length; j++) {
+      for (let j = 0; j < this._textLines[i].length; j++) {
         currentColor = this.getValueOfPropertyAt(i, j, 'textBackgroundColor');
         if (currentColor !== lastColor) {
           if (lastColor) {
@@ -668,9 +648,9 @@ export class ArcText extends OriginIText {
     this._removeShadow(ctx);
   }
 
-  _set(key: string, value: any) {
+  _set(key: string, value: any): any {
     super._set(key, value)
-    const _dimensionAffectingProps = ['fontSize', 'fontWeight', 'fontFamily', 'fontStyle', 'lineHeight', 'text', 'charSpacing', 'textAlign', 'styles']
+    const _dimensionAffectingProps = ['fontSize', 'fontWeight', 'fontFamily', 'fontStyle', 'lineHeight', 'text', 'charSpacing', 'textAlign', 'styles', 'left', 'top', 'fill']
     let needsDims = false;
     if (typeof key === 'object') {
       const keys = key as Object
@@ -680,6 +660,7 @@ export class ArcText extends OriginIText {
     } else {
       needsDims = _dimensionAffectingProps.indexOf(key) !== -1;
     }
+    console.log('__isinit:', this.__isinit, 'needsDims:', needsDims, 'key:', key)
     if (needsDims && this.__isinit) {
       this.initDimensions();
       this.setCoords();
@@ -688,6 +669,8 @@ export class ArcText extends OriginIText {
   }
 
   _render(ctx: CanvasRenderingContext2D) {
+    console.log('render:', this)
+    super._render(ctx)
     ctx.save()
     ctx.translate(-this._contentOffsetX, -this._contentOffsetY)
     if(!this.__lineHeights){
