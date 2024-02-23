@@ -232,7 +232,6 @@ export class CurvedText extends IText {
       this.letters.set('scaleX', 1);
       this.letters.set('scaleY', 1);
       this.letters.set('angle', 0);
-      console.log('_calcBounds: ---')
       // Update group coords
       this._calcBounds();
 			this._updateObjectsCoords();

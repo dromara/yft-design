@@ -466,14 +466,14 @@ const handleElementDeformation = () => {
   //     pathStartOffset: 0
   // });
   const CurvedText = classRegistry.getClass('CurvedText')
-  // const ArcText = classRegistry.getClass('ArcText')
+  const ArcText = classRegistry.getClass('ArcText')
   const options = handleElement.value.toObject(propertiesToInclude) as any
   delete options.type
   options.id = nanoid(10)
-  // const arcText = new ArcText(options.text, options)
-  const curvedText = new CurvedText(options.text, options)
-  // canvas.add(arcText)
-  canvas.add(curvedText)
+  const arcText = new ArcText(options.text, options)
+  // const curvedText = new CurvedText(options.text, options)
+  canvas.add(arcText)
+  // canvas.add(curvedText)
   // const _isCurvature = handleElement.value.get('_isCurvature')
   // console.log('_isCurvature:', _isCurvature)
   // handleElement.value.set({_isCurvature: true})

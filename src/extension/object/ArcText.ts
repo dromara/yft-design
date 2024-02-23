@@ -1,5 +1,5 @@
 
-import '../mixins/arctext.mixin'
+import { ArcTextMixin, addArcTextInteractions } from  '../mixins/arctext.mixin'
 import { IText as OriginIText, Textbox as OriginTextbox, Control, controlsUtils, classRegistry, Transform, TPointerEvent, TSVGReviver, util, Point, TMat2D } from 'fabric'
 import { sectorBoundingBox } from '@/utils/geometry'
 export class ArcText extends OriginIText {
@@ -19,8 +19,17 @@ export class ArcText extends OriginIText {
   private _translatedY: number = 0
   public useRenderBoundingBoxes: any
   private _charTransformations: any = []
+  public textTransform = false
+  public useBothRenderingMethod = true
+  public accepts = { role: "fontFamily" }
+  public storeProperties = ["type", "clipPath","frame","deco",'textLines','textTransform']
+  public eventListeners = {}
+  public textCase = "none"
+  public isText = true
+  public fontSizeOptions = [6,7,8,9,10,12,14,18,24,36,48,64]
   constructor(text: string, options: any) {
     super(text, options)
+    this.initBehavior()
   }
 
   createCurvatureControl() {
@@ -52,7 +61,7 @@ export class ArcText extends OriginIText {
   updateCurvingControl () {
     if (this.controls.c) {
       this.controls.c.offsetX =  -this._contentOffsetX * this.scaleX
-      this.controls.c.offsetY = (this._curvingCenter.y - this._contentOffsetY)  * this.scaleY
+      this.controls.c.offsetY = (this._curvingCenter.y - this._contentOffsetY) * this.scaleY
       this.canvas && this.setCoords()
     }
   }
@@ -67,11 +76,11 @@ export class ArcText extends OriginIText {
     let textHeight = target.calcTextHeight();
   
     let radius;
-    if(Math.abs(cy) <= textHeight / 2){
+    if (Math.abs(cy) <= textHeight / 2) {
       radius = 0;
     }
     else{
-      radius = cy > 0 ? cy - textHeight / 2 : cy  +textHeight / 2;
+      radius = cy > 0 ? cy - textHeight / 2 : cy + textHeight / 2;
     }
   
     target.set(radius)
@@ -102,7 +111,7 @@ export class ArcText extends OriginIText {
     }
   }
 
-  render (ctx: CanvasRenderingContext2D) {
+  render(ctx: CanvasRenderingContext2D) {
     super.render(ctx)
     if(this.group){
       this.group._transformDone = false;
@@ -115,7 +124,7 @@ export class ArcText extends OriginIText {
     }
   }
 
-  runCharRendering(method: any, ctx: CanvasRenderingContext2D, _char: string, left: number, top: number, angle: number, fullDecl: any, alignment: any){
+  runCharRendering(method: any, ctx: CanvasRenderingContext2D, _char: string, left: number, top: number, angle: number, fullDecl: any, alignment: any) {
     if(ctx){
       ctx.save();
       ctx.translate(left, top)
@@ -239,7 +248,6 @@ export class ArcText extends OriginIText {
   }
   
   enArcLargeSpaces(width: number) {
-
     let diffSpace, currentLineWidth, numberOfSpaces, accumulatedSpace, line, charBound, spaces;
     for (let i = 0, len = this._textLines.length; i < len; i++) {
       if (this.textAlign !== 'justify' && (i === len - 1 || this.isEndOfWrapping(i))) {
@@ -278,20 +286,6 @@ export class ArcText extends OriginIText {
     this.left -= (leftOverflow - this._translatedX)  * Math.cos(rad)* this.scaleX;
     this._translatedY = topOverflow
     this._translatedX = leftOverflow
-  }
-
-  _splitText() {
-    let text = this.text
-    let newLines = this._splitTextIntoLines(text);
-    this.textLines = newLines.lines;
-    this._textLines = newLines.graphemeLines;
-    this._unwrappedTextLines = newLines._unwrappedLines;
-    this._text = newLines.graphemeText;
-
-    if(this.useRenderBoundingBoxes){
-      this.__lineInfo = []
-    }
-    return newLines;
   }
 
   initDimensions() {
@@ -430,8 +424,6 @@ export class ArcText extends OriginIText {
             ct.contour.tl = util.transformPoint({x: x, y: y + ct.contour.h}, matrix);
             ct.contour.tr = util.transformPoint({x: x - ct.contour.w, y: y + ct.contour.h}, matrix);
           }
-
-
           xMin = Math.min(xMin, ct.contour.br.x, ct.contour.bl.x, ct.contour.tl.x, ct.contour.tr.x)
           xMax = Math.max(xMax, ct.contour.br.x, ct.contour.bl.x, ct.contour.tl.x, ct.contour.tr.x)
           yMin = Math.min(yMin, ct.contour.br.y, ct.contour.bl.y, ct.contour.tl.y, ct.contour.tr.y)
@@ -509,10 +501,7 @@ export class ArcText extends OriginIText {
 
     for (let i = 0, len = line.length - 1; i <= len; i++) {
       timeToRender = i === len || this.charSpacing;
-
-
       iteratorFn && iteratorFn(i)
-
       if (isJustify && !timeToRender) {
         if (this._reSpaceAndTab.test(line[i])) {
           timeToRender = true;
@@ -537,7 +526,6 @@ export class ArcText extends OriginIText {
 
   _enableFontFeatures(){
     let detectedFeaturesLines: any = []
-
     for (let li = 0, len = this._textLines.length; li < len; li++) {
       detectedFeaturesLines[li] = []
       this.interateTextChunks(li, (position: number, b: number, style: any) => {
@@ -575,6 +563,7 @@ export class ArcText extends OriginIText {
       }
     }
   }
+
   _enableDiacritics(){
     let cts = this._charTransformations
     //Fix Diacritics symbols on a curve
@@ -676,6 +665,7 @@ export class ArcText extends OriginIText {
 
   _set(key: string, value: any) {
     super._set(key, value)
+    console.log('key:', key, 'value:', value)
     const _dimensionAffectingProps = ['fontSize', 'fontWeight', 'fontFamily','fontStyle','lineHeight','text','charSpacing','textAlign','styles']
     let needsDims = false;
     if (typeof key === 'object') {
@@ -711,22 +701,6 @@ export class ArcText extends OriginIText {
     for (let i = startLine; i <= endLine; i++) {
       let charStart = (i === startLine) ? startChar : 0,
         charEnd = (i >= startLine && i < endLine) ? this._textLines[i].length : endChar
-
-      // let isEndLine = i === endLine;
-      // for (let j = charStart; j < charEnd; j++) {
-      //   let tr = this._charTransformations[i][j];
-      //   if(isEndLine){
-      //     ctx.moveTo(tr.nr.x, tr.nr.y )
-      //     ctx.lineTo(tr.nl.x, tr.nl.y )
-      //   }
-      //   else{
-      //     ctx.moveTo(tr.br.x, tr.br.y )
-      //     ctx.lineTo(tr.bl.x, tr.bl.y )
-      //   }
-      //   ctx.lineTo(tr.tl.x,tr.tl.y)
-      //   ctx.lineTo(tr.tr.x,tr.tr.y)
-      // }
-
       this._contextSelectBackgroundSector(ctx, i, charStart, charEnd - 1, i !== endLine)
       ctx.fill();
     }
@@ -758,6 +732,10 @@ export class ArcText extends OriginIText {
     ctx.restore();
   }
 }
+
+Object.assign(ArcText.prototype, {
+  ...addArcTextInteractions()
+})
 
 classRegistry.setClass(ArcText, 'ArcText')
 // classRegistry.setClass(IText)
