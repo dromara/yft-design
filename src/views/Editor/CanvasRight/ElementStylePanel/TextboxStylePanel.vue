@@ -476,6 +476,7 @@ const handleElementDeformation = () => {
   // handleElement.value.set({__isCurvature: true})
   // const _isCurvature = handleElement.value.get('_isCurvature')
   // console.log('_isCurvature:', handleElement.value, _isCurvature)
+  templatesStore.modifedElement()
   canvas.renderAll()
 }
 

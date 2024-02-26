@@ -284,16 +284,16 @@ export class ArcText extends OriginIText {
     return (this.lineHeight * this.fontSize) -0.9 * styleFontSize
   }
 
-  _translate(leftOverflow: number, topOverflow: number){
+  _translate(leftOverflow: number, topOverflow: number) {
+    const _translatedX = this._translatedX !== undefined ? this._translatedX : 0
+    const _translatedY = this._translatedY !== undefined ? this._translatedY : 0
     let rad = util.degreesToRadians(this.angle);
-    const cosRadius = Math.cos(rad), sinRadius = Math.sin(rad)
-    this.top -= (topOverflow - this._translatedY) * cosRadius *  this.scaleY;
-    this.left += (topOverflow - this._translatedY) * sinRadius * this.scaleY;
-    this.top -= (leftOverflow - this._translatedX) * sinRadius *  this.scaleX;
-    this.left -= (leftOverflow - this._translatedX)  * cosRadius * this.scaleX;
+    this.top -= (topOverflow - _translatedY) * Math.cos(rad) *  this.scaleY;
+    this.left += (topOverflow - _translatedY)  * Math.sin(rad)* this.scaleY;
+    this.top -= (leftOverflow - _translatedX) * Math.sin(rad) *  this.scaleX;
+    this.left -= (leftOverflow - _translatedX)  * Math.cos(rad)* this.scaleX;
     this._translatedY = topOverflow
     this._translatedX = leftOverflow
-    console.log('left:', this.left, 'top:', this.top)
   }
 
   initDimensions() {
@@ -315,57 +315,43 @@ export class ArcText extends OriginIText {
       globalOffset = textHeight
     } 
     this._linesRads = []
-
     if (this.textAlign.indexOf('justify') !== -1) {
       this.enArcLargeSpaces(textWidth);
     }
-
-    //calculate curving
-
     let cts: any[] = this._charTransformations = []
 
     let yMin = Infinity, yMax = -Infinity, xMin = Infinity, xMax = -Infinity
-    console.log('this.__charBounds:', this.__charBounds)
     for (let i = 0; i < this.__charBounds.length; i++) {
       cts[i] = []
-      let row = this.__charBounds[i]
-
+      const row = this.__charBounds[i]
       let currentLeft = -textWidth / 2 + this._getArcTextLineLeftOffset(i, textWidth)
-
       if (this.__lineInfo) {
         currentLeft += this.__lineInfo[i].renderedLeft
       }
-
-      let heightOfLine = this.getHeightOfLine(i);
-      let charOffset = (heightOfLine - heightOfLine / this.lineHeight) + heightOfLine * this._fontSizeFraction / this.lineHeight
-
+      const heightOfLine = this.getHeightOfLine(i)
+      const charOffset = (heightOfLine - heightOfLine / this.lineHeight) + heightOfLine * this._fontSizeFraction / this.lineHeight
       if (this.curvature > 0) {
         globalOffset -= heightOfLine
       } else {
         globalOffset += heightOfLine
       }
-      let rowOffset = Math.abs(this.radius) + globalOffset;
-
+      let rowOffset = Math.abs(this.radius) + globalOffset
       this._linesRads.push(rowOffset)
-
       for (let j = 0; j < row.length; j++) {
-        let bounds = row[j] as any
-        let decl = this.getCompleteStyleDeclaration(i, j) as any;
-        let deltaY = decl && decl.deltaY || 0
-
+        const bounds = row[j] as any
+        const decl = this.getCompleteStyleDeclaration(i, j) as any;
+        const deltaY = decl && decl.deltaY || 0
         let bottomRadius, topRadius, charRadius, lineRadius, leftAngle, charAngle, rightAngle, renderLeftAngle, renderRightAngle;
-
         if (this.curvature > 0) {
           bottomRadius = deltaY + rowOffset
           topRadius = deltaY + rowOffset + heightOfLine
           charRadius = deltaY + rowOffset + charOffset
           lineRadius = deltaY + rowOffset + heightOfLine - (heightOfLine / this.lineHeight)
 
-          let midRadius = (bottomRadius * 3 + topRadius * 2) / 5
+          const midRadius = (bottomRadius * 3 + topRadius * 2) / 5
           leftAngle = -(currentLeft + bounds.left) / midRadius
           rightAngle = -(currentLeft + bounds.left + bounds.width) / midRadius
           charAngle = -(currentLeft + bounds.left + bounds.width / 2) / midRadius
-
         } else {
           bottomRadius = deltaY + rowOffset
           topRadius = deltaY + rowOffset - heightOfLine
@@ -377,14 +363,12 @@ export class ArcText extends OriginIText {
           rightAngle = Math.PI + (currentLeft + bounds.left + bounds.width) / midRadius
           charAngle = Math.PI + (currentLeft + bounds.left + bounds.width / 2) / midRadius
         }
-
         let rsin = Math.sin(rightAngle),
           rcos = Math.cos(rightAngle),
           lsin = Math.sin(leftAngle),
           lcos = Math.cos(leftAngle),
           csin = Math.sin(charAngle),
           ccos = Math.cos(charAngle)
-
         let ct = {
           contour: bounds.contour && {
             x: bounds.contour.x * decl.fontSize,
@@ -414,19 +398,17 @@ export class ArcText extends OriginIText {
 
         if(ct.char?.trim() && bounds.contour) {
           let cos = util.cos(-charAngle), sin = util.sin(-charAngle);
-
           let rotateMatrix = [cos, sin, -sin, cos, 0, 0]
-          let matrix = util.multiplyTransformMatrices([1, 0, 0, 1, ct.lc.x, ct.lc.y], rotateMatrix as TMat2D);
+          let matrix = util.multiplyTransformMatrices([1, 0, 0, 1, ct.lc.x, ct.lc.y], rotateMatrix as TMat2D)
           let y = ct.contour.y
           if (this.curvature > 0) {
-            let x = ct.contour.x - this.__charBounds[i][j].width / 2
+            const x = ct.contour.x - this.__charBounds[i][j].width / 2
             ct.contour.br = util.transformPoint({x: x + ct.contour.w, y: -y}, matrix);
             ct.contour.bl = util.transformPoint({x: x, y: -y}, matrix);
             ct.contour.tl = util.transformPoint({x: x, y: -y - ct.contour.h}, matrix);
             ct.contour.tr = util.transformPoint({x: x + ct.contour.w, y: -y - ct.contour.h}, matrix);
           } else {
-            let x = - ct.contour.x + this.__charBounds[i][j].width / 2
-
+            const x = - ct.contour.x + this.__charBounds[i][j].width / 2
             ct.contour.br = util.transformPoint({x: x - ct.contour.w, y: y}, matrix);
             ct.contour.bl = util.transformPoint({x: x, y: y}, matrix);
             ct.contour.tl = util.transformPoint({x: x, y: y + ct.contour.h}, matrix);
@@ -436,15 +418,12 @@ export class ArcText extends OriginIText {
           xMax = Math.max(xMax, ct.contour.br.x, ct.contour.bl.x, ct.contour.tl.x, ct.contour.tr.x)
           yMin = Math.min(yMin, ct.contour.br.y, ct.contour.bl.y, ct.contour.tl.y, ct.contour.tr.y)
           yMax = Math.max(yMax, ct.contour.br.y, ct.contour.bl.y, ct.contour.tl.y, ct.contour.tr.y)
-
         }
-
         cts[i][j] = ct
       }
     }
     for(let i = 0; i< cts.length; i++) {
       let ctsl = cts[i] as any, cta = ctsl[0], ctb = ctsl[ctsl.length - 1], bbox, bbox2
-
       if (this.curvature > 0) {
         bbox = sectorBoundingBox(cta.tl, ctb.tr, this._curvingCenter, this._linesRads[i] + this.__lineHeights[i])
         bbox2 = sectorBoundingBox(cta.nl, ctb.nr, this._curvingCenter, this._linesRads[i])
@@ -453,7 +432,6 @@ export class ArcText extends OriginIText {
         bbox = sectorBoundingBox(ctb.tr, cta.tl, this._curvingCenter, this._linesRads[i] - this.__lineHeights[i])
         bbox2 = sectorBoundingBox(ctb.nr, cta.nl, this._curvingCenter, this._linesRads[i])
       }
-
       xMin = Math.min(xMin, bbox.x, bbox2.x)
       xMax = Math.max(xMax, bbox.x+ bbox.width, bbox2.x + bbox2.width)
       yMin = Math.min(yMin, bbox.y, bbox2.y)
@@ -463,21 +441,21 @@ export class ArcText extends OriginIText {
     this._enableFontFeatures()
     this._enableDiacritics()
 
-    let leftOverflow = -xMin - textWidth / 2
-    let rightOverflow = xMax - textWidth / 2
-    let topOverflow = -yMin - textHeight / 2
-    let bottomOverflow = yMax - textHeight / 2
+    const leftOverflow = -xMin - textWidth / 2
+    const rightOverflow = xMax - textWidth / 2
+    const topOverflow = -yMin - textHeight / 2
+    const bottomOverflow = yMax - textHeight / 2
 
     this.width = Math.max(textWidth + leftOverflow + rightOverflow, this.MIN_TEXT_WIDTH)
     this.height = textHeight + topOverflow + bottomOverflow
     this._contentOffsetY = bottomOverflow / 2 - topOverflow / 2
     this._contentOffsetX = rightOverflow / 2 - leftOverflow / 2
 
-    let _translateX = this.originX === "left" ? leftOverflow : this._contentOffsetX;
-
+    const _translateX = this.originX === "left" ? leftOverflow : this._contentOffsetX;
+    console.log('_translateX:', _translateX, 'topOverflow:', topOverflow)
     this._translate(_translateX, topOverflow)
     this.updateCurvingControl()
-    console.log('updateCurvingControl:', 'this:', this)
+    
   }
 
   _hasStyleChanged (prevStyle: string[], thisStyle: string[]) {
@@ -666,7 +644,6 @@ export class ArcText extends OriginIText {
       needsDims = _dimensionAffectingProps.indexOf(key) !== -1;
     }
     if (needsDims && this.initialized) {
-      console.log('initDimensions----')
       this.initDimensions();
       this.setCoords();
     }
@@ -674,7 +651,6 @@ export class ArcText extends OriginIText {
   }
 
   _render(ctx: CanvasRenderingContext2D) {
-    console.log('render:', this)
     ctx.save()
     ctx.translate(-this._contentOffsetX, -this._contentOffsetY)
     if(!this.__lineHeights){
@@ -866,10 +842,11 @@ export class ArcText extends OriginIText {
       charIndex = cursorLocation.charIndex > 0 ? cursorLocation.charIndex - 1 : 0,
       multiplier = this.scaleX * this.canvas!.getZoom(),
       cursorWidth = this.cursorWidth / multiplier;
+
     if (this.inCompositionMode) {
       this.renderSelection(boundaries, ctx);
     }
-    let tr = this._charTransformations[cursorLocation.lineIndex][cursorLocation.charIndex];
+    const tr = this._charTransformations[cursorLocation.lineIndex][cursorLocation.charIndex];
     ctx.save();
     ctx.translate(-this._contentOffsetX, -this._contentOffsetY)
     ctx.lineWidth = cursorWidth
@@ -1203,6 +1180,20 @@ export class ArcText extends OriginIText {
     }
   }
 }
+
+// Object.assign(ArcText.prototype, {
+//   _translatedY: 0,
+//   _translatedX: 0,
+//   _translate(leftOverflow, topOverflow) {
+//     let rad = util.degreesToRadians(this.angle);
+//     this.top -= (topOverflow - this._translatedY) * Math.cos(rad) *  this.scaleY;
+//     this.left += (topOverflow - this._translatedY)  * Math.sin(rad)* this.scaleY;
+//     this.top -= (leftOverflow - this._translatedX) * Math.sin(rad) *  this.scaleX;
+//     this.left -= (leftOverflow - this._translatedX)  * Math.cos(rad)* this.scaleX;
+//     this._translatedY = topOverflow
+//     this._translatedX = leftOverflow
+//   }
+// })
 
 // Object.assign(ArcText.prototype, ArcTextMixin, {
 //   "+_dimensionAffectingProps": ["textTransform"],
