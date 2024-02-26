@@ -305,13 +305,14 @@ export class ArcText extends OriginIText {
     }
     let textHeight = this.calcTextHeight();
     let textWidth = this.calcTextWidth();
-    this.radius = 10000 / (this.curvature || 1)
+    const curvature = this.curvature !== undefined ? this.curvature : 100
+    this.radius = 10000 / curvature
 
     let cx = 0, cy = this.curvature > 0 ? textHeight / 2 + this.radius : -textHeight / 2 + this.radius
     this._curvingCenter = {x: cx, y: cy}
 
     let globalOffset = 0
-    if (this.curvature > 0) {
+    if (curvature > 0) {
       globalOffset = textHeight
     } 
     this._linesRads = []
@@ -330,7 +331,7 @@ export class ArcText extends OriginIText {
       }
       const heightOfLine = this.getHeightOfLine(i)
       const charOffset = (heightOfLine - heightOfLine / this.lineHeight) + heightOfLine * this._fontSizeFraction / this.lineHeight
-      if (this.curvature > 0) {
+      if (curvature > 0) {
         globalOffset -= heightOfLine
       } else {
         globalOffset += heightOfLine
@@ -422,7 +423,7 @@ export class ArcText extends OriginIText {
         cts[i][j] = ct
       }
     }
-    for(let i = 0; i< cts.length; i++) {
+    for(let i = 0; i < cts.length; i++) {
       let ctsl = cts[i] as any, cta = ctsl[0], ctb = ctsl[ctsl.length - 1], bbox, bbox2
       if (this.curvature > 0) {
         bbox = sectorBoundingBox(cta.tl, ctb.tr, this._curvingCenter, this._linesRads[i] + this.__lineHeights[i])
