@@ -1,6 +1,6 @@
 
 import { ArcTextMixin } from '../mixins/arctext.mixin'
-import { IText as OriginIText, Textbox as OriginTextbox, Control, controlsUtils, classRegistry, Transform, TPointerEvent, TSVGReviver, util, Point, TMat2D } from 'fabric'
+import { IText as OriginIText, Textbox as OriginTextbox, Control, controlsUtils, classRegistry, Transform, TPointerEvent, TextStyleDeclaration, util, Point, TMat2D, TFiller } from 'fabric'
 import { sectorBoundingBox } from '@/utils/geometry'
 import { FabricObject } from 'fabric/src/shapes/Object/FabricObject'
 export class ArcText extends OriginIText {
@@ -12,15 +12,16 @@ export class ArcText extends OriginIText {
   private __isMousedown: boolean = false
   private _linesRads: number[] = []
   private __lineInfo: any = []
+  private __renderOffsetTop: any
   public _contentOffsetX: number = 0
   public _contentOffsetY: number = 0
   private _curvingCenter: any
   private _specialArray = []
   private _translatedX: number = 0
   private _translatedY: number = 0
-  public useRenderBoundingBoxes: any
+  public useRenderBoundingBoxes = true
   private _charTransformations: any = []
-  public textTransform = false
+  public textTransform: string = ''
   public useBothRenderingMethod = true
   public accepts = { role: "fontFamily" }
   public storeProperties = ["type", "clipPath","frame","deco",'textLines','textTransform']
@@ -92,7 +93,7 @@ export class ArcText extends OriginIText {
     return false
   }
 
-  renderCharCallback(method: any, ctx: CanvasRenderingContext2D, lineIndex: number, charIndex: number, endCharIndex: number, left: number, top: number, fullDecl: any) {
+  renderCharCallback(method: any, ctx: CanvasRenderingContext2D, lineIndex: number, charIndex: number, endCharIndex: string, left: number, top: number, fullDecl: any) {
     for (let index = charIndex; index <= endCharIndex; index++) {
       let tr = this._charTransformations[lineIndex][index];
       ctx.textAlign = "center"
@@ -129,7 +130,7 @@ export class ArcText extends OriginIText {
     }
   }
 
-  runCharRendering(method: any, ctx: CanvasRenderingContext2D, _char: string, left: number, top: number, angle: number, fullDecl: any, alignment: any) {
+  runCharRendering(method: any, ctx: CanvasRenderingContext2D, _char: string, left: number, top: number, angle: number, fullDecl: any, alignment?: string) {
     if(ctx){
       ctx.save();
       ctx.translate(left, top)
@@ -285,12 +286,14 @@ export class ArcText extends OriginIText {
 
   _translate(leftOverflow: number, topOverflow: number){
     let rad = util.degreesToRadians(this.angle);
-    this.top -= (topOverflow - this._translatedY) * Math.cos(rad) *  this.scaleY;
-    this.left += (topOverflow - this._translatedY)  * Math.sin(rad)* this.scaleY;
-    this.top -= (leftOverflow - this._translatedX) * Math.sin(rad) *  this.scaleX;
-    this.left -= (leftOverflow - this._translatedX)  * Math.cos(rad)* this.scaleX;
+    const cosRadius = Math.cos(rad), sinRadius = Math.sin(rad)
+    this.top -= (topOverflow - this._translatedY) * cosRadius *  this.scaleY;
+    this.left += (topOverflow - this._translatedY) * sinRadius * this.scaleY;
+    this.top -= (leftOverflow - this._translatedX) * sinRadius *  this.scaleX;
+    this.left -= (leftOverflow - this._translatedX)  * cosRadius * this.scaleX;
     this._translatedY = topOverflow
     this._translatedX = leftOverflow
+    console.log('left:', this.left, 'top:', this.top)
   }
 
   initDimensions() {
@@ -322,8 +325,8 @@ export class ArcText extends OriginIText {
     let cts: any[] = this._charTransformations = []
 
     let yMin = Infinity, yMax = -Infinity, xMin = Infinity, xMax = -Infinity
-
-    for(let i = 0; i < this.__charBounds.length; i++) {
+    console.log('this.__charBounds:', this.__charBounds)
+    for (let i = 0; i < this.__charBounds.length; i++) {
       cts[i] = []
       let row = this.__charBounds[i]
 
@@ -652,7 +655,7 @@ export class ArcText extends OriginIText {
 
   _set(key: string, value: any): any {
     super._set(key, value)
-    const _dimensionAffectingProps = ['fontSize', 'fontWeight', 'fontFamily', 'fontStyle', 'lineHeight', 'text', 'charSpacing', 'textAlign', 'styles', 'left', 'top', 'fill']
+    const _dimensionAffectingProps = ['fontSize', 'fontWeight', 'fontFamily', 'fontStyle', 'lineHeight', 'text', 'charSpacing', 'textAlign', 'styles', 'color', 'canvas']
     let needsDims = false;
     if (typeof key === 'object') {
       const keys = key as Object
@@ -663,27 +666,28 @@ export class ArcText extends OriginIText {
       needsDims = _dimensionAffectingProps.indexOf(key) !== -1;
     }
     if (needsDims && this.initialized) {
+      console.log('initDimensions----')
       this.initDimensions();
       this.setCoords();
     }
-    return this;
+    return this
   }
 
-  // _render(ctx: CanvasRenderingContext2D) {
-  //   console.log('render:', this)
-  //   ctx.save()
-  //   ctx.translate(-this._contentOffsetX, -this._contentOffsetY)
-  //   if(!this.__lineHeights){
-  //     this.initDimensions();
-  //   }
-  //   this._setTextStyles(ctx);
-  //   this._renderTextLinesBackground(ctx);
-  //   this._renderTextDecoration(ctx, 'underline');
-  //   this._renderText(ctx);
-  //   this._renderTextDecoration(ctx, 'overline');
-  //   this._renderTextDecoration(ctx, 'linethrough');
-  //   ctx.restore()
-  // }
+  _render(ctx: CanvasRenderingContext2D) {
+    console.log('render:', this)
+    ctx.save()
+    ctx.translate(-this._contentOffsetX, -this._contentOffsetY)
+    if(!this.__lineHeights){
+      this.initDimensions();
+    }
+    this._setTextStyles(ctx);
+    this._renderTextLinesBackground(ctx);
+    this._renderTextDecoration(ctx, 'underline');
+    this._renderText(ctx);
+    this._renderTextDecoration(ctx, 'overline');
+    this._renderTextDecoration(ctx, 'linethrough');
+    ctx.restore()
+  }
 
   renderSelection(ctx: CanvasRenderingContext2D, boundaries: any) {
     let selectionStart = this.inCompositionMode ? this.hiddenTextarea!.selectionStart : this.selectionStart,
@@ -706,214 +710,117 @@ export class ArcText extends OriginIText {
     }
   }
 
-  renderCursor(ctx: CanvasRenderingContext2D, boundaries: any) {
-    let cursorLocation = this.get2DCursorLocation(),
-      lineIndex = cursorLocation.lineIndex,
-      charIndex = cursorLocation.charIndex > 0 ? cursorLocation.charIndex - 1 : 0,
-      multiplier = this.scaleX * this.canvas!.getZoom(),
-      cursorWidth = this.cursorWidth / multiplier;
+  _measureLine(lineIndex: number) {
+    console.log('_measureLine:---')
+    let width = 0,charIndex, grapheme, line = this._textLines[lineIndex], prevGrapheme,
+      graphemeInfo, numOfSpaces = 0, lineBounds = new Array(line.length);
 
-    if (this.inCompositionMode) {
-      this.renderSelection(boundaries, ctx);
+    let renderedLeft = 0;
+    let renderedWidth = 0;
+    let renderedBottom = -Infinity;
+    let renderedTop = -Infinity
+
+    this.__charBounds[lineIndex] = lineBounds;
+    for (charIndex = 0; charIndex < line.length; charIndex++) {
+      grapheme = line[charIndex];
+
+      let specialObject = this._specialArray && this._specialArray[lineIndex] && this._specialArray[lineIndex][charIndex]
+      if (specialObject && specialObject.type === "void") {
+        grapheme = line[charIndex];
+        graphemeInfo = {width: 0, left: 0, height: 0, kernedWidth: 0, deltaY: 0,}
+        lineBounds[charIndex] = graphemeInfo;
+        prevGrapheme = grapheme;
+      }
+      let style = this.getCompleteStyleDeclaration(lineIndex, charIndex);
+      if (specialObject && specialObject.type === "emoji") {
+        //add emoji symbol
+        if(this.emojisPath ) {
+          graphemeInfo = {
+            width: style.fontSize,
+            left: 0,
+            height: style.fontSize,
+            kernedWidth: style.fontSize,
+            deltaY: 0,
+          }
+          if (charIndex > 0) {
+            let previousBox = this.__charBounds[lineIndex][charIndex - 1];
+            graphemeInfo.left = previousBox.left + previousBox.width
+          }
+        }
+        else{
+          let index = charIndex;
+          while(this._specialArray[lineIndex][++index] === specialObject){}
+          let grapheme = line.slice(charIndex,index).join("");
+          graphemeInfo = this._getGraphemeBox(grapheme, lineIndex, charIndex, prevGrapheme);
+        }
+
+        lineBounds[charIndex] = graphemeInfo;
+        width += graphemeInfo.kernedWidth;
+        prevGrapheme = grapheme;
+
+        //add Invisible-Symbols
+        let strIndex = charIndex;
+        while(this._specialArray[lineIndex][++strIndex] === specialObject){
+          grapheme = line[strIndex];
+          graphemeInfo = {width: 0, left: 0, height: 0, kernedWidth: 0, deltaY: 0,}
+          lineBounds[strIndex] = graphemeInfo;
+          prevGrapheme = grapheme;
+          let previousBox = this.__charBounds[lineIndex][strIndex - 1];
+          graphemeInfo.left = previousBox.left + previousBox.width
+        }
+        charIndex = strIndex - 1
+      }else{
+        //normal text
+        graphemeInfo = this._getGraphemeBox(grapheme, lineIndex, charIndex, prevGrapheme);
+
+        lineBounds[charIndex] = graphemeInfo;
+        width += graphemeInfo.kernedWidth;
+        prevGrapheme = grapheme;
+
+        let contourX,contourW,contourH,contourY
+        if (this.useRenderBoundingBoxes && graphemeInfo.contour) {
+          contourX = graphemeInfo.contour.x  * style.fontSize
+          contourW = graphemeInfo.contour.w  * style.fontSize
+          contourH = graphemeInfo.contour.h  * style.fontSize
+          contourY = this._getBaseLine(style.fontSize) + graphemeInfo.contour.y  * style.fontSize
+          renderedLeft = Math.max(renderedLeft,  -(graphemeInfo.left + contourX))
+          renderedWidth = Math.max(renderedWidth,contourW + contourX + graphemeInfo.left)
+          renderedBottom = Math.max(renderedBottom, -contourY)
+          renderedTop = Math.max(renderedTop,  contourY + contourH )
+        }
+      }
+
     }
+    // this latest bound box represent the last character of the line
+    // to simplify cursor handling in interactive mode.
+    lineBounds[charIndex] = {
+      left: graphemeInfo ? graphemeInfo.left + graphemeInfo.width : 0,
+      width: 0,
+      kernedWidth: 0,
+      height: this.fontSize
+    };
 
-    let tr = this._charTransformations[cursorLocation.lineIndex][cursorLocation.charIndex];
+    let renderedRight = Math.max(0,renderedWidth - width)
 
-    ctx.save();
-    ctx.translate(-this._contentOffsetX, -this._contentOffsetY)
-    ctx.lineWidth = cursorWidth
-    ctx.strokeStyle = this.getValueOfPropertyAt(lineIndex, charIndex, 'fill');
-    ctx.globalAlpha = this.__isMousedown ? 1 : this._currentCursorOpacity;
 
-    ctx.beginPath()
-    ctx.moveTo(tr.nl.x, tr.nl.y)
-    ctx.lineTo(tr.tl.x, tr.tl.y)
-    ctx.stroke();
-    ctx.restore();
+    return { width, numOfSpaces,
+      renderedLeft,
+      renderedBottom,
+      renderedRight,
+      renderedTop
+    };
   }
-}
-
-Object.assign(ArcText.prototype, {
-  _translatedY: 0,
-  _translatedX: 0,
-  _translate(leftOverflow, topOverflow) {
-    let rad = util.degreesToRadians(this.angle);
-    this.top -= (topOverflow - this._translatedY) * Math.cos(rad) *  this.scaleY;
-    this.left += (topOverflow - this._translatedY)  * Math.sin(rad)* this.scaleY;
-    this.top -= (leftOverflow - this._translatedX) * Math.sin(rad) *  this.scaleX;
-    this.left -= (leftOverflow - this._translatedX)  * Math.cos(rad)* this.scaleX;
-    this._translatedY = topOverflow
-    this._translatedX = leftOverflow
-  }
-})
-
-Object.assign(ArcText.prototype, ArcTextMixin, {
-  /**
-   * @private
-   * @param {Object} prevStyle
-   * @param {Object} thisStyle
-   */
-  _hasStyleChanged(prevStyle: any, thisStyle: any) {
-    if(Object.keys(prevStyle).length !== Object.keys(thisStyle).length ){
-      return true
-    }
-    for(let prop in prevStyle){
-      if(prevStyle[prop] !== thisStyle[prop]){
-        return true;
-      }
-    }
-    return false;
-  },
-
-  calcTextHeight() {
-    let lineHeight, height = 0;
-    for (let i = 0, len = this._textLines.length; i < len; i++) {
-      lineHeight = this.getHeightOfLine(i);
-      height += (i === len - 1 ? lineHeight / this.lineHeight : lineHeight);
-    }
-    return height;
-  },
-
-  _renderTextDecoration(ctx: CanvasRenderingContext2D, type: any) {
-    if (!this[type] && !this.styleHas(type)) {
-      return;
-    }
-    let heightOfLine, size, _size,
-      lineLeftOffset, dy, _dy,
-      line, lastDecoration,
-      leftOffset = this._getLeftOffset(),
-      topOffset = this._getTopOffset(), top,
-      boxStart, boxWidth, charBox, currentDecoration,
-      maxHeight, currentFill, lastFill,
-      charSpacing = this._getWidthOfCharSpacing();
-
-    for (let i = 0, len = this._textLines.length; i < len; i++) {
-      heightOfLine = this.getHeightOfLine(i);
-      if (!this[type] && !this.styleHas(type, i)) {
-        topOffset += heightOfLine;
-        continue;
-      }
-      line = this._textLines[i];
-      maxHeight = heightOfLine / this.lineHeight;
-      lineLeftOffset = this._getLineLeftOffset(i);
-      if(this.__lineInfo  && this.__lineInfo[i]){
-        lineLeftOffset += this.__lineInfo[i].renderedLeft
-      }
-      boxStart = 0;
-      boxWidth = 0;
-      lastDecoration = this.getValueOfPropertyAt(i, 0, type);
-      lastFill = this.getValueOfPropertyAt(i, 0, 'fill');
-      top = topOffset + maxHeight * (1 - this._fontSizeFraction);
-      size = this.getHeightOfChar(i, 0);
-      dy = this.getValueOfPropertyAt(i, 0, 'deltaY');
-      for (let j = 0, jlen = line.length; j < jlen; j++) {
-        charBox = this.__charBounds[i][j];
-        currentDecoration = this.getValueOfPropertyAt(i, j, type);
-        currentFill = this.getValueOfPropertyAt(i, j, 'fill');
-        _size = this.getHeightOfChar(i, j);
-        _dy = this.getValueOfPropertyAt(i, j, 'deltaY');
-        if ((currentDecoration !== lastDecoration || currentFill !== lastFill || _size !== size || _dy !== dy) &&
-          boxWidth > 0) {
-          ctx.fillStyle = lastFill;
-          lastDecoration && lastFill && ctx.fillRect(
-            leftOffset + lineLeftOffset + boxStart,
-            top + this.offsets[type] * size + dy,
-            boxWidth,
-            this.fontSize / 15
-          );
-          boxStart = charBox.left;
-          boxWidth = charBox.width;
-          lastDecoration = currentDecoration;
-          lastFill = currentFill;
-          size = _size;
-          dy = _dy;
-        }
-        else {
-          boxWidth += charBox.kernedWidth;
-        }
-      }
-      ctx.fillStyle = currentFill;
-      currentDecoration && currentFill && ctx.fillRect(
-        leftOffset + lineLeftOffset + boxStart,
-        top + this.offsets[type] * size + dy,
-        boxWidth - charSpacing,
-        this.fontSize / 15
-      );
-      topOffset += heightOfLine;
-    }
-    this._removeShadow(ctx);
-  },
-  _renderTextLinesBackground(ctx: CanvasRenderingContext2D) {
-    if (!this.textBackgroundColor && !this.styleHas('textBackgroundColor')) {
-      return;
-    }
-    let lineTopOffset = 0, heightOfLine,
-      lineLeftOffset, originalFill = ctx.fillStyle,
-      line, lastColor,
-      leftOffset = this._getLeftOffset(),
-      topOffset = this._getTopOffset(),
-      boxStart = 0, boxWidth = 0, charBox, currentColor;
-
-    for (let i = 0, len = this._textLines.length; i < len; i++) {
-      heightOfLine = this.getHeightOfLine(i);
-      if (!this.textBackgroundColor && !this.styleHas('textBackgroundColor', i)) {
-        lineTopOffset += heightOfLine;
-        continue;
-      }
-      line = this._textLines[i];
-      lineLeftOffset = this._getLineLeftOffset(i);
-
-      if(this.__lineInfo  && this.__lineInfo[i]){
-        lineLeftOffset += this.__lineInfo[i].renderedLeft
-      }
-      boxWidth = 0;
-      boxStart = 0;
-      lastColor = this.getValueOfPropertyAt(i, 0, 'textBackgroundColor');
-      for (let j = 0, jlen = line.length; j < jlen; j++) {
-        charBox = this.__charBounds[i][j];
-        currentColor = this.getValueOfPropertyAt(i, j, 'textBackgroundColor');
-        if (currentColor !== lastColor) {
-          ctx.fillStyle = lastColor;
-
-          lastColor && ctx.fillRect(
-            leftOffset + lineLeftOffset + boxStart,
-            topOffset + lineTopOffset,
-            boxWidth,
-            heightOfLine / this.lineHeight
-          );
-          boxStart = charBox.left;
-          boxWidth = charBox.width;
-          lastColor = currentColor;
-        }
-        else {
-          boxWidth += charBox.kernedWidth;
-        }
-      }
-      if (currentColor) {
-        ctx.fillStyle = currentColor;
-        ctx.fillRect(
-          leftOffset + lineLeftOffset + boxStart,
-          topOffset + lineTopOffset,
-          boxWidth,
-          heightOfLine / this.lineHeight
-        );
-      }
-      lineTopOffset += heightOfLine;
-    }
-    ctx.fillStyle = originalFill;
-    this._removeShadow(ctx);
-  },
 
   getLineWidth(lineIndex: number) {
     if (this.__lineWidths[lineIndex]) {
       return this.__lineWidths[lineIndex];
     }
     let width, line = this._textLines[lineIndex], lineInfo;
-    if (line === '') {
+    if (line.length === 0) {
       width = 0;
     }
     else {
-      lineInfo = this.measureLine(lineIndex);
+      lineInfo = this.measureLine(lineIndex) as any;
       if(this.useRenderBoundingBoxes){
         width = lineInfo.width + lineInfo.renderedRight + lineInfo.renderedLeft
         this.__lineInfo[lineIndex] = lineInfo
@@ -924,36 +831,12 @@ Object.assign(ArcText.prototype, ArcTextMixin, {
     }
     this.__lineWidths[lineIndex] = width;
     return width;
-  },
+  }
 
-  initDimensions() {
-    if (!this.initDimensions) return
-    this._splitText();
-    this._clearCache();
-
-    this.width = this.calcTextWidth() || this.cursorWidth || this.MIN_TEXT_WIDTH;
-
-    if (this.textAlign.indexOf('justify') !== -1) {
-      this.enlargeSpaces();
-    }
-    this.height = this.calcTextHeight();
-    if(this.useRenderBoundingBoxes){
-      let lf = this.__lineInfo
-      this.__renderOffsetTop = isFinite(lf[0].renderedTop) ? this.__lineHeights[0] / this.lineHeight - lf[0].renderedTop : 0
-      let paddingBottom = isFinite(lf[lf.length - 1].renderedBottom) ? lf[lf.length - 1].renderedBottom: 0;
-      this.height += paddingBottom - this.__renderOffsetTop
-      this._translate(0,-this.__renderOffsetTop)
-    }
-  },
-  /**
-   * @private
-   * @param {CanvasRenderingContext2D} ctx Context to render on
-   * @param {String} method Method name ("fillText" or "strokeText")
-   */
-  _renderTextCommon(ctx: CanvasRenderingContext2D, method: string) {
+  _renderTextCommon(ctx: CanvasRenderingContext2D, method: any) {
     ctx && ctx.save();
     let lineHeights = 0, left = this._getLeftOffset(), top = this._getTopOffset(),
-      offsets = this._applyPatternGradientTransform(ctx, method === 'fillText' ? this.fill : this.stroke);
+      offsets = this._applyPatternGradientTransform(ctx, (method === 'fillText' ? this.fill : this.stroke) as TFiller);
     for (let i = 0, len = this._textLines.length; i < len; i++) {
       let lineOffsetX = 0
       let lineOffsetY = 0
@@ -975,10 +858,46 @@ Object.assign(ArcText.prototype, ArcTextMixin, {
       lineHeights += heightOfLine;
     }
     ctx && ctx.restore();
-  },
-  //add textTransform support
+  }
+
+  renderCursor(ctx: CanvasRenderingContext2D, boundaries: any) {
+    let cursorLocation = this.get2DCursorLocation(),
+      lineIndex = cursorLocation.lineIndex,
+      charIndex = cursorLocation.charIndex > 0 ? cursorLocation.charIndex - 1 : 0,
+      multiplier = this.scaleX * this.canvas!.getZoom(),
+      cursorWidth = this.cursorWidth / multiplier;
+    if (this.inCompositionMode) {
+      this.renderSelection(boundaries, ctx);
+    }
+    let tr = this._charTransformations[cursorLocation.lineIndex][cursorLocation.charIndex];
+    ctx.save();
+    ctx.translate(-this._contentOffsetX, -this._contentOffsetY)
+    ctx.lineWidth = cursorWidth
+    ctx.strokeStyle = this.getValueOfPropertyAt(lineIndex, charIndex, 'fill');
+    ctx.globalAlpha = this.__isMousedown ? 1 : this._currentCursorOpacity;
+    ctx.beginPath()
+    ctx.moveTo(tr.nl.x, tr.nl.y)
+    ctx.lineTo(tr.tl.x, tr.tl.y)
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  _renderText(ctx: CanvasRenderingContext2D) {
+    if(this.useBothRenderingMethod){
+      return this._renderTextCommon(ctx, 'both');
+    }
+    if (this.paintFirst === 'stroke') {
+      this._renderTextStroke(ctx);
+      this._renderTextFill(ctx);
+    }
+    else {
+      this._renderTextFill(ctx);
+      this._renderTextStroke(ctx);
+    }
+  }
+
   _splitText() {
-    let text= this.text
+    let text = this.text
     if(this.textTransform){
       if(this.textTransform === "uppercase"){
         text = text.toUpperCase()
@@ -1000,157 +919,38 @@ Object.assign(ArcText.prototype, ArcTextMixin, {
       this.__lineInfo = []
     }
     return newLines;
-  },
+  }
 
-  setTextTransform(value: any) {
+  setTextTransform(value: string) {
     this.textTransform = value
-    this.setText(this.text)
+    this.set({text: this.text})
     this.dirty = true
     this.initDimensions()
     this.canvas && this.canvas.requestRenderAll()
-  },
-  "+_dimensionAffectingProps": ["textTransform"],
-  "+cacheProperties": ["textTransform"],
-  "+stateProperties": ["textTransform"],
-  textTransform: false,
-  useBothRenderingMethod: true,
-  renderCharCallback: null,
-  textRenders: ["defaultTextRender"],
-  accepts: { role: "fontFamily" },
-  storeProperties: ["type", "clipPath","frame","deco",'textLines','textTransform'],
-  eventListeners: {},
-  textCase: "none",
-  isText: true,
-  fontSizeOptions: [6,7,8,9,10,12,14,18,24,36,48,64],
-  features: {
-    "dnom": false, // Denominators Mostly superceded by contextual <frac> implementations
-    "numr": false, // Numerators Mostly superceded by contextual <frac> implementations
-    "frac": false, // Fractions
-    "zero": false, // Slashed Zero
-    "calt": true,  // Contextual Alternates
-    "liga": true,  // Standard Ligatures
-    "ccmp": true,  // Glyph Composition / Decomposition
-    "dlig": false, // Discretionary Ligatures
-    "rlig": false, // Requiered Ligatures
+  }
 
-    "c2sc": false, // Small Capitals From Capitals
-    "smcp": false, // Small Capitals from lowercase
-    "unic": false, // Unicase
-
-    "lnum": false, // Lining Figures
-    "onum": false, // Oldstyle Figures
-    "pnum": false, // Proportional Figures
-    "tnum": false,  // Tabular Figures
-    "locl": false, // Localized Forms
-
-    "ss01": false, // Stylistic Set 01
-    "ss02": false, // Stylistic Set 02
-    "ss03": false, // Stylistic Set 03
-    "ss04": false, // Stylistic Set 04
-    "ss05": false, // Stylistic Set 05
-    "ss06": false, // Stylistic Set 06
-    "ss07": false, // Stylistic Set 07
-
-    "cpsp": false,  // Capital Spacing
-    "kern": false,  // Kerning
-
-    "mark": false,  //Mark positioning
-    "mkmk": false,  //Mark to mark positioning
-  },
-
-  /**
-   * @private
-   */
-  _wrapSVGTextAndBg(textAndBg: any) {
-    let noShadow = true, textDecoration = this.getSvgTextDecoration(this);
-    return [
-      textAndBg.textBgRects.join(''),
-      '\t\t<text xml:space="preserve" ',
-      (this.fontFamily ? 'font-family="\'' + this.fontFamily.replace(/"/g, '\'') + '\'" ' : ''),
-      (this.fontSize ? 'font-size="' + this.fontSize + '" ' : ''),
-      (this.fontStyle ? 'font-style="' + this.fontStyle + '" ' : ''),
-      (this.fontWeight ? 'font-weight="' + this.fontWeight + '" ' : ''),
-      (textDecoration ? 'text-decoration="' + textDecoration + '" ' : ''),
-      'style="', this.getSvgStyles(noShadow), '"', this.addPaintOrder(), ' >',
-      textAndBg.textSpans.join(''),
-      '</text>\n',
-      textAndBg.special ? textAndBg.special.join('') : ''
-    ];
-  },
-  /**
-   * @private
-   * @param {CanvasRenderingContext2D} ctx Context to render on
-   */
-  _renderText(ctx: CanvasRenderingContext2D) {
-    if(this.useBothRenderingMethod){
-      return this._renderTextCommon(ctx, 'both');
+  calcTextHeight() {
+    let lineHeight, height = 0;
+    for (let i = 0, len = this._textLines.length; i < len; i++) {
+      lineHeight = this.getHeightOfLine(i);
+      height += (i === len - 1 ? lineHeight / this.lineHeight : lineHeight);
     }
-    if (this.paintFirst === 'stroke') {
-      this._renderTextStroke(ctx);
-      this._renderTextFill(ctx);
-    }
-    else {
-      this._renderTextFill(ctx);
-      this._renderTextStroke(ctx);
-    }
-  },
-  
-  interateTextChunks(lineIndex: number, foo: Function, iteratorFn: Function){
-    let actualStyle,
-      nextStyle,
-      firstChar = 0;
-    let specs = this._specialArray
-    let line = this._textLines[lineIndex]
-    let isJustify = this.textAlign.indexOf('justify') !== -1;
-    let shortCut = !isJustify && this.charSpacing === 0 && (!specs || !specs[lineIndex]) && this.isEmptyStyles(lineIndex);
+    return height;
+  }
 
-    if (shortCut) {
-      // render all the line in one pass without checking
-      foo(0, line.length,null)
-      return;
-    }
-
-    let timeToRender;
-
-    for (let i = 0, len = line.length - 1; i <= len; i++) {
-      timeToRender = i === len || this.charSpacing;
-      iteratorFn && iteratorFn(i)
-      if (isJustify && !timeToRender) {
-        if (this._reSpaceAndTab.test(line[i])) {
-          timeToRender = true;
-        }
-      }
-      if (!timeToRender) {
-        // if we have charSpacing, we render char by char
-        actualStyle = actualStyle || this.getCompleteStyleDeclaration(lineIndex, i);
-        nextStyle = this.getCompleteStyleDeclaration(lineIndex, i + 1);
-
-        timeToRender = (specs && specs[lineIndex] && specs[lineIndex][i] !== specs[lineIndex][i + 1]) ||
-          this._hasStyleChanged(actualStyle, nextStyle)
-      }
-
-      if (timeToRender) {
-        foo(firstChar, i, actualStyle)
-
-        firstChar = i + 1;
-        actualStyle = nextStyle;
-      }
-    }
-  },
-  _renderChars(method: any, ctx: CanvasRenderingContext2D, line: number, left: number, top: number, lineIndex: number) {
-    // set proper line offset
+  _renderChars(method: 'fillText' | 'strokeText', ctx: CanvasRenderingContext2D, line: Array<any>, left: number, top: number, lineIndex: number) {
     let lineHeight = this.getHeightOfLine(lineIndex),
       charBox,
       boxWidth = 0;
     ctx && ctx.save();
     top -= lineHeight * this._fontSizeFraction / this.lineHeight;
     this.interateTextChunks(lineIndex,
-      (a,b) => {
-        this._renderChar(method, ctx, lineIndex, a,b, left, top, lineHeight);
+      (charIndex: number, endCharIndex: string) => {
+        this._renderChar(method, ctx, lineIndex, charIndex, endCharIndex, left, top);
         left += boxWidth;
         boxWidth = 0;
       },
-      (i) => {
+      (i: number) => {
         charBox = this.__charBounds[lineIndex][i];
         if (boxWidth === 0) {
           left += charBox.kernedWidth - charBox.width;
@@ -1160,10 +960,11 @@ Object.assign(ArcText.prototype, ArcTextMixin, {
         }
       })
     ctx && ctx.restore();
-  },
-  _renderChar(method: any, ctx: CanvasRenderingContext2D, lineIndex: number, charIndex: number, endCharIndex: number, left: number, top: number) {
+  }
+
+  override _renderChar(method: any, ctx: CanvasRenderingContext2D, lineIndex: number, charIndex: number, endCharIndex: number, left: number, top: number) {
     let decl = this._getStyleDeclaration(lineIndex, charIndex),
-      fullDecl = this.getCompleteStyleDeclaration(lineIndex, charIndex),
+      fullDecl = this.getCompleteStyleDeclaration(lineIndex, charIndex) as any,
       shouldFill = method === 'fillText' && fullDecl.fill,
       shouldStroke = method === 'strokeText' && fullDecl.stroke && fullDecl.strokeWidth;
 
@@ -1194,18 +995,14 @@ Object.assign(ArcText.prototype, ArcTextMixin, {
       this.runCharRendering(method, ctx, text, left, top, 0, fullDecl);
     }
     ctx && decl && ctx.restore();
-  },
-  /**
-   * Draws a background for the object big as its untransformed dimensions
-   * @private
-   * @param {CanvasRenderingContext2D} ctx Context to render on
-   */
+  }
+
   _renderBackground(ctx: CanvasRenderingContext2D) {
     if (!this.backgroundColor && !this.backgroundStroke) {
       return;
     }
     let dim = this._getNonTransformedDimensions();
-    if(this.backgroundColor) {
+    if (this.backgroundColor) {
       ctx.fillStyle = this.backgroundColor;
       ctx.fillRect(
         -dim.x / 2,
@@ -1215,7 +1012,7 @@ Object.assign(ArcText.prototype, ArcTextMixin, {
       )
     }
 
-    if(this.backgroundStroke){
+    if (this.backgroundStroke) {
       this._setStrokeStyles(ctx, this.backgroundStroke);
       ctx.strokeRect(
         -dim.x / 2,
@@ -1225,22 +1022,8 @@ Object.assign(ArcText.prototype, ArcTextMixin, {
       )
     }
     this._removeShadow(ctx);
-  },
-  runCharRendering(method: any, ctx: CanvasRenderingContext2D, _char: string, left: number, top: number, angle: number, fullDecl: any, alignment: any) {
-    if(ctx){
-      ctx.save();
-      ctx.translate(left, top)
-      ctx.rotate(angle)
-    }
-    for(let i in this.textRenders){
-      let result = this[this.textRenders[i]](method, ctx, _char, fullDecl, alignment, left, top, angle)
-      if(result === true)break;
-    }
-    if(ctx) {
-      ctx.restore()
-    }
-  },
-  
+  }
+
   defaultTextRender(method: any, ctx: CanvasRenderingContext2D, _char: string, decl: any) {
     if(method === "both"){
       if (decl.fill && this.paintFirst === 'fill') {
@@ -1266,148 +1049,33 @@ Object.assign(ArcText.prototype, ArcTextMixin, {
       method === 'strokeText' && decl.stroke && decl.strokeWidth && ctx.strokeText(_char, 0,0);
     }
     return true;
-  },
-  setTextFill(value: string) {
-    this.setStyle("fill", value);
-  },
-  getTextFill() {
-    let fill = this.getStyle("fill"); //texture pattern fill fix
-    return typeof fill === "string" ? fill : "transparent";
-  },
- 
-  setData(data: any) {
-    if (data.role === "fontFamily") {
-      this.setFontFamily(data.fontFamily)
+  }
+
+  getHeightOfLine(lineIndex: number) {
+    if(!this.__lineHeights){
+      this.initDimensions();
     }
-  },
-  getStyle(styleName: string) {
-    if (this.getSelectionStyles && this.isEditing){
-      let selectionPosition;
-      if(this.selectionStart === this.selectionEnd){
-        selectionPosition = this.selectionStart > 0 ? this.selectionStart - 1 : this.selectionStart;
-      }else{
-        selectionPosition = this.selectionStart;
-      }
-      let style = this.getStyleAtPosition(selectionPosition)[styleName];
-      return style !== undefined ? style : this[styleName];
-    }else{
-      return (this[styleName] === undefined ? this['__' + styleName] : this[styleName]);
+    if (this.__lineHeights[lineIndex]) {
+      return this.__lineHeights[lineIndex];
     }
-  },
-  getPattern (url: string) {
-    let _fill = this.getStyle('fill ');
-    return _fill && _fill.source;
-  },
-  setPattern (url?: string) {
-    if (!url) {
-      this.setStyle('fill');
-    } else {
-      // todo
-      // util.loadImage(url, (img) => {
-      //   this.setStyle('fill', new Pattern({
-      //     source: img,
-      //     repeat: 'repeat'
-      //   }));
-      // }); 
+
+    let line = this._textLines[lineIndex],
+      maxHeight = this.getHeightOfChar(lineIndex, 0);
+    for (let i = 1, len = line.length; i < len; i++) {
+      maxHeight = Math.max(this.getHeightOfChar(lineIndex, i), maxHeight);
     }
-  },
-  setShadow(options: any) {
-    return this.setProperty('shadow', options ? new Shadow(options) : null);
-  },
-  getSpacing() {
-    return this.get('spacing');
-  },
-  setSpacing(value: any) {
-    this.setProperty('spacing', value);
-  },
-  getReverted() {
-    return this.get('reverted');
-  },
-  setReverted(value: any) {
-    this.setProperty('reverted', value);
-  },
-  getText() {
-    return this.get('text');
-  },
-  setFontFamily(value: any, callback: any) {
-    this.setProperty('fontFamily', "" + value);
-    this._forceClearCache = true
-    this.dirty = true
-    this.initDimensions()
-    if (value && this.renderOnFontsLoaded){
-      let fontsArray = [value]
-      this.renderOnFontsLoaded(fontsArray, callback)
-    }
-    else {
-      callback && callback()
-    }
-  },
-  setStyles(value: any, callback: any) {
-    this.styles = value ? JSON.parse(JSON.stringify(value)) : {}
-    this._forceClearCache = true
-    this.dirty = true
-    this.initDimensions()
-    if(value && this.renderOnFontsLoaded){
-      let fonts = this.getUsedFonts()
-      this.renderOnFontsLoaded(fonts,callback)
-    }
-    else{
-      callback && callback()
-    }
-  },
-  setText(value: string) {
-    this.setProperty('text', "" + value);
-  },
-  getTextAlign() {
-    return this.get('textAlign');
-  },
-  setTextAlign(value: string) {
-    this.setProperty('textAlign', value.toLowerCase());
-  },
-  getBgColor () {
-    return this.get('backgroundColor');
-  },
-  setBgColor(value: string) {
-    this.setProperty('backgroundColor', value);
-  },
-  getTextBgColor() {
-    return this.get('textBackgroundColor');
-  },
-  setTextBgColor(value: string) {
-    this.setProperty('textBackgroundColor', value);
-  },
-  _shouldClearDimensionCache() {
-    let shouldClear = this._forceClearCache;
-    shouldClear || (shouldClear = this.hasStateChanged('_dimensionAffectingProps'));
-    if (shouldClear) {
-      this.dirty = true;
-      this._forceClearCache = false;
-      if(this.group){
-        this.group.dirty = true;
-      }
-    }
-    return shouldClear;
-  },
-  
-  getStylePosition(index: number) {
-    return this.get2DCursorLocation(index);
-  },
-  getTextLines() {
-    return this.textLines.map(line => line.length);
-  },
-  setTextLines(val: any) {
-    // console.log("text lines",val,this.textLines);
-  },
-  cleanStyle(property: any) {
-    if (!this.styles || !property || property === '') {
+
+    return this.__lineHeights[lineIndex] = maxHeight * this.lineHeight * this._fontSizeMult;
+  }
+
+  cleanStyle(property: keyof TextStyleDeclaration) {
+    if (!this.styles || !property) {
       return false;
     }
     let obj = this.styles, stylesCount = 0, letterCount, stylePropertyValue,
       allStyleObjectPropertiesMatch = true, graphemeCount = 0, styleObject;
-    // eslint-disable-next-line
     for (let p1 in obj) {
       letterCount = 0;
-      // eslint-disable-next-line
       for (let p2 in obj[p1]) {
         let styleObject = obj[p1][p2],
           stylePropertyHasBeenSet = styleObject.hasOwnProperty(property);
@@ -1437,278 +1105,67 @@ Object.assign(ArcText.prototype, ArcTextMixin, {
           delete obj[p1][p2];
         }
       }
-
       if (letterCount === 0) {
         delete obj[p1];
       }
     }
-    // if every grapheme has the same style set then
-    // delete those styles and set it on the parent
+
     for (let i = 0; i < this._textLines.length; i++) {
       graphemeCount += this._textLines[i].length;
     }
-
     if (allStyleObjectPropertiesMatch && stylesCount === graphemeCount) {
 
-      //edited:  visceroid
       if (stylePropertyValue !== undefined) {
         this[property] = stylePropertyValue;
       }
       this.removeStyle(property);
     }
-  },
-  
-  //overwritten. Assign _measuringContext property to Editor. not to global  To avoid text measuring problems on Nodes.
-  //_measuringContext will be individual for every editor.
-  getMeasuringContext() {
-    let context = this.editor || fabric;
-    // if we did not return we have to measure something.
-    if (!context._measuringContext) {
-      context._measuringContext = this.canvas && this.canvas.contextCache || util.createCanvasElement().getContext('2d');
-    }
-    return context._measuringContext;
-  },
-  /**
-   * Calculate height of line at 'lineIndex'
-   * @param {Number} lineIndex index of line to calculate
-   * @return {Number}
-   */
-  getHeightOfLine(lineIndex: number) {
-    if(!this.__lineHeights){
-      this.initDimensions();
-    }
-    if (this.__lineHeights[lineIndex]) {
-      return this.__lineHeights[lineIndex];
-    }
+  }
 
-    let line = this._textLines[lineIndex],
-      // char 0 is measured before the line cycle because it nneds to char
-      // emptylines
-      maxHeight = this.getHeightOfChar(lineIndex, 0);
-    for (let i = 1, len = line.length; i < len; i++) {
-      maxHeight = Math.max(this.getHeightOfChar(lineIndex, i), maxHeight);
-    }
-
-    return this.__lineHeights[lineIndex] = maxHeight * this.lineHeight * this._fontSizeMult;
-  },
-
-  _render(ctx: CanvasRenderingContext2D) {
-    console.log('this:', this)
-    ctx.save()
-    ctx.translate(-this._contentOffsetX, -this._contentOffsetY)
-    if(!this.__lineHeights){
-      this.initDimensions();
-    }
-    this._setTextStyles(ctx);
-    this._renderTextLinesBackground(ctx);
-    this._renderTextDecoration(ctx, 'underline');
-    this._renderText(ctx);
-    this._renderTextDecoration(ctx, 'overline');
-    this._renderTextDecoration(ctx, 'linethrough');
-    ctx.restore()
-  },
-});
-
-Object.assign(ArcText.prototype, ArcTextMixin, {
-  lockOnEdit: true,
-
-  onInput(e: Event) {
-    let fromPaste = (this as ITextKeyBehavior).fromPaste;
-    this.fromPaste = false;
-    e && e.stopPropagation();
-    if (!this.isEditing) {
-      return;
-    }
-    const nextText = this._splitTextIntoLines(this.hiddenTextarea.value).graphemeText,
-        charCount = this._text.length,
-        nextCharCount = nextText.length,
-        selectionStart = this.selectionStart, selectionEnd = this.selectionEnd,
-        selection = selectionStart !== selectionEnd;
-    let removedText, charDiff = nextCharCount - charCount, insertedText, copiedStyle, removeFrom, removeTo;
-    if (this.hiddenTextarea.value === '') {
-
-      //modified
-      if(this.styles && this.styles[0] && this.styles[0][0]){
-        this.styles = {0: {0: Object.assign({},this.styles[0][0])}}
-      }
-      else{
-        this.styles = { };
-      }
-
-      this.updateFromTextArea();
-      this.fire('changed');
-      if (this.canvas) {
-        this.canvas.fire('text:changed', { target: this });
-        this.canvas.requestRenderAll();
-      }
-      return;
-    }
-
-    let textareaSelection = this.fromStringToGraphemeSelection(
-        this.hiddenTextarea.selectionStart,
-        this.hiddenTextarea.selectionEnd,
-        this.hiddenTextarea.value
-    );
-    const backDelete = selectionStart > textareaSelection.selectionStart;
-    if (selection) {
-      removedText = this._text.slice(selectionStart, selectionEnd);
-      charDiff += selectionEnd - selectionStart;
-    }
-    else if (nextCharCount < charCount) {
-      if (backDelete) {
-        removedText = this._text.slice(selectionEnd + charDiff, selectionEnd);
-      }
-      else {
-        removedText = this._text.slice(selectionStart, selectionStart - charDiff);
-      }
-    }
-    insertedText = nextText.slice(textareaSelection.selectionEnd - charDiff, textareaSelection.selectionEnd);
-    if (removedText && removedText.length) {
-      if (insertedText.length) {
-        // let's copy some style before deleting.
-        // we want to copy the style before the cursor OR the style at the cursor if selection
-        // is bigger than 0.
-        copiedStyle = this.getSelectionStyles(selectionStart, selectionStart + 1, false) as any;
-        // now duplicate the style one for each inserted text.
-        copiedStyle = insertedText.map( () => copiedStyle[0]);
-      }
-      if (selection) {
-        removeFrom = selectionStart;
-        removeTo = selectionEnd;
-      }
-      else if (backDelete) {
-        // detect differencies between forwardDelete and backDelete
-        removeFrom = selectionEnd - removedText.length;
-        removeTo = selectionEnd;
-      }
-      else {
-        removeFrom = selectionEnd;
-        removeTo = selectionEnd + removedText.length;
-      }
-      this.removeStyleFromTo(removeFrom, removeTo);
-    }
-    if (insertedText.length) {
-      const { copyPasteData } = getEnv()
-      if (fromPaste && insertedText.join('') === copyPasteData.copiedText && !config.disableStyleCopyPaste) {
-        copiedStyle = copyPasteData.copiedStyle;
-      }
-      this.insertNewStyleBlock(insertedText, selectionStart, copiedStyle);
-    }
-    this.updateFromTextArea();
-    this.fire('changed');
-    if (this.canvas) {
-      this.canvas.fire('text:changed', { target: this });
-      this.canvas.requestRenderAll();
-    }
-  },
-
-  /**
-   * Handles keyup event
-   * @param {Event} e Event object
-   */
-  onKeyDown(e: KeyboardEvent) {
-    if (!this.isEditing || this.inCompositionMode) return
-    let action;
-    if (e.keyCode in this.keysMap) {
-      action = this.keysMap[e.keyCode];
-    }
-    else if ((e.keyCode in this.ctrlKeysMapDown) && (e.ctrlKey || e.metaKey)) {
-      action = this.ctrlKeysMapDown[e.keyCode];
-    }
-    else {
-      return;
-    }
-
-    this[action](e);
-
-    e.stopImmediatePropagation();
-    e.preventDefault();
-    if (e.keyCode >= 33 && e.keyCode <= 40 || action === "selectAll") {
-      // if i press an arrow key just update selection
-      this.clearContextTop();
-      this.renderCursorOrSelection();
-    }
-    else {
-      this.canvas && this.canvas.requestRenderAll();
-    }
-  },
-
-  getLocalPointer(e: any, pointer: Point) {
-    pointer = pointer || this.canvas.getPointer(e);
+  getLocalPointer(e: TPointerEvent, pointer: Point) {
+    pointer = pointer || this.canvas!.getPointer(e);
     var pClicked = new Point(pointer.x, pointer.y),
         objectLeftTop = this._getLeftTopCoords();
     if (this.angle) {
-      pClicked = util.rotatePoint(pClicked, objectLeftTop, degreesToRadians(-this.angle));
+      pClicked = util.rotatePoint(pClicked, objectLeftTop, util.degreesToRadians(-this.angle));
     }
     return {
       x: pClicked.x - objectLeftTop.x,
       y: pClicked.y - objectLeftTop.y
     };
-  },
-  //todo do not render ursor here
-  // _setEditingProps() {
-  //   this.hoverCursor = 'text';
+  }
 
-  //   if (this.canvas) {
-  //     this.canvas.defaultCursor = this.canvas.moveCursor = 'text';
-  //   }
+  exitEditing () {
+    let isTextChanged = (this._textBeforeEdit !== this.text);
+    this.selected = false;
+    this.isEditing = false;
 
-  //   this.borderColor = this.editingBorderColor;
-  //   if(this.lockOnEdit){
-  //     this.hasControls = this.selectable = false;
-  //     this.lockMovementX = this.lockMovementY = true;
-  //   }
-  // },
-  
-  getSelectionStartFromPointer(e: any) {
-    let mouseOffset = this.getLocalPointer(e),
-      prevWidth = 0,
-      width = 0,
-      height = 0,
-      charIndex = 0,
-      lineIndex = 0,
-      lineLeftOffset,
-      line;
+    this.selectionEnd = this.selectionStart;
 
-    for (let i = 0, len = this._textLines.length; i < len; i++) {
-      if (height <= mouseOffset.y) {
-        height += this.getHeightOfLine(i) * this.scaleY;
-        lineIndex = i;
-        if (i > 0) {
-          charIndex += this._textLines[i - 1].length + this.missingNewlineOffset(i - 1);
-        }
-      }
-      else {
-        break;
-      }
-    }
-    lineLeftOffset = this._getLineLeftOffset(lineIndex);
-
-
-    if(this.__lineInfo && this.__lineInfo[lineIndex]){
-      lineLeftOffset += this.__lineInfo[lineIndex].renderedLeft
+    if (this.hiddenTextarea) {
+      this.hiddenTextarea.blur && this.hiddenTextarea.blur();
+      this.canvas && this.hiddenTextarea.parentNode.removeChild(this.hiddenTextarea);
+      this.hiddenTextarea = null;
     }
 
-    width = lineLeftOffset * this.scaleX
-    line = this._textLines[lineIndex]
-    const jlen = line.length
-    for (let j = 0; j < jlen; j++) {
-      prevWidth = width;
-      // i removed something about flipX here, check.
-      width += this.__charBounds[lineIndex][j].kernedWidth * this.scaleX;
-      if (width <= mouseOffset.x) {
-        charIndex++;
-      }
-      else {
-        break;
-      }
+    this.abortCursorAnimation();
+    this._restoreEditingProps();
+    this._currentCursorOpacity = 0;
+    if (this._forceClearCache) {
+      this.initDimensions();
+      this.setCoords();
     }
-    return this._getNewSelectionStartFromOffset(mouseOffset, prevWidth, width, charIndex, jlen);
-  },
-  /**
-   * @private aded options.e._group for editing texts inside groups
-   */
-  mouseMoveHandler(options) {
+    this.fire('editing:exited');
+
+    if (this.canvas) {
+      this.canvas.off('mouse:move', this.mouseMoveHandler);
+      this.canvas.fire('text:editing:exited', { target: this } as any);
+    }
+
+    return this
+  }
+
+  mouseMoveHandler(options: any) {
     if (!this.__isMousedown || !this.isEditing) {
       return;
     }
@@ -1744,67 +1201,307 @@ Object.assign(ArcText.prototype, ArcTextMixin, {
     if(this.group){
       delete options.e._group;
     }
-  },
-  getStyles () {
-    if (!Object.keys(this.styles).length) return null;
-    let _styles = {};
-    let _is_not_empty = false;
-    for (let row in this.styles) {
-      if (Object.keys(this.styles[row]).length) {
-        let _row_empty = true;
-        for (let char in this.styles[row]) {
-          if (Object.keys(this.styles[row][char]).length) {
-            if (_row_empty) {
-              _styles[row] = {};
-              _row_empty = false;
-            }
-            _styles[row][char] = util.object.clone(this.styles[row][char]);
-          }
-        }
-        if (!_row_empty) {
-          _is_not_empty = true;
-        }
-      }
-    }
-    return _is_not_empty && _styles || null;
-  },
-  initHiddenTextareaNative: ArcText.prototype.initHiddenTextarea,
-  initHiddenTextarea () {
-    this.initHiddenTextareaNative();
-    this.hiddenTextarea.style.width = "9999px";
-    this.hiddenTextarea.style["margin-left"] = "-9999px";
-  },
-
-  exitEditing () {
-    let isTextChanged = (this._textBeforeEdit !== this.text);
-    this.selected = false;
-    this.isEditing = false;
-
-    this.selectionEnd = this.selectionStart;
-
-    if (this.hiddenTextarea) {
-      this.hiddenTextarea.blur && this.hiddenTextarea.blur();
-      this.canvas && this.hiddenTextarea.parentNode.removeChild(this.hiddenTextarea);
-      this.hiddenTextarea = null;
-    }
-
-    this.abortCursorAnimation();
-    this._restoreEditingProps();
-    this._currentCursorOpacity = 0;
-    if (this._forceClearCache) {
-      this.initDimensions();
-      this.setCoords();
-    }
-    this.fire('editing:exited');
-
-    if (this.canvas) {
-      this.canvas.off('mouse:move', this.mouseMoveHandler);
-      this.canvas.fire('text:editing:exited', { target: this });
-    }
-
-    return this;
   }
-});
+}
+
+// Object.assign(ArcText.prototype, ArcTextMixin, {
+//   "+_dimensionAffectingProps": ["textTransform"],
+//   "+cacheProperties": ["textTransform"],
+//   "+stateProperties": ["textTransform"],
+//   textTransform: false,
+//   useBothRenderingMethod: true,
+//   renderCharCallback: null,
+//   textRenders: ["defaultTextRender"],
+//   accepts: { role: "fontFamily" },
+//   storeProperties: ["type", "clipPath","frame","deco",'textLines','textTransform'],
+//   eventListeners: {},
+//   textCase: "none",
+//   isText: true,
+//   fontSizeOptions: [6,7,8,9,10,12,14,18,24,36,48,64],
+//   features: {
+//     "dnom": false, // Denominators Mostly superceded by contextual <frac> implementations
+//     "numr": false, // Numerators Mostly superceded by contextual <frac> implementations
+//     "frac": false, // Fractions
+//     "zero": false, // Slashed Zero
+//     "calt": true,  // Contextual Alternates
+//     "liga": true,  // Standard Ligatures
+//     "ccmp": true,  // Glyph Composition / Decomposition
+//     "dlig": false, // Discretionary Ligatures
+//     "rlig": false, // Requiered Ligatures
+
+//     "c2sc": false, // Small Capitals From Capitals
+//     "smcp": false, // Small Capitals from lowercase
+//     "unic": false, // Unicase
+
+//     "lnum": false, // Lining Figures
+//     "onum": false, // Oldstyle Figures
+//     "pnum": false, // Proportional Figures
+//     "tnum": false,  // Tabular Figures
+//     "locl": false, // Localized Forms
+
+//     "ss01": false, // Stylistic Set 01
+//     "ss02": false, // Stylistic Set 02
+//     "ss03": false, // Stylistic Set 03
+//     "ss04": false, // Stylistic Set 04
+//     "ss05": false, // Stylistic Set 05
+//     "ss06": false, // Stylistic Set 06
+//     "ss07": false, // Stylistic Set 07
+
+//     "cpsp": false,  // Capital Spacing
+//     "kern": false,  // Kerning
+
+//     "mark": false,  //Mark positioning
+//     "mkmk": false,  //Mark to mark positioning
+//   },
+
+//   /**
+//    * @private
+//    */
+//   _wrapSVGTextAndBg(textAndBg: any) {
+//     let noShadow = true, textDecoration = this.getSvgTextDecoration(this);
+//     return [
+//       textAndBg.textBgRects.join(''),
+//       '\t\t<text xml:space="preserve" ',
+//       (this.fontFamily ? 'font-family="\'' + this.fontFamily.replace(/"/g, '\'') + '\'" ' : ''),
+//       (this.fontSize ? 'font-size="' + this.fontSize + '" ' : ''),
+//       (this.fontStyle ? 'font-style="' + this.fontStyle + '" ' : ''),
+//       (this.fontWeight ? 'font-weight="' + this.fontWeight + '" ' : ''),
+//       (textDecoration ? 'text-decoration="' + textDecoration + '" ' : ''),
+//       'style="', this.getSvgStyles(noShadow), '"', this.addPaintOrder(), ' >',
+//       textAndBg.textSpans.join(''),
+//       '</text>\n',
+//       textAndBg.special ? textAndBg.special.join('') : ''
+//     ];
+//   },
+//   setTextFill(value: string) {
+//     this.setStyle("fill", value);
+//   },
+//   getTextFill() {
+//     let fill = this.getStyle("fill"); //texture pattern fill fix
+//     return typeof fill === "string" ? fill : "transparent";
+//   },
+ 
+//   setData(data: any) {
+//     if (data.role === "fontFamily") {
+//       this.setFontFamily(data.fontFamily)
+//     }
+//   },
+//   getStyle(styleName: string) {
+//     if (this.getSelectionStyles && this.isEditing){
+//       let selectionPosition;
+//       if(this.selectionStart === this.selectionEnd){
+//         selectionPosition = this.selectionStart > 0 ? this.selectionStart - 1 : this.selectionStart;
+//       }else{
+//         selectionPosition = this.selectionStart;
+//       }
+//       let style = this.getStyleAtPosition(selectionPosition)[styleName];
+//       return style !== undefined ? style : this[styleName];
+//     }else{
+//       return (this[styleName] === undefined ? this['__' + styleName] : this[styleName]);
+//     }
+//   },
+//   getPattern (url: string) {
+//     let _fill = this.getStyle('fill ');
+//     return _fill && _fill.source;
+//   },
+//   setPattern (url?: string) {
+//     if (!url) {
+//       this.setStyle('fill');
+//     } else {
+//       // todo
+//       // util.loadImage(url, (img) => {
+//       //   this.setStyle('fill', new Pattern({
+//       //     source: img,
+//       //     repeat: 'repeat'
+//       //   }));
+//       // }); 
+//     }
+//   },
+//   setShadow(options: any) {
+//     return this.setProperty('shadow', options ? new Shadow(options) : null);
+//   },
+//   getSpacing() {
+//     return this.get('spacing');
+//   },
+//   setSpacing(value: any) {
+//     this.setProperty('spacing', value);
+//   },
+//   getReverted() {
+//     return this.get('reverted');
+//   },
+//   setReverted(value: any) {
+//     this.setProperty('reverted', value);
+//   },
+//   getText() {
+//     return this.get('text');
+//   },
+//   setFontFamily(value: any, callback: any) {
+//     this.setProperty('fontFamily', "" + value);
+//     this._forceClearCache = true
+//     this.dirty = true
+//     this.initDimensions()
+//     if (value && this.renderOnFontsLoaded){
+//       let fontsArray = [value]
+//       this.renderOnFontsLoaded(fontsArray, callback)
+//     }
+//     else {
+//       callback && callback()
+//     }
+//   },
+//   setStyles(value: any, callback: any) {
+//     this.styles = value ? JSON.parse(JSON.stringify(value)) : {}
+//     this._forceClearCache = true
+//     this.dirty = true
+//     this.initDimensions()
+//     if(value && this.renderOnFontsLoaded){
+//       let fonts = this.getUsedFonts()
+//       this.renderOnFontsLoaded(fonts,callback)
+//     }
+//     else{
+//       callback && callback()
+//     }
+//   },
+//   setText(value: string) {
+//     this.setProperty('text', "" + value);
+//   },
+//   getTextAlign() {
+//     return this.get('textAlign');
+//   },
+//   setTextAlign(value: string) {
+//     this.setProperty('textAlign', value.toLowerCase());
+//   },
+//   getBgColor () {
+//     return this.get('backgroundColor');
+//   },
+//   setBgColor(value: string) {
+//     this.setProperty('backgroundColor', value);
+//   },
+//   getTextBgColor() {
+//     return this.get('textBackgroundColor');
+//   },
+//   setTextBgColor(value: string) {
+//     this.setProperty('textBackgroundColor', value);
+//   },
+//   _shouldClearDimensionCache() {
+//     let shouldClear = this._forceClearCache;
+//     shouldClear || (shouldClear = this.hasStateChanged('_dimensionAffectingProps'));
+//     if (shouldClear) {
+//       this.dirty = true;
+//       this._forceClearCache = false;
+//       if(this.group){
+//         this.group.dirty = true;
+//       }
+//     }
+//     return shouldClear;
+//   },
+  
+//   getStylePosition(index: number) {
+//     return this.get2DCursorLocation(index);
+//   },
+//   getTextLines() {
+//     return this.textLines.map(line => line.length);
+//   },
+//   setTextLines(val: any) {
+//     // console.log("text lines",val,this.textLines);
+//   },
+  
+//   //overwritten. Assign _measuringContext property to Editor. not to global  To avoid text measuring problems on Nodes.
+//   //_measuringContext will be individual for every editor.
+//   getMeasuringContext() {
+//     let context = this.editor || fabric;
+//     // if we did not return we have to measure something.
+//     if (!context._measuringContext) {
+//       context._measuringContext = this.canvas && this.canvas.contextCache || util.createCanvasElement().getContext('2d');
+//     }
+//     return context._measuringContext;
+//   },
+//   /**
+//    * Calculate height of line at 'lineIndex'
+//    * @param {Number} lineIndex index of line to calculate
+//    * @return {Number}
+//    */
+  
+
+//   // _render(ctx: CanvasRenderingContext2D) {
+//   //   ctx.save()
+//   //   ctx.translate(-this._contentOffsetX, -this._contentOffsetY)
+//   //   if(!this.__lineHeights){
+//   //     this.initDimensions();
+//   //   }
+//   //   this._setTextStyles(ctx);
+//   //   this._renderTextLinesBackground(ctx);
+//   //   this._renderTextDecoration(ctx, 'underline');
+//   //   this._renderText(ctx);
+//   //   this._renderTextDecoration(ctx, 'overline');
+//   //   this._renderTextDecoration(ctx, 'linethrough');
+//   //   ctx.restore()
+//   // },
+// });
+
+// Object.assign(ArcText.prototype, ArcTextMixin, {
+//   lockOnEdit: true,
+
+  
+
+//   /**
+//    * Handles keyup event
+//    * @param {Event} e Event object
+//    */
+ 
+
+  
+//   //todo do not render ursor here
+//   // _setEditingProps() {
+//   //   this.hoverCursor = 'text';
+
+//   //   if (this.canvas) {
+//   //     this.canvas.defaultCursor = this.canvas.moveCursor = 'text';
+//   //   }
+
+//   //   this.borderColor = this.editingBorderColor;
+//   //   if(this.lockOnEdit){
+//   //     this.hasControls = this.selectable = false;
+//   //     this.lockMovementX = this.lockMovementY = true;
+//   //   }
+//   // },
+  
+  
+//   /**
+//    * @private aded options.e._group for editing texts inside groups
+//    */
+  
+//   getStyles () {
+//     if (!Object.keys(this.styles).length) return null;
+//     let _styles = {};
+//     let _is_not_empty = false;
+//     for (let row in this.styles) {
+//       if (Object.keys(this.styles[row]).length) {
+//         let _row_empty = true;
+//         for (let char in this.styles[row]) {
+//           if (Object.keys(this.styles[row][char]).length) {
+//             if (_row_empty) {
+//               _styles[row] = {};
+//               _row_empty = false;
+//             }
+//             _styles[row][char] = util.object.clone(this.styles[row][char]);
+//           }
+//         }
+//         if (!_row_empty) {
+//           _is_not_empty = true;
+//         }
+//       }
+//     }
+//     return _is_not_empty && _styles || null;
+//   },
+//   // initHiddenTextareaNative: ArcText.prototype.initHiddenTextarea,
+//   // initHiddenTextarea () {
+//   //   this.initHiddenTextareaNative();
+//   //   this.hiddenTextarea.style.width = "9999px";
+//   //   this.hiddenTextarea.style["margin-left"] = "-9999px";
+//   // },
+
+  
+// });
 
 // Object.assign(ArcText.prototype, ArcTextMixin, {
 //   // initialize(options,callback) {

@@ -465,7 +465,6 @@ const handleElementDeformation = () => {
   //     pathSide: 'left',
   //     pathStartOffset: 0
   // });
-  const CurvedText = classRegistry.getClass('CurvedText')
   const ArcText = classRegistry.getClass('ArcText')
   const options = handleElement.value.toObject(propertiesToInclude) as any
   delete options.type
