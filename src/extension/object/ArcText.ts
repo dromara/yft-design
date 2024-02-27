@@ -1,7 +1,12 @@
 
 import { ArcTextMixin } from '../mixins/arctext.mixin'
-import { IText as OriginIText, Textbox as OriginTextbox, Control, controlsUtils, classRegistry, Transform, TPointerEvent, TextStyleDeclaration, util, Point, TMat2D, TFiller } from 'fabric'
+import { IText as OriginIText, Textbox as OriginTextbox, Object as FabricObject, Control, controlsUtils, classRegistry, Transform, TPointerEvent, TextStyleDeclaration, util, Point, TMat2D, TFiller } from 'fabric'
 import { sectorBoundingBox } from '@/utils/geometry'
+
+const getParentScaleX = (el: FabricObject): number => {
+  return el.scaleX * (el.group ? getParentScaleX(el.group) : 1)//: this.canvas.viewportTransform[0])
+}
+
 export class ArcText extends OriginIText {
   static type: string = 'ArcText'
   public isCurvature? = false
@@ -13,7 +18,7 @@ export class ArcText extends OriginIText {
   private __renderOffsetTop: any
   public _contentOffsetX: number = 0
   public _contentOffsetY: number = 0
-  private _curvingCenter: any
+  private _curvingCenter = {x: 0, y: 0}
   private _specialArray = []
   private _translatedX: number = 0
   private _translatedY: number = 0
@@ -25,6 +30,7 @@ export class ArcText extends OriginIText {
 
   constructor(text: string, options: any) {
     super(text, options)
+    this.createCurvatureControl()
   }
 
   get type() {
@@ -442,14 +448,12 @@ export class ArcText extends OriginIText {
     this._contentOffsetY = bottomOverflow / 2 - topOverflow / 2
     this._contentOffsetX = rightOverflow / 2 - leftOverflow / 2
 
-    const _translateX = this.originX === "left" ? leftOverflow : this._contentOffsetX;
-    console.log('_translateX:', _translateX, 'topOverflow:', topOverflow)
+    const _translateX = this.originX === "left" ? leftOverflow : this._contentOffsetX
     this._translate(_translateX, topOverflow)
     this.updateCurvingControl()
-    
   }
 
-  _hasStyleChanged (prevStyle: string[], thisStyle: string[]) {
+  _hasStyleChanged(prevStyle: string[], thisStyle: string[]) {
     if(Object.keys(prevStyle).length !== Object.keys(thisStyle).length ){
       return true
     }
@@ -486,7 +490,6 @@ export class ArcText extends OriginIText {
       if (!timeToRender) {
         actualStyle = actualStyle || this.getCompleteStyleDeclaration(lineIndex, i);
         nextStyle = this.getCompleteStyleDeclaration(lineIndex, i + 1) as any;
-
         timeToRender = (specs && specs[lineIndex] && specs[lineIndex][i] !== specs[lineIndex][i + 1]) || this._hasStyleChanged(actualStyle, nextStyle)
       }
 
@@ -622,8 +625,8 @@ export class ArcText extends OriginIText {
     this._removeShadow(ctx);
   }
 
-  _set(key: string, value: any): any {
-    super._set(key, value)
+  set(key: string, value: any): any {
+    super.set(key, value)
     const _dimensionAffectingProps = ['fontSize', 'fontWeight', 'fontFamily', 'fontStyle', 'lineHeight', 'text', 'charSpacing', 'textAlign', 'styles', 'color', 'canvas']
     let needsDims = false;
     if (typeof key === 'object') {
@@ -634,6 +637,7 @@ export class ArcText extends OriginIText {
     } else {
       needsDims = _dimensionAffectingProps.indexOf(key) !== -1;
     }
+    console.log('key:', key, 'needsDims:', needsDims)
     if (needsDims && this.initialized) {
       this.initDimensions();
       this.setCoords();
@@ -911,7 +915,7 @@ export class ArcText extends OriginIText {
     top -= lineHeight * this._fontSizeFraction / this.lineHeight;
     this.interateTextChunks(lineIndex,
       (charIndex: number, endCharIndex: number) => {
-        this._renderChar(method, ctx, lineIndex, charIndex, endCharIndex, left, top);
+        this._renderStr(method, ctx, lineIndex, charIndex, endCharIndex, left, top);
         left += boxWidth;
         boxWidth = 0;
       },
@@ -927,7 +931,7 @@ export class ArcText extends OriginIText {
     ctx && ctx.restore();
   }
 
-  override _renderChar(method: any, ctx: CanvasRenderingContext2D, lineIndex: number, charIndex: number, endCharIndex: number, left: number, top: number) {
+  _renderStr(method: any, ctx: CanvasRenderingContext2D, lineIndex: number, charIndex: number, endCharIndex: number, left: number, top: number) {
     const decl = this._getStyleDeclaration(lineIndex, charIndex),
       fullDecl = this.getCompleteStyleDeclaration(lineIndex, charIndex) as any,
       shouldFill = method === 'fillText' && fullDecl.fill,
@@ -937,7 +941,7 @@ export class ArcText extends OriginIText {
       return;
     }
     ctx && decl && ctx.save();
-    console.log('_renderChar---')
+    console.log('_renderStr---')
     // ctx && this._applyCharStyles(method, ctx, lineIndex, charIndex, fullDecl);
 
     shouldFill && (fillOffsets = this._setFillStyles(ctx, fullDecl));
@@ -1090,8 +1094,8 @@ export class ArcText extends OriginIText {
 
   getLocalPointer(e: TPointerEvent, pointer: Point) {
     pointer = pointer || this.canvas!.getPointer(e);
-    var pClicked = new Point(pointer.x, pointer.y),
-        objectLeftTop = this._getLeftTopCoords();
+    let pClicked = new Point(pointer.x, pointer.y)
+    const objectLeftTop = this._getLeftTopCoords();
     if (this.angle) {
       pClicked = util.rotatePoint(pClicked, objectLeftTop, util.degreesToRadians(-this.angle));
     }
@@ -1102,6 +1106,7 @@ export class ArcText extends OriginIText {
   }
 
   exitEditing () {
+    let isTextChanged = (this._textBeforeEdit !== this.text);
     this.selected = false;
     this.isEditing = false;
 
@@ -1168,7 +1173,5 @@ export class ArcText extends OriginIText {
     }
   }
 }
-
-Object.assign(ArcText, ArcTextMixin)
 
 classRegistry.setClass(ArcText, 'ArcText')
