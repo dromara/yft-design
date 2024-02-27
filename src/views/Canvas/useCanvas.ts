@@ -12,7 +12,8 @@ import { FabricRuler } from '@/app/fabricRuler'
 
 import { FabricCanvas } from '@/app/fabricCanvas'
 import { Keybinding } from '@/app/keybinding'
-import { defaultControls, textboxControls } from '@/app/fabricControls'
+import { arcTextControls, defaultControls, textboxControls } from '@/app/fabricControls'
+import { ArcText } from '@/extension/object/ArcText'
 import { useTemplatesStore } from '@/store'
 import useCommon from './useCommon'
 import useHammer from './useHammer'
@@ -41,6 +42,7 @@ const initConf = () => {
 
   Object.assign(Textbox.ownDefaults, { controls: textboxControls() })
   Object.assign(IText.ownDefaults, { controls: textboxControls() })
+  Object.assign(ArcText.ownDefaults, { controls: arcTextControls() })
 
   const mixin = {
     getWidthHeight(noFixed = false): Point {

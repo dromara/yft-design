@@ -2,13 +2,11 @@
 import { ArcTextMixin } from '../mixins/arctext.mixin'
 import { IText as OriginIText, Textbox as OriginTextbox, Control, controlsUtils, classRegistry, Transform, TPointerEvent, TextStyleDeclaration, util, Point, TMat2D, TFiller } from 'fabric'
 import { sectorBoundingBox } from '@/utils/geometry'
-import { FabricObject } from 'fabric/src/shapes/Object/FabricObject'
 export class ArcText extends OriginIText {
   static type: string = 'ArcText'
   public isCurvature? = false
   public curvature = 100
   public radius = 66
-  public textRenders: any
   private __isMousedown: boolean = false
   private _linesRads: number[] = []
   private __lineInfo: any = []
@@ -23,15 +21,10 @@ export class ArcText extends OriginIText {
   private _charTransformations: any = []
   public textTransform: string = ''
   public useBothRenderingMethod = true
-  public accepts = { role: "fontFamily" }
   public storeProperties = ["type", "clipPath","frame","deco",'textLines','textTransform']
-  public eventListeners = {}
-  public textCase = "none"
-  public isText = true
-  public fontSizeOptions = [6,7,8,9,10,12,14,18,24,36,48,64]
+
   constructor(text: string, options: any) {
     super(text, options)
-    this.createCurvatureControl()
   }
 
   get type() {
@@ -93,9 +86,10 @@ export class ArcText extends OriginIText {
     return false
   }
 
-  renderCharCallback(method: any, ctx: CanvasRenderingContext2D, lineIndex: number, charIndex: number, endCharIndex: string, left: number, top: number, fullDecl: any) {
+  renderCharCallback(method: any, ctx: CanvasRenderingContext2D, lineIndex: number, charIndex: number, endCharIndex: number, left: number, top: number, fullDecl: any) {
     for (let index = charIndex; index <= endCharIndex; index++) {
       let tr = this._charTransformations[lineIndex][index];
+      console.log('tr:', tr)
       ctx.textAlign = "center"
       if (tr.char) {
         let angle = this.curvature > 0 ? -tr.charAngle : -tr.charAngle - Math.PI
@@ -136,11 +130,7 @@ export class ArcText extends OriginIText {
       ctx.translate(left, top)
       ctx.rotate(angle)
     }
-    for(let i in this.textRenders){
-      // @ts-ignore
-      let result = this[this.textRenders[i]](method, ctx, _char, fullDecl, alignment, left, top, angle)
-      if (result === true) break;
-    }
+    this.defaultTextRender(method, ctx, _char, fullDecl);
     if(ctx) {
       ctx.restore()
     }
@@ -308,7 +298,7 @@ export class ArcText extends OriginIText {
     const curvature = this.curvature !== undefined ? this.curvature : 100
     this.radius = 10000 / curvature
 
-    let cx = 0, cy = this.curvature > 0 ? textHeight / 2 + this.radius : -textHeight / 2 + this.radius
+    let cx = 0, cy = curvature > 0 ? textHeight / 2 + this.radius : -textHeight / 2 + this.radius
     this._curvingCenter = {x: cx, y: cy}
 
     let globalOffset = 0
@@ -343,7 +333,7 @@ export class ArcText extends OriginIText {
         const decl = this.getCompleteStyleDeclaration(i, j) as any;
         const deltaY = decl && decl.deltaY || 0
         let bottomRadius, topRadius, charRadius, lineRadius, leftAngle, charAngle, rightAngle, renderLeftAngle, renderRightAngle;
-        if (this.curvature > 0) {
+        if (curvature > 0) {
           bottomRadius = deltaY + rowOffset
           topRadius = deltaY + rowOffset + heightOfLine
           charRadius = deltaY + rowOffset + charOffset
@@ -402,7 +392,7 @@ export class ArcText extends OriginIText {
           let rotateMatrix = [cos, sin, -sin, cos, 0, 0]
           let matrix = util.multiplyTransformMatrices([1, 0, 0, 1, ct.lc.x, ct.lc.y], rotateMatrix as TMat2D)
           let y = ct.contour.y
-          if (this.curvature > 0) {
+          if (curvature > 0) {
             const x = ct.contour.x - this.__charBounds[i][j].width / 2
             ct.contour.br = util.transformPoint({x: x + ct.contour.w, y: -y}, matrix);
             ct.contour.bl = util.transformPoint({x: x, y: -y}, matrix);
@@ -425,7 +415,7 @@ export class ArcText extends OriginIText {
     }
     for(let i = 0; i < cts.length; i++) {
       let ctsl = cts[i] as any, cta = ctsl[0], ctb = ctsl[ctsl.length - 1], bbox, bbox2
-      if (this.curvature > 0) {
+      if (curvature > 0) {
         bbox = sectorBoundingBox(cta.tl, ctb.tr, this._curvingCenter, this._linesRads[i] + this.__lineHeights[i])
         bbox2 = sectorBoundingBox(cta.nl, ctb.nr, this._curvingCenter, this._linesRads[i])
       }
@@ -691,16 +681,13 @@ export class ArcText extends OriginIText {
     console.log('_measureLine:---')
     let width = 0,charIndex, grapheme, line = this._textLines[lineIndex], prevGrapheme,
       graphemeInfo, numOfSpaces = 0, lineBounds = new Array(line.length);
-
     let renderedLeft = 0;
     let renderedWidth = 0;
     let renderedBottom = -Infinity;
     let renderedTop = -Infinity
-
     this.__charBounds[lineIndex] = lineBounds;
     for (charIndex = 0; charIndex < line.length; charIndex++) {
       grapheme = line[charIndex];
-
       let specialObject = this._specialArray && this._specialArray[lineIndex] && this._specialArray[lineIndex][charIndex]
       if (specialObject && specialObject.type === "void") {
         grapheme = line[charIndex];
@@ -746,7 +733,8 @@ export class ArcText extends OriginIText {
           graphemeInfo.left = previousBox.left + previousBox.width
         }
         charIndex = strIndex - 1
-      }else{
+      }
+      else {
         //normal text
         graphemeInfo = this._getGraphemeBox(grapheme, lineIndex, charIndex, prevGrapheme);
 
@@ -776,11 +764,10 @@ export class ArcText extends OriginIText {
       kernedWidth: 0,
       height: this.fontSize
     };
-
     let renderedRight = Math.max(0,renderedWidth - width)
-
-
-    return { width, numOfSpaces,
+    return { 
+      width, 
+      numOfSpaces,
       renderedLeft,
       renderedBottom,
       renderedRight,
@@ -923,7 +910,7 @@ export class ArcText extends OriginIText {
     ctx && ctx.save();
     top -= lineHeight * this._fontSizeFraction / this.lineHeight;
     this.interateTextChunks(lineIndex,
-      (charIndex: number, endCharIndex: string) => {
+      (charIndex: number, endCharIndex: number) => {
         this._renderChar(method, ctx, lineIndex, charIndex, endCharIndex, left, top);
         left += boxWidth;
         boxWidth = 0;
@@ -941,17 +928,18 @@ export class ArcText extends OriginIText {
   }
 
   override _renderChar(method: any, ctx: CanvasRenderingContext2D, lineIndex: number, charIndex: number, endCharIndex: number, left: number, top: number) {
-    let decl = this._getStyleDeclaration(lineIndex, charIndex),
+    const decl = this._getStyleDeclaration(lineIndex, charIndex),
       fullDecl = this.getCompleteStyleDeclaration(lineIndex, charIndex) as any,
       shouldFill = method === 'fillText' && fullDecl.fill,
       shouldStroke = method === 'strokeText' && fullDecl.stroke && fullDecl.strokeWidth;
-
+    let fillOffsets, strokeOffsets;
     if (method !== "calc" && method !== "both" && !shouldStroke && !shouldFill) {
       return;
     }
     ctx && decl && ctx.save();
-
+    console.log('_renderChar---')
     // ctx && this._applyCharStyles(method, ctx, lineIndex, charIndex, fullDecl);
+
     shouldFill && (fillOffsets = this._setFillStyles(ctx, fullDecl));
     shouldStroke && (strokeOffsets = this._setStrokeStyles(ctx, fullDecl));
 
@@ -1002,7 +990,7 @@ export class ArcText extends OriginIText {
     this._removeShadow(ctx);
   }
 
-  defaultTextRender(method: any, ctx: CanvasRenderingContext2D, _char: string, decl: any) {
+  defaultTextRender(method: string, ctx: CanvasRenderingContext2D, _char: string, decl: any) {
     if(method === "both"){
       if (decl.fill && this.paintFirst === 'fill') {
         ctx.fillText(_char, 0,0);
@@ -1114,7 +1102,6 @@ export class ArcText extends OriginIText {
   }
 
   exitEditing () {
-    let isTextChanged = (this._textBeforeEdit !== this.text);
     this.selected = false;
     this.isEditing = false;
 
@@ -1182,342 +1169,6 @@ export class ArcText extends OriginIText {
   }
 }
 
-// Object.assign(ArcText.prototype, {
-//   _translatedY: 0,
-//   _translatedX: 0,
-//   _translate(leftOverflow, topOverflow) {
-//     let rad = util.degreesToRadians(this.angle);
-//     this.top -= (topOverflow - this._translatedY) * Math.cos(rad) *  this.scaleY;
-//     this.left += (topOverflow - this._translatedY)  * Math.sin(rad)* this.scaleY;
-//     this.top -= (leftOverflow - this._translatedX) * Math.sin(rad) *  this.scaleX;
-//     this.left -= (leftOverflow - this._translatedX)  * Math.cos(rad)* this.scaleX;
-//     this._translatedY = topOverflow
-//     this._translatedX = leftOverflow
-//   }
-// })
-
-// Object.assign(ArcText.prototype, ArcTextMixin, {
-//   "+_dimensionAffectingProps": ["textTransform"],
-//   "+cacheProperties": ["textTransform"],
-//   "+stateProperties": ["textTransform"],
-//   textTransform: false,
-//   useBothRenderingMethod: true,
-//   renderCharCallback: null,
-//   textRenders: ["defaultTextRender"],
-//   accepts: { role: "fontFamily" },
-//   storeProperties: ["type", "clipPath","frame","deco",'textLines','textTransform'],
-//   eventListeners: {},
-//   textCase: "none",
-//   isText: true,
-//   fontSizeOptions: [6,7,8,9,10,12,14,18,24,36,48,64],
-//   features: {
-//     "dnom": false, // Denominators Mostly superceded by contextual <frac> implementations
-//     "numr": false, // Numerators Mostly superceded by contextual <frac> implementations
-//     "frac": false, // Fractions
-//     "zero": false, // Slashed Zero
-//     "calt": true,  // Contextual Alternates
-//     "liga": true,  // Standard Ligatures
-//     "ccmp": true,  // Glyph Composition / Decomposition
-//     "dlig": false, // Discretionary Ligatures
-//     "rlig": false, // Requiered Ligatures
-
-//     "c2sc": false, // Small Capitals From Capitals
-//     "smcp": false, // Small Capitals from lowercase
-//     "unic": false, // Unicase
-
-//     "lnum": false, // Lining Figures
-//     "onum": false, // Oldstyle Figures
-//     "pnum": false, // Proportional Figures
-//     "tnum": false,  // Tabular Figures
-//     "locl": false, // Localized Forms
-
-//     "ss01": false, // Stylistic Set 01
-//     "ss02": false, // Stylistic Set 02
-//     "ss03": false, // Stylistic Set 03
-//     "ss04": false, // Stylistic Set 04
-//     "ss05": false, // Stylistic Set 05
-//     "ss06": false, // Stylistic Set 06
-//     "ss07": false, // Stylistic Set 07
-
-//     "cpsp": false,  // Capital Spacing
-//     "kern": false,  // Kerning
-
-//     "mark": false,  //Mark positioning
-//     "mkmk": false,  //Mark to mark positioning
-//   },
-
-//   /**
-//    * @private
-//    */
-//   _wrapSVGTextAndBg(textAndBg: any) {
-//     let noShadow = true, textDecoration = this.getSvgTextDecoration(this);
-//     return [
-//       textAndBg.textBgRects.join(''),
-//       '\t\t<text xml:space="preserve" ',
-//       (this.fontFamily ? 'font-family="\'' + this.fontFamily.replace(/"/g, '\'') + '\'" ' : ''),
-//       (this.fontSize ? 'font-size="' + this.fontSize + '" ' : ''),
-//       (this.fontStyle ? 'font-style="' + this.fontStyle + '" ' : ''),
-//       (this.fontWeight ? 'font-weight="' + this.fontWeight + '" ' : ''),
-//       (textDecoration ? 'text-decoration="' + textDecoration + '" ' : ''),
-//       'style="', this.getSvgStyles(noShadow), '"', this.addPaintOrder(), ' >',
-//       textAndBg.textSpans.join(''),
-//       '</text>\n',
-//       textAndBg.special ? textAndBg.special.join('') : ''
-//     ];
-//   },
-//   setTextFill(value: string) {
-//     this.setStyle("fill", value);
-//   },
-//   getTextFill() {
-//     let fill = this.getStyle("fill"); //texture pattern fill fix
-//     return typeof fill === "string" ? fill : "transparent";
-//   },
- 
-//   setData(data: any) {
-//     if (data.role === "fontFamily") {
-//       this.setFontFamily(data.fontFamily)
-//     }
-//   },
-//   getStyle(styleName: string) {
-//     if (this.getSelectionStyles && this.isEditing){
-//       let selectionPosition;
-//       if(this.selectionStart === this.selectionEnd){
-//         selectionPosition = this.selectionStart > 0 ? this.selectionStart - 1 : this.selectionStart;
-//       }else{
-//         selectionPosition = this.selectionStart;
-//       }
-//       let style = this.getStyleAtPosition(selectionPosition)[styleName];
-//       return style !== undefined ? style : this[styleName];
-//     }else{
-//       return (this[styleName] === undefined ? this['__' + styleName] : this[styleName]);
-//     }
-//   },
-//   getPattern (url: string) {
-//     let _fill = this.getStyle('fill ');
-//     return _fill && _fill.source;
-//   },
-//   setPattern (url?: string) {
-//     if (!url) {
-//       this.setStyle('fill');
-//     } else {
-//       // todo
-//       // util.loadImage(url, (img) => {
-//       //   this.setStyle('fill', new Pattern({
-//       //     source: img,
-//       //     repeat: 'repeat'
-//       //   }));
-//       // }); 
-//     }
-//   },
-//   setShadow(options: any) {
-//     return this.setProperty('shadow', options ? new Shadow(options) : null);
-//   },
-//   getSpacing() {
-//     return this.get('spacing');
-//   },
-//   setSpacing(value: any) {
-//     this.setProperty('spacing', value);
-//   },
-//   getReverted() {
-//     return this.get('reverted');
-//   },
-//   setReverted(value: any) {
-//     this.setProperty('reverted', value);
-//   },
-//   getText() {
-//     return this.get('text');
-//   },
-//   setFontFamily(value: any, callback: any) {
-//     this.setProperty('fontFamily', "" + value);
-//     this._forceClearCache = true
-//     this.dirty = true
-//     this.initDimensions()
-//     if (value && this.renderOnFontsLoaded){
-//       let fontsArray = [value]
-//       this.renderOnFontsLoaded(fontsArray, callback)
-//     }
-//     else {
-//       callback && callback()
-//     }
-//   },
-//   setStyles(value: any, callback: any) {
-//     this.styles = value ? JSON.parse(JSON.stringify(value)) : {}
-//     this._forceClearCache = true
-//     this.dirty = true
-//     this.initDimensions()
-//     if(value && this.renderOnFontsLoaded){
-//       let fonts = this.getUsedFonts()
-//       this.renderOnFontsLoaded(fonts,callback)
-//     }
-//     else{
-//       callback && callback()
-//     }
-//   },
-//   setText(value: string) {
-//     this.setProperty('text', "" + value);
-//   },
-//   getTextAlign() {
-//     return this.get('textAlign');
-//   },
-//   setTextAlign(value: string) {
-//     this.setProperty('textAlign', value.toLowerCase());
-//   },
-//   getBgColor () {
-//     return this.get('backgroundColor');
-//   },
-//   setBgColor(value: string) {
-//     this.setProperty('backgroundColor', value);
-//   },
-//   getTextBgColor() {
-//     return this.get('textBackgroundColor');
-//   },
-//   setTextBgColor(value: string) {
-//     this.setProperty('textBackgroundColor', value);
-//   },
-//   _shouldClearDimensionCache() {
-//     let shouldClear = this._forceClearCache;
-//     shouldClear || (shouldClear = this.hasStateChanged('_dimensionAffectingProps'));
-//     if (shouldClear) {
-//       this.dirty = true;
-//       this._forceClearCache = false;
-//       if(this.group){
-//         this.group.dirty = true;
-//       }
-//     }
-//     return shouldClear;
-//   },
-  
-//   getStylePosition(index: number) {
-//     return this.get2DCursorLocation(index);
-//   },
-//   getTextLines() {
-//     return this.textLines.map(line => line.length);
-//   },
-//   setTextLines(val: any) {
-//     // console.log("text lines",val,this.textLines);
-//   },
-  
-//   //overwritten. Assign _measuringContext property to Editor. not to global  To avoid text measuring problems on Nodes.
-//   //_measuringContext will be individual for every editor.
-//   getMeasuringContext() {
-//     let context = this.editor || fabric;
-//     // if we did not return we have to measure something.
-//     if (!context._measuringContext) {
-//       context._measuringContext = this.canvas && this.canvas.contextCache || util.createCanvasElement().getContext('2d');
-//     }
-//     return context._measuringContext;
-//   },
-//   /**
-//    * Calculate height of line at 'lineIndex'
-//    * @param {Number} lineIndex index of line to calculate
-//    * @return {Number}
-//    */
-  
-
-//   // _render(ctx: CanvasRenderingContext2D) {
-//   //   ctx.save()
-//   //   ctx.translate(-this._contentOffsetX, -this._contentOffsetY)
-//   //   if(!this.__lineHeights){
-//   //     this.initDimensions();
-//   //   }
-//   //   this._setTextStyles(ctx);
-//   //   this._renderTextLinesBackground(ctx);
-//   //   this._renderTextDecoration(ctx, 'underline');
-//   //   this._renderText(ctx);
-//   //   this._renderTextDecoration(ctx, 'overline');
-//   //   this._renderTextDecoration(ctx, 'linethrough');
-//   //   ctx.restore()
-//   // },
-// });
-
-// Object.assign(ArcText.prototype, ArcTextMixin, {
-//   lockOnEdit: true,
-
-  
-
-//   /**
-//    * Handles keyup event
-//    * @param {Event} e Event object
-//    */
- 
-
-  
-//   //todo do not render ursor here
-//   // _setEditingProps() {
-//   //   this.hoverCursor = 'text';
-
-//   //   if (this.canvas) {
-//   //     this.canvas.defaultCursor = this.canvas.moveCursor = 'text';
-//   //   }
-
-//   //   this.borderColor = this.editingBorderColor;
-//   //   if(this.lockOnEdit){
-//   //     this.hasControls = this.selectable = false;
-//   //     this.lockMovementX = this.lockMovementY = true;
-//   //   }
-//   // },
-  
-  
-//   /**
-//    * @private aded options.e._group for editing texts inside groups
-//    */
-  
-//   getStyles () {
-//     if (!Object.keys(this.styles).length) return null;
-//     let _styles = {};
-//     let _is_not_empty = false;
-//     for (let row in this.styles) {
-//       if (Object.keys(this.styles[row]).length) {
-//         let _row_empty = true;
-//         for (let char in this.styles[row]) {
-//           if (Object.keys(this.styles[row][char]).length) {
-//             if (_row_empty) {
-//               _styles[row] = {};
-//               _row_empty = false;
-//             }
-//             _styles[row][char] = util.object.clone(this.styles[row][char]);
-//           }
-//         }
-//         if (!_row_empty) {
-//           _is_not_empty = true;
-//         }
-//       }
-//     }
-//     return _is_not_empty && _styles || null;
-//   },
-//   // initHiddenTextareaNative: ArcText.prototype.initHiddenTextarea,
-//   // initHiddenTextarea () {
-//   //   this.initHiddenTextareaNative();
-//   //   this.hiddenTextarea.style.width = "9999px";
-//   //   this.hiddenTextarea.style["margin-left"] = "-9999px";
-//   // },
-
-  
-// });
-
-// Object.assign(ArcText.prototype, ArcTextMixin, {
-//   // initialize(options,callback) {
-//   //   Text.prototype.initialize.call(this, options,callback);
-//   //   this.initBehavior();
-//   // },
-//   isEmptyStylesOverwritten: ArcText.prototype.isEmptyStyles,
-
-//   isEmptyStyles(lineIndex: number) {
-//     if(!this._styleMap)return true;
-//     return this.isEmptyStylesOverwritten(lineIndex)
-//   },
-//   getStylePosition(index: number) {
-//     let loc = (this as Text).get2DCursorLocation(index);
-//     if (this._styleMap && !this.isWrapping) {
-//       let map = this._styleMap[loc.lineIndex];
-//       if (!map) {
-//         return null;
-//       }
-//       loc.lineIndex = map.line;
-//       loc.charIndex = map.offset + loc.charIndex;
-//     }
-//     return loc;
-//   }
-// });
+Object.assign(ArcText, ArcTextMixin)
 
 classRegistry.setClass(ArcText, 'ArcText')

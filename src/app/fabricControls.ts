@@ -6,6 +6,7 @@ import { px2mm } from '@/utils/image'
 import { Control, Object as FabricObject, controlsUtils, Point, Polygon, TPointerEvent, Transform, TDegree, util,TransformActionHandler } from 'fabric'
 import { storeToRefs } from 'pinia'
 import { useMainStore } from '@/store'
+import { ArcText } from '@/extension/object/ArcText'
 
 
 export const changeObjectHeight: TransformActionHandler = (eventData: TPointerEvent, transform: Transform, x: number, y: number) => {
@@ -26,6 +27,26 @@ export const changeObjectHeight: TransformActionHandler = (eventData: TPointerEv
   return false;
 };
 
+export const changeObjectCurvature: TransformActionHandler = (eventData: TPointerEvent, transform: Transform, x: number, y: number) => {
+  const target = transform.target as ArcText
+  let localPoint = controlsUtils.getLocalPoint(transform, transform.originX, transform.originY, x, y),
+    strokePadding = target.strokeWidth / (target.strokeUniform ? target.scaleX : 1),
+    multiplier = transform.originY === 'center' ? 2 : 1,
+    cy = (localPoint.y + target.controls[transform.corner].offsetY - target.height / 2 + target._contentOffsetY ) * multiplier / target.scaleY - strokePadding;
+
+  let textHeight = target.calcTextHeight();
+
+  let radius;
+  if (Math.abs(cy) <= textHeight / 2) {
+    radius = 0;
+  }
+  else{
+    radius = cy > 0 ? cy - textHeight / 2 : cy + textHeight / 2;
+  }
+
+  target.set(radius)
+  return false
+}
 
 // define a function that can locate the controls.
 // this function will be used both for drawing and for interaction.
@@ -191,6 +212,22 @@ const getHornControl = {
   actionHandler: controlsUtils.scalingEqually,
   actionName: 'scaling',
 }
+
+const changeWidth = controlsUtils.wrapWithFireEvent(
+  'scaling',
+  controlsUtils.wrapWithFixedAnchor(controlsUtils.changeWidth),
+)
+
+const changeHeight = controlsUtils.wrapWithFireEvent(
+  'scaling',
+  controlsUtils.wrapWithFixedAnchor(changeObjectHeight)
+)
+
+const changeCurvature = controlsUtils.wrapWithFireEvent(
+  'scaling',
+  controlsUtils.wrapWithFixedAnchor(changeObjectCurvature)
+)
+
 
 export const defaultControls = (): TControlSet => ({
   size: new Control({
@@ -371,16 +408,6 @@ export const defaultControls = (): TControlSet => ({
   }),
 })
 
-const changeWidth = controlsUtils.wrapWithFireEvent(
-  'scaling',
-  controlsUtils.wrapWithFixedAnchor(controlsUtils.changeWidth),
-)
-
-const changeHeight = controlsUtils.wrapWithFireEvent(
-  'scaling',
-  controlsUtils.wrapWithFixedAnchor(changeObjectHeight)
-)
-
 export const resizeControls = (): TControlSet => ({
   mr: new Control({
     x: 0.5,
@@ -414,6 +441,33 @@ export const resizeControls = (): TControlSet => ({
     render: noop,
     // positionHandler: positionHandlerH,
   }),
+})
+
+export const arcTextControls = (): TControlSet => ({
+  c: new Control({
+    x: 0,
+    y: 0,
+    offsetX: 0,
+    offsetY: 0,
+    render (ctx: CanvasRenderingContext2D, left: number, top: number, styleOverride: any, fabricObject: ArcText) {
+      if(fabricObject.canvas!.showControlsGuidlines){
+        ctx.save()
+        ctx.strokeStyle = fabricObject.borderColor
+        ctx.lineWidth = fabricObject.borderWidth
+        // let cx = -fabricObject._contentOffsetX * fabricObject.scaleX
+        // let cy = (fabricObject._curvingCenter.y - fabricObject._contentOffsetY) * fabricObject.scaleY
+        ctx.beginPath()
+        ctx.ellipse(left, top, Math.abs(fabricObject.radius) * fabricObject.scaleX, Math.abs(fabricObject.radius) * fabricObject.scaleY, 0, 0, 2 * Math.PI);
+        ctx.stroke();
+        ctx.restore()
+      }
+    },
+    actionHandler: changeCurvature,
+    cursorStyle: 'pointer',
+    actionName: 'resizing',
+  }),
+  ...defaultControls(),
+  ...resizeControls(),
 })
 
 export const textboxControls = (): TControlSet => ({
