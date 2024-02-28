@@ -98,7 +98,7 @@ export class HoverBorders extends Disposable {
       return
     }
     // 分组特殊处理，显示矩形边框
-    if (check.isCollection(object) || object.isType('CurvedText')) {
+    if (check.isCollection(object) || object.isType('ArcText')) {
       object._render = Rect.prototype._render
     }
 
