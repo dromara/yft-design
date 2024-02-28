@@ -1,10 +1,16 @@
 
 import { ArcTextMixin } from '../mixins/arctext.mixin'
-import { IText as OriginIText, Textbox as OriginTextbox, Object as FabricObject, Control, controlsUtils, classRegistry, Transform, TPointerEvent, TextStyleDeclaration, util, Point, TMat2D, TFiller } from 'fabric'
+import { IText as OriginIText, Textbox as OriginTextbox, Object as FabricObject, Control, controlsUtils, 
+  classRegistry, Transform, TPointerEvent, TextStyleDeclaration, util, Point, TMat2D, TFiller, TPointerEventInfo
+} from 'fabric'
 import { sectorBoundingBox } from '@/utils/geometry'
 
 const getParentScaleX = (el: FabricObject): number => {
   return el.scaleX * (el.group ? getParentScaleX(el.group) : 1)//: this.canvas.viewportTransform[0])
+}
+
+const notALeftClick = (e: MouseEvent) => {
+  return e.button && e.button !== 1;
 }
 
 export class ArcText extends OriginIText {
@@ -12,17 +18,17 @@ export class ArcText extends OriginIText {
   public isCurvature? = false
   public curvature = 100
   public radius = 66
+  public useRenderBoundingBoxes = true
   private __isMousedown: boolean = false
   private _linesRads: number[] = []
   private __lineInfo: any = []
-  private __renderOffsetTop: any
-  public _contentOffsetX: number = 0
-  public _contentOffsetY: number = 0
-  private _curvingCenter = {x: 0, y: 0}
+  private __renderOffsetTop: number = 0
+  private _contentOffsetX: number = 0
+  private _contentOffsetY: number = 0
+  private _curvingCenter: Point = new Point(0, 0)
   private _specialArray = []
   private _translatedX: number = 0
   private _translatedY: number = 0
-  public useRenderBoundingBoxes = true
   private _charTransformations: any = []
   public textTransform: string = ''
   public useBothRenderingMethod = true
@@ -88,14 +94,13 @@ export class ArcText extends OriginIText {
       radius = cy > 0 ? cy - textHeight / 2 : cy + textHeight / 2;
     }
   
-    target.set(radius)
+    target.set('radius', radius)
     return false
   }
 
   renderCharCallback(method: any, ctx: CanvasRenderingContext2D, lineIndex: number, charIndex: number, endCharIndex: number, left: number, top: number, fullDecl: any) {
     for (let index = charIndex; index <= endCharIndex; index++) {
-      let tr = this._charTransformations[lineIndex][index];
-      console.log('tr:', tr)
+      let tr = this._charTransformations[lineIndex][index]
       ctx.textAlign = "center"
       if (tr.char) {
         let angle = this.curvature > 0 ? -tr.charAngle : -tr.charAngle - Math.PI
@@ -117,7 +122,7 @@ export class ArcText extends OriginIText {
     }
   }
 
-  render(ctx: CanvasRenderingContext2D) {
+  override render(ctx: CanvasRenderingContext2D) {
     super.render(ctx)
     if(this.group){
       this.group._transformDone = false;
@@ -142,7 +147,8 @@ export class ArcText extends OriginIText {
     }
   }
 
-  getSelectionStartFromPointer(e: TPointerEvent): number {
+  override getSelectionStartFromPointer(e: TPointerEvent): number {
+    console.log('getSelectionStartFromPointer------:', this.curvature)
     const mouseOffset = this.canvas!.getPointer(e)
       .transform(util.invertTransform(this.calcTransformMatrix()))
       .add(new Point(-this._getLeftOffset(), -this._getTopOffset()));
@@ -189,6 +195,7 @@ export class ArcText extends OriginIText {
       diff = diff2
       specialsLen = 0;
     }
+    console.log('charIndex + j - 1:', charIndex + j - 1)
     return charIndex + j - 1;
   }
 
@@ -292,7 +299,7 @@ export class ArcText extends OriginIText {
     this._translatedX = leftOverflow
   }
 
-  initDimensions() {
+  override initDimensions() {
     this._splitText();
     this._clearCache();
     for (let li = 0, len = this._textLines.length; li < len; li++) {
@@ -305,7 +312,7 @@ export class ArcText extends OriginIText {
     this.radius = 10000 / curvature
 
     let cx = 0, cy = curvature > 0 ? textHeight / 2 + this.radius : -textHeight / 2 + this.radius
-    this._curvingCenter = {x: cx, y: cy}
+    this._curvingCenter = new Point(cx, cy)
 
     let globalOffset = 0
     if (curvature > 0) {
@@ -528,7 +535,7 @@ export class ArcText extends OriginIText {
         first.char = feature.components
         first.charAngle = (first.charAngle + last.charAngle) / 2
         let midAngle = (first.leftAngle + last.rightAngle) / 2
-        first.cl = {x: this._curvingCenter.cx - first.charRadius * Math.sin(midAngle), y: this._curvingCenter.cy - first.charRadius * Math.cos(midAngle)};
+        first.cl = {x: this._curvingCenter.x - first.charRadius * Math.sin(midAngle), y: this._curvingCenter.y - first.charRadius * Math.cos(midAngle)};
         for (let fci = 1; fci < feature.components.length; fci++) {
           delete cts[li][feature.position + fci].char
         }
@@ -593,7 +600,7 @@ export class ArcText extends OriginIText {
     ctx.closePath()
   }
 
-  _renderTextLinesBackground(ctx: CanvasRenderingContext2D) {
+  override _renderTextLinesBackground(ctx: CanvasRenderingContext2D) {
     if (!this.textBackgroundColor && !this.styleHas('textBackgroundColor')) return;
     let originalFill = ctx.fillStyle, lastColor, charStart, currentColor;
     for (let i = 0, len = this._textLines.length; i < len; i++) {
@@ -625,7 +632,7 @@ export class ArcText extends OriginIText {
     this._removeShadow(ctx);
   }
 
-  set(key: string, value: any): any {
+  override set(key: string, value?: any): any {
     super.set(key, value)
     const _dimensionAffectingProps = ['fontSize', 'fontWeight', 'fontFamily', 'fontStyle', 'lineHeight', 'text', 'charSpacing', 'textAlign', 'styles', 'color', 'canvas']
     let needsDims = false;
@@ -645,7 +652,7 @@ export class ArcText extends OriginIText {
     return this
   }
 
-  _render(ctx: CanvasRenderingContext2D) {
+  override _render(ctx: CanvasRenderingContext2D) {
     ctx.save()
     ctx.translate(-this._contentOffsetX, -this._contentOffsetY)
     if(!this.__lineHeights){
@@ -660,8 +667,8 @@ export class ArcText extends OriginIText {
     ctx.restore()
   }
 
-  renderSelection(ctx: CanvasRenderingContext2D, boundaries: any) {
-    let selectionStart = this.inCompositionMode ? this.hiddenTextarea!.selectionStart : this.selectionStart,
+  override renderSelection(ctx: CanvasRenderingContext2D, boundaries: any) {
+    const selectionStart = this.inCompositionMode ? this.hiddenTextarea!.selectionStart : this.selectionStart,
       selectionEnd = this.inCompositionMode ? this.hiddenTextarea!.selectionEnd : this.selectionEnd,
       start = this.get2DCursorLocation(selectionStart),
       end = this.get2DCursorLocation(selectionEnd),
@@ -681,7 +688,7 @@ export class ArcText extends OriginIText {
     }
   }
 
-  _measureLine(lineIndex: number) {
+  override _measureLine(lineIndex: number) {
     console.log('_measureLine:---')
     let width = 0,charIndex, grapheme, line = this._textLines[lineIndex], prevGrapheme,
       graphemeInfo, numOfSpaces = 0, lineBounds = new Array(line.length);
@@ -779,7 +786,7 @@ export class ArcText extends OriginIText {
     };
   }
 
-  getLineWidth(lineIndex: number) {
+  override getLineWidth(lineIndex: number): number {
     if (this.__lineWidths[lineIndex]) {
       return this.__lineWidths[lineIndex];
     }
@@ -801,7 +808,7 @@ export class ArcText extends OriginIText {
     return width;
   }
 
-  _renderTextCommon(ctx: CanvasRenderingContext2D, method: any) {
+  override _renderTextCommon(ctx: CanvasRenderingContext2D, method: any) {
     ctx && ctx.save();
     let lineHeights = 0, left = this._getLeftOffset(), top = this._getTopOffset(),
       offsets = this._applyPatternGradientTransform(ctx, (method === 'fillText' ? this.fill : this.stroke) as TFiller);
@@ -829,14 +836,14 @@ export class ArcText extends OriginIText {
   }
 
   renderCursor(ctx: CanvasRenderingContext2D, boundaries: any) {
-    let cursorLocation = this.get2DCursorLocation(),
+    const cursorLocation = this.get2DCursorLocation(),
       lineIndex = cursorLocation.lineIndex,
       charIndex = cursorLocation.charIndex > 0 ? cursorLocation.charIndex - 1 : 0,
       multiplier = this.scaleX * this.canvas!.getZoom(),
       cursorWidth = this.cursorWidth / multiplier;
 
     if (this.inCompositionMode) {
-      this.renderSelection(boundaries, ctx);
+      this.renderSelection(ctx, boundaries);
     }
     const tr = this._charTransformations[cursorLocation.lineIndex][cursorLocation.charIndex];
     ctx.save();
@@ -892,7 +899,7 @@ export class ArcText extends OriginIText {
 
   setTextTransform(value: string) {
     this.textTransform = value
-    this.set({text: this.text})
+    this.set('text', this.text)
     this.dirty = true
     this.initDimensions()
     this.canvas && this.canvas.requestRenderAll()
@@ -940,8 +947,7 @@ export class ArcText extends OriginIText {
     if (method !== "calc" && method !== "both" && !shouldStroke && !shouldFill) {
       return;
     }
-    ctx && decl && ctx.save();
-    console.log('_renderStr---')
+    ctx && decl && ctx.save()
     // ctx && this._applyCharStyles(method, ctx, lineIndex, charIndex, fullDecl);
 
     shouldFill && (fillOffsets = this._setFillStyles(ctx, fullDecl));
@@ -1103,6 +1109,45 @@ export class ArcText extends OriginIText {
       x: pClicked.x - objectLeftTop.x,
       y: pClicked.y - objectLeftTop.y
     };
+  }
+
+  mouseUpHandler({ e, transform, button }: TPointerEventInfo) {
+    const didDrag = this.draggableTextDelegate.end(e);
+    if (this.canvas) {
+      this.canvas.textEditingManager.unregister(this);
+
+      const activeObject = this.canvas._activeObject;
+      if (activeObject && activeObject !== this) {
+        // avoid running this logic when there is an active object
+        // this because is possible with shift click and fast clicks,
+        // to rapidly deselect and reselect this object and trigger an enterEdit
+        return;
+      }
+    }
+    if (
+      !this.editable ||
+      (this.group && !this.group.interactive) ||
+      (transform && transform.actionPerformed) ||
+      notALeftClick(e as MouseEvent) ||
+      didDrag
+    ) {
+      return;
+    }
+    // @ts-ignore
+    if (this.__lastSelected && !this.__corner) {
+      this.selected = false;
+      // @ts-ignore
+      this.__lastSelected = false;
+      this.isEditing = false
+      this.enterEditing(e);
+      if (this.selectionStart === this.selectionEnd) {
+        this.initDelayedCursor(true);
+      } else {
+        this.renderCursorOrSelection();
+      }
+    } else {
+      this.selected = true;
+    }
   }
 
   exitEditing () {
