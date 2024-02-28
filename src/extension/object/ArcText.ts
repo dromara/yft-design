@@ -654,8 +654,8 @@ export class ArcText extends OriginIText {
     this._removeShadow(ctx);
   }
 
-  override _set(key: string, value?: any): any {
-    super._set(key, value)
+  override set(key: string, value?: any): any {
+    super.set(key, value)
     const _dimensionAffectingProps = ['fontSize', 'fontWeight', 'fontFamily', 'fontStyle', 'lineHeight', 'text', 'charSpacing', 'textAlign', 'styles', 'color', 'canvas']
     let needsDims = false;
     if (typeof key === 'object') {
@@ -1172,54 +1172,180 @@ export class ArcText extends OriginIText {
     }
   }
 
-  // getLocalPointer(e: TPointerEvent, pointer: Point) {
-  //   pointer = pointer || this.canvas!.getPointer(e);
-  //   let pClicked = new Point(pointer.x, pointer.y)
-  //   const objectLeftTop = this._getLeftTopCoords();
-  //   if (this.angle) {
-  //     pClicked = util.rotatePoint(pClicked, objectLeftTop, util.degreesToRadians(-this.angle));
-  //   }
-  //   return {
-  //     x: pClicked.x - objectLeftTop.x,
-  //     y: pClicked.y - objectLeftTop.y
-  //   };
-  // }
+  getLocalPointer(e: TPointerEvent, pointer: Point) {
+    pointer = pointer || this.canvas!.getPointer(e);
+    let pClicked = new Point(pointer.x, pointer.y)
+    const objectLeftTop = this._getLeftTopCoords();
+    if (this.angle) {
+      pClicked = util.rotatePoint(pClicked, objectLeftTop, util.degreesToRadians(-this.angle));
+    }
+    return {
+      x: pClicked.x - objectLeftTop.x,
+      y: pClicked.y - objectLeftTop.y
+    };
+  }
 
-  // mouseMoveHandler(options: any) {
-  //   if (!this.__isMousedown || !this.isEditing) {
-  //     return;
-  //   }
-  //   if(this.group){
-  //     options.e._group = this.group;
-  //   }
-  //   let newSelectionStart = this.getSelectionStartFromPointer(options.e),
-  //     currentStart = this.selectionStart,
-  //     currentEnd = this.selectionEnd;
-  //   if (
-  //     (newSelectionStart !== this.__selectionStartOnMouseDown || currentStart === currentEnd)
-  //     &&
-  //     (currentStart === newSelectionStart || currentEnd === newSelectionStart)
-  //   ) {
-  //     return;
-  //   }
-  //   if (newSelectionStart > this.__selectionStartOnMouseDown) {
-  //     this.selectionStart = this.__selectionStartOnMouseDown;
-  //     this.selectionEnd = newSelectionStart;
-  //   }
-  //   else {
-  //     this.selectionStart = newSelectionStart;
-  //     this.selectionEnd = this.__selectionStartOnMouseDown;
-  //   }
-  //   if (this.selectionStart !== currentStart || this.selectionEnd !== currentEnd) {
-  //     this.restartCursorIfNeeded();
-  //     this._fireSelectionChanged();
-  //     this._updateTextarea();
-  //     this.renderCursorOrSelection();
-  //   }
-  //   if(this.group){
-  //     delete options.e._group;
-  //   }
-  // }
+  _mouseDownHandler({ e }: TPointerEventInfo) {
+    console.log('_mouseDownHandler+++++++++')
+    if (
+      !this.canvas ||
+      !this.editable ||
+      notALeftClick(e as MouseEvent) ||
+      this.__corner
+    ) {
+      return;
+    }
+
+    if (this.draggableTextDelegate.start(e)) {
+      return;
+    }
+
+    this.canvas.textEditingManager.register(this);
+
+    if (this.selected) {
+      this.inCompositionMode = false;
+      this.setCursorByClick(e);
+    }
+    if (this.isEditing) {
+      this.__selectionStartOnMouseDown = this.selectionStart;
+      if (this.selectionStart === this.selectionEnd) {
+        this.abortCursorAnimation();
+      }
+      this.renderCursorOrSelection();
+    }
+  }
+
+  mouseUpHandler({ e, transform, button }: TPointerEventInfo) {
+    console.log('mouseUpHandler==========')
+    const didDrag = this.draggableTextDelegate.end(e);
+    if (this.canvas) {
+      this.canvas.textEditingManager.unregister(this);
+      const activeObject = this.canvas._activeObject;
+      if (activeObject && activeObject !== this) {
+        return;
+      }
+    }
+    if (
+      !this.editable ||
+      (this.group && !this.group.interactive) ||
+      (transform && transform.actionPerformed) ||
+      notALeftClick(e as MouseEvent) ||
+      didDrag
+    ) {
+      return;
+    }
+    console.log('this.isEditing:', this.controls, 'this.__lastSelected && !this.__corner:', this.__lastSelected && !this.__corner)
+    this.isEditing = false;
+    // @ts-ignore
+    if (this.__lastSelected && !this.__corner) {
+      this.selected = false;
+      // @ts-ignore
+      this.__lastSelected = false;
+      this.enterEditing(e);
+      if (this.selectionStart === this.selectionEnd) {
+        this.initDelayedCursor(true);
+      } else {
+        this.renderCursorOrSelection();
+      }
+    } else {
+      this.selected = true;
+    }
+  }
+
+  enterEditing(e: TPointerEvent) {
+    console.log('enterEditing----------')
+    if (this.isEditing || !this.editable) {
+      return;
+    }
+    if (this.canvas) {
+      this.canvas.calcOffset();
+      this.canvas.textEditingManager.exitTextEditing();
+    }
+
+    this.isEditing = true;
+    if (!this.hiddenTextareaContainer) {
+      this.initHiddenTextarea();
+    }
+    this.hiddenTextarea!.focus();
+    this.hiddenTextarea!.value = this.text;
+    this._updateTextarea();
+    this._saveEditingProps();
+    this._setEditingProps();
+    this._textBeforeEdit = this.text;
+
+    this._tick();
+    this.fire('editing:entered', { e });
+    this._fireSelectionChanged();
+    if (this.canvas) {
+      // @ts-expect-error in reality it is an IText instance
+      this.canvas.fire('text:editing:entered', { target: this, e });
+      this.canvas.requestRenderAll();
+    }
+  }
+
+  exitEditing () {
+    // @ts-ignore
+    let isTextChanged = (this._textBeforeEdit !== this.text);
+    this.selected = false;
+    this.isEditing = false;
+    this.selectionEnd = this.selectionStart;
+    if (this.hiddenTextarea) {
+      this.hiddenTextarea.blur && this.hiddenTextarea.blur();
+      this.canvas && this.hiddenTextarea.parentNode!.removeChild(this.hiddenTextarea);
+      this.hiddenTextarea = null;
+    }
+
+    this.abortCursorAnimation();
+    this._restoreEditingProps();
+    this._currentCursorOpacity = 0;
+    if (this._forceClearCache) {
+      this.initDimensions();
+      this.setCoords();
+    }
+    this.fire('editing:exited');
+    if (this.canvas) {
+      this.canvas.off('mouse:move', this.mouseMoveHandler);
+      this.canvas.fire('text:editing:exited', { target: this } as any);
+    }
+    return this
+  }
+
+  mouseMoveHandler(options: any) {
+    console.log('mouseMoveHandler00000000000000')
+    if (!this.__isMousedown || !this.isEditing) {
+      return;
+    }
+    if(this.group){
+      options.e._group = this.group;
+    }
+    let newSelectionStart = this.getSelectionStartFromPointer(options.e),
+      currentStart = this.selectionStart,
+      currentEnd = this.selectionEnd;
+    if (
+      (newSelectionStart !== this.__selectionStartOnMouseDown || currentStart === currentEnd)
+      &&
+      (currentStart === newSelectionStart || currentEnd === newSelectionStart)
+    ) {
+      return;
+    }
+    if (newSelectionStart > this.__selectionStartOnMouseDown) {
+      this.selectionStart = this.__selectionStartOnMouseDown;
+      this.selectionEnd = newSelectionStart;
+    }
+    else {
+      this.selectionStart = newSelectionStart;
+      this.selectionEnd = this.__selectionStartOnMouseDown;
+    }
+    if (this.selectionStart !== currentStart || this.selectionEnd !== currentEnd) {
+      this.restartCursorIfNeeded();
+      this._fireSelectionChanged();
+      this._updateTextarea();
+      this.renderCursorOrSelection();
+    }
+    if(this.group){
+      delete options.e._group;
+    }
+  }
 }
 
 classRegistry.setClass(ArcText, 'ArcText')
