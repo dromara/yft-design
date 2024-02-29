@@ -161,6 +161,18 @@
       </el-col>
     </el-row>
 
+    <el-row class="mt-10">
+      <el-col :span="4" class="flex-align">弧度：</el-col>
+      <el-col :span="1"></el-col>
+      <el-col :span="12">
+        <el-slider :min="-66" :max="66" :step="0.01" v-model="(handleElement as ArcText).radius" @change="changeArcTextRadius" size="small"></el-slider>
+      </el-col>
+      <el-col :span="2"></el-col>
+      <el-col :span="5" class="slider-num">
+        <el-input :min="1" :max="10" v-model="radius" controls-position="right" size="small"/>
+      </el-col>
+    </el-row>
+
     <el-divider />
     <ElementFill />
     <el-divider />
@@ -196,7 +208,7 @@ import { ElMessage } from 'element-plus'
 import { FontSizeLibs, LineHeightLibs, CharSpaceLibs } from '@/configs/texts'
 import { WEB_FONTS } from '@/configs/fonts'
 import { propertiesToInclude } from '@/configs/canvas'
-import { TextboxElement, ITextElement } from '@/types/canvas'
+import { TextboxElement } from '@/types/canvas'
 import { FontGroupOption } from '@/types/elements'
 import { loadFont } from '@/utils/fonts'
 import { Path, classRegistry, Text, Textbox } from 'fabric'
@@ -210,6 +222,7 @@ import ElementPatterns from '../Components/ElementPatterns.vue'
 import ElementFill from '../Backgrounds/ElementFill.vue'
 import useHandleCreate from "@/hooks/useHandleCreate"
 import useCanvas from '@/views/Canvas/useCanvas'
+import { ArcText } from '@/extension/object/ArcText'
 
 
 
@@ -218,7 +231,7 @@ const templatesStore = useTemplatesStore()
 const { canvasObject, systemFonts } = storeToRefs(mainStore)
 const { createPathElement } = useHandleCreate()
 const [ canvas ] = useCanvas()
-const handleElement = computed(() => canvasObject.value as TextboxElement)
+const handleElement = computed(() => canvasObject.value as TextboxElement | ArcText)
 const elementGrapheme = computed(() => handleElement.value.splitByGrapheme)
 const hasFontFamily = computed(() => handleElement.value.fontFamily)
 const hasFontWeight = computed(() => handleElement.value.fontWeight !== 'normal')
@@ -226,6 +239,7 @@ const hasFontStyle = computed(() => handleElement.value.fontStyle !== 'normal')
 const hasUnderline = computed(() => handleElement.value.underline)
 const hasLinethrough = computed(() => handleElement.value.linethrough)
 const textAlign = computed(() => handleElement.value.textAlign)
+const radius = computed(() => 0)
 const elementFontFamily = ref<string>(hasFontFamily.value)
 const fontSizeRef = ref<Element>()
 const fontOptionGroups = ref<FontGroupOption[]>([
@@ -465,8 +479,8 @@ const handleElementDeformation = () => {
   //     pathSide: 'left',
   //     pathStartOffset: 0
   // });
-  const ArcText = classRegistry.getClass('ArcText')
-  const options = handleElement.value.toObject(propertiesToInclude) as any
+  // const ArcText = classRegistry.getClass('ArcText')
+  const options = handleElement.value.toObject(propertiesToInclude as any[]) as any
   delete options.type
   options.id = nanoid(10)
   const arcText = new ArcText(options.text, options)
@@ -483,6 +497,11 @@ const handleElementDeformation = () => {
 const handleElementStyleClear = () => {
   handleElement.value.cleanStyle('fontWeight')
   templatesStore.modifedElement()
+  canvas.renderAll()
+}
+
+const changeArcTextRadius = (val: number) => {
+  (handleElement.value as ArcText).setRadius(val)
   canvas.renderAll()
 }
 
@@ -586,6 +605,10 @@ onMounted(() => {
   .el-radio-button__inner {
     width: 100%
   }
+}
+.flex-align {
+  display: flex;
+  align-items: center;
 }
 
 .full-checkbox {

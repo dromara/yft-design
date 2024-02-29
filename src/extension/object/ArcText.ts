@@ -25,6 +25,8 @@ export class ArcText extends OriginIText {
   public curvature = 100
   public radius = 66
   public useRenderBoundingBoxes = true
+  public color?: string
+  public splitByGrapheme?: boolean
   private __isMousedown: boolean = false
   private _linesRads: number[] = []
   private __lineInfo: any = []
@@ -111,8 +113,17 @@ export class ArcText extends OriginIText {
     //   radius = cy > 0 ? cy - textHeight / 2 : cy + textHeight / 2;
     // }
   
-    target.set({'radius': radius})
+    target.setRadius(radius)
     return false
+  }
+
+  setRadius(value: number) {
+    console.log('setRadius: value:', value)
+    this.setCurvature(10000 / value)
+  }
+
+  setCurvature(value: number) {
+    this.set('curvature', value)
   }
 
   renderCharCallback(method: any, ctx: CanvasRenderingContext2D, lineIndex: number, charIndex: number, endCharIndex: number, left: number, top: number, fullDecl: any) {
@@ -594,18 +605,19 @@ export class ArcText extends OriginIText {
     this._removeShadow(ctx);
   }
 
-  override set(key: any, value?: any): any {
+  override set(key: string | any, value?: any): any {
     super.set(key, value)
-    const _dimensionAffectingProps = ['fontSize', 'fontWeight', 'fontFamily', 'fontStyle', 'lineHeight', 'text', 'charSpacing', 'textAlign', 'styles', 'color', 'canvas']
+    const _dimensionAffectingProps = ['fontSize', 'fontWeight', 'fontFamily', 'fontStyle', 'lineHeight', 'text', 'charSpacing', 'textAlign', 'styles', 'color', 'curvature']
     let needsDims = false;
     if (typeof key === 'object') {
-      const keys = key as Object
+      const keys = key as any
       for (let _key in keys) {
         needsDims = needsDims || _dimensionAffectingProps.indexOf(_key) !== -1;
       }
     } else {
       needsDims = _dimensionAffectingProps.indexOf(key) !== -1;
     }
+    console.log('key:', key)
     if (needsDims && this.initialized) {
       this.initDimensions();
       this.setCoords();
