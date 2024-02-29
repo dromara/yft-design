@@ -165,7 +165,7 @@
       <el-col :span="4" class="flex-align">弧度：</el-col>
       <el-col :span="1"></el-col>
       <el-col :span="12">
-        <el-slider :min="-66" :max="66" :step="0.01" v-model="(handleElement as ArcText).radius" @change="changeArcTextRadius" size="small"></el-slider>
+        <el-slider :min="66" :max="1000" :step="10" v-model="(handleElement as ArcText).radius" @change="changeArcTextRadius" size="small"></el-slider>
       </el-col>
       <el-col :span="2"></el-col>
       <el-col :span="5" class="slider-num">
