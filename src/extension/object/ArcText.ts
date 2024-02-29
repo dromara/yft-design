@@ -118,7 +118,6 @@ export class ArcText extends OriginIText {
   }
 
   setRadius(value: number) {
-    console.log('setRadius: value:', value)
     this.setCurvature(10000 / value)
   }
 
@@ -617,7 +616,6 @@ export class ArcText extends OriginIText {
     } else {
       needsDims = _dimensionAffectingProps.indexOf(key) !== -1;
     }
-    console.log('key:', key)
     if (needsDims && this.initialized) {
       this.initDimensions();
       this.setCoords();

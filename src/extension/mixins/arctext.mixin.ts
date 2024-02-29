@@ -211,7 +211,6 @@ export const ArcTextMixin: any = {
   },
 
   exitEditing() {
-    console.log('this.isEditing:', this.isEditing)
     const isTextChanged = (this._textBeforeEdit !== this.text);
     this.selectionEnd = this.selectionStart;
     this.__isEditing = false;
