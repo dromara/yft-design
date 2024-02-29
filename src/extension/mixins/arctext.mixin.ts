@@ -168,11 +168,9 @@ export const ArcTextMixin: any = {
     if (this.__lastSelected && !this.__corner) {
       this.selected = false;
       this.__lastSelected = false;
-      if (this.isEditing) {
-        this.hiddenTextarea!.focus()
-      } else {
-        this.enterEditing(e);
-      }
+      this.isEditing = false;
+      this._restoreEditingProps();
+      this.enterEditing(e);
       if (this.selectionStart === this.selectionEnd) {
         this.initDelayedCursor(true);
       } else {
