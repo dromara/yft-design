@@ -2,18 +2,22 @@ import { IText as OriginIText, Textbox as OriginTextbox, Object as FabricObject,
   classRegistry, Transform, TPointerEvent, TextStyleDeclaration, util, Point, TMat2D, TFiller, TPointerEventInfo
 } from 'fabric'
 import { sectorBoundingBox } from '@/utils/geometry'
+import { ArcTextMixin } from '../mixins/arctext.mixin'
 
 interface TBackgroundStroke {
   stroke: string
   strokeWidth: number
 }
 
+type CursorBoundaries = {
+  left: number;
+  top: number;
+  leftOffset: number;
+  topOffset: number;
+};
+
 const getParentScaleX = (el: FabricObject): number => {
   return el.scaleX * (el.group ? getParentScaleX(el.group) : 1)//: this.canvas.viewportTransform[0])
-}
-
-const notALeftClick = (e: MouseEvent) => {
-  return e.button && e.button !== 1;
 }
 
 export class ArcText extends OriginIText {
@@ -93,7 +97,6 @@ export class ArcText extends OriginIText {
   }
 
   public set __isCurvature(value) {
-    console.log('__curvature:', value)
     this.isCurvature = value
     
     if (this.isCurvature) {
@@ -111,26 +114,25 @@ export class ArcText extends OriginIText {
 
   changeCurvature (eventData: TPointerEvent, transform: Transform, x: number, y: number) {
     const target = transform.target as ArcText;
-    let localPoint = controlsUtils.getLocalPoint(transform, transform.originX, transform.originY, x, y),
+    const localPoint = controlsUtils.getLocalPoint(transform, transform.originX, transform.originY, x, y),
       strokePadding = target.strokeWidth / (target.strokeUniform ? target.scaleX : 1),
       multiplier = transform.originY === 'center' ? 2 : 1,
       cy = (localPoint.y + target.controls[transform.corner].offsetY - target.height / 2 + target._contentOffsetY ) * multiplier / target.scaleY - strokePadding;
-  
-    let textHeight = target.calcTextHeight();
-  
-    let radius;
-    if (Math.abs(cy) <= textHeight / 2) {
-      radius = 0;
-    }
-    else{
+    const textHeight = target.calcTextHeight();
+    let radius = 0;
+    if (Math.abs(cy) > textHeight / 2) {
       radius = cy > 0 ? cy - textHeight / 2 : cy + textHeight / 2;
     }
+    // else{
+    //   radius = cy > 0 ? cy - textHeight / 2 : cy + textHeight / 2;
+    // }
   
-    target.set('radius', radius)
+    target.set({'radius': radius})
     return false
   }
 
   renderCharCallback(method: any, ctx: CanvasRenderingContext2D, lineIndex: number, charIndex: number, endCharIndex: number, left: number, top: number, fullDecl: any) {
+    if (!this._charTransformations[lineIndex]) return
     for (let index = charIndex; index <= endCharIndex; index++) {
       let tr = this._charTransformations[lineIndex][index]
       ctx.textAlign = "center"
@@ -151,19 +153,6 @@ export class ArcText extends OriginIText {
         }
         this.runCharRendering(method, ctx, tr.char, tr.cl.x, tr.cl.y, angle, fullDecl, "center");
       }
-    }
-  }
-
-  override render(ctx: CanvasRenderingContext2D) {
-    super.render(ctx)
-    if(this.group){
-      this.group._transformDone = false;
-    }
-    this.clearContextTop();
-    this.cursorOffsetCache = {};
-    this.renderCursorOrSelection();
-    if(this.group){
-      this.group._transformDone = true;
     }
   }
 
@@ -229,7 +218,7 @@ export class ArcText extends OriginIText {
     return charIndex + j - 1;
   }
 
-   _getArcTextLineLeftOffset(lineIndex: number, width: number): number {
+  override _getLineLeftOffset(lineIndex: number, width?: number): number {
     if (!width) return 0;
     let lineWidth = this.getLineWidth(lineIndex);
     if (this.textAlign === 'center') return (width - lineWidth) / 2;
@@ -239,7 +228,7 @@ export class ArcText extends OriginIText {
     return 0;
   }
 
-  _renderTextDecoration(ctx: CanvasRenderingContext2D, type: any) {
+  override _renderTextDecoration(ctx: CanvasRenderingContext2D, type: any) {
     if (!this.get(type) && !this.styleHas(type)) {
       return;
     }
@@ -358,7 +347,7 @@ export class ArcText extends OriginIText {
     for (let i = 0; i < this.__charBounds.length; i++) {
       cts[i] = []
       const row = this.__charBounds[i]
-      let currentLeft = -textWidth / 2 + this._getArcTextLineLeftOffset(i, textWidth)
+      let currentLeft = -textWidth / 2 + this._getLineLeftOffset(i, textWidth)
       if (this.__lineInfo) {
         currentLeft += this.__lineInfo[i].renderedLeft
       }
@@ -472,7 +461,7 @@ export class ArcText extends OriginIText {
       yMax = Math.max(yMax, bbox.y+bbox.height, bbox2.y + bbox2.height)
     }
 
-    this._enableFontFeatures()
+    // this._enableFontFeatures()
     this._enableDiacritics()
 
     const leftOverflow = -xMin - textWidth / 2
@@ -538,45 +527,10 @@ export class ArcText extends OriginIText {
     }
   }
 
-  _enableFontFeatures(){
-    let detectedFeaturesLines: any = []
-    for (let li = 0, len = this._textLines.length; li < len; li++) {
-      detectedFeaturesLines[li] = []
-      this.interateTextChunks(li, (position: number, b: number, style: any) => {
-        let components = this._textLines[li].slice(position,b+1)
-        if (this._specialArray?.[li]?.[position]) {
-          detectedFeaturesLines[li].push({components,position})
-        } else {
-          let ff = style?.fontFamily || this?.styles[li]?.[position]?.fontFamily || this.fontFamily;
-          console.log('ff:', ff)
-          // let detected = fabric.fonts.getTextFeatures(components.join(""), ff, this.features)
-          // for (let detectedInstance of detected) {
-          //   detectedInstance.position += position
-          //   detectedFeaturesLines[li].push(detectedInstance)
-          // }
-        }
-      })
-    }
-    let cts = this._charTransformations
-    for (let li in detectedFeaturesLines) {
-      for (let feature of detectedFeaturesLines[li]) {
-        let first = cts[li][feature.position];
-        let last = cts[li][feature.position + feature.components.length - 1]
-        first.char = feature.components
-        first.charAngle = (first.charAngle + last.charAngle) / 2
-        let midAngle = (first.leftAngle + last.rightAngle) / 2
-        first.cl = {x: this._curvingCenter.x - first.charRadius * Math.sin(midAngle), y: this._curvingCenter.y - first.charRadius * Math.cos(midAngle)};
-        for (let fci = 1; fci < feature.components.length; fci++) {
-          delete cts[li][feature.position + fci].char
-        }
-      }
-    }
-  }
-
   _enableDiacritics(){
-    let cts = this._charTransformations
+    const cts = this._charTransformations
     //Fix Diacritics symbols on a curve
-    let diacritics = ['́', '̀', '̂', '̌', '̋', '̏', '̃', '̇', '̣', '·', '̈', 'ː', '̆', '̑', '͗', '̃', '҃', '̩', '̄', '̱', '⃓', '̷', '̵', '̊', '̓', '̒', '̔', '̉', '̛', '̦', '̧', '̡', '̢', '̨', '͝', '͡', '', '͞', '͠']
+    const diacritics = ['́', '̀', '̂', '̌', '̋', '̏', '̃', '̇', '̣', '·', '̈', 'ː', '̆', '̑', '͗', '̃', '҃', '̩', '̄', '̱', '⃓', '̷', '̵', '̊', '̓', '̒', '̔', '̉', '̛', '̦', '̧', '̡', '̢', '̨', '͝', '͡', '', '͞', '͠']
     for (let i in cts) {
       for (let j in cts[i]) {
         if (cts[i][j].char && diacritics.includes(cts[i][j].char)) {
@@ -654,7 +608,7 @@ export class ArcText extends OriginIText {
     this._removeShadow(ctx);
   }
 
-  override set(key: string, value?: any): any {
+  override set(key: any, value?: any): any {
     super.set(key, value)
     const _dimensionAffectingProps = ['fontSize', 'fontWeight', 'fontFamily', 'fontStyle', 'lineHeight', 'text', 'charSpacing', 'textAlign', 'styles', 'color', 'canvas']
     let needsDims = false;
@@ -666,12 +620,26 @@ export class ArcText extends OriginIText {
     } else {
       needsDims = _dimensionAffectingProps.indexOf(key) !== -1;
     }
-    console.log('key:', key, 'needsDims:', needsDims)
     if (needsDims && this.initialized) {
       this.initDimensions();
       this.setCoords();
     }
     return this
+  }
+
+  override render(ctx: CanvasRenderingContext2D) {
+    super.render(ctx)
+    ctx.save()
+    if(this.group){
+      this.group._transformDone = false;
+    }
+    this.clearContextTop();
+    this.cursorOffsetCache = {};
+    this.renderCursorOrSelection();
+    if(this.group){
+      this.group._transformDone = true;
+    }
+    ctx.restore()
   }
 
   override _render(ctx: CanvasRenderingContext2D) {
@@ -689,76 +657,8 @@ export class ArcText extends OriginIText {
     ctx.restore()
   }
 
-  // override renderSelection(ctx: CanvasRenderingContext2D, boundaries: any) {
-  //   const selectionStart = this.inCompositionMode ? this.hiddenTextarea!.selectionStart : this.selectionStart,
-  //     selectionEnd = this.inCompositionMode ? this.hiddenTextarea!.selectionEnd : this.selectionEnd,
-  //     isJustify = this.textAlign.indexOf('justify') !== -1,
-  //     start = this.get2DCursorLocation(selectionStart),
-  //     end = this.get2DCursorLocation(selectionEnd),
-  //     startLine = start.lineIndex,
-  //     endLine = end.lineIndex,
-  //     startChar = start.charIndex < 0 ? 0 : start.charIndex,
-  //     endChar = end.charIndex < 0 ? 0 : end.charIndex;
-
-  //   for (let i = startLine; i <= endLine; i++) {
-  //     let lineOffset = this._getLineLeftOffset(i) || 0,
-  //       lineHeight = this.getHeightOfLine(i),
-  //       realLineHeight = 0, boxStart = 0, boxEnd = 0;
-
-  //     if (i === startLine) {
-  //       boxStart = this.__charBounds[startLine][startChar].left;
-  //       if(this.__lineInfo  && this.__lineInfo[i] && startChar!== 0){
-  //         if(this.__lineInfo[i].renderedLeft){
-  //           boxStart += this.__lineInfo[i].renderedLeft
-  //         }
-  //       }
-  //     }
-  //     if (i >= startLine && i < endLine) {
-  //       boxEnd = isJustify && !this.isEndOfWrapping(i) ? this.width : this.getLineWidth(i) || 5; // WTF is this 5?
-  //     }
-  //     else if (i === endLine) {
-  //       if (endChar === 0) {
-  //         boxEnd = this.__charBounds[endLine][endChar].left;
-  //       }
-  //       else {
-  //         let charSpacing = this._getWidthOfCharSpacing();
-  //         boxEnd = this.__charBounds[endLine][endChar - 1].left + this.__charBounds[endLine][endChar - 1].width - charSpacing;
-  //       }
-  //       if(this.__lineInfo && this.__lineInfo[i]){
-  //         if(this.__lineInfo[i].renderedLeft){
-  //           boxEnd += this.__lineInfo[i].renderedLeft
-  //         }
-  //         if(endChar === this.__charBounds[endLine].length - 1){
-  //           boxEnd += this.__lineInfo[i].renderedRight
-  //         }
-  //       }
-  //     }
-  //     realLineHeight = lineHeight;
-  //     if (this.lineHeight < 1 || (i === endLine && this.lineHeight > 1)) {
-  //       lineHeight /= this.lineHeight;
-  //     }
-  //     if (this.inCompositionMode) {
-  //       ctx.fillStyle = this.compositionColor || 'black';
-  //       ctx.fillRect(
-  //         boundaries.left + lineOffset + boxStart,
-  //         boundaries.top + boundaries.topOffset + lineHeight,
-  //         boxEnd - boxStart,
-  //         1);
-  //     }
-  //     else {
-  //       ctx.fillStyle = this.selectionColor;
-  //       ctx.fillRect(
-  //         boundaries.left + lineOffset + boxStart,
-  //         boundaries.top + boundaries.topOffset,
-  //         boxEnd - boxStart,
-  //         lineHeight);
-  //     }
-  //     boundaries.topOffset += realLineHeight;
-  //   }
-  // }
-
-  renderSelection(ctx: CanvasRenderingContext2D, boundaries: any) {
-    const selectionStart = this.inCompositionMode ? this.hiddenTextarea!.selectionStart : this.selectionStart,
+  renderSelection(ctx: CanvasRenderingContext2D, boundaries: CursorBoundaries) {
+     const selectionStart = this.inCompositionMode ? this.hiddenTextarea!.selectionStart : this.selectionStart,
       selectionEnd = this.inCompositionMode ? this.hiddenTextarea!.selectionEnd : this.selectionEnd,
       start = this.get2DCursorLocation(selectionStart),
       end = this.get2DCursorLocation(selectionEnd),
@@ -777,53 +677,7 @@ export class ArcText extends OriginIText {
     }
   }
 
-  setStyleInterval(styleName: string, value: any, start: number, end: number) {
-    if (value === undefined || this.get(styleName) === value){
-      for (let i = start; i < end; i++) {
-        this._removeStyleAt(styleName, i);
-      }
-      this._forceClearCache = true;
-    }
-    else {
-      this.setSelectionStyles({[styleName]: value}, start, end);
-    }
-    this._modifyObjectStyleProperty(styleName,value);
-    this.setCoords();
-    if(styleName === "fontFamily" && value && this.renderOnFontsLoaded){
-      this.renderOnFontsLoaded([value])
-    }
-  }
-
-  setStyle(styleName: string, value: any) {
-    this.__selectionStart = this.selectionStart;
-    this.__selectionEnd = this.selectionEnd;
-    this.__changedProperty = styleName;
-    if (this.setSelectionStyles && this.isEditing && this.selectionStart !== this.selectionEnd) {
-      this.setStyleInterval(styleName, value, this.selectionStart, this.selectionEnd)
-    }
-    else {
-      if (value !== undefined) {
-        this._removeStyle(styleName);
-        this.set(styleName,value)
-      } else {
-        this.set(styleName,value)
-      }
-      if (!this._textLines && this.ready) {
-        this._clearCache();
-        this._splitText();
-      }
-    }
-    this.setCoords();
-    if (this.caching) {
-      this.dirty = true;
-    }
-    delete this.__changedProperty;
-    delete this.__selectionStart;
-    delete this.__selectionEnd;
-  }
-
   override _measureLine(lineIndex: number) {
-    console.log('_measureLine:---')
     let width = 0, charIndex, grapheme, line = this._textLines[lineIndex], prevGrapheme,
       graphemeInfo, numOfSpaces = 0, lineBounds = new Array(line.length);
     let renderedLeft = 0;
@@ -833,7 +687,7 @@ export class ArcText extends OriginIText {
     this.__charBounds[lineIndex] = lineBounds;
     for (charIndex = 0; charIndex < line.length; charIndex++) {
       grapheme = line[charIndex]
-      let style = this.getCompleteStyleDeclaration(lineIndex, charIndex)
+      const style = this.getCompleteStyleDeclaration(lineIndex, charIndex) as any
       graphemeInfo = this._getGraphemeBox(grapheme, lineIndex, charIndex, prevGrapheme);
       lineBounds[charIndex] = graphemeInfo;
       width += graphemeInfo.kernedWidth;
@@ -877,11 +731,11 @@ export class ArcText extends OriginIText {
     }
     else {
       lineInfo = this.measureLine(lineIndex) as any;
-      if(this.useRenderBoundingBoxes){
+      if (this.useRenderBoundingBoxes) {
         width = lineInfo.width + lineInfo.renderedRight + lineInfo.renderedLeft
         this.__lineInfo[lineIndex] = lineInfo
       }
-      else{
+      else {
         width = lineInfo.width;
       }
     }
@@ -1172,177 +1026,23 @@ export class ArcText extends OriginIText {
     }
   }
 
-  // getLocalPointer(e: TPointerEvent, pointer: Point) {
-  //   pointer = pointer || this.canvas!.getPointer(e);
-  //   let pClicked = new Point(pointer.x, pointer.y)
-  //   const objectLeftTop = this._getLeftTopCoords();
-  //   if (this.angle) {
-  //     pClicked = util.rotatePoint(pClicked, objectLeftTop, util.degreesToRadians(-this.angle));
-  //   }
-  //   return {
-  //     x: pClicked.x - objectLeftTop.x,
-  //     y: pClicked.y - objectLeftTop.y
-  //   };
-  // }
-
-  // _mouseDownHandler({ e }: TPointerEventInfo) {
-  //   console.log('_mouseDownHandler+++++++++')
-  //   if (
-  //     !this.canvas ||
-  //     !this.editable ||
-  //     notALeftClick(e as MouseEvent) ||
-  //     this.__corner
-  //   ) {
-  //     return;
-  //   }
-
-  //   if (this.draggableTextDelegate.start(e)) {
-  //     return;
-  //   }
-
-  //   this.canvas.textEditingManager.register(this);
-
-  //   if (this.selected) {
-  //     this.inCompositionMode = false;
-  //     this.setCursorByClick(e);
-  //   }
-  //   if (this.isEditing) {
-  //     this.__selectionStartOnMouseDown = this.selectionStart;
-  //     if (this.selectionStart === this.selectionEnd) {
-  //       this.abortCursorAnimation();
-  //     }
-  //     this.renderCursorOrSelection();
-  //   }
-  // }
-
-  override mouseUpHandler({ e, transform, button }: TPointerEventInfo) {
-    const didDrag = this.draggableTextDelegate.end(e);
-    if (this.canvas) {
-      this.canvas.textEditingManager.unregister(this);
-      const activeObject = this.canvas._activeObject;
-      if (activeObject && activeObject !== this) {
-        return;
-      }
+  getLocalPointer(e: TPointerEvent, pointer: Point) {
+    pointer = pointer || this.canvas!.getPointer(e);
+    let pClicked = new Point(pointer.x, pointer.y)
+    const objectLeftTop = this._getLeftTopCoords();
+    if (this.angle) {
+      pClicked = util.rotatePoint(pClicked, objectLeftTop, util.degreesToRadians(-this.angle));
     }
-    if (
-      !this.editable ||
-      (this.group && !this.group.interactive) ||
-      (transform && transform.actionPerformed) ||
-      notALeftClick(e as MouseEvent) ||
-      didDrag
-    ) {
-      return;
-    }
-    // @ts-ignore
-    if (this.__lastSelected && !this.__corner) {
-      this.selected = false;
-      // @ts-ignore
-      this.__lastSelected = false;
-      this.enterEditing(e);
-      this.hiddenTextarea?.focus()
-      if (this.selectionStart === this.selectionEnd) {
-        this.initDelayedCursor(true);
-      } else {
-        this.renderCursorOrSelection();
-      }
-    } else {
-      this.selected = true;
-    }
+    return {
+      x: pClicked.x - objectLeftTop.x,
+      y: pClicked.y - objectLeftTop.y
+    };
   }
 
-  // enterEditing(e: TPointerEvent) {
-  //   console.log('enterEditing----------')
-  //   if (this.isEditing || !this.editable) {
-  //     return;
-  //   }
-  //   if (this.canvas) {
-  //     this.canvas.calcOffset();
-  //     this.canvas.textEditingManager.exitTextEditing();
-  //   }
-
-  //   this.isEditing = true;
-  //   if (!this.hiddenTextareaContainer) {
-  //     this.initHiddenTextarea();
-  //   }
-  //   this.hiddenTextarea!.focus();
-  //   this.hiddenTextarea!.value = this.text;
-  //   this._updateTextarea();
-  //   this._saveEditingProps();
-  //   this._setEditingProps();
-  //   this._textBeforeEdit = this.text;
-
-  //   this._tick();
-  //   this.fire('editing:entered', { e });
-  //   this._fireSelectionChanged();
-  //   if (this.canvas) {
-  //     // @ts-expect-error in reality it is an IText instance
-  //     this.canvas.fire('text:editing:entered', { target: this, e });
-  //     this.canvas.requestRenderAll();
-  //   }
-  // }
-
-  // exitEditing () {
-  //   // @ts-ignore
-  //   let isTextChanged = (this._textBeforeEdit !== this.text);
-  //   this.selected = false;
-  //   this.isEditing = false;
-  //   this.selectionEnd = this.selectionStart;
-  //   if (this.hiddenTextarea) {
-  //     this.hiddenTextarea.blur && this.hiddenTextarea.blur();
-  //     this.canvas && this.hiddenTextarea.parentNode!.removeChild(this.hiddenTextarea);
-  //     this.hiddenTextarea = null;
-  //   }
-
-  //   this.abortCursorAnimation();
-  //   this._restoreEditingProps();
-  //   this._currentCursorOpacity = 0;
-  //   if (this._forceClearCache) {
-  //     this.initDimensions();
-  //     this.setCoords();
-  //   }
-  //   this.fire('editing:exited');
-  //   if (this.canvas) {
-  //     this.canvas.off('mouse:move', this.mouseMoveHandler);
-  //     this.canvas.fire('text:editing:exited', { target: this } as any);
-  //   }
-  //   return this
-  // }
-
-  // mouseMoveHandler(options: any) {
-  //   if (!this.__isMousedown || !this.isEditing) {
-  //     return;
-  //   }
-  //   if(this.group){
-  //     options.e._group = this.group;
-  //   }
-  //   let newSelectionStart = this.getSelectionStartFromPointer(options.e),
-  //     currentStart = this.selectionStart,
-  //     currentEnd = this.selectionEnd;
-  //   if (
-  //     (newSelectionStart !== this.__selectionStartOnMouseDown || currentStart === currentEnd)
-  //     &&
-  //     (currentStart === newSelectionStart || currentEnd === newSelectionStart)
-  //   ) {
-  //     return;
-  //   }
-  //   if (newSelectionStart > this.__selectionStartOnMouseDown) {
-  //     this.selectionStart = this.__selectionStartOnMouseDown;
-  //     this.selectionEnd = newSelectionStart;
-  //   }
-  //   else {
-  //     this.selectionStart = newSelectionStart;
-  //     this.selectionEnd = this.__selectionStartOnMouseDown;
-  //   }
-  //   if (this.selectionStart !== currentStart || this.selectionEnd !== currentEnd) {
-  //     this.restartCursorIfNeeded();
-  //     this._fireSelectionChanged();
-  //     this._updateTextarea();
-  //     this.renderCursorOrSelection();
-  //   }
-  //   if(this.group){
-  //     delete options.e._group;
-  //   }
-  // }
 }
+
+Object.assign(ArcText.prototype, {
+  ...ArcTextMixin
+})
 
 classRegistry.setClass(ArcText, 'ArcText')

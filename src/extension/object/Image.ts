@@ -223,7 +223,7 @@ export class Image extends OriginImage {
 }
 
 const imageDefaultValues: Partial<TClassProperties<Image>> = {
-  type: 'CropImage',
+  type: 'Image',
   strokeWidth: 0,
   srcFromAttribute: false,
   minimumScaleTrigger: 0.5,

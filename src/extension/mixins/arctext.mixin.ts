@@ -1,11 +1,14 @@
-import { Object as FabricObject, Text, IText, Textbox, util, getEnv, Shadow, Point, config } from "fabric"
+import { Object as FabricObject, TPointerEventInfo, TPointerEvent } from "fabric"
 
 const getParentScaleX = (el: FabricObject): number => {
-  return el.scaleX * (el.group ? getParentScaleX(el.group) : 1)//: this.canvas.viewportTransform[0])
+  return el.scaleX * (el.group ? getParentScaleX(el.group) : 1)
+}
+
+const notALeftClick = (e: MouseEvent) => {
+  return e.button && e.button !== 1;
 }
 
 export const ArcTextMixin: any = {
-  optionsOrder: ["fontWeight", "fontStyle", "fontSize", "fontFamily", "styles", "width","height", "text",  "*"],
   minFontSize: 2,
   maxFontSize: 250,
   minLineHeight: 2,
@@ -13,123 +16,6 @@ export const ArcTextMixin: any = {
 
   maxStrokeWidth () {
     return Math.ceil(this.getFontSize() / 10);
-  },
-
-  addText(text: string, options: any) {
-    let match = this.text.match(/\n/g);
-    let lineIndex = match && match.length || 0;
-    let charIndex = this.text.length - this.text.lastIndexOf("\n") - 1;
-
-    if (!this.styles[lineIndex]) {
-      this.styles[lineIndex] = {}
-    }
-
-    if (!this.styles[lineIndex][charIndex]) {
-      this.styles[lineIndex][charIndex] = {}
-    }
-    Object.assign(this.styles[lineIndex][charIndex], options);
-    this.text += text;
-  },
-
-  renderSelection(ctx: CanvasRenderingContext2D, boundaries: any) {
-    let selectionStart = this.inCompositionMode ? this.hiddenTextarea.selectionStart : this.selectionStart,
-      selectionEnd = this.inCompositionMode ? this.hiddenTextarea.selectionEnd : this.selectionEnd,
-      isJustify = this.textAlign.indexOf('justify') !== -1,
-      start = this.get2DCursorLocation(selectionStart),
-      end = this.get2DCursorLocation(selectionEnd),
-      startLine = start.lineIndex,
-      endLine = end.lineIndex,
-      startChar = start.charIndex < 0 ? 0 : start.charIndex,
-      endChar = end.charIndex < 0 ? 0 : end.charIndex;
-
-    for (let i = startLine; i <= endLine; i++) {
-      let lineOffset = this._getLineLeftOffset(i) || 0,
-        lineHeight = this.getHeightOfLine(i),
-        realLineHeight = 0, boxStart = 0, boxEnd = 0;
-
-      if (i === startLine) {
-        boxStart = this.__charBounds[startLine][startChar].left;
-        if(this.__lineInfo  && this.__lineInfo[i] && startChar!== 0){
-          if(this.__lineInfo[i].renderedLeft){
-            boxStart += this.__lineInfo[i].renderedLeft
-          }
-        }
-      }
-
-      if (i >= startLine && i < endLine) {
-        boxEnd = isJustify && !this.isEndOfWrapping(i) ? this.width : this.getLineWidth(i) || 5; // WTF is this 5?
-      }
-      else if (i === endLine) {
-        if (endChar === 0) {
-          boxEnd = this.__charBounds[endLine][endChar].left;
-        }
-        else {
-          let charSpacing = this._getWidthOfCharSpacing();
-          boxEnd = this.__charBounds[endLine][endChar - 1].left + this.__charBounds[endLine][endChar - 1].width - charSpacing;
-        }
-        if(this.__lineInfo && this.__lineInfo[i]){
-          if(this.__lineInfo[i].renderedLeft){
-            boxEnd += this.__lineInfo[i].renderedLeft
-          }
-          if(endChar === this.__charBounds[endLine].length - 1){
-            boxEnd += this.__lineInfo[i].renderedRight
-          }
-        }
-      }
-      realLineHeight = lineHeight;
-      if (this.lineHeight < 1 || (i === endLine && this.lineHeight > 1)) {
-        lineHeight /= this.lineHeight;
-      }
-      if (this.inCompositionMode) {
-        ctx.fillStyle = this.compositionColor || 'black';
-        ctx.fillRect(
-          boundaries.left + lineOffset + boxStart,
-          boundaries.top + boundaries.topOffset + lineHeight,
-          boxEnd - boxStart,
-          1);
-      }
-      else {
-        ctx.fillStyle = this.selectionColor;
-        ctx.fillRect(
-          boundaries.left + lineOffset + boxStart,
-          boundaries.top + boundaries.topOffset,
-          boxEnd - boxStart,
-          lineHeight);
-      }
-      boundaries.topOffset += realLineHeight;
-    }
-  },
-
-  renderCursor (ctx: CanvasRenderingContext2D, boundaries: any) {
-    let cursorLocation = this.get2DCursorLocation(),
-      lineIndex = cursorLocation.lineIndex,
-      charIndex = cursorLocation.charIndex > 0 ? cursorLocation.charIndex - 1 : 0,
-      charHeight = this.getValueOfPropertyAt(lineIndex, charIndex, 'fontSize'),
-      multiplier = getParentScaleX(this) * this.canvas.getZoom(), //overriden
-      cursorWidth = this.cursorWidth / multiplier,
-      topOffset = boundaries.topOffset,
-      dy = this.getValueOfPropertyAt(lineIndex, charIndex, 'deltaY');
-
-    topOffset += (1 - this._fontSizeFraction) * this.getHeightOfLine(lineIndex) / this.lineHeight - charHeight * (1 - this._fontSizeFraction);
-
-    if (this.inCompositionMode) {
-      this.renderSelection(ctx, boundaries);
-    }
-
-    let lineOffset = 0;
-    if(this.__lineInfo  && this.__lineInfo[lineIndex]){
-      if( cursorLocation.charIndex!== 0 && this.__lineInfo[lineIndex].renderedLeft){
-        lineOffset += this.__lineInfo[lineIndex].renderedLeft
-      }
-    }
-    ctx.fillStyle = this.getValueOfPropertyAt(lineIndex, charIndex, 'fill');
-    ctx.globalAlpha = this.__isMousedown ? 1 : this._currentCursorOpacity;
-    ctx.fillRect(
-      boundaries.left + boundaries.leftOffset - cursorWidth / 2 + lineOffset,
-      topOffset + boundaries.top + dy,
-      cursorWidth,
-      charHeight
-    )
   },
 
   setProperty(property: string, value: any) {
@@ -229,6 +115,156 @@ export const ArcTextMixin: any = {
         ( this.getStyle('linethrough') ? 'line-through ' : '') +
         ( this.getStyle('overline') ? 'overline ' : '') +
         ( this.getStyle('underline') ? 'underline ' : '')
+    }
+  },
+
+  _mouseDownHandler({ e }: TPointerEventInfo) {
+    if (
+      !this.canvas ||
+      !this.editable ||
+      notALeftClick(e as MouseEvent) ||
+      this.__corner
+    ) {
+      return;
+    }
+
+    if (this.draggableTextDelegate.start(e)) {
+      return;
+    }
+
+    this.canvas.textEditingManager.register(this);
+
+    if (this.selected) {
+      this.inCompositionMode = false;
+      this.setCursorByClick(e);
+    }
+    if (this.isEditing) {
+      this.__selectionStartOnMouseDown = this.selectionStart;
+      if (this.selectionStart === this.selectionEnd) {
+        this.abortCursorAnimation();
+      }
+      this.renderCursorOrSelection();
+    }
+  },
+
+  mouseUpHandler({ e, transform, button }: TPointerEventInfo) {
+    const didDrag = this.draggableTextDelegate.end(e);
+    if (this.canvas) {
+      this.canvas.textEditingManager.unregister(this);
+      const activeObject = this.canvas._activeObject;
+      if (activeObject && activeObject !== this) {
+        return;
+      }
+    }
+    if (
+      !this.editable ||
+      (this.group && !this.group.interactive) ||
+      (transform && transform.actionPerformed) ||
+      notALeftClick(e as MouseEvent) ||
+      didDrag
+    ) {
+      return;
+    }
+    if (this.__lastSelected && !this.__corner) {
+      this.selected = false;
+      this.__lastSelected = false;
+      if (this.isEditing) {
+        this.hiddenTextarea!.focus()
+      } else {
+        this.enterEditing(e);
+      }
+      if (this.selectionStart === this.selectionEnd) {
+        this.initDelayedCursor(true);
+      } else {
+        this.renderCursorOrSelection();
+      }
+    } else {
+      this.selected = true;
+    }
+  },
+
+  enterEditing(e: TPointerEvent) {
+    if (this.isEditing || !this.editable) {
+      return;
+    }
+    if (this.canvas) {
+      this.canvas.calcOffset();
+      this.canvas.textEditingManager.exitTextEditing();
+    }
+
+    this.isEditing = true;
+    this.initHiddenTextarea();
+    this.hiddenTextarea!.focus();
+    this.hiddenTextarea!.value = this.text;
+    this._updateTextarea();
+    this._saveEditingProps();
+    this._setEditingProps();
+    this._textBeforeEdit = this.text;
+
+    this._tick();
+    this.fire('editing:entered', { e });
+    this._fireSelectionChanged();
+    if (this.canvas) {
+      this.canvas.fire('text:editing:entered', { target: this, e });
+      this.canvas.requestRenderAll();
+    }
+  },
+
+  exitEditing() {
+    console.log('this.isEditing:', this.isEditing)
+    const isTextChanged = (this._textBeforeEdit !== this.text);
+    this.selectionEnd = this.selectionStart;
+    this.__isEditing = false;
+    this._exitEditing()
+    this.abortCursorAnimation();
+    this._restoreEditingProps();
+    if (this._forceClearCache) {
+      this.initDimensions();
+      this.setCoords();
+    }
+    this.fire('editing:exited');
+    isTextChanged && this.fire('modified')
+    if (this.canvas) {
+      this.canvas.off('mouse:move', this.mouseMoveHandler);
+      this.canvas.fire('text:editing:exited', { target: this });
+      this.canvas.fire('object:modified', { target: this });
+    }
+    return this;
+  },
+
+  mouseMoveHandler(options: any) {
+    if (!this.__isMousedown || !this.isEditing) {
+      return;
+    }
+    if(this.group){
+      options.e._group = this.group;
+    }
+    let newSelectionStart = this.getSelectionStartFromPointer(options.e),
+      currentStart = this.selectionStart,
+      currentEnd = this.selectionEnd;
+    if (
+      (newSelectionStart !== this.__selectionStartOnMouseDown || currentStart === currentEnd)
+      &&
+      (currentStart === newSelectionStart || currentEnd === newSelectionStart)
+    ) {
+      return;
+    }
+    if (newSelectionStart > this.__selectionStartOnMouseDown) {
+      this.selectionStart = this.__selectionStartOnMouseDown;
+      this.selectionEnd = newSelectionStart;
+    }
+    else {
+      this.selectionStart = newSelectionStart;
+      this.selectionEnd = this.__selectionStartOnMouseDown;
+    }
+    if (this.selectionStart !== currentStart || this.selectionEnd !== currentEnd) {
+      this.restartCursorIfNeeded();
+      this._fireSelectionChanged();
+      this._updateTextarea();
+      this.renderCursorOrSelection();
+    }
+    if(this.group){
+      delete options.e._group;
     }
   }
 }
