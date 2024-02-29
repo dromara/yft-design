@@ -191,7 +191,9 @@ export const ArcTextMixin: any = {
     }
 
     this.isEditing = true;
-    this.initHiddenTextarea();
+    if (!this.hiddenTextarea) {
+      this.initHiddenTextarea();
+    }
     this.hiddenTextarea!.focus();
     this.hiddenTextarea!.value = this.text;
     this._updateTextarea();

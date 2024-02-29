@@ -22,14 +22,10 @@ const getParentScaleX = (el: FabricObject): number => {
 
 export class ArcText extends OriginIText {
   static type: string = 'ArcText'
-  public isCurvature? = false
   public curvature = 100
   public radius = 66
   public useRenderBoundingBoxes = true
   private __isMousedown: boolean = false
-  private __selectionStart: number = 0
-  private __selectionEnd: number = 0
-  private __changedProperty: string = ''
   private _linesRads: number[] = []
   private __lineInfo: any = []
   private __renderOffsetTop: number = 0
@@ -92,18 +88,6 @@ export class ArcText extends OriginIText {
     this.on("scaling", this.updateCurvingControl)
   }
 
-  public get __isCurvature() {
-    return this.isCurvature
-  }
-
-  public set __isCurvature(value) {
-    this.isCurvature = value
-    
-    if (this.isCurvature) {
-      this.createCurvatureControl()
-    }
-  }
-
   updateCurvingControl () {
     if (this.controls.c) {
       this.controls.c.offsetX =  -this._contentOffsetX * this.scaleX
@@ -132,9 +116,12 @@ export class ArcText extends OriginIText {
   }
 
   renderCharCallback(method: any, ctx: CanvasRenderingContext2D, lineIndex: number, charIndex: number, endCharIndex: number, left: number, top: number, fullDecl: any) {
-    if (!this._charTransformations[lineIndex]) return
+    if (!this._charTransformations[lineIndex]) {
+      this.initDimensions()
+    }
     for (let index = charIndex; index <= endCharIndex; index++) {
-      let tr = this._charTransformations[lineIndex][index]
+      // console.log('this._charTransformations[lineIndex]:', this._charTransformations[lineIndex], index, this.canvas)
+      const tr = this._charTransformations[lineIndex][index]
       ctx.textAlign = "center"
       if (tr.char) {
         let angle = this.curvature > 0 ? -tr.charAngle : -tr.charAngle - Math.PI
@@ -325,14 +312,12 @@ export class ArcText extends OriginIText {
       this.getLineWidth(li);
       this.getHeightOfLine(li);
     }
-    let textHeight = this.calcTextHeight();
-    let textWidth = this.calcTextWidth();
+    const textHeight = this.calcTextHeight();
+    const textWidth = this.calcTextWidth();
     const curvature = this.curvature !== undefined ? this.curvature : 100
     this.radius = 10000 / curvature
-
-    let cx = 0, cy = curvature > 0 ? textHeight / 2 + this.radius : -textHeight / 2 + this.radius
+    const cx = 0, cy = curvature > 0 ? textHeight / 2 + this.radius : -textHeight / 2 + this.radius
     this._curvingCenter = new Point(cx, cy)
-
     let globalOffset = 0
     if (curvature > 0) {
       globalOffset = textHeight
@@ -341,7 +326,7 @@ export class ArcText extends OriginIText {
     if (this.textAlign.indexOf('justify') !== -1) {
       this.enArcLargeSpaces(textWidth);
     }
-    let cts: any[] = this._charTransformations = []
+    const cts: any[] = this._charTransformations = []
 
     let yMin = Infinity, yMax = -Infinity, xMin = Infinity, xMax = -Infinity
     for (let i = 0; i < this.__charBounds.length; i++) {
@@ -358,7 +343,7 @@ export class ArcText extends OriginIText {
       } else {
         globalOffset += heightOfLine
       }
-      let rowOffset = Math.abs(this.radius) + globalOffset
+      const rowOffset = Math.abs(this.radius) + globalOffset
       this._linesRads.push(rowOffset)
       for (let j = 0; j < row.length; j++) {
         const bounds = row[j] as any
@@ -386,13 +371,13 @@ export class ArcText extends OriginIText {
           rightAngle = Math.PI + (currentLeft + bounds.left + bounds.width) / midRadius
           charAngle = Math.PI + (currentLeft + bounds.left + bounds.width / 2) / midRadius
         }
-        let rsin = Math.sin(rightAngle),
+        const rsin = Math.sin(rightAngle),
           rcos = Math.cos(rightAngle),
           lsin = Math.sin(leftAngle),
           lcos = Math.cos(leftAngle),
           csin = Math.sin(charAngle),
           ccos = Math.cos(charAngle)
-        let ct = {
+        const ct = {
           contour: bounds.contour && {
             x: bounds.contour.x * decl.fontSize,
             w: bounds.contour.w * decl.fontSize,
@@ -446,7 +431,8 @@ export class ArcText extends OriginIText {
       }
     }
     for(let i = 0; i < cts.length; i++) {
-      let ctsl = cts[i] as any, cta = ctsl[0], ctb = ctsl[ctsl.length - 1], bbox, bbox2
+      const ctsl = cts[i] as any, cta = ctsl[0], ctb = ctsl[ctsl.length - 1]
+      let bbox, bbox2
       if (curvature > 0) {
         bbox = sectorBoundingBox(cta.tl, ctb.tr, this._curvingCenter, this._linesRads[i] + this.__lineHeights[i])
         bbox2 = sectorBoundingBox(cta.nl, ctb.nr, this._curvingCenter, this._linesRads[i])
@@ -832,13 +818,13 @@ export class ArcText extends OriginIText {
     return newLines;
   }
 
-  setTextTransform(value: string) {
-    this.textTransform = value
-    this.set('text', this.text)
-    this.dirty = true
-    this.initDimensions()
-    this.canvas && this.canvas.requestRenderAll()
-  }
+  // setTextTransform(value: string) {
+  //   this.textTransform = value
+  //   this.set('text', this.text)
+  //   this.dirty = true
+  //   this.initDimensions()
+  //   this.canvas && this.canvas.requestRenderAll()
+  // }
 
   calcTextHeight() {
     let lineHeight, height = 0;
@@ -897,12 +883,11 @@ export class ArcText extends OriginIText {
 
     fullDecl.special = this._specialArray && this._specialArray[lineIndex] && this._specialArray[lineIndex][charIndex];
 
-    if(this.renderCharCallback){
-      // this.renderCharCallback(method, ctx, lineIndex, charIndex ? charIndex - _char.length + 1: 0, _char, left, top, fullDecl)
+    if (this.renderCharCallback) {
       this.renderCharCallback(method, ctx, lineIndex, charIndex, endCharIndex, left, top, fullDecl)
     }
     else {
-      let text = this._textLines[lineIndex].slice(charIndex, endCharIndex + 1).join("")
+      const text = this._textLines[lineIndex].slice(charIndex, endCharIndex + 1).join("")
       this.runCharRendering(method, ctx, text, left, top, 0, fullDecl);
     }
     ctx && decl && ctx.restore();
@@ -970,12 +955,11 @@ export class ArcText extends OriginIText {
       return this.__lineHeights[lineIndex];
     }
 
-    let line = this._textLines[lineIndex],
-      maxHeight = this.getHeightOfChar(lineIndex, 0);
+    const line = this._textLines[lineIndex]
+    let maxHeight = this.getHeightOfChar(lineIndex, 0);
     for (let i = 1, len = line.length; i < len; i++) {
       maxHeight = Math.max(this.getHeightOfChar(lineIndex, i), maxHeight);
     }
-
     return this.__lineHeights[lineIndex] = maxHeight * this.lineHeight * this._fontSizeMult;
   }
 
@@ -1013,7 +997,6 @@ export class ArcText extends OriginIText {
         delete obj[p1];
       }
     }
-
     for (let i = 0; i < this._textLines.length; i++) {
       graphemeCount += this._textLines[i].length;
     }
