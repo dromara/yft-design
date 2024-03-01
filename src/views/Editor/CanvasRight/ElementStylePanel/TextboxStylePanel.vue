@@ -161,15 +161,28 @@
       </el-col>
     </el-row>
 
-    <el-row class="mt-10">
-      <el-col :span="4" class="flex-align">弧度：</el-col>
-      <el-col :span="1"></el-col>
-      <el-col :span="12">
+    <el-row class="mt-10" v-show="handleElement.type.toLowerCase() === ElementNames.ARCTEXT">
+      <el-col :span="4" class="flex-align">
+        <el-radio-group class="full-ratio" v-model="(handleElement as ArcText).showCurvature" @change="changeArcTextStatus">
+          <el-tooltip placement="top" content="隐藏弧度" :hide-after="0" v-if="(handleElement as ArcText).showCurvature">
+            <el-radio-button :label="false">
+              <IconPreviewClose />
+            </el-radio-button>
+          </el-tooltip>
+          <el-tooltip placement="top" content="显示弧度" :hide-after="0" v-else>
+            <el-radio-button :label="true">
+              <IconPreviewOpen />
+            </el-radio-button>
+          </el-tooltip>
+        </el-radio-group>
+      </el-col>
+      <el-col :span="2"></el-col>
+      <el-col :span="12" class="flex-align">
         <el-slider :min="66" :max="1000" :step="10" v-model="(handleElement as ArcText).radius" @change="changeArcTextRadius" size="small"></el-slider>
       </el-col>
       <el-col :span="2"></el-col>
-      <el-col :span="5" class="slider-num">
-        <el-input :min="1" :max="10" v-model="radius" controls-position="right" size="small"/>
+      <el-col :span="4" class="flex-align">
+        <el-input :min="1" :max="10" v-model="(handleElement as ArcText).radius" controls-position="right" size="middle"/>
       </el-col>
     </el-row>
 
@@ -209,9 +222,8 @@ import { FontSizeLibs, LineHeightLibs, CharSpaceLibs } from '@/configs/texts'
 import { WEB_FONTS } from '@/configs/fonts'
 import { propertiesToInclude } from '@/configs/canvas'
 import { TextboxElement } from '@/types/canvas'
-import { FontGroupOption } from '@/types/elements'
+import { ElementNames, FontGroupOption } from '@/types/elements'
 import { loadFont } from '@/utils/fonts'
-import { Path, classRegistry, Text, Textbox } from 'fabric'
 import { nanoid } from 'nanoid'
 import opentype from "opentype.js"
 import ElementPosition from '../Components/ElementPosition.vue'
@@ -223,7 +235,6 @@ import ElementFill from '../Backgrounds/ElementFill.vue'
 import useHandleCreate from "@/hooks/useHandleCreate"
 import useCanvas from '@/views/Canvas/useCanvas'
 import { ArcText } from '@/extension/object/ArcText'
-
 
 
 const mainStore = useMainStore()
@@ -502,6 +513,12 @@ const handleElementStyleClear = () => {
 
 const changeArcTextRadius = (val: number) => {
   (handleElement.value as ArcText).setRadius(val)
+  canvas.renderAll()
+}
+
+const changeArcTextStatus = (showCurvature: boolean) => {
+  (handleElement.value as ArcText).set({showCurvature})
+  console.log('val:', showCurvature)
   canvas.renderAll()
 }
 

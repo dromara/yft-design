@@ -4,6 +4,7 @@ export const enum ElementNames {
   TEXTBOX = 'textbox',
   TEXT = 'text',
   ITEXT = 'i-text',
+  ARCTEXT = 'arctext',
   IMAGE = 'image',
   CROPIMAGE = 'cropimage',
   MASK = 'mask',
