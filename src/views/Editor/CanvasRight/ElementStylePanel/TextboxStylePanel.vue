@@ -176,13 +176,13 @@
           </el-tooltip>
         </el-radio-group>
       </el-col>
-      <el-col :span="2"></el-col>
+      <el-col :span="1"></el-col>
       <el-col :span="12" class="flex-align">
         <el-slider :min="66" :max="1000" :step="10" v-model="(handleElement as ArcText).radius" @change="changeArcTextRadius" size="small"></el-slider>
       </el-col>
-      <el-col :span="2"></el-col>
-      <el-col :span="4" class="flex-align">
-        <el-input :min="1" :max="10" v-model="(handleElement as ArcText).radius" controls-position="right" size="middle"/>
+      <el-col :span="1"></el-col>
+      <el-col :span="6" class="flex-align">
+        <el-input :min="1" :max="10" v-model="(handleElement as ArcText).radius" controls-position="right" size="default"/>
       </el-col>
     </el-row>
 

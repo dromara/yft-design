@@ -297,11 +297,12 @@ export class ArcText extends OriginIText {
   _translate(leftOverflow: number, topOverflow: number) {
     const _translatedX = this._translatedX !== undefined ? this._translatedX : 0
     const _translatedY = this._translatedY !== undefined ? this._translatedY : 0
-    let rad = util.degreesToRadians(this.angle);
-    this.top -= (topOverflow - _translatedY) * Math.cos(rad) *  this.scaleY;
-    this.left += (topOverflow - _translatedY)  * Math.sin(rad)* this.scaleY;
-    this.top -= (leftOverflow - _translatedX) * Math.sin(rad) *  this.scaleX;
-    this.left -= (leftOverflow - _translatedX)  * Math.cos(rad)* this.scaleX;
+    const rad = util.degreesToRadians(this.angle);
+    const cosRad = Math.cos(rad), sinRad = Math.sin(rad)
+    this.top -= (topOverflow - _translatedY) * cosRad * this.scaleY;
+    this.left += (topOverflow - _translatedY) * sinRad * this.scaleY;
+    this.top -= (leftOverflow - _translatedX) * sinRad * this.scaleX;
+    this.left -= (leftOverflow - _translatedX) * cosRad * this.scaleX;
     this._translatedY = topOverflow
     this._translatedX = leftOverflow
   }
