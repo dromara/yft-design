@@ -25,8 +25,10 @@ export class ArcText extends OriginIText {
   public curvature = 100
   public radius = 66
   public useRenderBoundingBoxes = true
+  public showCurvature?: boolean
   public color?: string
   public splitByGrapheme?: boolean
+  public borderWidth: number = 0
   private __isMousedown: boolean = false
   private _linesRads: number[] = []
   private __lineInfo: any = []
@@ -59,30 +61,19 @@ export class ArcText extends OriginIText {
       offsetX: 0,
       offsetY: 0,
       actionHandler: this.changeCurvature,
-      // render(ctx, left, top, styleOverride, fabricObject: ArcText) {
-      //   // if(fabricObject.canvas.showControlsGuidlines){
-      //   //   ctx.save()
-      //   //   ctx.strokeStyle = fabricObject.borderColor
-      //   //   ctx.lineWidth = fabricObject.borderWidth
-      //   //   // let cx = -fabricObject._contentOffsetX * fabricObject.scaleX
-      //   //   // let cy = (fabricObject._curvingCenter.y - fabricObject._contentOffsetY) * fabricObject.scaleY
-      //   //   ctx.beginPath()
-      //   //   ctx.ellipse(left, top, Math.abs(fabricObject.radius) * fabricObject.scaleX, Math.abs(fabricObject.radius) * fabricObject.scaleY, 0, 0, 2 * Math.PI);
-      //   //   ctx.stroke();
-      //   //   ctx.restore()
-      //   // }
-
-      //   const absRadius = Math.abs(fabricObject.radius)
-      //   ctx.save()
-      //   ctx.strokeStyle = fabricObject.borderColor
-      //   ctx.lineWidth = 1
-      //   // let cx = -fabricObject._contentOffsetX * fabricObject.scaleX
-      //   // let cy = (fabricObject._curvingCenter.y - fabricObject._contentOffsetY) * fabricObject.scaleY
-      //   ctx.beginPath()
-      //   ctx.ellipse(left, top, absRadius * fabricObject.scaleX, absRadius * fabricObject.scaleY, 0, 0, 2 * Math.PI)
-      //   ctx.stroke()
-      //   ctx.restore()
-      // },
+      render(ctx, left, top, styleOverride, fabricObject: ArcText) {
+        if (fabricObject.showCurvature) {
+          ctx.save()
+          ctx.strokeStyle = fabricObject.borderColor
+          ctx.lineWidth = fabricObject.borderWidth
+          // let cx = -fabricObject._contentOffsetX * fabricObject.scaleX
+          // let cy = (fabricObject._curvingCenter.y - fabricObject._contentOffsetY) * fabricObject.scaleY
+          ctx.beginPath()
+          ctx.ellipse(left, top, Math.abs(fabricObject.radius) * fabricObject.scaleX, Math.abs(fabricObject.radius) * fabricObject.scaleY, 0, 0, 2 * Math.PI);
+          ctx.stroke();
+          ctx.restore()
+        }
+      },
       cursorStyle: 'pointer',
       actionName: 'resizing',
     })
