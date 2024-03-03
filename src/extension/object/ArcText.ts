@@ -1,5 +1,5 @@
 import { IText as OriginIText, Textbox as OriginTextbox, Object as FabricObject, Control, controlsUtils, 
-  classRegistry, Transform, TPointerEvent, TextStyleDeclaration, util, Point, TMat2D, TFiller, TPointerEventInfo
+  classRegistry, Transform, TPointerEvent, TextStyleDeclaration, util, Point, TMat2D, TFiller, TPointerEventInfo, StaticCanvas
 } from 'fabric'
 import { sectorBoundingBox } from '@/utils/geometry'
 import { ArcTextMixin } from '../mixins/arctext.mixin'
@@ -29,6 +29,8 @@ export class ArcText extends OriginIText {
   public color?: string
   public splitByGrapheme?: boolean
   public borderWidth: number = 0
+  private _left: number = 0
+  private _top: number = 0
   private __isMousedown: boolean = false
   private _linesRads: number[] = []
   private __lineInfo: any = []
@@ -295,19 +297,22 @@ export class ArcText extends OriginIText {
   }
 
   _translate(leftOverflow: number, topOverflow: number) {
-    const _translatedX = this._translatedX !== undefined ? this._translatedX : 0
-    const _translatedY = this._translatedY !== undefined ? this._translatedY : 0
-    const rad = util.degreesToRadians(this.angle);
-    const cosRad = Math.cos(rad), sinRad = Math.sin(rad)
-    this.top -= (topOverflow - _translatedY) * cosRad * this.scaleY;
-    this.left += (topOverflow - _translatedY) * sinRad * this.scaleY;
-    this.top -= (leftOverflow - _translatedX) * sinRad * this.scaleX;
-    this.left -= (leftOverflow - _translatedX) * cosRad * this.scaleX;
-    this._translatedY = topOverflow
-    this._translatedX = leftOverflow
+    // if (this.canvas && this.canvas instanceof StaticCanvas) return
+    // const _translatedX = this._translatedX !== undefined ? this._translatedX : 0
+    // const _translatedY = this._translatedY !== undefined ? this._translatedY : 0
+    // const rad = util.degreesToRadians(this.angle);
+    // const cosRad = Math.cos(rad), sinRad = Math.sin(rad)
+    // const textHeight = this.calcTextHeight()
+    // this.top -= (topOverflow - _translatedY) * cosRad * this.scaleY;
+    // this.left += (topOverflow - _translatedY) * sinRad * this.scaleY;
+    // this.top -= (leftOverflow - _translatedX) * sinRad * this.scaleX;
+    // this.left -= (leftOverflow - _translatedX) * cosRad * this.scaleX;
+    // this._translatedY = topOverflow
+    // this._translatedX = leftOverflow
   }
 
   override initDimensions() {
+    if (!this.initialized) return
     this._splitText();
     this._clearCache();
     for (let li = 0, len = this._textLines.length; li < len; li++) {
@@ -444,9 +449,9 @@ export class ArcText extends OriginIText {
         bbox2 = sectorBoundingBox(ctb.nr, cta.nl, this._curvingCenter, this._linesRads[i])
       }
       xMin = Math.min(xMin, bbox.x, bbox2.x)
-      xMax = Math.max(xMax, bbox.x+ bbox.width, bbox2.x + bbox2.width)
+      xMax = Math.max(xMax, bbox.x + bbox.width, bbox2.x + bbox2.width)
       yMin = Math.min(yMin, bbox.y, bbox2.y)
-      yMax = Math.max(yMax, bbox.y+bbox.height, bbox2.y + bbox2.height)
+      yMax = Math.max(yMax, bbox.y + bbox.height, bbox2.y + bbox2.height)
     }
 
     // this._enableFontFeatures()
@@ -461,7 +466,6 @@ export class ArcText extends OriginIText {
     this.height = textHeight + topOverflow + bottomOverflow
     this._contentOffsetY = bottomOverflow / 2 - topOverflow / 2
     this._contentOffsetX = rightOverflow / 2 - leftOverflow / 2
-
     const _translateX = this.originX === "left" ? leftOverflow : this._contentOffsetX
     this._translate(_translateX, topOverflow)
     this.updateCurvingControl()
@@ -633,7 +637,7 @@ export class ArcText extends OriginIText {
   override _render(ctx: CanvasRenderingContext2D) {
     ctx.save()
     ctx.translate(-this._contentOffsetX, -this._contentOffsetY)
-    if(!this.__lineHeights){
+    if (!this.__lineHeights) {
       this.initDimensions();
     }
     this._setTextStyles(ctx);
@@ -682,9 +686,9 @@ export class ArcText extends OriginIText {
       prevGrapheme = grapheme;
       let contourX, contourW, contourH, contourY
       if (this.useRenderBoundingBoxes && graphemeInfo.contour) {
-        contourX = graphemeInfo.contour.x  * style.fontSize
-        contourW = graphemeInfo.contour.w  * style.fontSize
-        contourH = graphemeInfo.contour.h  * style.fontSize
+        contourX = graphemeInfo.contour.x * style.fontSize
+        contourW = graphemeInfo.contour.w * style.fontSize
+        contourH = graphemeInfo.contour.h * style.fontSize
         contourY = this._getBaseLine(style.fontSize) + graphemeInfo.contour.y * style.fontSize
         renderedLeft = Math.max(renderedLeft,  -(graphemeInfo.left + contourX))
         renderedWidth = Math.max(renderedWidth, contourW + contourX + graphemeInfo.left)
@@ -820,14 +824,6 @@ export class ArcText extends OriginIText {
     return newLines;
   }
 
-  // setTextTransform(value: string) {
-  //   this.textTransform = value
-  //   this.set('text', this.text)
-  //   this.dirty = true
-  //   this.initDimensions()
-  //   this.canvas && this.canvas.requestRenderAll()
-  // }
-
   calcTextHeight() {
     let lineHeight, height = 0;
     for (let i = 0, len = this._textLines.length; i < len; i++) {
@@ -950,7 +946,8 @@ export class ArcText extends OriginIText {
   }
 
   getHeightOfLine(lineIndex: number) {
-    if(!this.__lineHeights){
+    if (!this.__lineHeights) {
+      console.log('this.getHeightOfLine')
       this.initDimensions();
     }
     if (this.__lineHeights[lineIndex]) {
