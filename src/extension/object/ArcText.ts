@@ -600,9 +600,9 @@ export class ArcText extends OriginIText {
     this._removeShadow(ctx);
   }
 
-  override set(key: string | any, value?: any): any {
-    super.set(key, value)
-    const _dimensionAffectingProps = ['fontSize', 'fontWeight', 'fontFamily', 'fontStyle', 'lineHeight', 'text', 'charSpacing', 'textAlign', 'styles', 'color', 'curvature']
+  override _set(key: string | any, value?: any): any {
+    super._set(key, value)
+    const _dimensionAffectingProps = ['fontSize', 'fontWeight', 'fontFamily', 'fontStyle', 'lineHeight', 'text', 'charSpacing', 'textAlign', 'styles', 'color', 'canvas', 'curvature']
     let needsDims = false;
     if (typeof key === 'object') {
       const keys = key as any
