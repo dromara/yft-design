@@ -1,8 +1,12 @@
-import { IText as OriginIText, Textbox as OriginTextbox, Object as FabricObject, Control, controlsUtils, 
-  classRegistry, Transform, TPointerEvent, TextStyleDeclaration, util, Point, TMat2D, TFiller, TPointerEventInfo, StaticCanvas
+import { IText as OriginIText, Textbox as OriginTextbox, Object as FabricObject, Control, controlsUtils, Color,
+  classRegistry, Transform, TPointerEvent, TextStyleDeclaration, util, Point, TMat2D, TFiller, TSVGReviver, StaticCanvas
 } from 'fabric'
 import { sectorBoundingBox } from '@/utils/geometry'
 import { ArcTextMixin } from '../mixins/arctext.mixin'
+
+const _dimensionAffectingProps = ['fontSize', 'fontWeight', 'fontFamily', 'fontStyle', 'lineHeight', 'text', 'charSpacing', 'textAlign', 'styles', 'color', 'canvas', 'curvature']
+const multipleSpacesRegex = /  +/g
+const NUM_FRACTION_DIGITS = 2
 
 interface TBackgroundStroke {
   stroke: string
@@ -29,8 +33,6 @@ export class ArcText extends OriginIText {
   public color?: string
   public splitByGrapheme?: boolean
   public borderWidth: number = 0
-  private _left: number = 0
-  private _top: number = 0
   private __isMousedown: boolean = false
   private _linesRads: number[] = []
   private __lineInfo: any = []
@@ -45,6 +47,7 @@ export class ArcText extends OriginIText {
   public textTransform: string = ''
   public useBothRenderingMethod = true
   public storeProperties = ["type", "clipPath","frame","deco",'textLines','textTransform']
+
   public backgroundStroke?: TBackgroundStroke
 
   constructor(text: string, options: any) {
@@ -602,7 +605,6 @@ export class ArcText extends OriginIText {
 
   override _set(key: string | any, value?: any): any {
     super._set(key, value)
-    const _dimensionAffectingProps = ['fontSize', 'fontWeight', 'fontFamily', 'fontStyle', 'lineHeight', 'text', 'charSpacing', 'textAlign', 'styles', 'color', 'canvas', 'curvature']
     let needsDims = false;
     if (typeof key === 'object') {
       const keys = key as any
@@ -1021,6 +1023,218 @@ export class ArcText extends OriginIText {
     };
   }
 
+  toSVG(reviver?: TSVGReviver): string {
+    const arcTextSVG = this._createBaseSVGMarkup(
+      this._toSVG(),
+      { reviver: reviver, noStyle: true, withShadow: true }
+    );
+    console.log('arcTextSVG:', arcTextSVG)
+    return arcTextSVG
+  }
+
+  _toSVG() {
+    const offsets = this._getSVGLeftTopOffsets()
+    const textAndBg = this._getSVGTextAndBg(offsets.textTop, offsets.textLeft);
+    return this._wrapSVGTextAndBg(textAndBg);
+  }
+
+  _getSVGLeftTopOffsets() {
+    return {
+      textLeft: -this.width / 2,
+      textTop: -this.height / 2,
+      lineTop: this.getHeightOfLine(0)
+    };
+  }
+
+  _wrapSVGTextAndBg(textAndBg: any) {
+    const noShadow = true, textDecoration = this.getSvgTextDecoration(this);
+    return [
+      textAndBg.textBgRects.join(''),
+      '\t\t<text xml:space="preserve" ',
+      (this.fontFamily ? 'font-family="' + this.fontFamily.replace(/"/g, '\'') + '" ' : ''),
+      (this.fontSize ? 'font-size="' + this.fontSize + '" ' : ''),
+      (this.fontStyle ? 'font-style="' + this.fontStyle + '" ' : ''),
+      (this.fontWeight ? 'font-weight="' + this.fontWeight + '" ' : ''),
+      (textDecoration ? 'text-decoration="' + textDecoration + '" ' : ''),
+      'style="', this.getSvgStyles(noShadow), '"', this.addPaintOrder(), ' >',
+      textAndBg.textSpans.join(''),
+      '</text>\n'
+    ];
+  }
+
+  _setSVGBg(textBgRects: any[]) {
+    if (this.backgroundColor) {
+      textBgRects.push(
+        '\t\t<rect ',
+        this._getFillAttributes(this.backgroundColor),
+        ' x="',
+        util.toFixed(-this.width / 2, NUM_FRACTION_DIGITS),
+        '" y="',
+        util.toFixed(-this.height / 2, NUM_FRACTION_DIGITS),
+        '" width="',
+        util.toFixed(this.width, NUM_FRACTION_DIGITS),
+        '" height="',
+        util.toFixed(this.height, NUM_FRACTION_DIGITS),
+        '"></rect>\n');
+    }
+  }
+
+  _getSVGTextAndBg(textTopOffset: number, textLeftOffset: number) {
+    let textSpans: any[] = [],
+        textBgRects: any[] = [],
+        height = textTopOffset, lineOffset;
+    this._setSVGBg(textBgRects);
+
+    // text and text-background
+    for (let i = 0, len = this._textLines.length; i < len; i++) {
+      lineOffset = this._getLineLeftOffset(i);
+      if (this.textBackgroundColor || this.styleHas('textBackgroundColor', i)) {
+        this._setSVGTextLineBg(textBgRects, i, textLeftOffset + lineOffset, height);
+      }
+      this._setSVGTextLineText(textSpans, i, textLeftOffset + lineOffset, height);
+      height += this.getHeightOfLine(i);
+    }
+
+    return {
+      textSpans: textSpans,
+      textBgRects: textBgRects
+    };
+  }
+
+  _createTextCharSpan(_char: string, styleDecl: any, left: number, top: number) {
+    const shouldUseWhitespace = _char !== _char.trim() || _char.match(multipleSpacesRegex) ? true : false,
+        styleProps = this.getSvgSpanStyles(styleDecl, shouldUseWhitespace),
+        fillStyles = styleProps ? 'style="' + styleProps + '"' : '',
+        dy = styleDecl.deltaY;
+    let dySpan = '';
+    if (dy) {
+      dySpan = ' dy="' + util.toFixed(dy, NUM_FRACTION_DIGITS) + '" ';
+    }
+    return [
+      '<tspan x="', util.toFixed(left, NUM_FRACTION_DIGITS), '" y="',
+      util.toFixed(top, NUM_FRACTION_DIGITS), '" ', dySpan,
+      fillStyles, '>',
+      util.string.escapeXml(_char),
+      '</tspan>'
+    ].join('');
+  }
+
+  _hasStyleChangedForSvg(prevStyle: any, thisStyle: any) {
+    return this._hasStyleChanged(prevStyle, thisStyle) ||
+      prevStyle.overline !== thisStyle.overline ||
+      prevStyle.underline !== thisStyle.underline ||
+      prevStyle.linethrough !== thisStyle.linethrough;
+  }
+
+  _setSVGTextLineText(textSpans: string[], lineIndex: number, textLeftOffset: number, textTopOffset: number) {
+    // set proper line offset
+    let lineHeight = this.getHeightOfLine(lineIndex),
+        isJustify = this.textAlign.indexOf('justify') !== -1,
+        actualStyle,
+        nextStyle,
+        charsToRender = '',
+        charBox, style,
+        boxWidth = 0,
+        line = this._textLines[lineIndex],
+        timeToRender;
+
+    textTopOffset += lineHeight * (1 - this._fontSizeFraction) / this.lineHeight;
+    for (let i = 0, len = line.length - 1; i <= len; i++) {
+      timeToRender = i === len || this.charSpacing;
+      charsToRender += line[i];
+      charBox = this.__charBounds[lineIndex][i];
+      if (boxWidth === 0) {
+        textLeftOffset += charBox.kernedWidth - charBox.width;
+        boxWidth += charBox.width;
+      }
+      else {
+        boxWidth += charBox.kernedWidth;
+      }
+      if (isJustify && !timeToRender) {
+        if (this._reSpaceAndTab.test(line[i])) {
+          timeToRender = true;
+        }
+      }
+      if (!timeToRender) {
+        actualStyle = actualStyle || this.getCompleteStyleDeclaration(lineIndex, i);
+        nextStyle = this.getCompleteStyleDeclaration(lineIndex, i + 1);
+        timeToRender = this._hasStyleChangedForSvg(actualStyle, nextStyle);
+      }
+      if (timeToRender) {
+        style = this._getStyleDeclaration(lineIndex, i) || { };
+        textSpans.push(this._createTextCharSpan(charsToRender, style, textLeftOffset, textTopOffset));
+        charsToRender = '';
+        actualStyle = nextStyle;
+        textLeftOffset += boxWidth;
+        boxWidth = 0;
+      }
+    }
+  }
+
+  _pushTextBgRect(textBgRects: any[], color: string, left: number, top: number, width: number, height: number) {
+    textBgRects.push(
+      '\t\t<rect ',
+      this._getFillAttributes(color),
+      ' x="',
+      util.toFixed(left, NUM_FRACTION_DIGITS),
+      '" y="',
+      util.toFixed(top, NUM_FRACTION_DIGITS),
+      '" width="',
+      util.toFixed(width, NUM_FRACTION_DIGITS),
+      '" height="',
+      util.toFixed(height, NUM_FRACTION_DIGITS),
+      '"></rect>\n');
+  }
+
+  _setSVGTextLineBg(textBgRects: string[], i: number, leftOffset: number, textTopOffset: number) {
+    let line = this._textLines[i],
+        heightOfLine = this.getHeightOfLine(i) / this.lineHeight,
+        boxWidth = 0,
+        boxStart = 0,
+        charBox, currentColor,
+        lastColor = this.getValueOfPropertyAt(i, 0, 'textBackgroundColor');
+    for (let j = 0, jlen = line.length; j < jlen; j++) {
+      charBox = this.__charBounds[i][j];
+      currentColor = this.getValueOfPropertyAt(i, j, 'textBackgroundColor');
+      if (currentColor !== lastColor) {
+        lastColor && this._pushTextBgRect(textBgRects, lastColor, leftOffset + boxStart,
+          textTopOffset, boxWidth, heightOfLine);
+        boxStart = charBox.left;
+        boxWidth = charBox.width;
+        lastColor = currentColor;
+      }
+      else {
+        boxWidth += charBox.kernedWidth;
+      }
+    }
+    currentColor && this._pushTextBgRect(textBgRects, currentColor, leftOffset + boxStart,
+      textTopOffset, boxWidth, heightOfLine);
+  }
+
+  _getFillAttributes(value: any) {
+    let fillColor = (value && typeof value === 'string') ? new Color(value) : '';
+    if (!fillColor || !fillColor.getSource() || fillColor.getAlpha() === 1) {
+      return 'fill="' + value + '"';
+    }
+    return 'opacity="' + fillColor.getAlpha() + '" fill="' + fillColor.setAlpha(1).toRgb() + '"';
+  }
+
+  _getSVGLineTopOffset(lineIndex: number) {
+    let lineTopOffset = 0, lastHeight = 0, j = 0;
+    for (let j = 0; j < lineIndex; j++) {
+      lineTopOffset += this.getHeightOfLine(j);
+    }
+    lastHeight = this.getHeightOfLine(j);
+    return {
+      lineTop: lineTopOffset,
+      offset: (this._fontSizeMult - this._fontSizeFraction) * lastHeight / (this.lineHeight * this._fontSizeMult)
+    };
+  }
+
+  getSvgStyles(skipShadow: boolean) {
+    const svgStyle = super.getSvgStyles(skipShadow);
+    return svgStyle + ' white-space: pre;';
+  }
 }
 
 Object.assign(ArcText.prototype, {
