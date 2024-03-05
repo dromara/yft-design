@@ -7,6 +7,7 @@ import { ArcTextMixin } from '../mixins/arctext.mixin'
 const _dimensionAffectingProps = ['fontSize', 'fontWeight', 'fontFamily', 'fontStyle', 'lineHeight', 'text', 'charSpacing', 'textAlign', 'styles', 'color', 'canvas', 'curvature']
 const multipleSpacesRegex = /  +/g
 const NUM_FRACTION_DIGITS = 2
+const BaseRadius = 10000
 
 interface TBackgroundStroke {
   stroke: string
@@ -26,8 +27,8 @@ const getParentScaleX = (el: FabricObject): number => {
 
 export class ArcText extends OriginIText {
   static type: string = 'ArcText'
-  public curvature = 100
-  public radius = 66
+  public curvature: number = 151
+  public radius: number = 66
   public useRenderBoundingBoxes = true
   public showCurvature?: boolean
   public color?: string
@@ -53,6 +54,7 @@ export class ArcText extends OriginIText {
   constructor(text: string, options: any) {
     super(text, options)
     this.createCurvatureControl()
+    this.showCurvature = true
   }
 
   get type() {
@@ -68,13 +70,15 @@ export class ArcText extends OriginIText {
       actionHandler: this.changeCurvature,
       render(ctx, left, top, styleOverride, fabricObject: ArcText) {
         if (fabricObject.showCurvature) {
+          const zoom = fabricObject.canvas?.getZoom() ? fabricObject.canvas?.getZoom() : 1
+          const radius = Math.abs(fabricObject.radius) * zoom
           ctx.save()
           ctx.strokeStyle = fabricObject.borderColor
           ctx.lineWidth = fabricObject.borderWidth
           // let cx = -fabricObject._contentOffsetX * fabricObject.scaleX
           // let cy = (fabricObject._curvingCenter.y - fabricObject._contentOffsetY) * fabricObject.scaleY
           ctx.beginPath()
-          ctx.ellipse(left, top, Math.abs(fabricObject.radius) * fabricObject.scaleX, Math.abs(fabricObject.radius) * fabricObject.scaleY, 0, 0, 2 * Math.PI);
+          ctx.ellipse(left, top, radius * fabricObject.scaleX, radius * fabricObject.scaleY, 0, 0, 2 * Math.PI);
           ctx.stroke();
           ctx.restore()
         }
@@ -88,9 +92,12 @@ export class ArcText extends OriginIText {
 
   updateCurvingControl () {
     if (this.controls.c) {
-      this.controls.c.offsetX =  -this._contentOffsetX * this.scaleX
-      this.controls.c.offsetY = (this._curvingCenter.y - this._contentOffsetY) * this.scaleY
+      const zoom = this.canvas?.getZoom() ? this.canvas?.getZoom() : 1
+      this.controls.c.offsetX =  -this._contentOffsetX * this.scaleX * zoom,
+      this.controls.c.offsetY = (this._curvingCenter.y - this._contentOffsetY) * this.scaleY * zoom
       this.canvas && this.setCoords()
+      // console.log('this._contentOffsetX:', this._contentOffsetX, 'this._contentOffsetY:', this._contentOffsetY)
+      // console.log('offsetX:', this.controls.c.offsetX, 'offsetY:', this.controls.c.offsetY)
     }
   }
 
@@ -114,7 +121,7 @@ export class ArcText extends OriginIText {
   }
 
   setRadius(value: number) {
-    this.setCurvature(10000 / value)
+    this.setCurvature(BaseRadius / value)
   }
 
   setCurvature(value: number) {
@@ -122,16 +129,12 @@ export class ArcText extends OriginIText {
   }
 
   renderCharCallback(method: any, ctx: CanvasRenderingContext2D, lineIndex: number, charIndex: number, endCharIndex: number, left: number, top: number, fullDecl: any) {
-    if (!this._charTransformations[lineIndex]) {
-      this.initDimensions()
-    }
     for (let index = charIndex; index <= endCharIndex; index++) {
-      // console.log('this._charTransformations[lineIndex]:', this._charTransformations[lineIndex], index, this.canvas)
       const tr = this._charTransformations[lineIndex][index]
       ctx.textAlign = "center"
       if (tr.char) {
         let angle = this.curvature > 0 ? -tr.charAngle : -tr.charAngle - Math.PI
-        if(tr.contour && fullDecl.contourStroke){
+        if (tr.contour && fullDecl.contourStroke) {
           ctx.save();
           ctx.lineWidth = fullDecl.contourStrokeWidth
           ctx.strokeStyle = fullDecl.contourStroke
@@ -324,8 +327,8 @@ export class ArcText extends OriginIText {
     }
     const textHeight = this.calcTextHeight();
     const textWidth = this.calcTextWidth();
-    const curvature = this.curvature !== undefined ? this.curvature : 100
-    this.radius = 10000 / curvature
+    const curvature = this.curvature !== undefined ? this.curvature : 1
+    this.radius = BaseRadius / curvature
     const cx = 0, cy = curvature > 0 ? textHeight / 2 + this.radius : -textHeight / 2 + this.radius
     this._curvingCenter = new Point(cx, cy)
     let globalOffset = 0
@@ -949,7 +952,6 @@ export class ArcText extends OriginIText {
 
   getHeightOfLine(lineIndex: number) {
     if (!this.__lineHeights) {
-      console.log('this.getHeightOfLine')
       this.initDimensions();
     }
     if (this.__lineHeights[lineIndex]) {
