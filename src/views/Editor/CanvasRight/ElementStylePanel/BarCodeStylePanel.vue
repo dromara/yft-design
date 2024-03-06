@@ -92,11 +92,13 @@ onMounted(() => {
 
 // 更新背景颜色
 const updateBackgroundColor = (color: string) => {
+  handleElement.value.codeOption.background = color
   generateBarCode()
 }
 
 // 更新条码颜色
 const updateLineColor = (color: string) => {
+  handleElement.value.codeOption.lineColor = color
   generateBarCode()
 }
 
