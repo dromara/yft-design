@@ -6,6 +6,7 @@ import { useFabricStore, useTemplatesStore } from '@/store'
 import { WorkSpaceThumbType, WorkSpaceClipType, WorkSpaceCommonType, WorkSpaceSafeType, propertiesToInclude } from '@/configs/canvas'
 import { ImageFormat } from 'fabric'
 import { downloadSVGFile, downloadLinkFile } from '@/utils/download'
+import { changeDpiDataUrl } from 'changedpi'
 import useCanvas from '@/views/Canvas/useCanvas'
 import useCenter from '@/views/Canvas/useCenter'
 import { handleMessage } from "@/worker/pdf"
@@ -33,7 +34,7 @@ export default () => {
     if (activeObject) canvas.discardActiveObject()
     canvas.set({background: 'rgba(255,255,255,0)'})
     canvas.renderAll()
-    const result = canvas.toDataURL({
+    let result = canvas.toDataURL({
       multiplier: 1 / zoom,
       quality: quality,
       format: format,
@@ -42,7 +43,7 @@ export default () => {
       left: left * zoom + viewportTransform[4],
       top: top * zoom + viewportTransform[5]
     })
-    // const data = changeDataURLDPI(result, dpi)
+    result = changeDpiDataUrl(result, dpi)
     saveAs(result, `yft-design-${Date.now()}.${format}`)
     Exporting.value = false
     ignoreObjects.map(item => item.set({visible: true}))

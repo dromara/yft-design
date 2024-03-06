@@ -348,3 +348,5 @@ declare module 'clipper-lib' {
   }
 
 }
+
+declare module 'changedpi';
