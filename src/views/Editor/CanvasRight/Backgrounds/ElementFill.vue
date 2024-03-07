@@ -464,6 +464,20 @@ const updateGradientBackground = (index: number, color: string) => {
   }
 }
 
+// 计算渐变角度后的位置
+const rotateRectangle = (width: number, height: number, gradientRotate: number) => {
+  const proportion = (gradientRotate % 180) / 180;
+  let x1 = width * proportion;
+  let x2 = width - x1;
+  const y1 = gradientRotate <= 180 ? 0 : height;
+  const y2 = height - y1;
+  if (gradientRotate >= 180) {
+    [x2, x1] = [x1, x2]
+  }
+  // 返回旋转后的坐标
+  return { x1, y1, x2, y2 };
+};
+
 // 生成渐变背景
 const generateGradientBackground = () => {
   if (!handleElement.value) return
@@ -472,16 +486,15 @@ const generateGradientBackground = () => {
   let coords: GradientCoords = { x1: 0, y1: 0, x2: width, y2: 0 }
   if (background.value.gradientType !== 'linear') {
     coords = { r1: 0, r2: height / 2, x1: width / 2, y1: height / 2, x2: width / 2, y2: height / 2 }
-  } 
-  const rotateCos = Math.cos(gradientRotate.value * Math.PI / 180.0)
-  const rotateSin = Math.sin(gradientRotate.value * Math.PI / 180.0)
+  } else {
+    coords = rotateRectangle(width, height, gradientRotate.value);
+  }
   const gradient = new Gradient({
     type: background.value.gradientType,
     colorStops: background.value.gradientColor || GradientColorLibs[0].colors,
     coords: coords,
     offsetX: gradientOffsetX.value * width,
     offsetY: gradientOffsetY.value * height,
-    gradientTransform: [rotateCos, rotateSin, -1 * rotateSin, rotateCos, 0, 0],
     gradientUnits: 'pixels'
   })
   updateBackground({fill: gradient, opacity: gradientOpacity.value})
