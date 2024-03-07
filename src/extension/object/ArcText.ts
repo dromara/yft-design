@@ -96,8 +96,6 @@ export class ArcText extends OriginIText {
       this.controls.c.offsetX =  -this._contentOffsetX * this.scaleX * zoom,
       this.controls.c.offsetY = (this._curvingCenter.y - this._contentOffsetY) * this.scaleY * zoom
       this.canvas && this.setCoords()
-      // console.log('this._contentOffsetX:', this._contentOffsetX, 'this._contentOffsetY:', this._contentOffsetY)
-      // console.log('offsetX:', this.controls.c.offsetX, 'offsetY:', this.controls.c.offsetY)
     }
   }
 
@@ -1030,8 +1028,8 @@ export class ArcText extends OriginIText {
       this._toSVG(),
       { reviver: reviver, noStyle: true, withShadow: true }
     );
-    console.log('arcTextSVG:', arcTextSVG)
-    return arcTextSVG
+    // res = this.toDataURL()
+    return `<image xlink:href="${this.toDataURL()}" width="${this.width}" height="${this.height}" x="${this.left}" y="${this.top}"/>`
   }
 
   _toSVG() {
@@ -1103,7 +1101,7 @@ export class ArcText extends OriginIText {
     };
   }
 
-  _createTextCharSpan(_char: string, styleDecl: any, left: number, top: number) {
+  _createTextCharSpan(_char: string, styleDecl: any, left: number, top: number, angle: number) {
     const shouldUseWhitespace = _char !== _char.trim() || _char.match(multipleSpacesRegex) ? true : false,
         styleProps = this.getSvgSpanStyles(styleDecl, shouldUseWhitespace),
         fillStyles = styleProps ? 'style="' + styleProps + '"' : '',
@@ -1115,6 +1113,7 @@ export class ArcText extends OriginIText {
     return [
       '<tspan x="', util.toFixed(left, NUM_FRACTION_DIGITS), '" y="',
       util.toFixed(top, NUM_FRACTION_DIGITS), '" ', dySpan,
+      'rotate="', angle + '"', 
       fillStyles, '>',
       util.string.escapeXml(_char),
       '</tspan>'
@@ -1144,7 +1143,9 @@ export class ArcText extends OriginIText {
     for (let i = 0, len = line.length - 1; i <= len; i++) {
       timeToRender = i === len || this.charSpacing;
       charsToRender += line[i];
-      charBox = this.__charBounds[lineIndex][i];
+      // charBox = this.__charBounds[lineIndex][i];
+      charBox = this._charTransformations[lineIndex][i];
+      const angle  = this.curvature > 0 ? -charBox.charAngle : -charBox.charAngle - Math.PI
       if (boxWidth === 0) {
         textLeftOffset += charBox.kernedWidth - charBox.width;
         boxWidth += charBox.width;
@@ -1164,7 +1165,9 @@ export class ArcText extends OriginIText {
       }
       if (timeToRender) {
         style = this._getStyleDeclaration(lineIndex, i) || { };
-        textSpans.push(this._createTextCharSpan(charsToRender, style, textLeftOffset, textTopOffset));
+        // textSpans.push(this._createTextCharSpan(charsToRender, style, textLeftOffset, textTopOffset));
+        const degress = angle * 180 / Math.PI
+        textSpans.push(this._createTextCharSpan(charsToRender, style, charBox.cl.x, charBox.cl.y, degress));
         charsToRender = '';
         actualStyle = nextStyle;
         textLeftOffset += boxWidth;
