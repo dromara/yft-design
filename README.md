@@ -1,7 +1,7 @@
 # yft-design
 1，一款美观且功能强大的在线设计工具，具备海报设计和图片编辑功能，基于Canvas的开源版【稿定设计】。适用于多种场景，如海报生成、电商产品图制作、文章长图设计、视频/公众号封面编辑等。  
-2，适配稿定设计导出pdf还原，支持导入psd样式还原
-3，可导出图片，svg，pdf
+2，适配稿定设计导出pdf还原，支持导入psd还原  
+3，可导出图片，svg，pdf  
 <b>体验Demo：[https://yft.design](https://yft.design)</b>  
 <b>体验Demo：[https://dromara.org/yft-design](https://dromara.org/yft-design)</b>
 
