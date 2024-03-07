@@ -9,7 +9,6 @@ import { downloadSVGFile, downloadLinkFile } from '@/utils/download'
 import { changeDpiDataUrl } from 'changedpi'
 import useCanvas from '@/views/Canvas/useCanvas'
 import useCenter from '@/views/Canvas/useCenter'
-import { handleMessage } from "@/worker/pdf"
 import { exportFile } from '@/api/file'
 // const worker = new PDFWorker()
 
@@ -26,7 +25,10 @@ export default () => {
     const zoom = canvas.getZoom()
     const viewportTransform = canvas.viewportTransform
     const activeObject = canvas.getActiveObject()
-    const ignoreObjects = canvas.getObjects().filter(obj => WorkSpaceCommonType.includes(obj.id))
+    let ignoreObjects = canvas.getObjects().filter(obj => WorkSpaceCommonType.includes(obj.id))
+    if (format === 'jpeg') {
+      ignoreObjects = canvas.getObjects().filter(obj => WorkSpaceThumbType.includes(obj.id))
+    }
     if (ignoreClip) {
       ignoreObjects.map(item => item.set({visible: false}))
       canvas.renderAll()

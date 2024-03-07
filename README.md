@@ -8,7 +8,11 @@
 
 ![image](/docs/example.png)
 
-# 🎉 PSD解析
+# 🎉 pdf解析
+
+![psd-parse](/docs/pdf-parse.gif)
+
+# 🎉 psd解析
 
 ![psd-parse](/docs/psd-parse.gif)
 
