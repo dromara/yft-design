@@ -1,7 +1,7 @@
 # yft-design
-1，基于fabric.js的多页面图片设计，使用 Vue3 + TypeScript + Fabric.js + Element-Plus，支持 文字、图片、形状、线条、二维码 、条形码几种最常用的元素类型，每一种元素都拥有高度可编辑能力，缩略图显示，模板，支持导出json，svg, image文件。  
-2，完美适配稿定设计导出pdf还原  
-3，完美适配pdf，psd格式导入  
+1，一款美观且功能强大的在线设计工具，具备海报设计和图片编辑功能，基于Canvas的开源版【稿定设计】。适用于多种场景，如海报生成、电商产品图制作、文章长图设计、视频/公众号封面编辑等。  
+2，适配稿定设计导出pdf还原，支持导入psd样式还原
+3，可导出图片，svg，pdf
 <b>体验Demo：[https://yft.design](https://yft.design)</b>  
 <b>体验Demo：[https://dromara.org/yft-design](https://dromara.org/yft-design)</b>
 
