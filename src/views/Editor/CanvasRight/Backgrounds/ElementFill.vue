@@ -272,9 +272,9 @@ const { canvasObject } = storeToRefs(mainStore)
 
 // 渐变偏移
 const gradientOpacity = ref(1)
-const gradientRotate = ref(0)
-const gradientOffsetX = ref(0)
-const gradientOffsetY = ref(0)
+const gradientRotate = ref(canvasObject.value.fill.gradientRotate ?? 0)
+const gradientOffsetX = ref((canvasObject.value.fill.offsetX ?? 0) / canvasObject.value.width)
+const gradientOffsetY = ref((canvasObject.value.fill.offsetY ?? 0) / canvasObject.value?.height)
 
 // 网格 预定义 参数
 const RECENT_GRIDS = 'RECENT_GRIDS'
@@ -495,8 +495,10 @@ const generateGradientBackground = () => {
     coords: coords,
     offsetX: gradientOffsetX.value * width,
     offsetY: gradientOffsetY.value * height,
-    gradientUnits: 'pixels'
+    gradientUnits: 'pixels',
   })
+  gradient.gradientRotate = gradientRotate.value
+  
   updateBackground({fill: gradient, opacity: gradientOpacity.value})
 }
 
