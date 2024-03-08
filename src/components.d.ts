@@ -215,4 +215,6 @@ declare global {
   interface Window {
     queryLocalFonts(): any[];
   }
+
+  declare type Recordable<T = any> = Record<string, T>;
 }
