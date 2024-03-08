@@ -56,6 +56,13 @@ export default () => {
     if (!element) return
     element.lockMovementX = status
     element.lockMovementY = status
+    element.selectable = !status;
+    if (status ) {
+      element.hoverCursor = 'not-allowed';
+      if (canvasObject.value && canvasObject.value.id == element.id) {
+        canvas.discardActiveObject();
+      }
+    }
     canvas.renderAll()
     templatesStore.modifedElement()
   }

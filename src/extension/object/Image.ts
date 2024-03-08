@@ -15,7 +15,7 @@ export class Image extends OriginImage {
   }
 
   public doubleClickHandler(e: TPointerEventInfo<TPointerEvent>) {
-    if (!this.canvas || !e.target || e.target !== this) return
+    if (!this.canvas || !e.target || e.target !== this || (e.target.lockMovementX && e.target.lockMovementY)) return
     this.set({__isCropping: true, clipPath: undefined})
     this.canvas.setActiveObject(this)
     this.canvas.requestRenderAll()
