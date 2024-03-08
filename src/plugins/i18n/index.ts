@@ -2,7 +2,7 @@
  * @Author: June 1601745371@qq.com
  * @Date: 2024-03-08 10:20:49
  * @LastEditors: June 1601745371@qq.com
- * @LastEditTime: 2024-03-08 11:29:37
+ * @LastEditTime: 2024-03-08 14:01:25
  * @FilePath: \github\yft-design\src\plugins\locale\index.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -32,8 +32,7 @@ function getLocalLang() {
 async function createI18nOptions(): Promise<I18nOptions> {
   const locale = getLocalLang();
   const defaultLocal = await import(`./lang/${locale}.ts`);
-  const message = defaultLocal.default?.message ?? {};
-  console.log(locale, defaultLocal, message)
+  const message = defaultLocal.default ?? {};
   return {
     legacy: false,
     locale,

@@ -1,10 +1,20 @@
+<!--
+ * @Author: June 1601745371@qq.com
+ * @Date: 2024-03-08 09:06:56
+ * @LastEditors: June 1601745371@qq.com
+ * @LastEditTime: 2024-03-08 14:07:24
+ * @FilePath: \github\yft-design\src\App.vue
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
 <template>
-  <Editor v-if="!isMobile()"/>
-  <Mobile v-else/>
+  <el-config-provider :locale="elLocale.el">
+    <Editor v-if="!isMobile()"/>
+    <Mobile v-else/>
+  </el-config-provider>
 </template>
 
 <script lang="ts" setup>
-import { onMounted } from 'vue'
+import { onMounted, computed } from 'vue'
 import { deleteDiscardedDB } from '@/utils/database'
 import { useMainStore, useSnapshotStore } from '@/store'
 import { storeToRefs } from 'pinia'
@@ -12,6 +22,10 @@ import { isMobile } from '@/utils/common'
 import { LocalStorageDiscardedKey } from '@/configs/canvas'
 import Editor from '@/views/Editor/index.vue'
 import Mobile from './views/Editor/mobile.vue'
+import useI18n from '@/hooks/useI18n'
+
+const { locale, messages }= useI18n()
+const elLocale = computed(() => messages.value[locale.value])
 
 const snapshotStore = useSnapshotStore()
 const mainStore = useMainStore()
