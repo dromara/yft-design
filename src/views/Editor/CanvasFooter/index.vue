@@ -3,13 +3,13 @@
     <!-- <div class="resize-handler"></div> -->
     <div class="footer-left">
       <div class="left-handle">
-        <el-tooltip placement="top" :hide-after="0" content="邀请协同">
+        <el-tooltip placement="top" :hide-after="0" :content="t('inviteCollaboration')">
           <IconPeoples class="footer-button"/>
         </el-tooltip>
       </div>
       <div class="left-handle">
         <a href="https://github.com/dromara/yft-design" target="_blank" rel="noopener noreferrer">
-          <el-tooltip placement="top" :hide-after="0" content="欢迎Star">
+          <el-tooltip placement="top" :hide-after="0" :content="t('github')">
             <IconGithub class="footer-button"></IconGithub>
           </el-tooltip>
         </a>
@@ -18,18 +18,18 @@
     <div class="footer-right">
       <div class="right-handle" v-if="isChecked">
         <FileInput :accept="'.json'" @change="(files: FileList) => loadFile(files)">
-          <el-tooltip placement="top" :hide-after="0" content="上传文件">
+          <el-tooltip placement="top" :hide-after="0" :content="t('uploadFiles')">
             <IconUploadOne class="footer-button"/>
           </el-tooltip>
         </FileInput>
       </div>
       <div class="right-handle">
-        <el-tooltip placement="top" :hide-after="0" content="下载文件">
+        <el-tooltip placement="top" :hide-after="0" :content="t('downloadFiles')">
           <IconDownloadOne class="footer-button" @click="exportFile()"/>
         </el-tooltip>
       </div>
       <div class="right-handle">
-        <el-tooltip placement="top" :hide-after="0" content="保存模板">
+        <el-tooltip placement="top" :hide-after="0" :content="t('saveTemplate')">
           <IconSave class="footer-button" @click="exportFile()"/>
         </el-tooltip>
       </div>
@@ -43,11 +43,13 @@ import { ref, watch } from 'vue'
 import useCanvas from "@/views/Canvas/useCanvas"
 import useHandleElement  from '@/hooks/useHandleElement'
 import ExportFile from './components/index.vue'
+import useI18n from '@/hooks/useI18n'
 import { storeToRefs } from 'pinia'
 import { useFabricStore, useTemplatesStore } from '@/store'
 
 const fabricStore = useFabricStore()
 const { isChecked } = storeToRefs(fabricStore)
+const { t } = useI18n()
 const exportFileDialog = ref(false)
 
 

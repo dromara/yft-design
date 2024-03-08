@@ -2,14 +2,14 @@
   <div class="export-pdf-dialog">
     <div class="configs">
       <div class="row">
-        <div class="title">导出范围：</div>
+        <div class="title">{{ t('exportRange') }}：</div>
         <el-radio-group class="config-item" v-model="rangeType">
-          <el-radio-button style="width: 50%;" value="all">全部页面</el-radio-button>
-          <el-radio-button style="width: 50%;" value="current">当前页面</el-radio-button>
+          <el-radio-button style="width: 50%;" value="all">{{ t('allPages') }}</el-radio-button>
+          <el-radio-button style="width: 50%;" value="current">{{ t('currentPage') }}</el-radio-button>
         </el-radio-group>
       </div>
       <div class="row">
-        <div class="title">每页数量：</div>
+        <div class="title">{{ t('quantityPerPage') }}：</div>
         <el-select class="config-item" v-model:value="count">
           <el-option :value="1">1</el-option>
           <el-option :value="2">2</el-option>
@@ -17,19 +17,19 @@
         </el-select>
       </div>
       <div class="row">
-        <div class="title">边缘留白：</div>
+        <div class="title">{{ t('blankEdges') }}：</div>
         <div class="config-item">
           <el-switch v-model:checked="padding" />
         </div>
       </div>
-      <div class="tip">
+      <!-- <div class="tip">
         注意：若打印预览与实际样式不一致，请在弹出的打印窗口中勾选【背景图形】选项。
-      </div>
+      </div> -->
     </div>
 
     <div class="btns">
-      <el-button class="btn export" type="primary" @click="expPDF()">导出PDF</el-button>
-      <el-button class="btn close" @click="emit('close')">关闭</el-button>
+      <el-button class="btn export" type="primary" @click="expPDF()">{{ t('exportPDF') }}</el-button>
+      <el-button class="btn close" @click="emit('close')">{{ t('close') }}</el-button>
     </div>
   </div>
 </template>
@@ -37,6 +37,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
+import useI18n from '@/hooks/useI18n'
 import useCanvasExport from '@/hooks/useCanvasExport'
 // import { useSlidesStore } from '@/store'
 // import { print } from '@/utils/print'
@@ -44,7 +45,7 @@ import useCanvasExport from '@/hooks/useCanvasExport'
 // import ThumbnailSlide from '@/views/components/ThumbnailSlide/index.vue'
 
 const { exportPDF } = useCanvasExport()
-
+const { t } = useI18n()
 const emit = defineEmits<{
   (event: 'close'): void
 }>()
@@ -107,7 +108,7 @@ const expPDF = () => {
   }
 
   .title {
-    width: 100px;
+    width: 120px;
   }
   .config-item {
     flex: 1;

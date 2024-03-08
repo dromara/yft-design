@@ -5,7 +5,7 @@
     v-contextmenu="contextMenusThumbnails"  
   >
     <div class="thumb-handle">
-      <div class="btn" @click="createTemplate()"><IconPlus class="icon" />添加页面</div>
+      <div class="btn" @click="createTemplate()"><IconPlus class="icon" />{{ t('addPage') }}</div>
     </div>
     <Draggable
       class="thumb-content"
@@ -42,15 +42,18 @@ import useLoadTemplates from '@/hooks/useLoadTemplates'
 import useHandleTemplate from '@/hooks/useHandleTemplate'
 import ThumbnailTemplate from '@/views/Editor/CanvasThumb/ThumbnailTemplate.vue'
 import Draggable from 'vuedraggable'
+import useI18n from '@/hooks/useI18n'
 import { contextMenusThumbnails } from '@/configs/contextMenu'
 import { useMainStore, useTemplatesStore, useKeyboardStore } from '@/store'
 import { ContextMenu } from '@/components/ContextMenu/types'
 import { storeToRefs } from 'pinia'
 import { computed } from 'vue'
 import { fillDigit } from '@/utils/common/common'
+
 const mainStore = useMainStore()
 const templatesStore = useTemplatesStore()
 const keyboardStore = useKeyboardStore()
+const { t } = useI18n()
 const { templatesLoadLimit } = useLoadTemplates()
 const { templates, templateIndex } = storeToRefs(templatesStore)
 const { selectedTemplatesIndex: _selectedTemplatesIndex, thumbnailsFocus, canvasObject } = storeToRefs(mainStore)
