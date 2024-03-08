@@ -2,21 +2,21 @@
   <div>
     <el-affix position="bottom" :offset="45" v-show="unitMode === 0" style="width: calc(100%)">
       <el-checkbox-group v-model="showWorkLines" @change="changeWorkLines">
-        <el-checkbox-button type="primary" class="clip-btn" label="clip" :checked="showClip">
-          <el-tooltip placement="top" :hide-after="0" :content="(showClip ? '隐藏' : '显示') + '出血线'">
+        <el-tooltip placement="top" :hide-after="0" :content="(showClip ? '隐藏' : '显示') + '出血线'">
+          <el-checkbox-button type="primary" class="clip-btn" label="clip" :checked="showClip">
             <IconCuttingOne/>
-          </el-tooltip>
-        </el-checkbox-button>
-        <el-checkbox-button type="primary" label="drag" :checked="isDrag">
-          <el-tooltip placement="top" :hide-after="0" content="拖拽画布">
+          </el-checkbox-button>
+        </el-tooltip>
+        <el-tooltip placement="top" :hide-after="0" content="拖拽画布">
+          <el-checkbox-button type="primary" label="drag" :checked="isDrag">
             <IconClickTap/>
-          </el-tooltip>
-        </el-checkbox-button>
-        <el-checkbox-button type="primary" class="safe-btn" label="safe" :checked="showSafe">
-          <el-tooltip placement="top" :hide-after="0" :content="(showSafe ? t('show') : t('hide')) + '安全线'">
+          </el-checkbox-button>
+        </el-tooltip>
+        <el-tooltip placement="top" :hide-after="0" :content="(showSafe ? t('show') : t('hide')) + '安全线'">
+          <el-checkbox-button type="primary" class="safe-btn" label="safe" :checked="showSafe">
             <IconShield/>
-          </el-tooltip>
-        </el-checkbox-button>
+          </el-checkbox-button>
+        </el-tooltip>
       </el-checkbox-group>
     </el-affix>
   </div>

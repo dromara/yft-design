@@ -20,7 +20,7 @@ const props = defineProps({
   },
 })
 
-const checkboardCache = {}
+const checkboardCache: Record<string, any> = {}
 
 const renderCheckboard = (white: string, grey: string, size: number) => {
   const canvas = document.createElement('canvas')
