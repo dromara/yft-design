@@ -51,6 +51,25 @@ export default {
     downloadFiles: '下载文件',
     uploadFiles: '上传文件',
     saveTemplate: '保存模板',
+
+    undo: '撤销',
+    redo: '重做',
+    group: '组合',
+    ungroup: '解组',
+    union: '并集',
+    difference: '减去顶层',
+    intersection: '交集',
+    xor: '排除重叠',
+
+    createDesign: '创建设计',
+    referenceLine: '参考线',
+
+    codeStyle: '码样式',
+    codeContent: '码内容',
+    codeMargin: '码边距',
+    nonMargin: '无边距',
+    standardMargin: '标准边距',
+    errorRate: '容错率',
   },
 };
   

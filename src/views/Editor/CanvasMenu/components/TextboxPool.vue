@@ -36,7 +36,9 @@
 import { onMounted, ref } from 'vue'
 import { Search } from '@element-plus/icons-vue'
 import useHandleCreate from '@/hooks/useHandleCreate'
+import useI18n from '@/hooks/useI18n'
 
+const { t } = useI18n()
 const { createTextElement } = useHandleCreate()
 
 const textStyle = ref<'transverse' | 'direction'>('transverse')

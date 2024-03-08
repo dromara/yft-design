@@ -2,7 +2,7 @@
   <div>
     <el-popover 
       placement="right" 
-      width="200" 
+      width="220" 
       trigger="click" 
       popper-class="home-pop" 
       @before-enter="setHome(true)" 
@@ -21,15 +21,15 @@
       </el-row> -->
       <el-row class="pop-row">
         <IconNewlybuild class="pop-icon"/>
-        <span class="pop-text">创建设计</span>
+        <span class="pop-text">{{ t('createDesign') }}</span>
       </el-row>
       <el-row class="pop-row" @click="openUpload">
         <IconUpload class="pop-icon"/>
-        <span class="pop-text">导入文件</span>
+        <span class="pop-text">{{ t('uploadFiles') }}</span>
       </el-row>
       <el-row class="pop-row">
         <IconDividingLine class="pop-icon"/>
-        <span class="pop-text">参考线</span>
+        <span class="pop-text">{{ t('referenceLine') }}</span>
       </el-row>
     </el-popover>
     <FileUpload :visible="dialogVisible" @close="closeUpload"/>
@@ -37,6 +37,9 @@
 </template>
 <script lang="ts" setup>
 import { ref, watch } from 'vue'
+import useI18n from '@/hooks/useI18n'
+
+const { t } = useI18n()
 const hasHelp = ref(false)
 const popoverVisible = ref(false)
 const dialogVisible = ref(false)
@@ -79,14 +82,14 @@ const closeUpload = () => {
 .pop-row {
   margin: 0 10px;
   font-size: 15px;
-  padding: 10px 25px;
+  padding: 10px 15px;
   cursor: pointer;
   .pop-icon {
     font-size: 20px;
   }
 
   .pop-text {
-    padding-left: 10px;
+    padding-left: 15px;
   } 
 }
 .pop-row:hover {

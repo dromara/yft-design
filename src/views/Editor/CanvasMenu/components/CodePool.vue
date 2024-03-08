@@ -4,7 +4,7 @@
       <el-input></el-input>
     </el-row>
     <div class="code-content">
-      <div class="title">码样式：</div>
+      <div class="title">{{ t('codeStyle') }}：</div>
       <el-carousel type="card" height="135px" :autoplay="false" trigger="click" indicator-position="none">
         <el-carousel-item v-for="item in QRCodeStyleLibs" :key="item">
           <div justify="center" @click="createElement(item.name as QRCodeType)">
@@ -13,18 +13,18 @@
           </div>
         </el-carousel-item>
       </el-carousel>
-      <div class="title">码内容：</div>
+      <div class="title">{{ t('codeContent') }}：</div>
       <div class="row">
         <el-input v-model="codeContent" @change="updateCodeContent"></el-input>
       </div>
-      <div class="title">码边距：</div>
+      <div class="title">{{ t('codeMargin') }}：</div>
       <div class="row">
         <el-radio-group class="full-ratio" v-model="codeSpace" @change="updateCodeSpace">
-          <el-radio-button :value="true" :label="true">无边距</el-radio-button>
-          <el-radio-button :value="false" :label="false">标准边距</el-radio-button>
+          <el-radio-button :value="true" :label="true">{{ t('nonMargin') }}</el-radio-button>
+          <el-radio-button :value="false" :label="false">{{ t('standardMargin') }}</el-radio-button>
         </el-radio-group>
       </div>
-      <div class="title">容错率：</div>
+      <div class="title">{{ t('errorRate') }}：</div>
       <div class="row">
         <el-radio-group class="full-ratio" v-model="codeError" @change="updateCodeError">
           <el-radio-button :label="0">7%</el-radio-button>
@@ -58,7 +58,9 @@ import {
   rendererFuncB,
 } from 'beautify-qrcode'
 import useHandleCreate from '@/hooks/useHandleCreate'
+import useI18n from '@/hooks/useI18n'
 
+const { t } = useI18n()
 const { createQRCodeElement } = useHandleCreate()
 const codeContent = ref<string>(window.location.href)
 const codeSpace = ref<boolean>(true)

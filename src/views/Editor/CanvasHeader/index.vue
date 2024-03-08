@@ -2,19 +2,19 @@
   <div>
     <div class="left-handler">
       <el-tooltip placement="top" :hide-after="0">
-        <template #content>撤销</template>
+        <template #content>{{ t('undo') }}</template>
         <IconBack class="handler-item" :class="{ 'disable': !canUndo }" @click="undo()"/>
       </el-tooltip>
       <el-tooltip placement="top" :hide-after="0">
-        <template #content>重做</template>
+        <template #content>{{ t('redo') }}</template>
         <IconNext class="handler-item" :class="{ 'disable': !canRedo }" @click="redo()"/>
       </el-tooltip>
       <el-tooltip placement="top" :hide-after="0">
-        <template #content>组合</template>
+        <template #content>{{ t('group') }}</template>
         <IconGroup class="handler-item" :class="{ 'disable': !canGroup }" @click="group()"/>
       </el-tooltip>
       <el-tooltip placement="top" :hide-after="0">
-        <template #content>解组</template>
+        <template #content>{{ t('ungroup') }}</template>
         <IconUngroup class="handler-item" :class="{ 'disable': !canUnGroup }" @click="ungroup()"/>
       </el-tooltip>
     </div>
@@ -23,7 +23,7 @@
       <el-dropdown trigger="click">
         <span class="handler-dropdown">
           <el-tooltip placement="top" :hide-after="0">
-            <template #content>并集</template>
+            <template #content>{{ t('union') }}</template>
             <IconUnionSelection class="handler-icon"/>
           </el-tooltip>
           <IconDown class="handler-icon icon-down"/>
@@ -31,16 +31,16 @@
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item @click="intersection(0)">
-              <IconUnionSelection class="handler-item"/>并集
+              <IconUnionSelection class="handler-item"/>{{ t('union') }}
             </el-dropdown-item>
             <el-dropdown-item @click="intersection(1)">
-              <IconSubtractSelectionOne class="handler-item"/>减去顶层
+              <IconSubtractSelectionOne class="handler-item"/>{{ t('difference') }}
             </el-dropdown-item>
             <el-dropdown-item @click="intersection(2)">
-              <IconIntersectSelection class="handler-item"/>交集
+              <IconIntersectSelection class="handler-item"/>{{ t('intersection') }}
             </el-dropdown-item>
             <el-dropdown-item @click="intersection(3)">
-              <IconExcludeSelection class="handler-item"/>排除重叠
+              <IconExcludeSelection class="handler-item"/>{{ t('xor') }}
             </el-dropdown-item>
           </el-dropdown-menu>
         </template>
@@ -58,7 +58,7 @@
       </el-popover>
       <IconPlus class="handler-item"  @click="scaleCanvas('+')" />
       <el-tooltip placement="top">
-        <template #content>适应屏幕</template>
+        <template #content>{{ t('undo') }}</template>
         <IconFullScreen class="handler-item" @click="resetCanvas()"/>
       </el-tooltip>
       <Lang />
@@ -73,6 +73,7 @@ import { ElementNames } from '@/types/elements'
 import { storeToRefs } from 'pinia'
 import { Object as FabricObject, Group } from 'fabric'
 import { useFabricStore, useMainStore, useSnapshotStore, useTemplatesStore } from "@/store"
+import useI18n from '@/hooks/useI18n'
 import useCanvas from '@/views/Canvas/useCanvas'
 import useHandleTool from '@/hooks/useHandleTool'
 import useCanvasScale from '@/hooks/useCanvasScale'
@@ -82,6 +83,7 @@ import useHistorySnapshot from '@/hooks/useHistorySnapshot'
 const fabricStore = useFabricStore()
 const mainStore = useMainStore()
 const templatesStore = useTemplatesStore()
+const { t } = useI18n()
 const { alignElement, layerElement } = useHandleTool()
 const { setCanvasScalePercentage, scaleCanvas, resetCanvas } = useCanvasScale()
 const { combineElements, uncombineElements, intersectElements } = useHandleElement()

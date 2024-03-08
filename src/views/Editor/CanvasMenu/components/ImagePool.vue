@@ -35,6 +35,9 @@ import { getImageDataURL } from '@/utils/image'
 import useHandleCreate from '@/hooks/useHandleCreate'
 import ImageCategory from './ImageComponents/ImageCategory.vue'
 import IllustrationCategory from './ImageComponents/IllustrationCategory.vue'
+import useI18n from '@/hooks/useI18n'
+
+const { t } = useI18n()
 const { createImageElement } = useHandleCreate()
 
 

@@ -49,5 +49,23 @@ export default {
     uploadFiles: 'Upload Files',
     saveTemplate: 'Save Template',
 
+    undo: 'Undo',
+    redo: 'Redo',
+    group: 'Group',
+    ungroup: 'UnGroup',
+    union: 'Union',
+    difference: 'Difference',
+    intersection: 'Intersection',
+    xor: 'Xor',
+
+    createDesign: 'Create Design',
+    referenceLine: 'Reference Line',
+
+    codeStyle: 'Code Style',
+    codeContent: 'Code Content',
+    codeMargin: 'Code Margin',
+    nonMargin: 'Non Margin',
+    standardMargin: 'Standard Margin',
+    errorRate: 'Error Rate',
   },
 };

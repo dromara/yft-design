@@ -40,9 +40,9 @@ import useCanvas from '@/views/Canvas/useCanvas'
 import PathPool from './MaterialComponents/PathPool.vue'
 import LinePool from './MaterialComponents/LinePool.vue'
 import useHandleCreate from '@/hooks/useHandleCreate'
-import { CanvasElement, TextboxElement } from '@/types/canvas'
+import useI18n from '@/hooks/useI18n'
 
-
+const { t } = useI18n()
 const { createLineElement, createPathElement } = useHandleCreate()
 const activeMaterial = ref('data')
 

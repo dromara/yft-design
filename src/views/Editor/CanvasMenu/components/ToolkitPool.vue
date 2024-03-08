@@ -53,8 +53,9 @@ import {
 import { QRCodeType } from '@/types/canvas'
 import JsBarCode from 'jsbarcode'
 import useHandleCreate from '@/hooks/useHandleCreate'
+import useI18n from '@/hooks/useI18n'
 
-
+const { t } = useI18n()
 const { createQRCodeElement, createBarCodeElement } = useHandleCreate()
 const codeContent = ref<string>(window.location.href)
 const codeSpace = ref<boolean>(true)

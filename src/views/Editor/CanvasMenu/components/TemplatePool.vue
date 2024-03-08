@@ -28,7 +28,9 @@ import { onMounted, ref } from 'vue'
 // import { storeToRefs } from 'pinia'
 // import { useSlidesStore } from '@/store'
 import { Templates } from '@/mocks/templates'
-// import { TemplateAPIData } from '@/api/types'
+import useI18n from '@/hooks/useI18n'
+
+const { t } = useI18n()
 
 
 
