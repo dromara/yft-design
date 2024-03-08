@@ -61,7 +61,7 @@
         <template #content>适应屏幕</template>
         <IconFullScreen class="handler-item" @click="resetCanvas()"/>
       </el-tooltip>
-      <!-- <Lang /> -->
+      <Lang />
     </div>
   </div>
 </template>
