@@ -10,7 +10,7 @@ export interface UseSwipeOptions {
   onSwipeEnd?: (e: TPointerEventInfo<TPointerEvent>) => void
 }
 
-export function useFabricSwipe(options: UseSwipeOptions = {}) {
+export default(options: UseSwipeOptions = {}) => {
   const { onSwipe, onSwipeEnd, onSwipeStart } = options
 
   const coordsStart = reactive({ x: 0, y: 0 })

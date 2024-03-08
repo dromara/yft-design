@@ -2,7 +2,7 @@ import { Point, Canvas, Object as FabricObject } from 'fabric'
 import { watch, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { Disposable } from '@/utils/lifecycle'
-import { useFabricSwipe } from '@/hooks/useCanvasSwipe'
+import useCanvasSwipe from '@/hooks/useCanvasSwipe'
 import { useKeyboardStore } from '@/store'
 import { useActiveElement, toValue } from '@vueuse/core'
 
@@ -184,7 +184,7 @@ export class FabricTool extends Disposable {
     /** 鼠标移动开始的vpt */
     let vpt = canvas.viewportTransform
     const { spaceKeyState } = storeToRefs(useKeyboardStore())
-    const { lengthX, lengthY, isSwiping } = useFabricSwipe({
+    const { lengthX, lengthY, isSwiping } = useCanvasSwipe({
       onSwipeStart: (e) => {
         
         if (e.button === 2 || (spaceKeyState.value && e.button === 1)) {
