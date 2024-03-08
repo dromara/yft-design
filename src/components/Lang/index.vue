@@ -7,8 +7,10 @@
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
-  <el-dropdown split-button type="primary" @command="onDropdown">
-    {{ lang }}
+  <el-dropdown trigger="click">
+    <span class="handler-dropdown">
+      <IconTranslate class="handler-icon"/>
+    </span>
     <template #dropdown>
       <el-dropdown-menu>
         <el-dropdown-item v-for="lang in langList" :key="lang.langType" :command="lang.langType">{{ lang.langName }}</el-dropdown-item>
@@ -18,10 +20,10 @@
 </template>
 
 <script name="Lang" lang="ts" setup>
-import { ref, computed } from 'vue';
 import useI18n from '@/hooks/useI18n'
+import { ref, computed } from 'vue'
 import { LANG } from '@/constants/key'
-import { setLocal } from '@/utils/local';
+import { setLocal } from '@/utils/local'
 
 const { locale, changeLocale }= useI18n()
 const LANGMAP: Record<string, string> = {
@@ -43,3 +45,10 @@ const onDropdown = (command: string) => {
   setLocal(LANG, command);
 }
 </script>
+
+<style  lang="scss" scoped>
+.handler-icon {
+  font-size: 16px;
+  width: 18px;
+}
+</style>

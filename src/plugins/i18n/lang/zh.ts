@@ -13,7 +13,9 @@ export default {
     error: '系统出错',
   },
   message: {
-    test: '测试'
+    test: '测试',
+    show: '显示',
+    hide: '隐藏',
   },
 };
   

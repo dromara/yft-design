@@ -10,6 +10,8 @@ import el_en from 'element-plus/dist/locale/en.mjs'
 export default {
     ...el_en,
     message: {
-        test: 'test'
+        test: 'test',
+        show: 'show',
+        hide: 'hide',
     },
 };

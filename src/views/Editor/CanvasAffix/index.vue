@@ -13,7 +13,7 @@
           </el-tooltip>
         </el-checkbox-button>
         <el-checkbox-button type="primary" class="safe-btn" label="safe" :checked="showSafe">
-          <el-tooltip placement="top" :hide-after="0" :content="(showSafe ? '隐藏' : '显示') + '安全线'">
+          <el-tooltip placement="top" :hide-after="0" :content="(showSafe ? t('show') : t('hide')) + '安全线'">
             <IconShield/>
           </el-tooltip>
         </el-checkbox-button>
@@ -29,6 +29,7 @@ import { CanvasElement } from '@/types/canvas'
 import { WorkSpaceClipType, WorkSpaceSafeType } from '@/configs/canvas'
 import { useFabricStore, useKeyboardStore, useMainStore } from '@/store'
 import useCanvas from '@/views/Canvas/useCanvas'
+import useI18n from '@/hooks/useI18n'
 
 
 const fabricStore = useFabricStore()
@@ -36,6 +37,7 @@ const mainStore = useMainStore()
 const keyboardStore = useKeyboardStore()
 const { showClip, showSafe } = storeToRefs(fabricStore)
 const { unitMode } = storeToRefs(mainStore)
+const { t } = useI18n()
 const showWorkLines = ref<string[]>([])
 const isDrag = ref(false)
 
