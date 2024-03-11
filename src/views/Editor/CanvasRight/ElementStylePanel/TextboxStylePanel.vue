@@ -40,12 +40,12 @@
             <el-popover trigger="click" placement="bottom" :width="265">
               <template #reference>
                 <el-button class="high-light">
-                  <TextColorButton :color="handleElement.backgroundColor">
+                  <TextColorButton :color="elementBackgrounColor">
                     <IconHighLight />
                   </TextColorButton>
                 </el-button>
               </template>
-              <ColorPicker :modelValue="handleElement.backgroundColor" @update:modelValue="(color: string) => updateBackgroundColor(color)"/>
+              <ColorPicker :modelValue="elementBackgrounColor" @update:modelValue="(color: string) => updateBackgroundColor(color)"/>
             </el-popover>
           </div>
         </el-tooltip>
@@ -247,6 +247,12 @@ const { createPathElement } = useHandleCreate()
 const [ canvas ] = useCanvas()
 const handleElement = computed(() => canvasObject.value as TextboxElement | ArcText)
 const elementGrapheme = computed(() => handleElement.value.splitByGrapheme)
+const elementBackgrounColor = computed(() => {
+  if (handleElement.value.type.toLowerCase() === ElementNames.ARCTEXT) {
+    return handleElement.value.textBackgroundColor
+  }
+  return handleElement.value.backgroundColor
+})
 const hasFontFamily = computed(() => handleElement.value.fontFamily)
 const hasFontWeight = computed(() => handleElement.value.fontWeight !== 'normal')
 const hasFontStyle = computed(() => handleElement.value.fontStyle !== 'normal')
@@ -307,12 +313,15 @@ const updateFontColor = (fill: string) => {
 
 // 修改背景颜色
 const updateBackgroundColor = (backgroundColor: string) => {
-  
+  let changeData = { backgroundColor }
+  if (handleElement.value.type.toLowerCase() === ElementNames.ARCTEXT) {
+    changeData = { textBackgroundColor: backgroundColor }
+  }
   if (handleElement.value.isEditing) {
-    handleElement.value.setSelectionStyles({backgroundColor})
+    handleElement.value.setSelectionStyles(changeData)
   }
   else {
-    handleElement.value.set({backgroundColor})
+    handleElement.value.set(changeData)
   }
   templatesStore.modifedElement()
   canvas.renderAll()

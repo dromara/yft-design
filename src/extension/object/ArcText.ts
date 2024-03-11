@@ -35,9 +35,9 @@ export class ArcText extends OriginIText {
   public splitByGrapheme?: boolean
   public borderWidth: number = 0
   private __isMousedown: boolean = false
-  private _linesRads: number[] = []
   private __lineInfo: any = []
   private __renderOffsetTop: number = 0
+  private _linesRads: number[] = []
   private _contentOffsetX: number = 0
   private _contentOffsetY: number = 0
   private _curvingCenter: Point = new Point(0, 0)

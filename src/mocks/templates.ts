@@ -195,7 +195,7 @@ export const Templates: Template[] = [
       {
         "fontSize": 80,
         "fontWeight": "normal",
-        "fontFamily": "Arial",
+        "fontFamily": "Microsoft Yahei",
         "fontStyle": "normal",
         "lineHeight": 1.3,
         "text": "双击修改文字",
