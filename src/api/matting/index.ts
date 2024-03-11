@@ -6,7 +6,7 @@ import { UploadResult } from './types'
 /**
  * 上传文件
  *
- * @param file
+ * @param image
  */
  export function uploadImage(image: File, type: string): AxiosPromise<UploadResult> {
   const formData = new FormData()

@@ -1,6 +1,14 @@
 <template>
-  <el-dialog v-model="dialogVisible" title="AI智能抠图" width="35%" class="upload-dialog" :before-close="closeUpload">
-    <el-upload class="upload-demo" ref="uploadRef" :on-exceed="handleExceed" drag action="http" :http-request="uploadHandle" :limit="1" :accept="fileAccept" v-loading="uploading">
+  <el-dialog v-model="state.dialogVisible" title="AI智能抠图" width="35%" class="matting-dialog" :before-close="closeUpload">
+    <el-row class="model-row">
+      <el-col :span="2" class="model-tip">模型</el-col>
+      <el-col :span="4">
+        <el-select v-model="mattingModel">
+          <el-option v-for="item in MattingModel" :key="item.key" :value="item.id" :label="item.name"></el-option>
+        </el-select>
+      </el-col>
+    </el-row>
+    <el-upload v-if="!state.originImage" class="upload-demo" ref="uploadRef" :on-exceed="handleExceed" drag action="http" :http-request="uploadHandle" :limit="1" :accept="state.fileAccept" v-loading="state.loading">
       <el-icon :size="50">
         <UploadFilled />
       </el-icon>
@@ -13,29 +21,72 @@
         </div>
       </template>
     </el-upload>
+    <div class="content">
+      <div v-show="state.originImage" v-loading="!state.resultImage" :style="{ width: state.offsetWidth ? state.offsetWidth + 'px' : '100%' }" class="scan-effect transparent-bg">
+        <img ref="raw" :style="{ 'clip-path': 'inset(0 0 0 ' + state.percent + '%)' }" :src="state.originImage" alt="原始图像" />
+        <img v-show="state.resultImage" :src="state.resultImage" @mousemove="mousemove" alt="结果图像" />
+        <div v-show="state.resultImage" :style="{ left: state.percent + '%' }" class="scan-line"></div>
+      </div>
+    </div>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button v-show="state.originImage && state.toolModel" @click="clear">清空</el-button>
+        <el-button v-show="state.resultImage" type="primary" plain @click="edit">编辑</el-button>
+        <el-button v-show="state.resultImage && state.toolModel" type="primary" plain @click="download"> 下载 </el-button>
+        <el-button v-show="state.resultImage && !state.toolModel" v-loading="state.loading" type="primary" plain > {{ state.loading ? '上传中..' : '完成抠图' }} </el-button>
+      </span>
+    </template>
   </el-dialog>
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue'
+import { computed, ref, watch, reactive } from 'vue'
 import { UploadFilled } from '@element-plus/icons-vue'
 import { getImageDataURL, getImageText } from '@/utils/image'
 import { ElMessage, genFileId, UploadInstance, UploadProps, UploadRawFile } from "element-plus"
 import { uploadImage } from '@/api/matting'
 import { useTemplatesStore } from '@/store'
+import { MattingModel } from '@/configs/images'
 import useCanvasScale from '@/hooks/useCanvasScale'
 import useHandleCreate from '@/hooks/useHandleCreate'
 import useHandleTemplate from '@/hooks/useHandleTemplate'
 import useCanvas from '@/views/Canvas/useCanvas'
 
-
 const templatesStore = useTemplatesStore()
 const { setCanvasTransform } = useCanvasScale()
 const { createImageElement } = useHandleCreate()
 const { addTemplate } = useHandleTemplate()
-const dialogVisible = ref(false)
-const uploading = ref(false)
-const fileAccept = ref('.jpg,.jpeg,.png,.webp')
+
+interface TImageMattingState {
+  dialogVisible: boolean
+  fileAccept: string
+  show: boolean
+  originImage: string
+  resultImage: string
+  offsetWidth: number
+  percent: number
+  progress: number
+  progressText: string
+  toolModel: boolean
+  loading: boolean
+}
+
+const state = reactive<TImageMattingState>({
+  dialogVisible: false,
+  fileAccept: '.jpg,.jpeg,.png,.webp',
+  show: false,
+  originImage: '',
+  resultImage: '',
+  offsetWidth: 0,
+  percent: 0,
+  progress: 0,
+  progressText: '',
+  toolModel: true,
+  loading: false,
+})
+
+const isRuning = ref(false)
+const mattingModel = ref<string>(MattingModel[0].key)
 const uploadRef = ref<UploadInstance>()
 const props = defineProps({
   visible: {
@@ -49,7 +100,7 @@ const emit = defineEmits<{
 }>()
 
 watch(() => props.visible, (val) => {
-  dialogVisible.value = val
+  state.dialogVisible = val
   if (val) {
     uploadRef.value?.clearFiles()
   }
@@ -60,26 +111,16 @@ const closeUpload = () => {
 }
 
 const uploadHandle = async (option: any) => {
-  const [ canvas ] = useCanvas()
   const filename = option.file.name
   const fileSuffix = filename.split('.').pop()
-  if (!fileAccept.value.split(',').includes(`.${fileSuffix}`)) return
-  if (['jpg', 'jpeg', 'png', 'webp'].includes(fileSuffix)) {
-    // const dataURL = await getImageDataURL(option.file)
-    const res = await uploadImage(option.file, fileSuffix)
-    console.log('res:', res)
-    
+  if (!state.fileAccept.split(',').includes(`.${fileSuffix}`)) return
+  const res = await uploadImage(option.file, fileSuffix)
+  const mattingData = res.data
+  state.originImage = await getImageDataURL(option.file)
+  if (mattingData.code === 200) {
+    state.resultImage = mattingData.resultImage
+    state.offsetWidth = mattingData.size.width
   }
-  // uploading.value = true
-  // const res = await uploadFile(option.file, fileSuffix)
-  // uploading.value = false
-  // if (res && res.data.code === 200) {
-  //   const template = res.data.data
-  //   if (!template) return
-  //   await templatesStore.addTemplate(template)
-  //   setCanvasTransform()
-  //   emit('close')
-  // }
 }
 
 const handleExceed: UploadProps['onExceed'] = (files: File[]) => {
@@ -89,22 +130,78 @@ const handleExceed: UploadProps['onExceed'] = (files: File[]) => {
   uploadRef.value!.handleStart(file)
 }
 
+
+const clear = () => {
+  URL.revokeObjectURL(state.originImage)
+  state.originImage = ''
+  state.resultImage = ''
+  state.percent = 0
+  state.offsetWidth = 0
+}
+
+const edit = () => {
+
+}
+
+const download = () => {
+
+}
+
+const mousemove = (e: MouseEvent) => {
+  console.log('e.target :', e.target)
+  !isRuning.value && (state.percent = (e.offsetX / (e.target as any).width) * 100)
+}
+
 </script>
 
 <style lang="scss" scoped>
+.model-row {
+  padding-bottom: 10px;
+  .model-tip {
+    display: flex;
+    align-items: center;
+  }
+}
+.content {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+.scan-effect {
+  position: relative;
+  height: 50vh;
+  overflow: hidden;
+  img {
+    width: 100%;
+    object-fit: contain;
+    position: absolute;
+  }
+}
+.scan-line {
+  position: absolute;
+  top: 0;
+  width: 1.5px;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.7);
+  // background-image: linear-gradient(to top, transparent, rgba(255, 255, 255, 0.7), transparent);
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+}
 
 </style>
 <style>
-.upload-dialog .el-dialog__header {
+.matting-dialog .el-dialog__header {
   text-align: left
 }
-.upload-dialog .el-upload__tip {
+.matting-dialog .el-upload__tip {
   text-align: left;
 }
-.upload-dialog .el-upload-list__item-name {
+.matting-dialog .el-dialog__body {
+  padding-top: 0;
+}
+.matting-dialog .el-upload-list__item-name {
   padding: 0;
 }
-.upload-dialog .el-upload-list__item-info {
+.matting-dialog .el-upload-list__item-info {
   width: 100%;
   margin-left: 0;
 }
