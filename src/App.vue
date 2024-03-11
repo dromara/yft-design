@@ -24,7 +24,7 @@ import Editor from '@/views/Editor/index.vue'
 import Mobile from './views/Editor/mobile.vue'
 import useI18n from '@/hooks/useI18n'
 
-const {  messages }= useI18n()
+const { messages }= useI18n()
 const elLocale = computed(() => messages.value)
 console.log(elLocale)
 

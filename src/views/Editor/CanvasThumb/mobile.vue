@@ -7,7 +7,7 @@
     v-contextmenu="contextMenusThumbnails"  
   >
     <div class="thumb-handle">
-      <div class="btn" @click="createTemplate()"><IconPlus class="icon" />{{ t('addPage') }}</div>
+      <div class="btn" @click="createTemplate()"><IconPlus class="icon" />{{ t('message.addPage') }}</div>
     </div>
     <Draggable
       class="thumb-content"
@@ -35,7 +35,7 @@
       </template>
     </Draggable>
 
-    <div class="thumb-number">页面{{ templateIndex + 1 }} / {{ templates.length }}</div>
+    <div class="thumb-number">{{ t('message.pages') }}{{ templateIndex + 1 }} / {{ templates.length }}</div>
 
     <div class="layout-toggle" @click="thumbToggle">
       <IconLeft v-if="thumbShow"/>

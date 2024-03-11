@@ -21,15 +21,15 @@
       </el-row> -->
       <el-row class="pop-row">
         <IconNewlybuild class="pop-icon"/>
-        <span class="pop-text">{{ t('createDesign') }}</span>
+        <span class="pop-text">{{ t('message.createDesign') }}</span>
       </el-row>
       <el-row class="pop-row" @click="openUpload">
         <IconUpload class="pop-icon"/>
-        <span class="pop-text">{{ t('uploadFiles') }}</span>
+        <span class="pop-text">{{ t('message.uploadFiles') }}</span>
       </el-row>
       <el-row class="pop-row">
         <IconDividingLine class="pop-icon"/>
-        <span class="pop-text">{{ t('referenceLine') }}</span>
+        <span class="pop-text">{{ t('message.referenceLine') }}</span>
       </el-row>
     </el-popover>
     <FileUpload :visible="dialogVisible" @close="closeUpload"/>

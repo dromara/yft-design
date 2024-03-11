@@ -2,19 +2,19 @@
   <div>
     <div class="left-handler">
       <el-tooltip placement="top" :hide-after="0">
-        <template #content>{{ t('undo') }}</template>
+        <template #content>{{ t('message.undo') }}</template>
         <IconBack class="handler-item" :class="{ 'disable': !canUndo }" @click="undo()"/>
       </el-tooltip>
       <el-tooltip placement="top" :hide-after="0">
-        <template #content>{{ t('redo') }}</template>
+        <template #content>{{ t('message.redo') }}</template>
         <IconNext class="handler-item" :class="{ 'disable': !canRedo }" @click="redo()"/>
       </el-tooltip>
       <el-tooltip placement="top" :hide-after="0">
-        <template #content>{{ t('group') }}</template>
+        <template #content>{{ t('message.group') }}</template>
         <IconGroup class="handler-item" :class="{ 'disable': !canGroup }" @click="group()"/>
       </el-tooltip>
       <el-tooltip placement="top" :hide-after="0">
-        <template #content>{{ t('ungroup') }}</template>
+        <template #content>{{ t('message.ungroup') }}</template>
         <IconUngroup class="handler-item" :class="{ 'disable': !canUnGroup }" @click="ungroup()"/>
       </el-tooltip>
     </div>
@@ -23,7 +23,7 @@
       <el-dropdown trigger="click">
         <span class="handler-dropdown">
           <el-tooltip placement="top" :hide-after="0">
-            <template #content>{{ t('union') }}</template>
+            <template #content>{{ t('message.union') }}</template>
             <IconUnionSelection class="handler-icon"/>
           </el-tooltip>
           <IconDown class="handler-icon icon-down"/>
@@ -31,16 +31,16 @@
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item @click="intersection(0)">
-              <IconUnionSelection class="handler-item"/>{{ t('union') }}
+              <IconUnionSelection class="handler-item"/>{{ t('message.union') }}
             </el-dropdown-item>
             <el-dropdown-item @click="intersection(1)">
-              <IconSubtractSelectionOne class="handler-item"/>{{ t('difference') }}
+              <IconSubtractSelectionOne class="handler-item"/>{{ t('message.difference') }}
             </el-dropdown-item>
             <el-dropdown-item @click="intersection(2)">
-              <IconIntersectSelection class="handler-item"/>{{ t('intersection') }}
+              <IconIntersectSelection class="handler-item"/>{{ t('message.intersection') }}
             </el-dropdown-item>
             <el-dropdown-item @click="intersection(3)">
-              <IconExcludeSelection class="handler-item"/>{{ t('xor') }}
+              <IconExcludeSelection class="handler-item"/>{{ t('message.xor') }}
             </el-dropdown-item>
           </el-dropdown-menu>
         </template>
@@ -58,7 +58,7 @@
       </el-popover>
       <IconPlus class="handler-item"  @click="scaleCanvas('+')" />
       <el-tooltip placement="top">
-        <template #content>{{ t('undo') }}</template>
+        <template #content>{{ t('message.undo') }}</template>
         <IconFullScreen class="handler-item" @click="resetCanvas()"/>
       </el-tooltip>
       <Lang />

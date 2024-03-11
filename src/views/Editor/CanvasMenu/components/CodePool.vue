@@ -4,7 +4,7 @@
       <el-input></el-input>
     </el-row>
     <div class="code-content">
-      <div class="title">{{ t('codeStyle') }}：</div>
+      <div class="title">{{ t('message.codeStyle') }}：</div>
       <el-carousel type="card" height="135px" :autoplay="false" trigger="click" indicator-position="none">
         <el-carousel-item v-for="item in QRCodeStyleLibs" :key="item">
           <div justify="center" @click="createElement(item.name as QRCodeType)">
@@ -13,18 +13,18 @@
           </div>
         </el-carousel-item>
       </el-carousel>
-      <div class="title">{{ t('codeContent') }}：</div>
+      <div class="title">{{ t('message.codeContent') }}：</div>
       <div class="row">
         <el-input v-model="codeContent" @change="updateCodeContent"></el-input>
       </div>
-      <div class="title">{{ t('codeMargin') }}：</div>
+      <div class="title">{{ t('message.codeMargin') }}：</div>
       <div class="row">
         <el-radio-group class="full-ratio" v-model="codeSpace" @change="updateCodeSpace">
-          <el-radio-button :value="true" :label="true">{{ t('nonMargin') }}</el-radio-button>
-          <el-radio-button :value="false" :label="false">{{ t('standardMargin') }}</el-radio-button>
+          <el-radio-button :value="true" :label="true">{{ t('message.nonMargin') }}</el-radio-button>
+          <el-radio-button :value="false" :label="false">{{ t('message.standardMargin') }}</el-radio-button>
         </el-radio-group>
       </div>
-      <div class="title">{{ t('errorRate') }}：</div>
+      <div class="title">{{ t('message.errorRate') }}：</div>
       <div class="row">
         <el-radio-group class="full-ratio" v-model="codeError" @change="updateCodeError">
           <el-radio-button :label="0">7%</el-radio-button>

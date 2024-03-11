@@ -3,13 +3,13 @@
     <!-- <div class="resize-handler"></div> -->
     <div class="footer-left">
       <div class="left-handle">
-        <el-tooltip placement="top" :hide-after="0" :content="t('inviteCollaboration')">
+        <el-tooltip placement="top" :hide-after="0" :content="t('message.inviteCollaboration')">
           <IconPeoples class="footer-button"/>
         </el-tooltip>
       </div>
       <div class="left-handle">
         <a href="https://github.com/dromara/yft-design" target="_blank" rel="noopener noreferrer">
-          <el-tooltip placement="top" :hide-after="0" :content="t('github')">
+          <el-tooltip placement="top" :hide-after="0" :content="t('message.github')">
             <IconGithub class="footer-button"></IconGithub>
           </el-tooltip>
         </a>
@@ -18,18 +18,18 @@
     <div class="footer-right">
       <div class="right-handle" v-if="isChecked">
         <FileInput :accept="'.json'" @change="(files: FileList) => loadFile(files)">
-          <el-tooltip placement="top" :hide-after="0" :content="t('uploadFiles')">
+          <el-tooltip placement="top" :hide-after="0" :content="t('message.uploadFiles')">
             <IconUploadOne class="footer-button"/>
           </el-tooltip>
         </FileInput>
       </div>
       <div class="right-handle">
-        <el-tooltip placement="top" :hide-after="0" :content="t('downloadFiles')">
+        <el-tooltip placement="top" :hide-after="0" :content="t('message.downloadFiles')">
           <IconDownloadOne class="footer-button" @click="exportFile()"/>
         </el-tooltip>
       </div>
       <div class="right-handle">
-        <el-tooltip placement="top" :hide-after="0" :content="t('saveTemplate')">
+        <el-tooltip placement="top" :hide-after="0" :content="t('message.saveTemplate')">
           <IconSave class="footer-button" @click="exportFile()"/>
         </el-tooltip>
       </div>
