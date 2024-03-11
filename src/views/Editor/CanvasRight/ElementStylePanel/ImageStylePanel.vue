@@ -105,33 +105,31 @@ const clipImage = () => {
 // 预设裁剪
 const presetImageClip = (key: ClipPathType, ratio = 0) => {
   if (!handleElement.value) return
+  const originImage = handleElement.value._originalElement
+  const originHeight = originImage.height
+  const originWidth = originImage.width
 
   // 纵横比裁剪（形状固定为矩形）
   if (ratio) {
-    // const imageRatio = originHeight / originWidth
+    const imageRatio = originHeight / originWidth
 
-    // const min = 0
-    // const max = 100
-    // let range: [[number, number], [number, number]]
+    const min = 0
+    const max = 100
+    let range: [[number, number], [number, number]]
 
-    // if (imageRatio > ratio) {
-    //   const distance = ((1 - ratio / imageRatio) / 2) * 100
-    //   range = [[min, distance], [max, max - distance]]
-    // }
-    // else {
-    //   const distance = ((1 - imageRatio / ratio) / 2) * 100
-    //   range = [[distance, min], [max - distance, max]]
-    // }
-    // ({
-    //   id: handleElementId.value,
-    //   props: {
-    //     clip: { ..._handleElement.clip, shape, range },
-    //     left: originLeft + originWidth * (range[0][0] / 100),
-    //     top: originTop + originHeight * (range[0][1] / 100),
-    //     width: originWidth * (range[1][0] - range[0][0]) / 100,
-    //     height: originHeight * (range[1][1] - range[0][1]) / 100,
-    //   },
-    // })
+    if (imageRatio > ratio) {
+      const distance = ((1 - ratio / imageRatio) / 2) * 100
+      range = [[min, distance], [max, max - distance]]
+    }
+    else {
+      const distance = ((1 - imageRatio / ratio) / 2) * 100
+      range = [[distance, min], [max - distance, max]]
+    }
+    handleElement.value.set({
+        width: originWidth * (range[1][0] - range[0][0]) / 100,
+        height: originHeight * (range[1][1] - range[0][1]) / 100,
+    })
+    canvas.renderAll()
   }
   // 形状裁剪（保持当前裁剪范围）
   else {
