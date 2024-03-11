@@ -2,14 +2,14 @@
  * @Author: June 1601745371@qq.com
  * @Date: 2024-03-08 09:06:56
  * @LastEditors: June 1601745371@qq.com
- * @LastEditTime: 2024-03-08 14:06:17
+ * @LastEditTime: 2024-03-11 12:00:19
  * @FilePath: \github\yft-design\src\App.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
   <el-config-provider :locale="elLocale.el">
     <Editor v-if="!isMobile()"/>
-    <Mobile v-else/>
+    <Mobile v-else />
   </el-config-provider>
 </template>
 
@@ -24,8 +24,9 @@ import Editor from '@/views/Editor/index.vue'
 import Mobile from './views/Editor/mobile.vue'
 import useI18n from '@/hooks/useI18n'
 
-const { locale, messages }= useI18n()
-const elLocale = computed(() => messages.value[locale.value])
+const {  messages }= useI18n()
+const elLocale = computed(() => messages.value)
+console.log(elLocale)
 
 const snapshotStore = useSnapshotStore()
 const mainStore = useMainStore()

@@ -2,7 +2,7 @@
  * @Author: June 1601745371@qq.com
  * @Date: 2024-03-08 10:20:49
  * @LastEditors: June 1601745371@qq.com
- * @LastEditTime: 2024-03-08 14:35:01
+ * @LastEditTime: 2024-03-11 11:59:37
  * @FilePath: \github\yft-design\src\plugins\locale\index.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -10,6 +10,8 @@
 import { createI18n } from 'vue-i18n';
 import { LANG } from '@/constants/key'
 import { getLocal, setLocal } from '@/utils/local';
+import en from './lang/en'
+import zh from './lang/zh'
 import type { App } from 'vue';
 import type { I18n, I18nOptions } from 'vue-i18n';
 
@@ -31,18 +33,21 @@ const getLocalLang = () => {
 
 const  createI18nOptions = async (): Promise<I18nOptions> =>   {
   const locale = getLocalLang();
-  const defaultLocal = await import(`./lang/${locale}.ts`);
-  const message = defaultLocal.default ?? {};
+  const modules: Record<string, any> = import.meta.glob('./lang/*', { eager: true })
+  const messages: Record<string, any> = {}
+  Object.keys(modules).forEach((i: any) => {
+    const key = i.replace('./lang/', '').split('.')[0]
+    messages[key] = modules[i].default
+  })
   return {
     legacy: false,
     locale,
-    messages: {
-      [locale]: message,
-    },
-    sync: true, //If you don’t want to inherit locale from global scope, you need to set sync of i18n component option to false.
+    messages,
+    allowComposition: true,
+    globalInjection: true,
     silentTranslationWarn: true, // true - warning off
     missingWarn: false,
-    silentFallbackWarn: true,
+    silentFallbackWarn: false,
   };
 }
 
@@ -60,17 +65,13 @@ export const changeLocale = async (locale: string) => {
   if(!globalI18n) return
   const currentLocale = globalI18n.locale;
   if (currentLocale === locale) return;
-
-  const langModule = ((await import(`./lang/${locale}.ts`)) as any).default as any;
-  if (!langModule) return;
-  const { message } = langModule;
-  globalI18n.setLocaleMessage(locale, message);
   setI18nLanguage(locale);
   return locale;
 }
 
 export const setupI18n = async (app: App) => {
   const options = await createI18nOptions();
+  console.log(options)
   i18n = createI18n(options) as I18n;
   app.use(i18n);
 }

@@ -16,7 +16,7 @@
           @click="setPoolType(tab.key)"
           >
           <div><SvgIcon :icon-class="tab.icon" className="svg-size"/></div>
-          <div class="left-name">{{ t(tab.label) }}</div>
+          <div class="left-name">{{ $t(tab.label) }}</div>
         </div>
       </div>
       <div class="bottom-tabs">
@@ -26,7 +26,7 @@
           @click="setPoolType('layer')"
           >
           <div><SvgIcon icon-class="layer" className="svg-size"/></div>
-          <div class="left-name">{{ t('layer') }}</div>
+          <div class="left-name">{{ $t('message.layer') }}</div>
         </div>
         <div 
           class="bottom-tab" 
@@ -35,7 +35,7 @@
           @click="setPoolType('help')"
           >
           <div><SvgIcon icon-class="help" className="svg-size"/></div>
-          <div class="left-name">{{ t('help') }}</div>
+          <div class="left-name">{{ $t('message.help') }}</div>
         </div>
         <HelpPopover :help-ref="helpRef" :help-popover-ref="helpPopoverRef"/>
         <HotkeyDrawer :has-hotkey="hasHotkey"/>
@@ -52,10 +52,8 @@ import { ref } from 'vue'
 import HotkeyDrawer from './components/HotkeyDrawer.vue'
 import HelpPopover from './components/HelpPopover.vue'
 import HomePopover from './components/HomePopover.vue'
-import useI18n from '@/hooks/useI18n'
 
 const mainStore = useMainStore()
-const { t } = useI18n()
 const { poolType, poolShow } = storeToRefs(mainStore)
 
 const helpRef = ref()
@@ -72,12 +70,12 @@ interface TabItem {
 }
 
 const topTabs: TabItem[] = [
-  { key: 'editor', label: t('message.edit'), icon: `editor`, index: 0},
-  { key: 'template', label: t('message.template'), icon: `template`, index: 1},
-  { key: 'material', label: t('message.material'), icon: `material`, index: 2 },
-  { key: 'text', label: t('message.text'), icon: 'text', index: 3 },
-  { key: 'image', label: t('message.image'), icon: 'picture', index: 4 },
-  { key: 'toolkit', label: t('message.tool'), icon: 'toolkit', index: 5 },
+  { key: 'editor', label: 'message.edit', icon: `editor`, index: 0},
+  { key: 'template', label: 'message.template', icon: `template`, index: 1},
+  { key: 'material', label: 'message.material', icon: `material`, index: 2 },
+  { key: 'text', label: 'message.text', icon: 'text', index: 3 },
+  { key: 'image', label: 'message.image', icon: 'picture', index: 4 },
+  { key: 'toolkit', label: 'message.tool', icon: 'toolkit', index: 5 },
 ]
 
 const setPoolType = (tab: PoolType) => {
