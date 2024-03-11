@@ -2,26 +2,22 @@ import { Object as FabricObject, IText, Text, Group, Point, classRegistry, TPoin
 import { textboxControls } from '@/app/fabricControls'
 
 
-function max(array: number[], byProperty?: string) {
+const max = (array: number[], byProperty?: string) => {
   return find(array, byProperty, function(value1: number, value2: number) {
     return value1 >= value2;
   });
 }
 
-function min(array: number[], byProperty?: string) {
+const min = (array: number[], byProperty?: string) => {
   return find(array, byProperty, function(value1: number, value2: number) {
     return value1 < value2;
   });
 }
 
-// @ts-ignore
-function find(array, byProperty, condition) {
-  if (!array || array.length === 0) {
-    return;
-  }
+const find = (array: any, byProperty: any, condition: any) => {
+  if (!array || array.length === 0) return;
 
-  var i = array.length - 1,
-      result = byProperty ? array[i][byProperty] : array[i];
+  let i = array.length - 1, result = byProperty ? array[i][byProperty] : array[i];
   if (byProperty) {
     while (i--) {
       if (condition(array[i][byProperty], result)) {
@@ -57,7 +53,7 @@ export class CurvedText extends IText {
     super(text, options)
     this.radius = options.width / 2
     this.on('editing:entered', this.editingEnterdHandler.bind(this))
-    // this.on('editing:exited', this.editingExitedHandler.bind(this))
+    this.on('editing:exited', this.editingExitedHandler.bind(this))
     this.letters = new Group([], { selectable: false, padding: 0})
     this.initialize(text, options)
   }

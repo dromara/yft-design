@@ -163,10 +163,7 @@ export class ArcText extends OriginIText {
   }
 
   override getSelectionStartFromPointer(e: TPointerEvent): number {
-    const mouseOffset = this.canvas!.getPointer(e)
-      .transform(util.invertTransform(this.calcTransformMatrix()))
-      .add(new Point(-this._getLeftOffset(), -this._getTopOffset()));
-
+    const mouseOffset = this.getLocalPointer(e)
     let relX = mouseOffset.x + (-this.width / 2 + this._contentOffsetX) * this.scaleX,
       relY = mouseOffset.y + (-this.height / 2 - this._curvingCenter.y + this._contentOffsetY) * this.scaleY,
       angle = Math.atan2(-relX, -relY),
@@ -1010,7 +1007,7 @@ export class ArcText extends OriginIText {
     }
   }
 
-  getLocalPointer(e: TPointerEvent, pointer: Point) {
+  getLocalPointer(e: TPointerEvent, pointer?: Point) {
     pointer = pointer || this.canvas!.getPointer(e);
     let pClicked = new Point(pointer.x, pointer.y)
     const objectLeftTop = this._getLeftTopCoords();

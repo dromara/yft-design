@@ -225,6 +225,9 @@ import { TextboxElement } from '@/types/canvas'
 import { ElementNames, FontGroupOption } from '@/types/elements'
 import { loadFont } from '@/utils/fonts'
 import { nanoid } from 'nanoid'
+import { ArcText } from '@/extension/object/ArcText'
+import { CurvedText } from '@/extension/object/CurvedText'
+import { RotateText } from '@/extension/object/RotateText'
 import opentype from "opentype.js"
 import ElementPosition from '../Components/ElementPosition.vue'
 import ElementStroke from '../Components/ElementStroke.vue'
@@ -234,7 +237,7 @@ import ElementPatterns from '../Components/ElementPatterns.vue'
 import ElementFill from '../Backgrounds/ElementFill.vue'
 import useHandleCreate from "@/hooks/useHandleCreate"
 import useCanvas from '@/views/Canvas/useCanvas'
-import { ArcText } from '@/extension/object/ArcText'
+
 
 
 const mainStore = useMainStore()
@@ -495,8 +498,10 @@ const handleElementDeformation = () => {
   delete options.type
   options.id = nanoid(10)
   const arcText = new ArcText(options.text, options)
+  // const rotateText = new RotateText(options.text, options)
   // const curvedText = new CurvedText(options.text, options)
   canvas.add(arcText)
+  // canvas.add(rotateText)
   // canvas.add(curvedText)
   // handleElement.value.set({__isCurvature: true})
   // const _isCurvature = handleElement.value.get('_isCurvature')
