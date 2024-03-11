@@ -25,6 +25,18 @@
         </div>
       </div>
     </el-row>
+    <el-row>
+      <div class="code-common" @click="openUpload">
+        <div class="code-icon">
+          <IconMagicWand class="icon-font"/>
+        </div>
+        <div class="code-text">
+          <div class="font-middle">AI抠图</div>
+          <div class="font-little">运用AI技术，实现智能识别</div>
+        </div>
+      </div>
+    </el-row>
+    <ImageUpload :visible="dialogVisible" @close="closeUpload"/>
   </div>
 </template>
 
@@ -60,7 +72,7 @@ const { createQRCodeElement, createBarCodeElement } = useHandleCreate()
 const codeContent = ref<string>(window.location.href)
 const codeSpace = ref<boolean>(true)
 const codeError = ref<number>(0)
-
+const dialogVisible = ref(false)
 const generateQRCodeMap = {
   'A1': rendererRect,
   'A2': rendererRound,
@@ -112,6 +124,14 @@ const createQRElement = (style: QRCodeType) => {
     codeError: codeError.value,
   }
   createQRCodeElement(src, codeOption, codeContent.value)
+}
+
+const openUpload = () => {
+  dialogVisible.value = true
+}
+
+const closeUpload = () => {
+  dialogVisible.value = false
 }
 </script>
 
