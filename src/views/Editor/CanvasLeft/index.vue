@@ -72,12 +72,12 @@ interface TabItem {
 }
 
 const topTabs: TabItem[] = [
-  { key: 'editor', label: t('edit'), icon: `editor`, index: 0},
-  { key: 'template', label: t('template'), icon: `template`, index: 1},
-  { key: 'material', label: t('material'), icon: `material`, index: 2 },
-  { key: 'text', label: t('text'), icon: 'text', index: 3 },
-  { key: 'image', label: t('image'), icon: 'picture', index: 4 },
-  { key: 'toolkit', label: t('tool'), icon: 'toolkit', index: 5 },
+  { key: 'editor', label: t('message.edit'), icon: `editor`, index: 0},
+  { key: 'template', label: t('message.template'), icon: `template`, index: 1},
+  { key: 'material', label: t('message.material'), icon: `material`, index: 2 },
+  { key: 'text', label: t('message.text'), icon: 'text', index: 3 },
+  { key: 'image', label: t('message.image'), icon: 'picture', index: 4 },
+  { key: 'toolkit', label: t('message.tool'), icon: 'toolkit', index: 5 },
 ]
 
 const setPoolType = (tab: PoolType) => {
