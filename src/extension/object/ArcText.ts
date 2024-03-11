@@ -258,7 +258,7 @@ export class ArcText extends OriginIText {
       }
       if (currentDecoration && currentFill) {
         // @ts-ignore
-        let offset = this.offsets[type] * size + dy
+        const offset = this.offsets[type] * size + dy
         this._drawTextLinesDecorationSector(ctx, currentFill, offset, i, charStart, j)
       }
     }
@@ -1021,12 +1021,12 @@ export class ArcText extends OriginIText {
   }
 
   toSVG(reviver?: TSVGReviver): string {
-    const arcTextSVG = this._createBaseSVGMarkup(
-      this._toSVG(),
-      { reviver: reviver, noStyle: true, withShadow: true }
-    );
-    // res = this.toDataURL()
-    return `<image xlink:href="${this.toDataURL()}" width="${this.width}" height="${this.height}" x="${this.left}" y="${this.top}"/>`
+    // const arcTextSVG = this._createBaseSVGMarkup(
+    //   this._toSVG(),
+    //   { reviver: reviver, noStyle: true, withShadow: true }
+    // );
+    const imageData = this.toDataURL()
+    return `<image xlink:href="${imageData}" width="${this.width * this.scaleX}" height="${this.height * this.scaleY}" x="${this.left}" y="${this.top}"/>`
   }
 
   _toSVG() {
