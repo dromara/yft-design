@@ -10,7 +10,7 @@ import { changeDpiDataUrl } from 'changedpi'
 import useCanvas from '@/views/Canvas/useCanvas'
 import useCenter from '@/views/Canvas/useCenter'
 import { exportFile } from '@/api/file'
-// const worker = new PDFWorker()
+import { Base64 } from 'js-base64'
 
 export default () => {
   
@@ -98,7 +98,7 @@ export default () => {
   // 导出PDF
   const exportPDF = async () => {
     const content = {
-      data: getSVGData(),
+      data: Base64.encode(getSVGData()),
       width: currentTemplate.value.width / currentTemplate.value.zoom,
       height: currentTemplate.value.height / currentTemplate.value.zoom,
     }
