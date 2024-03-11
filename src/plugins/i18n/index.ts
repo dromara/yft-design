@@ -10,8 +10,6 @@
 import { createI18n } from 'vue-i18n';
 import { LANG } from '@/constants/key'
 import { getLocal, setLocal } from '@/utils/local';
-import en from './lang/en'
-import zh from './lang/zh'
 import type { App } from 'vue';
 import type { I18n, I18nOptions } from 'vue-i18n';
 
