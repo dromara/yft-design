@@ -350,7 +350,7 @@ export default () => {
   const queryTextboxChecked = (elements: FabricObject[]): boolean => {
     for (let i = 0; i < elements.length; i++) {
       const element = elements[i]
-      if (element.type === ElementNames.TEXTBOX && (element as TextboxElement).isCheck) {
+      if (element.type === ElementNames.TEXTBOX && (element as TextboxElement).editable) {
         return true
       }
       if (element.type === ElementNames.GROUP) {
@@ -365,7 +365,8 @@ export default () => {
   const checkElement = (eid: string) => {
     const [ canvas ] = useCanvas()
     const element = queryElement(eid) as TextboxElement
-    element.isCheck = !element.isCheck
+    element.editable = !element.editable
+    canvas.discardActiveObject();
     canvas.renderAll()
     templatesStore.modifedElement()
     const elements = canvas.getObjects().filter(item => !WorkSpaceCommonType.includes((item as CanvasElement).id)) as FabricObject[]

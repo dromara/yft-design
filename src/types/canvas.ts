@@ -84,7 +84,7 @@ export interface TextboxElement extends Textbox, CommenElement {
   color: string
   fillRepeat: TPatternRepeat
   fillURL: string
-  isCheck?: boolean
+  editable: boolean
 }
 
 export interface ITextElement extends IText, CommenElement {
@@ -92,7 +92,7 @@ export interface ITextElement extends IText, CommenElement {
   color: string
   fillRepeat: TPatternRepeat
   fillURL: string
-  isCheck?: boolean
+  editable: boolean
 }
 
 export interface PathElement extends Path, CommenElement {

@@ -12,9 +12,9 @@
         <el-col :span="11" v-if="background.fillType === 0">
           <el-popover trigger="click" placement="bottom" :width="265">
             <template #reference>
-              <ColorButton :color="background.fill || '#fff'"/>
+              <ColorButton :color="background.fill || '#fff'" />
             </template>
-            <ColorPicker :modelValue="background.fill" @update:modelValue="(color: string) => updateBackground({color: color, fill: color})"/>
+            <ColorPicker :modelValue="background.fill" @update:modelValue="(color: string) => updateBackground({color: color, fill: color})" />
           </el-popover>
         </el-col>
 
@@ -41,7 +41,7 @@
         </el-col>
       </el-row>
     </div>
-    
+
     <!-- 图片填充 -->
     <div v-if="background.fillType === 1">
       <FileInput @change="(files: FileList) => uploadBackgroundImage(files)" class="mb-10">
@@ -63,28 +63,28 @@
       <el-row>
         <el-col :span="7" class="slider-name">不透明度：</el-col>
         <el-col :span="13">
-          <el-slider class="common-slider" :min="0" :max="1" :step="0.01" v-model="gradientOpacity" @change="generateGradientBackground"/>
+          <el-slider class="common-slider" :min="0" :max="1" :step="0.01" v-model="gradientOpacity" @change="generateGradientBackground" />
         </el-col>
         <el-col :span="4" class="slider-num">{{ gradientOpacity }}</el-col>
       </el-row>
       <el-row v-if="background.gradientType === 'linear'">
         <el-col :span="7" class="slider-name">渐变角度：</el-col>
         <el-col :span="13">
-          <el-slider class="common-slider" :min="0" :max="360" :step="1" v-model="gradientRotate" @change="generateGradientBackground"/>
+          <el-slider class="common-slider" :min="0" :max="360" :step="1" v-model="gradientRotate" @change="generateGradientBackground" />
         </el-col>
         <el-col :span="4" class="slider-num">{{ gradientRotate }}</el-col>
       </el-row>
       <el-row>
         <el-col :span="7" class="slider-name">水平位置：</el-col>
         <el-col :span="13">
-          <el-slider class="common-slider" :min="0" :max="1" :step="0.01" v-model="gradientOffsetX" @change="generateGradientBackground"/>
+          <el-slider class="common-slider" :min="0" :max="1" :step="0.01" v-model="gradientOffsetX" @change="generateGradientBackground" />
         </el-col>
         <el-col :span="4" class="slider-num">{{ gradientOffsetX }}</el-col>
       </el-row>
       <el-row>
         <el-col :span="7" class="slider-name">垂直位置：</el-col>
         <el-col :span="13">
-          <el-slider class="common-slider" :min="0" :max="1" :step="0.01" v-model="gradientOffsetY" @change="generateGradientBackground"/>
+          <el-slider class="common-slider" :min="0" :max="1" :step="0.01" v-model="gradientOffsetY" @change="generateGradientBackground" />
         </el-col>
         <el-col :span="4" class="slider-num">{{ gradientOffsetY }}</el-col>
       </el-row>
@@ -92,9 +92,9 @@
         <div v-for="(item, index) in background.gradientColor" :key="index" class="gradient-box">
           <el-popover trigger="click" width="265">
             <template #reference>
-              <ColorButton :color="item.color || '#fff'"/>
+              <ColorButton :color="item.color || '#fff'" />
             </template>
-            <ColorPicker :modelValue="item.color" @update:modelValue="(color: string) => updateGradientBackground(index, color)"/>
+            <ColorPicker :modelValue="item.color" @update:modelValue="(color: string) => updateGradientBackground(index, color)" />
           </el-popover>
         </div>
       </div>
@@ -105,21 +105,21 @@
       <el-row>
         <el-col :span="4" class="slider-name">强度：</el-col>
         <el-col :span="16">
-          <el-slider class="common-slider" :min="0" :max="1" :step="0.01" v-model="gridStrengthRef" @change="changeGridStrength"/>
+          <el-slider class="common-slider" :min="0" :max="1" :step="0.01" v-model="gridStrengthRef" @change="changeGridStrength" />
         </el-col>
         <el-col :span="4" class="slider-num">{{ gridStrengthRef }}</el-col>
       </el-row>
       <el-row>
         <el-col :span="4" class="slider-name">方差：</el-col>
         <el-col :span="16">
-          <el-slider class="common-slider" :min="0" :max="1" :step="0.01" v-model="gridVarianceRef" @change="changeGridVariance"/>
+          <el-slider class="common-slider" :min="0" :max="1" :step="0.01" v-model="gridVarianceRef" @change="changeGridVariance" />
         </el-col>
         <el-col :span="4" class="slider-num">{{ gridVarianceRef }}</el-col>
       </el-row>
       <el-row class="mb-10">
         <el-col :span="4" class="slider-name">尺寸：</el-col>
         <el-col :span="16">
-          <el-slider class="common-slider" :min="0.1" :max="0.25" :step="0.01" v-model="gridSizeRef" @change="changeGridSize"/>
+          <el-slider class="common-slider" :min="0.1" :max="0.25" :step="0.01" v-model="gridSizeRef" @change="changeGridSize" />
         </el-col>
         <el-col :span="4" class="slider-num">{{ gridSizeRef }}</el-col>
       </el-row>
@@ -137,17 +137,17 @@
           <IconShuffleOne />
         </el-button>
         <el-button class="full-row" v-else @click="showGridColorSelf">
-          <IconPlus/>
+          <IconPlus />
         </el-button>
       </el-row>
       <div class="mt-10" v-if="isGridLibData">
         <div class="row color-contianer" v-for="(item, index) in GridColorLibs" :key="index">
-          <div v-for="color in item.color" :key="color" class="color-box" :style="{backgroundColor: color}" @click="changeGridColor(item.color)"></div>
+          <div v-for="color in item.color" :key="color" class="color-box" :style="{ backgroundColor: color }" @click="changeGridColor(item.color)"></div>
         </div>
       </div>
       <div class="mt-10" v-else>
         <div :class="[item.length > 0 ? 'row' : '', 'color-contianer']" v-for="(item, index) in gridColorRecent" :key="index">
-          <div v-for="color in item" :key="color" class="color-box" :style="{backgroundColor: color}" @click="changeGridColor(item)"></div>
+          <div v-for="color in item" :key="color" class="color-box" :style="{ backgroundColor: color }" @click="changeGridColor(item)"></div>
         </div>
       </div>
     </div>
@@ -157,21 +157,21 @@
       <el-row>
         <el-col :span="7" class="slider-name">图形缩放：</el-col>
         <el-col :span="13">
-          <el-slider class="common-slider" :min="1" :max="shadingColorLib.maxScale" :step="1" v-model="shadingBackground.scale" @change="changeShadingZoom"/>
+          <el-slider class="common-slider" :min="1" :max="shadingColorLib.maxScale" :step="1" v-model="shadingBackground.scale" @change="changeShadingZoom" />
         </el-col>
         <el-col :span="4" class="slider-num">{{ shadingBackground.colorCounts }}</el-col>
       </el-row>
       <el-row>
         <el-col :span="7" class="slider-name">水平位置：</el-col>
         <el-col :span="13">
-          <el-slider class="common-slider" :min="0" :max="shadingColorLib.width * 2" :step="1" v-model="shadingBackground.moveLeft" @change="changeShadingHorizontal"/>
+          <el-slider class="common-slider" :min="0" :max="shadingColorLib.width * 2" :step="1" v-model="shadingBackground.moveLeft" @change="changeShadingHorizontal" />
         </el-col>
         <el-col :span="4" class="slider-num">{{ shadingBackground.moveLeft }}</el-col>
       </el-row>
       <el-row>
         <el-col :span="7" class="slider-name">垂直位置：</el-col>
         <el-col :span="13">
-          <el-slider class="common-slider" :min="0" :max="shadingColorLib.height" :step="1" v-model="shadingBackground.moveTop" @change="changeShadingVertical"/>
+          <el-slider class="common-slider" :min="0" :max="shadingColorLib.height" :step="1" v-model="shadingBackground.moveTop" @change="changeShadingVertical" />
         </el-col>
         <el-col :span="4" class="slider-num">{{ shadingBackground.moveTop }}</el-col>
       </el-row>
@@ -179,7 +179,7 @@
       <el-row v-if="shadingColorLib.mode === 'stroke-join' || shadingColorLib.mode === 'stroke'">
         <el-col :span="7" class="slider-name">线条粗细：</el-col>
         <el-col :span="13">
-          <el-slider class="common-slider" :min="0.5" :max="shadingColorLib.maxStroke" :step="0.5" v-model="shadingBackground.stroke" @change="changeShadingStroke"/>
+          <el-slider class="common-slider" :min="0.5" :max="shadingColorLib.maxStroke" :step="0.5" v-model="shadingBackground.stroke" @change="changeShadingStroke" />
         </el-col>
         <el-col :span="4" class="slider-num">{{ shadingBackground.stroke }}</el-col>
       </el-row>
@@ -187,7 +187,7 @@
       <el-row v-if="shadingColorLib.maxSpacing[0] > 0">
         <el-col :span="7" class="slider-name">垂直间距：</el-col>
         <el-col :span="13">
-          <el-slider class="common-slider" :min="0" :max="shadingColorLib.maxSpacing[0]" :step="0.5" v-model="shadingBackground.spacing[0]" @change="changeShadingHSpacing"/>
+          <el-slider class="common-slider" :min="0" :max="shadingColorLib.maxSpacing[0]" :step="0.5" v-model="shadingBackground.spacing[0]" @change="changeShadingHSpacing" />
         </el-col>
         <el-col :span="4" class="slider-num">{{ shadingBackground.spacing[0] }}</el-col>
       </el-row>
@@ -195,7 +195,7 @@
       <el-row v-if="shadingColorLib.maxSpacing[1] > 0">
         <el-col :span="7" class="slider-name">水平间距：</el-col>
         <el-col :span="13">
-          <el-slider class="common-slider" :min="0" :max="shadingColorLib.maxSpacing[1]" :step="0.5" v-model="shadingBackground.spacing[1]" @change="changeShadingVSpacing"/>
+          <el-slider class="common-slider" :min="0" :max="shadingColorLib.maxSpacing[1]" :step="0.5" v-model="shadingBackground.spacing[1]" @change="changeShadingVSpacing" />
         </el-col>
         <el-col :span="4" class="slider-num">{{ shadingBackground.spacing[1] }}</el-col>
       </el-row>
@@ -203,41 +203,29 @@
       <el-row>
         <el-col :span="7" class="slider-name">旋转角度：</el-col>
         <el-col :span="13">
-          <el-slider class="common-slider" :min="0" :max="180" :step="1" v-model="shadingBackground.angle" @change="changeShadingAngle"/>
+          <el-slider class="common-slider" :min="0" :max="180" :step="1" v-model="shadingBackground.angle" @change="changeShadingAngle" />
         </el-col>
         <el-col :span="4" class="slider-num">{{ shadingBackground.angle }}</el-col>
       </el-row>
       <el-row>
         <el-col :span="7" class="slider-name">颜色数量：</el-col>
         <el-col :span="13">
-          <el-slider class="common-slider" :min="2" :max="shadingColorLib.colors" :step="1" v-model="shadingBackground.colorCounts" @change="changeShadingColors"/>
+          <el-slider class="common-slider" :min="2" :max="shadingColorLib.colors" :step="1" v-model="shadingBackground.colorCounts" @change="changeShadingColors" />
         </el-col>
         <el-col :span="4" class="slider-num">{{ shadingBackground.colorCounts }}</el-col>
       </el-row>
       <div class="row">
-        <div 
-          v-for="(color, index) in shadingBackground.colors" 
-          :key="index" 
-          :class="index + 1 <= shadingBackground.colorCounts ? 'color-item' : 'color-non'" 
-          :style="{ backgroundColor: color }"
-          >
+        <div v-for="(color, index) in shadingBackground.colors" :key="index" :class="index + 1 <= shadingBackground.colorCounts ? 'color-item' : 'color-non'" :style="{ backgroundColor: color }">
           <el-popover trigger="click" placement="bottom" :width="265">
             <template #reference>
               <div class="color-select"></div>
             </template>
-            <ColorPicker :modelValue="color"/>
+            <ColorPicker :modelValue="color" />
           </el-popover>
         </div>
       </div>
       <div class="background-shading-body">
-        <div 
-          v-for="item in shadingColorLibs" 
-          :key="item.title" 
-          class="shading-box" 
-          :style="{ backgroundImage: `url(&quot;${shadingSvgPattern(item.width, item.height, item.path, item.mode)}&quot;)` }"
-          @click="changeShadingElement(item)"
-          >
-        </div>
+        <div v-for="item in shadingColorLibs" :key="item.title" class="shading-box" :style="{ backgroundImage: `url(&quot;${shadingSvgPattern(item.width, item.height, item.path, item.mode)}&quot;)` }" @click="changeShadingElement(item)"></div>
       </div>
     </div>
     <GridFill v-model:visible="gridColorDialog" @close="hideGridColorSelf" @save="saveGridColorSelf"></GridFill>
@@ -245,91 +233,102 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, watch, onMounted } from 'vue'
-import { useMainStore, useTemplatesStore } from '@/store'
-import { storeToRefs } from 'pinia'
-import { debounce } from 'lodash'
-import { Gradient, Pattern, util } from 'fabric'
-import { TransparentFill, BackgroundFillMode, BackgroundFillImageMode, BackgroundFillGridMode, BackgroundFillGradientMode } from '@/configs/background'
-import { GridColorLibs } from '@/configs/colorGrid'
-import { GradientColorLibs } from '@/configs/colorGradient'
-import { ShadingColorLibInit, ShadingLigntColors, ShadingBackgroudInit } from '@/configs/colorShading'
-import { GradientCoords } from '@/types/elements'
-import { ShadingColorLib, ShadingBackground } from '@/types/elements'
-import { BackgroundElement, CanvasElement, TextboxElement } from '@/types/canvas'
-import { getRandomNum } from '@/utils/common'
-import { getImageDataURL } from '@/utils/image'
-import { getColorShading } from '@/api/color'
-import trianglify from '@/plugins/trianglify/trianglify'
-import useCanvas from '@/views/Canvas/useCanvas'
-import GridFill from './GridFill.vue'
-import GradientFill from './GradientFill.vue'
+import { ref, computed, watch, onMounted, onActivated } from "vue";
+import { useMainStore, useTemplatesStore } from "@/store";
+import { storeToRefs } from "pinia";
+import { debounce } from "lodash";
+import { Gradient, Pattern, util } from "fabric";
+import { TransparentFill, BackgroundFillMode, BackgroundFillImageMode, BackgroundFillGridMode, BackgroundFillGradientMode } from "@/configs/background";
+import { GridColorLibs } from "@/configs/colorGrid";
+import { GradientColorLibs } from "@/configs/colorGradient";
+import { ShadingColorLibInit, ShadingLigntColors, ShadingBackgroudInit } from "@/configs/colorShading";
+import { GradientCoords } from "@/types/elements";
+import { ShadingColorLib, ShadingBackground } from "@/types/elements";
+import { BackgroundElement, CanvasElement, TextboxElement } from "@/types/canvas";
+import { getRandomNum } from "@/utils/common";
+import { getImageDataURL } from "@/utils/image";
+import { getColorShading } from "@/api/color";
+import trianglify from "@/plugins/trianglify/trianglify";
+import useCanvas from "@/views/Canvas/useCanvas";
+import GridFill from "./GridFill.vue";
+import GradientFill from "./GradientFill.vue";
 
-const mainStore = useMainStore()
-const templatesStore = useTemplatesStore()
-const { canvasObject } = storeToRefs(mainStore)
+const mainStore = useMainStore();
+const templatesStore = useTemplatesStore();
+const { canvasObject } = storeToRefs(mainStore);
 
+console.log("canvasObject", canvasObject.value);
 
 // 渐变偏移
-const gradientOpacity = ref(1)
-const gradientRotate = ref(canvasObject.value.fill.gradientRotate ?? 0)
-const gradientOffsetX = ref((canvasObject.value.fill.offsetX ?? 0) / canvasObject.value.width)
-const gradientOffsetY = ref((canvasObject.value.fill.offsetY ?? 0) / canvasObject.value?.height)
+const gradientOpacity = ref(1);
+const gradientRotate = ref(0);
+const gradientOffsetX = ref(0);
+const gradientOffsetY = ref(0);
 
 // 网格 预定义 参数
-const RECENT_GRIDS = 'RECENT_GRIDS'
-const gridColorRecent = ref<[string[]]>([[]])
-const isGridLibData = ref(true)
-const gridColorMode = ref<'interpolateLinear' | 'sparkle' | 'shadows'>('sparkle')
-const gridSizeRef = ref(0.15)
-const gridColorsRef = ref<string[]>(GridColorLibs[0].color)
-const gridStrengthRef = ref(0.5)
-const gridVarianceRef = ref(0.5)
-const gridColorDialog = ref(false)
+const RECENT_GRIDS = "RECENT_GRIDS";
+const gridColorRecent = ref<[string[]]>([[]]);
+const isGridLibData = ref(true);
+const gridColorMode = ref<"interpolateLinear" | "sparkle" | "shadows">("sparkle");
+const gridSizeRef = ref(0.15);
+const gridColorsRef = ref<string[]>(GridColorLibs[0].color);
+const gridStrengthRef = ref(0.5);
+const gridVarianceRef = ref(0.5);
+const gridColorDialog = ref(false);
 
-const shadingColorLibs = ref<ShadingColorLib[]>([])
-const shadingColorLib = ref<ShadingColorLib>(ShadingColorLibInit)  // 底纹 预定义 参数
-const shadingBackground = ref<ShadingBackground>(ShadingBackgroudInit)
+const shadingColorLibs = ref<ShadingColorLib[]>([]);
+const shadingColorLib = ref<ShadingColorLib>(ShadingColorLibInit); // 底纹 预定义 参数
+const shadingBackground = ref<ShadingBackground>(ShadingBackgroudInit);
 
-// 加载缓存最近添加的网格 
+// 加载缓存最近添加的网格
 onMounted(async () => {
-  const recentGridCache = localStorage.getItem(RECENT_GRIDS)
-  if (recentGridCache) gridColorRecent.value = JSON.parse(recentGridCache)
-  const res = await getColorShading()
-  shadingColorLibs.value = res.data
-  shadingColorLib.value = shadingColorLibs.value[0]
-})
+  const recentGridCache = localStorage.getItem(RECENT_GRIDS);
+  if (recentGridCache) gridColorRecent.value = JSON.parse(recentGridCache);
+  const res = await getColorShading();
+  shadingColorLibs.value = res.data;
+  shadingColorLib.value = shadingColorLibs.value[0];
+});
 
-// 保存缓存最近添加的网格 
-watch(gridColorRecent, () => {
-  const recentGridCache = JSON.stringify(gridColorRecent.value)
-  localStorage.setItem(RECENT_GRIDS, recentGridCache)
-}, {deep: true})
-const handleElement = computed(() => canvasObject.value as CanvasElement)
+// 保存缓存最近添加的网格
+watch(
+  gridColorRecent,
+  () => {
+    const recentGridCache = JSON.stringify(gridColorRecent.value);
+    localStorage.setItem(RECENT_GRIDS, recentGridCache);
+  },
+  { deep: true }
+);
+const handleElement = computed(() => {
+  gradientOpacity.value = canvasObject.value?.opacity ?? 1
+  gradientRotate.value = canvasObject.value.fill.gradientRotate ?? 0
+  gradientOffsetX.value = (canvasObject.value.fill.offsetX ?? 0) / canvasObject.value.width
+  gradientOffsetY.value = (canvasObject.value.fill.offsetY ?? 0) / canvasObject.value?.height
+  return canvasObject.value as CanvasElement;
+});
 
 const background = computed(() => {
   if (!handleElement.value) {
     return {
       fillType: 0,
-      fill: '#fff',
-    } as BackgroundElement
+      fill: "#fff",
+    } as BackgroundElement;
   }
   if (!handleElement.value.background) {
     return {
       fillType: 0,
       fill: handleElement.value.fill,
-      color: (handleElement.value as TextboxElement).color
-    } as BackgroundElement
+      color: (handleElement.value as TextboxElement).color,
+    } as BackgroundElement;
   }
-  return handleElement.value.background
-})
+  return handleElement.value.background;
+});
 
 // 设置背景图片隐藏
 const removeBackgroundElement = () => {
-  const [ canvas ] = useCanvas()
-  canvas.set('backgroundImage', null)
-  canvas.renderAll()
-}
+  const [canvas] = useCanvas();
+  canvas.set("backgroundImage", null);
+  canvas.renderAll();
+};
 
 // 设置背景模式：纯色，图片，渐变，网格，形状，智能
 const changeBackgroundType = (type: number) => {
@@ -338,9 +337,9 @@ const changeBackgroundType = (type: number) => {
     const elementBackground: BackgroundElement = {
       ...background.value,
       fillType: type,
-      fill: background.value.color || '#fff',
-    }
-    updateBackground(elementBackground)
+      fill: background.value.color || "#fff",
+    };
+    updateBackground(elementBackground);
   }
   // 图片
   else if (type === 1) {
@@ -348,11 +347,11 @@ const changeBackgroundType = (type: number) => {
       ...background.value,
       fillType: type,
       fill: background.value.fill,
-      imageURL: background.value.imageURL || '',
-      imageSize: background.value.imageSize || 'cover',
-    }
-    updateBackground(elementBackground)
-    generateImageBackground()
+      imageURL: background.value.imageURL || "",
+      imageSize: background.value.imageSize || "cover",
+    };
+    updateBackground(elementBackground);
+    generateImageBackground();
   }
   // 网格
   else if (type === 3) {
@@ -360,10 +359,10 @@ const changeBackgroundType = (type: number) => {
       ...background.value,
       fillType: type,
       fill: background.value.fill,
-      gaidImageURL: background.value.gaidImageURL || '',
-    }
-    updateBackground(elementBackground)
-    generateGridBackground()
+      gaidImageURL: background.value.gaidImageURL || "",
+    };
+    updateBackground(elementBackground);
+    generateGridBackground();
   }
   // 底纹
   else if (type === 4) {
@@ -371,98 +370,96 @@ const changeBackgroundType = (type: number) => {
       ...background.value,
       fillType: type,
       backgroundColor: TransparentFill,
-      shadingImageURL: background.value.shadingImageURL || '',
-    }
-    removeBackgroundElement()
-    updateBackground(elementBackground)
-    generateShadingBackground()
+      shadingImageURL: background.value.shadingImageURL || "",
+    };
+    removeBackgroundElement();
+    updateBackground(elementBackground);
+    generateShadingBackground();
   }
   // 渐变
   else {
     const elementBackground: BackgroundElement = {
       ...background.value,
       fillType: 2,
-      gradientType: background.value.gradientType || 'linear',
+      gradientType: background.value.gradientType || "linear",
       gradientColor: background.value.gradientColor || GradientColorLibs[0].colors,
-      gradientName: background.value.gradientName || GradientColorLibs[0].name
-    }
-    updateBackground(elementBackground)
-    generateGradientBackground()
+      gradientName: background.value.gradientName || GradientColorLibs[0].name,
+    };
+    updateBackground(elementBackground);
+    generateGradientBackground();
   }
-}
-
+};
 
 // 设置背景
 const updateBackground = (props: Partial<BackgroundElement>) => {
-  const [ canvas ] = useCanvas()
-  if (!canvasObject.value) return
-  const color = props.color ? props.color : (handleElement.value as TextboxElement).color
-  canvasObject.value.set({fill: props.fill, color, fillType: background.value.fillType, background: {...background.value, ...props}})
-  canvas.renderAll()
-  templatesStore.modifedElement()
-}
+  const [canvas] = useCanvas();
+  if (!canvasObject.value) return;
+  const color = props.color ? props.color : (handleElement.value as TextboxElement).color;
+  canvasObject.value.set({ fill: props.fill, color, fillType: background.value.fillType, background: { ...background.value, ...props }, opacity: props.opacity });
+  canvas.renderAll();
+  templatesStore.modifedElement();
+};
 
 // 修改上传背景
 const generateImageBackground = async () => {
-  const imageURL = background.value.imageURL
-  if (!imageURL) return
-  if (background.value.imageSize === 'repeat') {
-    const source = await util.loadImage(imageURL)
-    const elementPattern = new Pattern({source, repeat: 'repeat'})
-    updateBackground({ fill: elementPattern, imageURL})
-  } 
-  else {
-    const source = await util.loadImage(imageURL)
+  const imageURL = background.value.imageURL;
+  if (!imageURL) return;
+  if (background.value.imageSize === "repeat") {
+    const source = await util.loadImage(imageURL);
+    const elementPattern = new Pattern({ source, repeat: "repeat" });
+    updateBackground({ fill: elementPattern, imageURL });
+  } else {
+    const source = await util.loadImage(imageURL);
     // const { width, height } = await getImageSize(imageURL)
-    if (!handleElement.value) return
+    if (!handleElement.value) return;
     // source.width = handleElement.value.width
     // source.height = handleElement.value.height
     // source.style.width = handleElement.value.width + 'px'
     // source.style.height = handleElement.value.height + 'px'
     // source.style.transform = 'scale(0.1)'
-    const elementPattern = new Pattern({source, repeat: 'no-repeat'})
-    updateBackground({ fill: elementPattern, imageURL })
+    const elementPattern = new Pattern({ source, repeat: "no-repeat" });
+    updateBackground({ fill: elementPattern, imageURL });
   }
-}
+};
 
 // 上传背景图片
 const uploadBackgroundImage = async (files: FileList) => {
-  const imageFile = files[0]
-  if (!imageFile) return
-  background.value.imageURL = await getImageDataURL(imageFile)
-  generateImageBackground()
-}
+  const imageFile = files[0];
+  if (!imageFile) return;
+  background.value.imageURL = await getImageDataURL(imageFile);
+  generateImageBackground();
+};
 
 // 修改背景图片
 const changeImageSize = () => {
-  generateImageBackground()
-}
+  generateImageBackground();
+};
 
 // 修改渐变名字
 const changeGradientName = (gradientName: string) => {
-  const gradientColorLib = GradientColorLibs.filter(item => item.name === gradientName)[0]
+  const gradientColorLib = GradientColorLibs.filter((item) => item.name === gradientName)[0];
   if (gradientColorLib) {
-    background.value.gradientName = gradientName
-    updateBackground({gradientColor: gradientColorLib.colors})
-    generateGradientBackground()
-  } 
-}
+    background.value.gradientName = gradientName;
+    updateBackground({ gradientColor: gradientColorLib.colors });
+    generateGradientBackground();
+  }
+};
 
 // 修改渐变类型
 const changeGradientType = () => {
-  updateBackground({gradientType: background.value.gradientType})
-  generateGradientBackground()
-}
+  updateBackground({ gradientType: background.value.gradientType });
+  generateGradientBackground();
+};
 
 // 修改渐变颜色
 const updateGradientBackground = (index: number, color: string) => {
-  const gradientBackgroundColor = background.value.gradientColor
+  const gradientBackgroundColor = background.value.gradientColor;
   if (gradientBackgroundColor) {
-    gradientBackgroundColor[index].color = color
-    updateBackground({ gradientColor: gradientBackgroundColor })
-    generateGradientBackground()
+    gradientBackgroundColor[index].color = color;
+    updateBackground({ gradientColor: gradientBackgroundColor });
+    generateGradientBackground();
   }
-}
+};
 
 // 计算渐变角度后的位置
 const rotateRectangle = (width: number, height: number, gradientRotate: number) => {
@@ -472,7 +469,7 @@ const rotateRectangle = (width: number, height: number, gradientRotate: number) 
   const y1 = gradientRotate <= 180 ? 0 : height;
   const y2 = height - y1;
   if (gradientRotate >= 180) {
-    [x2, x1] = [x1, x2]
+    [x2, x1] = [x1, x2];
   }
   // 返回旋转后的坐标
   return { x1, y1, x2, y2 };
@@ -480,12 +477,12 @@ const rotateRectangle = (width: number, height: number, gradientRotate: number) 
 
 // 生成渐变背景
 const generateGradientBackground = () => {
-  if (!handleElement.value) return
-  const width = handleElement.value.width
-  const height = handleElement.value.height
-  let coords: GradientCoords = { x1: 0, y1: 0, x2: width, y2: 0 }
-  if (background.value.gradientType !== 'linear') {
-    coords = { r1: 0, r2: height / 2, x1: width / 2, y1: height / 2, x2: width / 2, y2: height / 2 }
+  if (!handleElement.value) return;
+  const width = handleElement.value.width;
+  const height = handleElement.value.height;
+  let coords: GradientCoords = { x1: 0, y1: 0, x2: width, y2: 0 };
+  if (background.value.gradientType !== "linear") {
+    coords = { r1: 0, r2: height / 2, x1: width / 2, y1: height / 2, x2: width / 2, y2: height / 2 };
   } else {
     coords = rotateRectangle(width, height, gradientRotate.value);
   }
@@ -495,96 +492,99 @@ const generateGradientBackground = () => {
     coords: coords,
     offsetX: gradientOffsetX.value * width,
     offsetY: gradientOffsetY.value * height,
-    gradientUnits: 'pixels',
-  })
-  gradient.gradientRotate = gradientRotate.value
-  
-  updateBackground({fill: gradient, opacity: gradientOpacity.value})
-}
+    gradientUnits: "pixels",
+  });
+  gradient.gradientRotate = gradientRotate.value;
+
+  updateBackground({ fill: gradient, opacity: gradientOpacity.value });
+};
 
 // 更新缓存保存最大的网格
-const updateGridColorRecentCache = debounce(function() {
-  const maxLength = 10
-  if (gridColorRecent.value.length > maxLength) {
-    gridColorRecent.value = gridColorRecent.value.slice(0, maxLength) as [string[]]
-  }
-}, 300, { trailing: true })
+const updateGridColorRecentCache = debounce(
+  function () {
+    const maxLength = 10;
+    if (gridColorRecent.value.length > maxLength) {
+      gridColorRecent.value = gridColorRecent.value.slice(0, maxLength) as [string[]];
+    }
+  },
+  300,
+  { trailing: true }
+);
 
 // 修改网格图片强度
 const changeGridStrength = (value: number) => {
-  gridStrengthRef.value = value
-  generateGridBackground()
-}
+  gridStrengthRef.value = value;
+  generateGridBackground();
+};
 // 修改网格图片方差
 const changeGridVariance = (value: number) => {
-  gridVarianceRef.value = value
-  generateGridBackground()
-}
+  gridVarianceRef.value = value;
+  generateGridBackground();
+};
 // 修改网格图片尺寸
 const changeGridSize = (value: number) => {
-  gridSizeRef.value = value
-  generateGridBackground()
-}
+  gridSizeRef.value = value;
+  generateGridBackground();
+};
 
 // 随机数字生成网格
 const generateGridBackgroundRandom = () => {
-  gridStrengthRef.value = Math.floor(getRandomNum(0, 1) * 100) / 100
-  gridVarianceRef.value = Math.floor(getRandomNum(0, 1) * 100) / 100
-  gridSizeRef.value = Math.floor(getRandomNum(0, 0.25) * 100) / 100
-  generateGridBackground()
-}
+  gridStrengthRef.value = Math.floor(getRandomNum(0, 1) * 100) / 100;
+  gridVarianceRef.value = Math.floor(getRandomNum(0, 1) * 100) / 100;
+  gridSizeRef.value = Math.floor(getRandomNum(0, 0.25) * 100) / 100;
+  generateGridBackground();
+};
 
 // 随机颜色生成网格
 const generateGridBackgroundRandColor = () => {
-  generateGridBackground('random')
-}
+  generateGridBackground("random");
+};
 
 // 显示网格自定义
 const showGridColorSelf = () => {
-  gridColorDialog.value = true
-}
+  gridColorDialog.value = true;
+};
 // 隐藏网格自定义
 const hideGridColorSelf = () => {
-  gridColorDialog.value = false
-}
+  gridColorDialog.value = false;
+};
 
 // 保存网格自定义
 const saveGridColorSelf = (colors: string[]) => {
-  gridColorRecent.value.unshift(colors)
-  updateGridColorRecentCache()
-}
+  gridColorRecent.value.unshift(colors);
+  updateGridColorRecentCache();
+};
 
 // 选择网格图片色彩
 const changeGridColor = (colors: string[]) => {
-  gridColorsRef.value = colors
-  generateGridBackground()
-}
+  gridColorsRef.value = colors;
+  generateGridBackground();
+};
 
 // 选择网格色彩模式
-const changeGridColorMode = (mode: 'interpolateLinear' | 'sparkle' | 'shadows') => {
-  gridColorMode.value = mode
-  generateGridBackground()
-}
+const changeGridColorMode = (mode: "interpolateLinear" | "sparkle" | "shadows") => {
+  gridColorMode.value = mode;
+  generateGridBackground();
+};
 
 // 获取网格图片颜色模式
 const getGridColorFunction = () => {
-  if (gridColorMode.value === 'interpolateLinear') {
-    return trianglify.colorFunctions.interpolateLinear(gridStrengthRef.value)
+  if (gridColorMode.value === "interpolateLinear") {
+    return trianglify.colorFunctions.interpolateLinear(gridStrengthRef.value);
+  } else if (gridColorMode.value === "sparkle") {
+    return trianglify.colorFunctions.sparkle(gridStrengthRef.value);
+  } else if (gridColorMode.value === "shadows") {
+    return trianglify.colorFunctions.shadows(gridStrengthRef.value);
   }
-  else if (gridColorMode.value === 'sparkle') {
-    return trianglify.colorFunctions.sparkle(gridStrengthRef.value)
-  }
-  else if (gridColorMode.value === 'shadows') {
-    return trianglify.colorFunctions.shadows(gridStrengthRef.value)
-  }
-  return trianglify.colorFunctions.sparkle(gridStrengthRef.value)
-}
+  return trianglify.colorFunctions.sparkle(gridStrengthRef.value);
+};
 
 // 生成网格图片
 const generateGridBackground = async (status?: string) => {
-  if (!handleElement.value) return
-  const width = handleElement.value.width, height = handleElement.value.height
-  const gridColors = gridColorsRef.value && gridColorsRef.value.length > 0 && status !== 'random' ? gridColorsRef.value : 'random'
+  if (!handleElement.value) return;
+  const width = handleElement.value.width,
+    height = handleElement.value.height;
+  const gridColors = gridColorsRef.value && gridColorsRef.value.length > 0 && status !== "random" ? gridColorsRef.value : "random";
 
   const defaultOptions = {
     width,
@@ -593,99 +593,102 @@ const generateGridBackground = async (status?: string) => {
     variance: gridVarianceRef.value,
     seed: null,
     xColors: gridColors,
-    yColors: 'match',
+    yColors: "match",
     fill: true,
     palette: trianglify.utils.colorbrewer,
-    colorSpace: 'lab',
+    colorSpace: "lab",
     colorFunction: getGridColorFunction(),
     strokeWidth: 0,
-    points: null
-  }
-  const trianglifier = trianglify(defaultOptions)
+    points: null,
+  };
+  const trianglifier = trianglify(defaultOptions);
   // @ts-ignore
-  const canvasBackground = trianglifier.toCanvas()
-  const dataURL = canvasBackground.toDataURL('image/svg')
-  const source = await util.loadImage(dataURL)
-  const elementPattern = new Pattern({source, repeat: 'repeat'})
-  updateBackground({fill: elementPattern, gaidImageURL: dataURL})
-}
+  const canvasBackground = trianglifier.toCanvas();
+  const dataURL = canvasBackground.toDataURL("image/svg");
+  const source = await util.loadImage(dataURL);
+  const elementPattern = new Pattern({ source, repeat: "repeat" });
+  updateBackground({ fill: elementPattern, gaidImageURL: dataURL });
+};
 
 // 底纹样式读取
 const shadingSvgPattern = (width: number, height: number, path: string, mode: string) => {
-  let strokeGroup = ''
-  for (let i = 0; i < path.split('~').length; i++) {
-    const svgColor = ShadingLigntColors[i + 1]
-    let strokeFill = `stroke-width='1' stroke='${svgColor}' fill='none'`
-    if (mode === 'fill') strokeFill = `stroke='none' fill='${svgColor}'`
-    strokeGroup += path.split('~')[i].replace('/>', ` ${strokeFill}/>`)
+  let strokeGroup = "";
+  for (let i = 0; i < path.split("~").length; i++) {
+    const svgColor = ShadingLigntColors[i + 1];
+    let strokeFill = `stroke-width='1' stroke='${svgColor}' fill='none'`;
+    if (mode === "fill") strokeFill = `stroke='none' fill='${svgColor}'`;
+    strokeGroup += path.split("~")[i].replace("/>", ` ${strokeFill}/>`);
   }
   const patternData =
-      "<svg width='100%' height='100%' xmlns='http://www.w3.org/2000/svg'><defs>" +
-      "<pattern id='a' patternUnits='userSpaceOnUse' width='" +
-      width +
-      "' height='" +
-      height +
-      "'><rect x='0' y='0' width='" +
-      width +
-      "' height='" +
-      height +
-      "' fill='" +
-      ShadingLigntColors[0] +
-      "'/>" +
-      strokeGroup +
-      "</pattern></defs><rect width='100%' height='100%' fill='url(%23a)'/></svg>"
-  const svgShading = `data:image/svg+xml,${patternData}`
-  return svgShading
-}
+    "<svg width='100%' height='100%' xmlns='http://www.w3.org/2000/svg'><defs>" +
+    "<pattern id='a' patternUnits='userSpaceOnUse' width='" +
+    width +
+    "' height='" +
+    height +
+    "'><rect x='0' y='0' width='" +
+    width +
+    "' height='" +
+    height +
+    "' fill='" +
+    ShadingLigntColors[0] +
+    "'/>" +
+    strokeGroup +
+    "</pattern></defs><rect width='100%' height='100%' fill='url(%23a)'/></svg>";
+  const svgShading = `data:image/svg+xml,${patternData}`;
+  return svgShading;
+};
 
 // 多笔画底纹
 const multiStroke = (index: number, vHeight: number, maxColors: number, mode: string, path: string, item: ShadingBackground) => {
-  const colors = item.colors
-  const colorCounts = item.colorCounts
-  const join = item.join
-  const spacing = item.spacing
-  const stroke = item.stroke
-  let defColor = colors[index + 1]
-  let strokeFill = '', joinMode = ''
+  const colors = item.colors;
+  const colorCounts = item.colorCounts;
+  const join = item.join;
+  const spacing = item.spacing;
+  const stroke = item.stroke;
+  let defColor = colors[index + 1];
+  let strokeFill = "",
+    joinMode = "";
   if (vHeight === 0 && maxColors > 2) {
-    if (colorCounts === 3 && maxColors === 4 && index === 2) defColor = colors[1]
-    else if (colorCounts === 4 && maxColors === 5 && index === 3) defColor = colors[1]
-    else if (colorCounts === 3 && maxColors === 5 && index === 3) defColor = colors[1]
-    else if (colorCounts === 3 && maxColors === 5 && index === 2) defColor = colors[1]
-    else if (colorCounts === 2) defColor = colors[1]
+    if (colorCounts === 3 && maxColors === 4 && index === 2) defColor = colors[1];
+    else if (colorCounts === 4 && maxColors === 5 && index === 3) defColor = colors[1];
+    else if (colorCounts === 3 && maxColors === 5 && index === 3) defColor = colors[1];
+    else if (colorCounts === 3 && maxColors === 5 && index === 2) defColor = colors[1];
+    else if (colorCounts === 2) defColor = colors[1];
   }
-  if (mode === 'stroke-join') {
-    strokeFill = " stroke='" + defColor + "' fill='none'"
-    joinMode = join === 2 ? "stroke-linejoin='round' stroke-linecap='round' " : "stroke-linecap='square' "
-  } 
-  else if (mode === 'stroke') {
-    strokeFill = " stroke='" + defColor + "' fill='none'"
+  if (mode === "stroke-join") {
+    strokeFill = " stroke='" + defColor + "' fill='none'";
+    joinMode = join === 2 ? "stroke-linejoin='round' stroke-linecap='round' " : "stroke-linecap='square' ";
+  } else if (mode === "stroke") {
+    strokeFill = " stroke='" + defColor + "' fill='none'";
+  } else {
+    strokeFill = " stroke='none' fill='" + defColor + "'";
   }
-  else {
-    strokeFill = " stroke='none' fill='" + defColor + "'"
-  } 
-  return path.split('~')[index].replace('/>', " transform='translate(" + spacing[0] / 2 + ",0)' " + joinMode + "stroke-width='" + stroke + "'" + strokeFill + '/>').replace("transform='translate(0,0)' ", ' ')
-}
+  return path
+    .split("~")
+    [index].replace("/>", " transform='translate(" + spacing[0] / 2 + ",0)' " + joinMode + "stroke-width='" + stroke + "'" + strokeFill + "/>")
+    .replace("transform='translate(0,0)' ", " ");
+};
 
 // 底纹样式背景生成
 const generateShadingBackground = async () => {
-  if (!handleElement.value || !shadingColorLib.value) return
-  const item = shadingColorLib.value
-  const maxColors = item.path.split('~').length + 1
-  const width = item.width
-  const height = item.height
-  const vHeight = item.vHeight
-  const path = item.path
-  const mode = item.mode
-  const svgWidth = width + shadingBackground.value.spacing[0]
-  const svgHeight = height - vHeight * (maxColors - shadingBackground.value.colorCounts) + shadingBackground.value.spacing[1]
-  const imageWidth = handleElement.value.width, imageHeight = handleElement.value.height
-  let strokeGroup = ''
+  if (!handleElement.value || !shadingColorLib.value) return;
+  const item = shadingColorLib.value;
+  const maxColors = item.path.split("~").length + 1;
+  const width = item.width;
+  const height = item.height;
+  const vHeight = item.vHeight;
+  const path = item.path;
+  const mode = item.mode;
+  const svgWidth = width + shadingBackground.value.spacing[0];
+  const svgHeight = height - vHeight * (maxColors - shadingBackground.value.colorCounts) + shadingBackground.value.spacing[1];
+  const imageWidth = handleElement.value.width,
+    imageHeight = handleElement.value.height;
+  let strokeGroup = "";
   for (let i = 0; i < maxColors - 1; i++) {
-    strokeGroup += multiStroke(i, vHeight, maxColors, mode, path, shadingBackground.value)
+    strokeGroup += multiStroke(i, vHeight, maxColors, mode, path, shadingBackground.value);
   }
-  const translateX = shadingBackground.value.scale * shadingBackground.value.moveLeft
-  const translateY = shadingBackground.value.scale * shadingBackground.value.moveTop
+  const translateX = shadingBackground.value.scale * shadingBackground.value.moveLeft;
+  const translateY = shadingBackground.value.scale * shadingBackground.value.moveTop;
   const svg = `
     <svg id='patternId' width='${imageWidth}' height='${imageHeight}' xmlns='http://www.w3.org/2000/svg'>
       <defs>
@@ -700,67 +703,67 @@ const generateShadingBackground = async () => {
       </defs>
       <rect x="0" y="0" width='${imageWidth}' height='${imageHeight}' transform='translate(${translateX},${translateY})' fill='url(%23a)' />
     </svg>
-  `
-  const imageURL = `data:image/svg+xml,${svg}`
-  const source = await util.loadImage(imageURL)
-  const elementPattern = new Pattern({source, repeat: 'no-repeat'})
-  updateBackground({ shadingImageURL: imageURL, fill: elementPattern })
-}
+  `;
+  const imageURL = `data:image/svg+xml,${svg}`;
+  const source = await util.loadImage(imageURL);
+  const elementPattern = new Pattern({ source, repeat: "no-repeat" });
+  updateBackground({ shadingImageURL: imageURL, fill: elementPattern });
+};
 
 // // 选择底纹填充
 const changeShadingElement = (item: ShadingColorLib) => {
-  shadingColorLib.value = item
-  shadingBackground.value.colorCounts = item.colors
-  generateShadingBackground()
-}
+  shadingColorLib.value = item;
+  shadingBackground.value.colorCounts = item.colors;
+  generateShadingBackground();
+};
 
 // 修改底纹缩放
 const changeShadingZoom = (value: number) => {
-  shadingBackground.value.scale = value
-  generateShadingBackground()
-}
+  shadingBackground.value.scale = value;
+  generateShadingBackground();
+};
 // 修改底纹水平位置
 const changeShadingHorizontal = (value: number) => {
-  shadingBackground.value.moveLeft = value
-  generateShadingBackground()
-}
+  shadingBackground.value.moveLeft = value;
+  generateShadingBackground();
+};
 // 修改底纹垂直位置
 const changeShadingVertical = (value: number) => {
-  shadingBackground.value.moveTop = value
-  generateShadingBackground()
-}
+  shadingBackground.value.moveTop = value;
+  generateShadingBackground();
+};
 // 修改底纹线条粗细
 const changeShadingStroke = (value: number) => {
-  shadingBackground.value.stroke = value
-  generateShadingBackground()
-}
+  shadingBackground.value.stroke = value;
+  generateShadingBackground();
+};
 // 修改底纹水平间隔
 const changeShadingHSpacing = (value: number) => {
-  shadingBackground.value.spacing[0] = value
-  generateShadingBackground()
-}
+  shadingBackground.value.spacing[0] = value;
+  generateShadingBackground();
+};
 // 修改底纹垂直间隔
 const changeShadingVSpacing = (value: number) => {
-  shadingBackground.value.spacing[1] = value
-  generateShadingBackground()
-}
+  shadingBackground.value.spacing[1] = value;
+  generateShadingBackground();
+};
 // 修改底纹填充旋转角度
 const changeShadingAngle = (value: number) => {
-  shadingBackground.value.angle = value
-  generateShadingBackground()
-}
+  shadingBackground.value.angle = value;
+  generateShadingBackground();
+};
 // 修改底纹填充颜色数量
 const changeShadingColors = (value: number) => {
-  shadingBackground.value.colorCounts = value
-  generateShadingBackground()
-}
+  shadingBackground.value.colorCounts = value;
+  generateShadingBackground();
+};
 // 随机底纹填充形状
 const generateShadingBackgroundRandom = () => {
-  const item = shadingColorLibs.value[Math.floor(getRandomNum(0, shadingColorLibs.value.length - 1))]
-  shadingColorLib.value = item
-  if (item.colors) shadingBackground.value.colorCounts = item.colors
-  generateShadingBackground()
-}
+  const item = shadingColorLibs.value[Math.floor(getRandomNum(0, shadingColorLibs.value.length - 1))];
+  shadingColorLib.value = item;
+  if (item.colors) shadingBackground.value.colorCounts = item.colors;
+  generateShadingBackground();
+};
 </script>
 
 <style lang="scss" scoped>
@@ -817,10 +820,9 @@ const generateShadingBackgroundRandom = () => {
     width: 50%;
   }
   .el-radio-button__inner {
-    width: 100%
+    width: 100%;
   }
 }
-
 
 .background-image {
   height: 0;
@@ -893,7 +895,7 @@ const generateShadingBackgroundRandom = () => {
     justify-content: center;
     align-items: center;
     display: none;
-    background-color: rgba($color: #000, $alpha: .25);
+    background-color: rgba($color: #000, $alpha: 0.25);
   }
   .btn {
     width: 72px;
@@ -991,7 +993,7 @@ const generateShadingBackgroundRandom = () => {
   display: inline-block;
   cursor: pointer;
   margin: 0 2px;
-  transition: transform .2s ease, box-shadow .2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .color-item:hover {
@@ -1010,7 +1012,6 @@ const generateShadingBackgroundRandom = () => {
   width: 90%;
   margin: 0 auto;
 }
-
 </style>
 
 <style scoped>

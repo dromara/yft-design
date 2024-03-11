@@ -63,7 +63,7 @@ export const propertiesToInclude = [
   'id', 
   'name', 
   'isShow',
-  'isCheck',
+  'editable',
   'color', 
   'axis',
   'cropKey', 
