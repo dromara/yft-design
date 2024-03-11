@@ -36,7 +36,7 @@
         </div>
       </div>
     </el-row>
-    <ImageUpload :visible="dialogVisible" @close="closeUpload"/>
+    <ImageMatting :visible="dialogVisible" @close="closeUpload"/>
   </div>
 </template>
 

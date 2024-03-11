@@ -7,7 +7,7 @@ import TextColorButton from '@/components/TextColorButton.vue'
 import FullscreenSpin from '@/components/FullscreenSpin.vue'
 import SwipeInput from '@/components/SwipeInput.vue'
 import FileUpload from '@/components/FileUpload/index.vue'
-import ImageUpload from '@/components/ImageUpload/index.vue'
+import ImageMatting from '@/components/ImageMatting/index.vue'
 
 const components = {
   FileInput,
@@ -17,7 +17,7 @@ const components = {
   FullscreenSpin,
   SwipeInput,
   FileUpload,
-  ImageUpload,
+  ImageMatting,
 }
 
 export default {

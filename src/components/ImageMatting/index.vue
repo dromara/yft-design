@@ -21,9 +21,8 @@ import { computed, ref, watch } from 'vue'
 import { UploadFilled } from '@element-plus/icons-vue'
 import { getImageDataURL, getImageText } from '@/utils/image'
 import { ElMessage, genFileId, UploadInstance, UploadProps, UploadRawFile } from "element-plus"
-import { uploadFile } from '@/api/file'
+import { uploadImage } from '@/api/matting'
 import { useTemplatesStore } from '@/store'
-import { loadSVGFromString } from 'fabric'
 import useCanvasScale from '@/hooks/useCanvasScale'
 import useHandleCreate from '@/hooks/useHandleCreate'
 import useHandleTemplate from '@/hooks/useHandleTemplate'
@@ -66,11 +65,12 @@ const uploadHandle = async (option: any) => {
   const fileSuffix = filename.split('.').pop()
   if (!fileAccept.value.split(',').includes(`.${fileSuffix}`)) return
   if (['jpg', 'jpeg', 'png', 'webp'].includes(fileSuffix)) {
-    const dataURL = await getImageDataURL(option.file)
-    // createImageElement(dataURL)
-    emit('close')
+    // const dataURL = await getImageDataURL(option.file)
+    const res = await uploadImage(option.file, fileSuffix)
+    console.log('res:', res)
+    
   }
-  uploading.value = true
+  // uploading.value = true
   // const res = await uploadFile(option.file, fileSuffix)
   // uploading.value = false
   // if (res && res.data.code === 200) {
