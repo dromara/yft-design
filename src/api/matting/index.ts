@@ -8,10 +8,9 @@ import { UploadResult } from './types'
  *
  * @param image
  */
- export function uploadImage(image: File, type: string): AxiosPromise<UploadResult> {
+ export function uploadImage(image: File, type?: string): AxiosPromise<UploadResult> {
   const formData = new FormData()
   formData.append('image', image)
-  formData.append('type', type)
   return request({
     url: '/api/matting/file',
     method: 'post',
