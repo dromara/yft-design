@@ -54,7 +54,7 @@ export class ArcText extends OriginIText {
   constructor(text: string, options: any) {
     super(text, options)
     this.createCurvatureControl()
-    this.curvature = options.curvature ? options.curvature : 151
+    this.curvature = options.curvature ? options.curvature : this.curvature
   }
 
   get type() {
