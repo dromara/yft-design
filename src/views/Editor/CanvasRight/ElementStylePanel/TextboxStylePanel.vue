@@ -313,9 +313,9 @@ const updateFontColor = (fill: string) => {
 
 // 修改背景颜色
 const updateBackgroundColor = (backgroundColor: string) => {
-  let changeData = { backgroundColor }
+  let changeData: Record<string, any> = { backgroundColor }
   if (handleElement.value.type.toLowerCase() === ElementNames.ARCTEXT) {
-    changeData = { textBackgroundColor: backgroundColor }
+    changeData = { 'textBackgroundColor': backgroundColor }
   }
   if (handleElement.value.isEditing) {
     handleElement.value.setSelectionStyles(changeData)
