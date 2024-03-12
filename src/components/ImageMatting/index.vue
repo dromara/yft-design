@@ -29,12 +29,12 @@
       </div>
     </div>
     <template #footer>
-      <span class="dialog-footer">
-        <el-button v-show="state.originImage && state.toolModel" @click="clear">清空</el-button>
-        <el-button v-show="state.resultImage" type="primary" plain @click="edit">编辑</el-button>
-        <el-button v-show="state.resultImage && state.toolModel" type="primary" plain @click="download"> 下载 </el-button>
-        <el-button v-show="state.resultImage && !state.toolModel" v-loading="state.loading" type="primary" plain > {{ state.loading ? '上传中..' : '完成抠图' }} </el-button>
-      </span>
+      <div class="dialog-footer">
+        <el-button v-show="state.originImage && state.toolModel" type="danger" @click="clear">清空</el-button>
+        <el-button v-show="state.resultImage" type="primary" @click="edit">编辑</el-button>
+        <el-button v-show="state.resultImage && state.toolModel" type="success" @click="download">下载</el-button>
+        <el-button v-show="state.resultImage && !state.toolModel" v-loading="state.loading" type="primary" > {{ state.loading ? '上传中..' : '完成抠图' }} </el-button>
+      </div>
     </template>
   </el-dialog>
 </template>
@@ -43,6 +43,7 @@
 import { computed, ref, watch, reactive } from 'vue'
 import { UploadFilled } from '@element-plus/icons-vue'
 import { getImageDataURL, getImageText, getImageSize } from '@/utils/image'
+import { downloadLinkFile } from '@/utils/download'
 import { ElMessage, genFileId, UploadInstance, UploadProps, UploadRawFile } from "element-plus"
 import { uploadImage } from '@/api/matting'
 import { useTemplatesStore } from '@/store'
@@ -61,6 +62,7 @@ interface TImageMattingState {
   dialogVisible: boolean
   fileAccept: string
   show: boolean
+  filename: string
   originImage: string
   resultImage: string
   offsetWidth: number
@@ -75,6 +77,7 @@ const state = reactive<TImageMattingState>({
   dialogVisible: false,
   fileAccept: '.jpg,.jpeg,.png,.webp',
   show: false,
+  filename: '',
   originImage: '',
   resultImage: '',
   offsetWidth: 0,
@@ -111,8 +114,8 @@ const closeUpload = () => {
 }
 
 const uploadHandle = async (option: any) => {
-  const filename = option.file.name
-  const fileSuffix = filename.split('.').pop()
+  state.filename = option.file.name
+  const fileSuffix = state.filename.split('.').pop()
   if (!state.fileAccept.split(',').includes(`.${fileSuffix}`)) return
   const res = await uploadImage(option.file, fileSuffix)
   const mattingData = res.data
@@ -152,11 +155,11 @@ const edit = () => {
 }
 
 const download = () => {
-
+  if (!state.resultImage) return
+  downloadLinkFile(state.resultImage, `yft-design-${Date.now()}-matting-${state.filename}`)
 }
 
 const mousemove = (e: MouseEvent) => {
-  console.log('e.target :', e.target)
   !isRuning.value && (state.percent = (e.offsetX / (e.target as any).width) * 100)
 }
 
