@@ -54,7 +54,7 @@ export class ArcText extends OriginIText {
   constructor(text: string, options: any) {
     super(text, options)
     this.createCurvatureControl()
-    // this.showCurvature = true
+    this.curvature = options.curvature ? options.curvature : 151
   }
 
   get type() {
@@ -110,9 +110,6 @@ export class ArcText extends OriginIText {
     if (Math.abs(cy) > textHeight / 2) {
       radius = cy > 0 ? cy - textHeight / 2 : cy + textHeight / 2;
     }
-    // else{
-    //   radius = cy > 0 ? cy - textHeight / 2 : cy + textHeight / 2;
-    // }
   
     target.setRadius(radius)
     return false
@@ -124,6 +121,7 @@ export class ArcText extends OriginIText {
 
   setCurvature(value: number) {
     this.set('curvature', value)
+    this.canvas?.fire('object:modified')
   }
 
   renderCharCallback(method: any, ctx: CanvasRenderingContext2D, lineIndex: number, charIndex: number, endCharIndex: number, left: number, top: number, fullDecl: any) {
@@ -619,20 +617,20 @@ export class ArcText extends OriginIText {
     return this
   }
 
-  override render(ctx: CanvasRenderingContext2D) {
-    super.render(ctx)
-    ctx.save()
-    if(this.group){
-      this.group._transformDone = false;
-    }
-    this.clearContextTop();
-    this.cursorOffsetCache = {};
-    this.renderCursorOrSelection();
-    if(this.group){
-      this.group._transformDone = true;
-    }
-    ctx.restore()
-  }
+  // override render(ctx: CanvasRenderingContext2D) {
+  //   super.render(ctx)
+  //   ctx.save()
+  //   if(this.group){
+  //     this.group._transformDone = false;
+  //   }
+  //   // this.clearContextTop();
+  //   // this.cursorOffsetCache = {};
+  //   // this.renderCursorOrSelection();
+  //   if(this.group){
+  //     this.group._transformDone = true;
+  //   }
+  //   ctx.restore()
+  // }
 
   override _render(ctx: CanvasRenderingContext2D) {
     ctx.save()
