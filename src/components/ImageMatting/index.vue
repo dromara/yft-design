@@ -22,7 +22,7 @@
       </template>
     </el-upload>
     <div class="content">
-      <div v-show="state.originImage" v-loading="!state.resultImage" :style="{ width: state.offsetWidth ? state.offsetWidth + 'px' : '100%' }" class="scan-effect transparent-bg">
+      <div v-show="state.originImage" v-loading="!state.resultImage" :style="{ width: state.offsetWidth ? state.offsetWidth + 'px' : '100%' }" class="scan-effect transparent-background">
         <img ref="raw" :style="{ 'clip-path': 'inset(0 0 0 ' + state.percent + '%)' }" :src="state.originImage" alt="原始图像" />
         <img v-show="state.resultImage" :src="state.resultImage" @mousemove="mousemove" alt="结果图像" />
         <div v-show="state.resultImage" :style="{ left: state.percent + '%' }" class="scan-line"></div>
@@ -42,7 +42,7 @@
 <script lang="ts" setup>
 import { computed, ref, watch, reactive } from 'vue'
 import { UploadFilled } from '@element-plus/icons-vue'
-import { getImageDataURL, getImageText } from '@/utils/image'
+import { getImageDataURL, getImageText, getImageSize } from '@/utils/image'
 import { ElMessage, genFileId, UploadInstance, UploadProps, UploadRawFile } from "element-plus"
 import { uploadImage } from '@/api/matting'
 import { useTemplatesStore } from '@/store'
@@ -117,9 +117,11 @@ const uploadHandle = async (option: any) => {
   const res = await uploadImage(option.file, fileSuffix)
   const mattingData = res.data
   state.originImage = await getImageDataURL(option.file)
+  const { width, height } = await getImageSize(state.originImage)
   if (mattingData.code === 200) {
     state.resultImage = mattingData.resultImage
-    state.offsetWidth = mattingData.size.width
+    // state.offsetWidth = mattingData.size.width
+    requestAnimationFrame(run)
   }
 }
 
@@ -137,6 +139,12 @@ const clear = () => {
   state.resultImage = ''
   state.percent = 0
   state.offsetWidth = 0
+}
+
+const run = () => {
+  state.percent += 1
+  isRuning.value = true
+  state.percent < 100 ? requestAnimationFrame(run) : (isRuning.value = false)
 }
 
 const edit = () => {
@@ -169,10 +177,11 @@ const mousemove = (e: MouseEvent) => {
 }
 .scan-effect {
   position: relative;
-  height: 50vh;
   overflow: hidden;
+  height: 50vh;
   img {
     width: 100%;
+    height: 100%;
     object-fit: contain;
     position: absolute;
   }
