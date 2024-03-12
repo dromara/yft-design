@@ -121,22 +121,22 @@
       <el-col :span="24">
         <el-radio-group class="full-ratio" v-model="textAlign" @change="handleTextAlign">
           <el-tooltip placement="top" content="左对齐" :hide-after="0">
-            <el-radio-button label="justify-left">
+            <el-radio-button value="justify-left">
               <IconAlignTextLeft />
             </el-radio-button>
           </el-tooltip>
           <el-tooltip placement="top" content="居中" :hide-after="0">
-            <el-radio-button label="justify-center">
+            <el-radio-button value="justify-center">
               <IconAlignTextCenter />
             </el-radio-button>
           </el-tooltip>
           <el-tooltip placement="top" content="右对齐" :hide-after="0">
-            <el-radio-button label="justify-right">
+            <el-radio-button value="justify-right">
               <IconAlignTextRight />
             </el-radio-button>
           </el-tooltip>
           <el-tooltip placement="top" content="两边对齐" :hide-after="0">
-            <el-radio-button label="justify">
+            <el-radio-button value="justify">
               <IconAlignTextBoth />
             </el-radio-button>
           </el-tooltip>
@@ -165,12 +165,12 @@
       <el-col :span="4" class="flex-align">
         <el-radio-group class="full-ratio" v-model="handleElement.showCurvature" @change="changeArcTextStatus">
           <el-tooltip placement="top" content="隐藏弧度" :hide-after="0" v-if="handleElement.showCurvature">
-            <el-radio-button :label="false">
+            <el-radio-button :value="false">
               <IconPreviewClose />
             </el-radio-button>
           </el-tooltip>
           <el-tooltip placement="top" content="显示弧度" :hide-after="0" v-else>
-            <el-radio-button :label="true">
+            <el-radio-button :value="true">
               <IconPreviewOpen />
             </el-radio-button>
           </el-tooltip>
