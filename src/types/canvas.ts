@@ -140,7 +140,7 @@ export interface QRCodeProps extends ImageProps {
   codeOption: QRCodeOption
 }
 
-export interface GuideLineProps extends Line {
+export interface ReferenceLineProps extends Line {
   type: string
   axis: 'horizontal' | 'vertical' | ''
 }

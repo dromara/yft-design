@@ -4,9 +4,10 @@ import { shallowRef } from 'vue'
 import { toRef } from './attribute/toRef'
 import { check } from '@/utils/check'
 import { nonid } from '@/utils/common'
+import { FabricRuler } from './fabricRuler'
 
 export class FabricCanvas extends Canvas {
-
+  public ruler?: FabricRuler
   public activeObject = shallowRef<FabricObject>()
 
   constructor(el: string | HTMLCanvasElement, options?: any) {

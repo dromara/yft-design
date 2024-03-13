@@ -9,6 +9,7 @@ import { useMainStore } from '@/store'
 import { storeToRefs } from 'pinia'
 import { px2mm } from '@/utils/image'
 import { ElementNames } from '@/types/elements'
+import { FabricCanvas } from './fabricCanvas'
 
 type Rect = { left: number; top: number; width: number; height: number }
 
@@ -78,7 +79,7 @@ export class FabricRuler extends Disposable {
     y: HighlightRect[]
   }
 
-  constructor(private readonly canvas: Canvas) {
+  constructor(private readonly canvas: FabricCanvas) {
     super()
 
     // 合并默认配置
@@ -127,6 +128,7 @@ export class FabricRuler extends Disposable {
       'mouse:down': this.mouseDown.bind(this),
     }
     this.enabled = this.options.enabled
+    canvas.ruler = this
   }
 
   public getPointHover(point: Point): string {
@@ -165,8 +167,8 @@ export class FabricRuler extends Disposable {
     if (!pointHover) return
     this.canvas.selection = false
     // this.canvas.renderAll()
-    const GuideLine = classRegistry.getClass('GuideLine')
-    const guideLine = new GuideLine(
+    const ReferenceLine = classRegistry.getClass('ReferenceLine')
+    const referenceLine = new ReferenceLine(
       pointHover === 'horizontal' ? e.absolutePointer.y : e.absolutePointer.x,
       {
         axis: pointHover,
@@ -183,8 +185,8 @@ export class FabricRuler extends Disposable {
         globalCompositeOperation: 'difference',
       }
     );
-    // this.canvas.add(guideLine)
-    // this.canvas.setActiveObject(guideLine)
+    this.canvas.add(referenceLine)
+    this.canvas.setActiveObject(referenceLine)
   }
 
   public get enabled() {

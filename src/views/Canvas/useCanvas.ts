@@ -19,7 +19,7 @@ import useHammer from './useHammer'
 
 
 
-let canvas: null | Canvas = null
+let canvas: null | FabricCanvas = null
 
 // 初始化配置
 const initConf = () => {

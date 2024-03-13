@@ -39,7 +39,7 @@ const setRightState = (value: RightStates) => {
 
 const currentTabs = computed(() => {
   if (!canvasObject.value) return designTabs
-  if (canvasObject.value.name === 'backgroundImage') return designTabs
+  if (canvasObject.value.type.toLowerCase() === 'referenceline') return designTabs
   return styleTabs
 })
 
