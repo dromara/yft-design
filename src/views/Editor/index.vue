@@ -13,6 +13,7 @@
       <CanvasRight class="layout-content-right" />
       <CanvasDom class="layout-content-dom"/>
     </div>
+    <CanvasTour />
   </div>
 </template>
 
@@ -26,6 +27,7 @@ import CanvasRight from './CanvasRight/index.vue'
 import CanvasFooter from './CanvasFooter/index.vue'
 import CanvasAffix from './CanvasAffix/index.vue'
 import CanvasDom from './CanvasDom/index.vue'
+import CanvasTour from './CanvasTour/index.vue'
 </script>
 
 <style lang="scss" scoped>
