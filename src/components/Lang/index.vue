@@ -22,7 +22,7 @@
 <script name="Lang" lang="ts" setup>
 import useI18n from '@/hooks/useI18n'
 import { ref,  } from 'vue'
-import { LANG } from '@/constants/key'
+import { LANG } from '@/configs/key'
 import { setLocal, getLocal } from '@/utils/local'
 
 const {  changeLocale }= useI18n()

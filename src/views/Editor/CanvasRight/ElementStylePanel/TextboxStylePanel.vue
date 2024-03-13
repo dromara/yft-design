@@ -29,7 +29,7 @@
                   </TextColorButton>
                 </el-button>
               </template>
-              <ColorPicker :modelValue="handleElement.color" @update:modelValue="(color: string) => updateFontColor(color)"/>
+              <ColorPicker :modelValue="handleElement.color" @update:modelValue="(color) => updateFontColor(color)"/>
             </el-popover>
           </div>
         </el-tooltip>
@@ -45,7 +45,7 @@
                   </TextColorButton>
                 </el-button>
               </template>
-              <ColorPicker :modelValue="elementBackgrounColor" @update:modelValue="(color: string) => updateBackgroundColor(color)"/>
+              <ColorPicker :modelValue="elementBackgrounColor" @update:modelValue="(color) => updateBackgroundColor(color)"/>
             </el-popover>
           </div>
         </el-tooltip>
@@ -70,7 +70,7 @@
     <el-row class="mt-10">
       <div class="full-checkbox">
         <el-tooltip placement="top" content="加粗" :hide-after="0">
-          <el-checkbox-button :label="hasFontWeight" @change="handleElementBlod()">
+          <el-checkbox-button :value="hasFontWeight" @change="handleElementBlod()">
             <IconTextBold />
           </el-checkbox-button>
         </el-tooltip>
@@ -121,22 +121,22 @@
       <el-col :span="24">
         <el-radio-group class="full-ratio" v-model="textAlign" @change="handleTextAlign">
           <el-tooltip placement="top" content="左对齐" :hide-after="0">
-            <el-radio-button label="justify-left">
+            <el-radio-button value="justify-left">
               <IconAlignTextLeft />
             </el-radio-button>
           </el-tooltip>
           <el-tooltip placement="top" content="居中" :hide-after="0">
-            <el-radio-button label="justify-center">
+            <el-radio-button value="justify-center">
               <IconAlignTextCenter />
             </el-radio-button>
           </el-tooltip>
           <el-tooltip placement="top" content="右对齐" :hide-after="0">
-            <el-radio-button label="justify-right">
+            <el-radio-button value="justify-right">
               <IconAlignTextRight />
             </el-radio-button>
           </el-tooltip>
           <el-tooltip placement="top" content="两边对齐" :hide-after="0">
-            <el-radio-button label="justify-right">
+            <el-radio-button value="justify">
               <IconAlignTextBoth />
             </el-radio-button>
           </el-tooltip>
@@ -163,14 +163,14 @@
 
     <el-row class="mt-10" v-show="handleElement.type.toLowerCase() === ElementNames.ARCTEXT">
       <el-col :span="4" class="flex-align">
-        <el-radio-group class="full-ratio" v-model="(handleElement as ArcText).showCurvature" @change="changeArcTextStatus">
-          <el-tooltip placement="top" content="隐藏弧度" :hide-after="0" v-if="(handleElement as ArcText).showCurvature">
-            <el-radio-button :label="false">
+        <el-radio-group class="full-ratio" v-model="handleElement.showCurvature" @change="changeArcTextStatus">
+          <el-tooltip placement="top" content="隐藏弧度" :hide-after="0" v-if="handleElement.showCurvature">
+            <el-radio-button :value="false">
               <IconPreviewClose />
             </el-radio-button>
           </el-tooltip>
           <el-tooltip placement="top" content="显示弧度" :hide-after="0" v-else>
-            <el-radio-button :label="true">
+            <el-radio-button :value="true">
               <IconPreviewOpen />
             </el-radio-button>
           </el-tooltip>
@@ -178,11 +178,11 @@
       </el-col>
       <el-col :span="1"></el-col>
       <el-col :span="12" class="flex-align">
-        <el-slider :min="66" :max="1000" :step="1" v-model="(handleElement as ArcText).radius" @change="changeArcTextRadius" size="small"></el-slider>
+        <el-slider :min="66" :max="1000" :step="1" v-model="handleElement.radius" @change="changeArcTextRadius" size="small"></el-slider>
       </el-col>
       <el-col :span="1"></el-col>
       <el-col :span="6" class="flex-align">
-        <el-input :min="1" :max="10" v-model="(handleElement as ArcText).radius" controls-position="right" size="default"/>
+        <el-input :min="1" :max="10" v-model="handleElement.radius" controls-position="right" size="default"/>
       </el-col>
     </el-row>
 
@@ -192,12 +192,12 @@
 
     <div class="row">
       <div style="flex: 2;">行距：</div>
-      <el-select style="flex: 3" suffix-icon="IconRowHeight" v-model="handleElement.lineHeight">
+      <el-select style="flex: 3" suffix-icon="IconRowHeight" v-model="handleElement.lineHeight" @change="changeLineHeight">
         <el-option v-for="item in LineHeightLibs" :key="item" :value="item" :label="item"></el-option>
       </el-select>
       <div style="flex: 1;"></div>
       <div style="flex: 2;">字距：</div>
-      <el-select style="flex: 3" suffix-icon="IconFullwidth" v-model="handleElement.charSpacing">
+      <el-select style="flex: 3" suffix-icon="IconFullwidth" v-model="handleElement.charSpacing" @change="changeCharSpacing">
         <el-option v-for="item in CharSpaceLibs" :key="item" :value="item" :label="item"></el-option>
       </el-select>
     </div>
@@ -313,9 +313,9 @@ const updateFontColor = (fill: string) => {
 
 // 修改背景颜色
 const updateBackgroundColor = (backgroundColor: string) => {
-  let changeData = { backgroundColor }
+  let changeData: Record<string, any> = { backgroundColor }
   if (handleElement.value.type.toLowerCase() === ElementNames.ARCTEXT) {
-    changeData = { textBackgroundColor: backgroundColor }
+    changeData = { 'textBackgroundColor': backgroundColor }
   }
   if (handleElement.value.isEditing) {
     handleElement.value.setSelectionStyles(changeData)
@@ -440,6 +440,28 @@ const handleElementCharSpacing = (mode: '+' | '-') => {
   canvas.renderAll()
 }
 
+const changeLineHeight = (lineHeight: number) => {
+  if (handleElement.value.isEditing) {
+    handleElement.value.setSelectionStyles({lineHeight})
+  }
+  else {
+    handleElement.value.set({lineHeight})
+  }
+  templatesStore.modifedElement()
+  canvas.renderAll()
+}
+
+const changeCharSpacing = (charSpacing: number) => {
+  if (handleElement.value.isEditing) {
+    handleElement.value.setSelectionStyles({charSpacing})
+  }
+  else {
+    handleElement.value.set({charSpacing})
+  }
+  templatesStore.modifedElement()
+  canvas.renderAll()
+}
+
 const handleElementArrange = (status: boolean) => {
   handleElement.value.set({splitByGrapheme: status, width: handleElement.value.fontSize})
   templatesStore.modifedElement()
@@ -467,55 +489,14 @@ const handleElementCurve = async () => {
 }
 
 const handleElementDeformation = () => {
-  // const textWidth = handleElement.value.width
-  // const quarterWidth = textWidth / 4
-  /*
-  A(rx, ry, xr, laf, sf, x, y) - 绘制弧线
-  rx - (radius-x)：弧线所在椭圆的 x 半轴长
-  ry - (radius-y)：弧线所在椭圆的 y 半轴长
-  xr - (xAxis-rotation)：弧线所在椭圆的长轴角度
-  laf - (large-arc-flag)：是否选择弧长较长的那一段弧
-  sf - (sweep-flag)：是否选择逆时针方向的那一段弧
-  x, y：弧的终点位置
-  */
-  // const pathItem = `M 0 0 A ${quarterWidth + 200} ${quarterWidth} 0 0 1 ${textWidth} 0`
-  // console.log('pathItem:', pathItem)
-  // const pathElement = new Path(pathItem, {
-  //   visible: false,
-  //   opacity: 1,
-  //   originX: 'left',
-  //   originY: 'top',
-  //   fill: '',
-  //   stroke: '#ff5e17',
-  //   strokeWidth: 1
-  // })
-  // handleElement.value.set({path: pathElement, height: handleElement.value.height + 200})
-  // const textPath = new Text('Text on a path', {
-  //     top: 150,
-  //     left: 150,
-  //     textAlign: 'center',
-  //     charSpacing: -50,
-  //     path: new Path('M 0 0 C 50 -100 150 -100 200 0', {
-  //       strokeWidth: 1,
-  //       visible: false
-  //     }),
-  //     pathSide: 'left',
-  //     pathStartOffset: 0
-  // });
-  // const ArcText = classRegistry.getClass('ArcText')
   const options = handleElement.value.toObject(propertiesToInclude as any[]) as any
   delete options.type
   options.id = nanoid(10)
   const arcText = new ArcText(options.text, options)
-  // const rotateText = new RotateText(options.text, options)
-  // const curvedText = new CurvedText(options.text, options)
   canvas.add(arcText)
-  // canvas.add(rotateText)
-  // canvas.add(curvedText)
-  // handleElement.value.set({__isCurvature: true})
-  // const _isCurvature = handleElement.value.get('_isCurvature')
-  // console.log('_isCurvature:', handleElement.value, _isCurvature)
+  handleElement.value.set({visible: false})
   templatesStore.modifedElement()
+  canvas.setActiveObject(arcText)
   canvas.renderAll()
 }
 
@@ -532,7 +513,6 @@ const changeArcTextRadius = (val: number) => {
 
 const changeArcTextStatus = (showCurvature: boolean) => {
   (handleElement.value as ArcText).set({showCurvature})
-  console.log('val:', showCurvature)
   canvas.renderAll()
 }
 

@@ -280,3 +280,8 @@ export const ImageCategoryInfo = [
   {id: 16, name: '时尚', type: 'fashion', category: [], total: []},
   {id: 17, name: '人物', type: 'people', category: [], total: []},
 ]
+
+export const MattingModel = [
+  {id: 'universal', key: 'universal', name: '通用'},
+  {id: 'people', key: 'people', name: '人像'},
+]

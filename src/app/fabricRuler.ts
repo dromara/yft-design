@@ -4,11 +4,14 @@ import { computed, watchEffect } from 'vue'
 // import { useThemes } from '@/hooks/useThemes'
 import { DesignUnitMode } from '@/configs/background'
 import { PiBy180, isMobile } from '@/utils/common'
-import { TAxis, Canvas, Point, Rect as fabricRect, util, classRegistry } from 'fabric'
+import { TAxis, Canvas, Point, Rect as fabricRect, CanvasEvents, classRegistry, Object as FabricObject, TPointerEventInfo, TPointerEvent, CanvasPointerEvents } from 'fabric'
 import { useMainStore } from '@/store'
 import { storeToRefs } from 'pinia'
 import { px2mm } from '@/utils/image'
 import { ElementNames } from '@/types/elements'
+import { FabricCanvas } from './fabricCanvas'
+import { ReferenceLine } from '@/extension/object/ReferenceLine'
+import { WorkSpaceDrawType } from '@/configs/canvas'
 
 type Rect = { left: number; top: number; width: number; height: number }
 
@@ -64,23 +67,19 @@ export type HighlightRect = {skip?: TAxis} & Rect
 
 export class FabricRuler extends Disposable {
   private canvasEvents
-
-  /**
-   * 配置
-   */
+  public lastCursor: string
+  public workSpaceDraw?: fabricRect
   public options: Required<RulerOptions>
-
-  /**
-   * 选取对象矩形坐标
-   */
-  private objectRect: undefined | {
+  private tempReferenceLine?: ReferenceLine
+  private activeOn: string = "up"
+  private objectRect: undefined | { 
     x: HighlightRect[],
     y: HighlightRect[]
   }
 
-  constructor(private readonly canvas: Canvas) {
+  constructor(private readonly canvas: FabricCanvas) {
     super()
-
+    this.lastCursor = this.canvas.defaultCursor
     // 合并默认配置
     this.options = Object.assign({
       ruleSize: 20,
@@ -125,11 +124,15 @@ export class FabricRuler extends Disposable {
       'after:render': this.render.bind(this),
       'mouse:move': this.mouseMove.bind(this),
       'mouse:down': this.mouseDown.bind(this),
+      'mouse:up': this.mouseUp.bind(this),
+      'referenceline:moving': this.referenceLineMoving.bind(this),
+      'referenceline:mouseup': this.referenceLineMouseup.bind(this),
     }
     this.enabled = this.options.enabled
+    canvas.ruler = this
   }
 
-  public getPointHover(point: Point): string {
+  public getPointHover(point: Point): 'vertical' | 'horizontal' | '' {
     if (
       new fabricRect({
         left: 0,
@@ -154,37 +157,135 @@ export class FabricRuler extends Disposable {
     return '';
   }
 
-  private mouseMove(e: any) {
+  private mouseMove(e: TPointerEventInfo<TPointerEvent>) {
+    if (!e.pointer) return
+    if (this.tempReferenceLine && e.absolutePointer) {
+      const pos: Partial<ReferenceLine> = {};
+      if (this.tempReferenceLine.axis === 'horizontal') {
+        pos.top = e.absolutePointer.y;
+      } 
+      else {
+        pos.left = e.absolutePointer.x;
+      }
+      this.tempReferenceLine.set({ ...pos, visible: true });
+
+      this.canvas.requestRenderAll();
+
+      const event = this.getCommonEventInfo(e) as any;
+      this.canvas.fire('object:moving', event);
+      this.tempReferenceLine.fire('moving', event);
+    }
     const status = this.getPointHover(e.absolutePointer)
+    this.canvas.defaultCursor = this.lastCursor
     if (!status) return
-    // this.canvas.defaultCursor = status === 'horizontal' ? 'ns-resize' : 'ew-resize';
+    this.lastCursor = this.canvas.defaultCursor
+    this.canvas.defaultCursor = status === 'horizontal' ? 'ns-resize' : 'ew-resize';
   }
 
   private mouseDown(e: any) {
     const pointHover = this.getPointHover(e.absolutePointer)
     if (!pointHover) return
-    this.canvas.selection = false
-    // this.canvas.renderAll()
-    const GuideLine = classRegistry.getClass('GuideLine')
-    const guideLine = new GuideLine(
-      pointHover === 'horizontal' ? e.absolutePointer.y : e.absolutePointer.x,
-      {
-        axis: pointHover,
-        // visible: ,
-        name: 'GuideLine',
-        // selectable: false,
-        hasControls: false,
-        hasBorders: false,
-        stroke: 'pink',
-        fill: 'pink',
-        originX: 'center',
-        originY: 'center',
-        padding: 4, // 填充，让辅助线选择范围更大，方便选中
-        globalCompositeOperation: 'difference',
-      }
-    );
-    // this.canvas.add(guideLine)
-    // this.canvas.setActiveObject(guideLine)
+    if (this.activeOn === 'up') {
+      this.canvas.selection = false
+      this.activeOn = 'down'
+      this.tempReferenceLine = new ReferenceLine(
+        pointHover === 'horizontal' ? e.absolutePointer.y : e.absolutePointer.x,
+        {
+          type: 'ReferenceLine',
+          axis: pointHover,
+          visible: false,
+          name: 'ReferenceLine',
+          // selectable: false,
+          hasControls: false,
+          hasBorders: false,
+          stroke: 'pink',
+          fill: 'pink',
+          originX: 'center',
+          originY: 'center',
+          padding: 4, // 填充，让辅助线选择范围更大，方便选中
+          globalCompositeOperation: 'difference',
+        }
+      );
+      this.canvas.add(this.tempReferenceLine)
+      this.canvas.setActiveObject(this.tempReferenceLine)
+      this.canvas._setupCurrentTransform(e.e, this.tempReferenceLine, true);
+      // @ts-ignore
+      this.tempReferenceLine.fire('down', this.getCommonEventInfo(e));
+    }
+  }
+
+  private getCommonEventInfo(e: TPointerEventInfo<TPointerEvent>) {
+    if (!this.tempReferenceLine || !e.absolutePointer) return;
+    return {
+      e: e.e,
+      transform: this.tempReferenceLine.get('transform'),
+      pointer: {
+        x: e.absolutePointer.x,
+        y: e.absolutePointer.y,
+      },
+      target: this.tempReferenceLine,
+    };
+  }
+
+  private mouseUp(e: any) {
+    if (this.activeOn !== 'down') return;
+    this.canvas.selection = true
+    this.activeOn = 'up';
+    // @ts-ignore
+    this.tempReferenceLine?.fire('up', this.getCommonEventInfo(e));
+    this.tempReferenceLine = undefined;
+  }
+
+  public getWorkSpaceDraw() {
+    this.workSpaceDraw = this.canvas.getObjects().filter(item => item.id === WorkSpaceDrawType)[0] as fabricRect
+  }
+
+  public isRectOut(object: FabricObject, target: ReferenceLine): boolean {
+    const { top, height, left, width } = object;
+
+    if (top === undefined || height === undefined || left === undefined || width === undefined) {
+      return false;
+    }
+
+    const targetRect = target.getBoundingRect(true, true);
+    const {
+      top: targetTop,
+      height: targetHeight,
+      left: targetLeft,
+      width: targetWidth,
+    } = targetRect;
+
+    if (target.isHorizontal() && (top > targetTop + 1 || top + height < targetTop + targetHeight - 1)) {
+      return true;
+    } 
+    else if (!target.isHorizontal() && (left > targetLeft + 1 || left + width < targetLeft + targetWidth - 1)) {
+      return true;
+    }
+
+    return false;
+  };
+
+  referenceLineMoving(e: any) {
+    if (!this.workSpaceDraw) {
+      this.getWorkSpaceDraw();
+      return;
+    }
+    const { target } = e;
+    if (this.isRectOut(this.workSpaceDraw, target)) {
+      target.moveCursor = 'not-allowed';
+    }
+  } 
+
+  referenceLineMouseup(e: any) {
+    if (!this.workSpaceDraw) {
+      this.getWorkSpaceDraw();
+      return;
+    }
+    const { target } = e;
+    if (this.isRectOut(this.workSpaceDraw, target)) {
+      this.canvas.remove(target);
+      this.canvas.setCursor(this.canvas.defaultCursor ?? '');
+    }
   }
 
   public get enabled() {

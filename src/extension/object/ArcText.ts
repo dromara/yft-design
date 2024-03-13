@@ -38,8 +38,8 @@ export class ArcText extends OriginIText {
   private __lineInfo: any = []
   private __renderOffsetTop: number = 0
   private _linesRads: number[] = []
-  private _contentOffsetX: number = 0
-  private _contentOffsetY: number = 0
+  public _contentOffsetX: number = 0
+  public _contentOffsetY: number = 0
   private _curvingCenter: Point = new Point(0, 0)
   private _specialArray = []
   private _translatedX: number = 0
@@ -54,7 +54,8 @@ export class ArcText extends OriginIText {
   constructor(text: string, options: any) {
     super(text, options)
     this.createCurvatureControl()
-    // this.showCurvature = true
+    this.curvature = options.curvature ? options.curvature : this.curvature
+    this.showCurvature = true
   }
 
   get type() {
@@ -62,40 +63,40 @@ export class ArcText extends OriginIText {
   }
 
   createCurvatureControl() {
-    this.controls.c = new Control({
-      x: 0,
-      y: 0,
-      offsetX: 0,
-      offsetY: 0,
-      actionHandler: this.changeCurvature,
-      render(ctx, left, top, styleOverride, fabricObject: ArcText) {
-        if (fabricObject.showCurvature) {
-          const zoom = fabricObject.canvas?.getZoom() ? fabricObject.canvas?.getZoom() : 1
-          const radius = Math.abs(fabricObject.radius) * zoom
-          ctx.save()
-          ctx.strokeStyle = fabricObject.borderColor
-          ctx.lineWidth = fabricObject.borderWidth
-          // let cx = -fabricObject._contentOffsetX * fabricObject.scaleX
-          // let cy = (fabricObject._curvingCenter.y - fabricObject._contentOffsetY) * fabricObject.scaleY
-          ctx.beginPath()
-          ctx.ellipse(left, top, radius * fabricObject.scaleX, radius * fabricObject.scaleY, 0, 0, 2 * Math.PI);
-          ctx.stroke();
-          ctx.restore()
-        }
-      },
-      cursorStyle: 'pointer',
-      actionName: 'resizing',
-    })
+    // this.controls.c = new Control({
+    //   x: 0,
+    //   y: -0.5,
+    //   offsetX: 0,
+    //   offsetY: -10,
+    //   // actionHandler: this.changeCurvature,
+    //   // render(ctx, left, top, styleOverride, fabricObject: ArcText) {
+    //   //   if (fabricObject.showCurvature) {
+    //   //     const zoom = fabricObject.canvas?.getZoom() ? fabricObject.canvas?.getZoom() : 1
+    //   //     const radius = Math.abs(fabricObject.radius) * zoom
+    //   //     ctx.save()
+    //   //     ctx.strokeStyle = fabricObject.borderColor
+    //   //     ctx.lineWidth = fabricObject.borderWidth
+    //   //     // let cx = -fabricObject._contentOffsetX * fabricObject.scaleX
+    //   //     // let cy = (fabricObject._curvingCenter.y - fabricObject._contentOffsetY) * fabricObject.scaleY
+    //   //     ctx.beginPath()
+    //   //     ctx.ellipse(left, top, radius * fabricObject.scaleX, radius * fabricObject.scaleY, 0, 0, 2 * Math.PI);
+    //   //     ctx.stroke();
+    //   //     ctx.restore()
+    //   //   }
+    //   // },
+    //   cursorStyle: 'pointer',
+    //   actionName: 'resizing',
+    // })
 
     this.on("scaling", this.updateCurvingControl)
   }
 
   updateCurvingControl () {
     if (this.controls.c) {
-      const zoom = this.canvas?.getZoom() ? this.canvas?.getZoom() : 1
-      this.controls.c.offsetX =  -this._contentOffsetX * this.scaleX * zoom,
-      this.controls.c.offsetY = (this._curvingCenter.y - this._contentOffsetY) * this.scaleY * zoom
-      this.canvas && this.setCoords()
+      // const zoom = this.canvas?.getZoom() ? this.canvas?.getZoom() : 1
+      // this.controls.c.offsetX =  -this._contentOffsetX * this.scaleX * zoom,
+      // this.controls.c.offsetY = (this._curvingCenter.y - this._contentOffsetY) * this.scaleY * zoom
+      // this.canvas && this.setCoords()
     }
   }
 
@@ -110,9 +111,6 @@ export class ArcText extends OriginIText {
     if (Math.abs(cy) > textHeight / 2) {
       radius = cy > 0 ? cy - textHeight / 2 : cy + textHeight / 2;
     }
-    // else{
-    //   radius = cy > 0 ? cy - textHeight / 2 : cy + textHeight / 2;
-    // }
   
     target.setRadius(radius)
     return false
@@ -124,6 +122,7 @@ export class ArcText extends OriginIText {
 
   setCurvature(value: number) {
     this.set('curvature', value)
+    this.canvas?.fire('object:modified')
   }
 
   renderCharCallback(method: any, ctx: CanvasRenderingContext2D, lineIndex: number, charIndex: number, endCharIndex: number, left: number, top: number, fullDecl: any) {
@@ -619,20 +618,20 @@ export class ArcText extends OriginIText {
     return this
   }
 
-  override render(ctx: CanvasRenderingContext2D) {
-    super.render(ctx)
-    ctx.save()
-    if(this.group){
-      this.group._transformDone = false;
-    }
-    this.clearContextTop();
-    this.cursorOffsetCache = {};
-    this.renderCursorOrSelection();
-    if(this.group){
-      this.group._transformDone = true;
-    }
-    ctx.restore()
-  }
+  // override render(ctx: CanvasRenderingContext2D) {
+  //   super.render(ctx)
+  //   ctx.save()
+  //   if(this.group){
+  //     this.group._transformDone = false;
+  //   }
+  //   // this.clearContextTop();
+  //   // this.cursorOffsetCache = {};
+  //   // this.renderCursorOrSelection();
+  //   if(this.group){
+  //     this.group._transformDone = true;
+  //   }
+  //   ctx.restore()
+  // }
 
   override _render(ctx: CanvasRenderingContext2D) {
     ctx.save()

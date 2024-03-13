@@ -1,6 +1,6 @@
 import { TControlSet } from '@/types/fabric'
 import { polygonPositionHandler, anchorWrapper, actionHandler} from '@/app/fabricControls'
-import type {  Group , Canvas , StaticCanvas , ActiveSelection } from 'fabric'
+import type {  Group , Canvas , StaticCanvas , ActiveSelection, TSVGReviver } from 'fabric'
 import { Object as FabricObject, Point, TransformActionHandler, Control, Polygon as OriginPolygon, classRegistry, XY, util, CanvasEvents } from 'fabric'
 import { ElementNames } from '@/types/elements'
 import { check } from '@/utils/check'
@@ -241,7 +241,6 @@ export class Polygon extends OriginPolygon {
     return { objHeight, objWidth }
   }
 
-  // 当对象被旋转时，需要忽略一些坐标，例如水平辅助线只取最上、下边的坐标（参考 figma）
   private omitCoords(objCoords: ACoordsAppendCenter, type: 'vertical' | 'horizontal') {
     const newCoords = objCoords
     const axis = type === 'vertical' ? 'x' : 'y'
@@ -429,6 +428,10 @@ export class Polygon extends OriginPolygon {
     this.dirty = false
     if (!this.canvas.contextTop) return
     this.canvas.clearContext(this.canvas.getTopContext())
+  }
+
+  public toSVG(reviver?: TSVGReviver | undefined): string {
+    return super.toSVG(reviver)
   }
 
   public dispose(): void {
