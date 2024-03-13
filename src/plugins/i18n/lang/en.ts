@@ -67,5 +67,11 @@ export default {
     nonMargin: 'Non Margin',
     standardMargin: 'Standard Margin',
     errorRate: 'Error Rate',
+
+    uploadImages: 'Upload Images',
+    searchImages: 'Search Images',
+    recommendImages: 'Recommend Images ',
+    myBookmarks: 'My BookMarks',
+    teamTemplates: 'Team Templates'
   },
 };

@@ -70,6 +70,12 @@ export default {
     nonMargin: '无边距',
     standardMargin: '标准边距',
     errorRate: '容错率',
+
+    uploadImages: '上传图片',
+    searchImages: '搜索图片',
+    recommendImages: '推荐图片',
+    myBookmarks: '我的收藏',
+    teamTemplates: '团队模板',
   },
 };
   
