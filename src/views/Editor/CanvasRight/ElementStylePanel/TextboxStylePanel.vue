@@ -494,7 +494,9 @@ const handleElementDeformation = () => {
   options.id = nanoid(10)
   const arcText = new ArcText(options.text, options)
   canvas.add(arcText)
+  handleElement.value.set({visible: false})
   templatesStore.modifedElement()
+  canvas.setActiveObject(arcText)
   canvas.renderAll()
 }
 

@@ -21,27 +21,27 @@ export default () => {
   const { setZindex } = useCanvasZindex()
 
   const sortElement = async (eventData: { moved: { newIndex: number, oldIndex: number, element: FabricObject} }) => {
-    // if (WorkSpaceCommonType.includes(eventData.moved.element.id)) return
-    // const newIndex = eventData.moved.newIndex, oldIndex = eventData.moved.oldIndex, option = eventData.moved.element
-    // if (oldIndex === newIndex) return
-    // const element = queryElement(option.id)
-    // if (!element) return
-    // if (element.group) {
-    //   const elementGroup = queryOption((element.group as GroupElement).id) as Group
-    //   if (!elementGroup) return
-    //   const _element = elementGroup.objects[oldIndex]
-    //   elementGroup.objects.splice(oldIndex, 1)
-    //   elementGroup.objects.splice(newIndex, 0, _element)
-    // } 
-    // else {
-    //   const _elements = JSON.parse(JSON.stringify(currentTemplate.value.objects))
-    //   const _element = _elements[oldIndex]
-    //   _elements.splice(oldIndex, 1)
-    //   _elements.splice(newIndex, 0, _element)
-    //   currentTemplate.value.objects = _elements
-    // }
-    // await templatesStore.renderElement()
-    // templatesStore.modifedElement()
+    if (WorkSpaceCommonType.includes(eventData.moved.element.id)) return
+    const newIndex = eventData.moved.newIndex, oldIndex = eventData.moved.oldIndex, option = eventData.moved.element
+    if (oldIndex === newIndex) return
+    const element = queryElement(option.id)
+    if (!element) return
+    if (element.group) {
+      const elementGroup = queryOption((element.group as GroupElement).id) as Group
+      if (!elementGroup) return
+      const _element = elementGroup.objects[oldIndex]
+      elementGroup.objects.splice(oldIndex, 1)
+      elementGroup.objects.splice(newIndex, 0, _element)
+    } 
+    else {
+      const _elements = JSON.parse(JSON.stringify(currentTemplate.value.objects))
+      const _element = _elements[oldIndex]
+      _elements.splice(oldIndex, 1)
+      _elements.splice(newIndex, 0, _element)
+      currentTemplate.value.objects = _elements
+    }
+    await templatesStore.renderElement()
+    templatesStore.modifedElement()
   }
 
   const layerElement = (e: any, originalEvent: any) => {
