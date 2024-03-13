@@ -4,11 +4,12 @@ import { FabricCanvas } from "@/app/fabricCanvas";
 
 export class ReferenceLine extends Line {
   static type: string = 'ReferenceLine';
+  public axis: string = ''
 
-  constructor(point: number, options: ReferenceLineProps) {
+  constructor(point: number, options: any) {
     // 设置新的点
     // point += 100
-    const size = 500
+    const size = 999999
     const points = options.axis === 'horizontal' ? [-size, point, size, point] : [point, -size, point, size]
     const isHorizontal = options.axis === 'horizontal'
     options[isHorizontal ? 'lockMovementX' : 'lockMovementY'] = true
@@ -22,7 +23,6 @@ export class ReferenceLine extends Line {
 
     this.on('mousedown:before', (e) => {
       if (this.activeOn === 'down') {
-        // 设置selectable:false后激活对象才能进行移动
         this.canvas?.setActiveObject(this, e.e);
       }
     });
@@ -34,10 +34,10 @@ export class ReferenceLine extends Line {
       else {
         this.moveCursor = this.isHorizontal() ? 'ns-resize' : 'ew-resize';
       }
-      // this.canvas?.fire('guideline:moving', {
-      //   target: this,
-      //   e: e.e,
-      // });
+      this.canvas?.fire('referenceline:moving', {
+        target: this,
+        e: e.e,
+      });
     });
 
     this.on('mouseup', (e) => {
@@ -46,10 +46,10 @@ export class ReferenceLine extends Line {
         return;
       }
       this.moveCursor = this.isHorizontal() ? 'ns-resize' : 'ew-resize';
-      // this.canvas?.fire('guideline:mouseup', {
-      //   target: this,
-      //   e: e.e,
-      // });
+      this.canvas?.fire('referenceline:mouseup', {
+        target: this,
+        e: e.e,
+      });
     });
 
     this.on('removed', () => {

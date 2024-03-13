@@ -90,6 +90,14 @@ export declare module 'fabric' {
     | 'direction'
   > &
     Pick<Rect, 'rx' | 'ry'>
+  
+  export declare class Observable<EventSpec> {
+    on(eventName: 'referenceline:moving' | 'referenceline:mouseup', handler: (event: { e: Event; target: ReferenceLine }) => void): T;
+    on(events: { [key: EventName]: (event: { e: Event; target: fabric.GuideLine }) => void }): T;
+    // on<K extends keyof EventSpec, E extends EventSpec[K]>(eventName: K, handler: TEventCallback<E>): VoidFunction;
+    // on<K extends string, E>(eventName: K, handler: TEventCallback<E>): VoidFunction;
+    // on<K extends keyof EventSpec, E extends EventSpec[K]>(handlers: EventRegistryObject<K, E>): VoidFunction;
+  }
 
   export declare class Canvas {
     __targetlessCanvasDrag?: boolean
@@ -105,6 +113,11 @@ export declare module 'fabric' {
     absolutePan(point: Point, skipSetCoords?: boolean): void
     relativePan(point: Point, skipSetCoords?: boolean): void
     zoomToPoint(point: Point, value: number, skipSetCoords?: boolean): void
+
+    on(eventName: EventName, handler: (e: IEvent<MouseEvent>) => void): void;
+    on(options: any): void;
+    off(eventName: EventName, handler?: (e: IEvent<MouseEvent>) => void): void;
+    fire<T>(eventName: EventName, options?: any): T;
   }
 
   export declare class ActiveSelection {
