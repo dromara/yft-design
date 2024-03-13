@@ -70,7 +70,7 @@
     <el-row class="mt-10">
       <div class="full-checkbox">
         <el-tooltip placement="top" content="加粗" :hide-after="0">
-          <el-checkbox-button :label="hasFontWeight" @change="handleElementBlod()">
+          <el-checkbox-button :value="hasFontWeight" @change="handleElementBlod()">
             <IconTextBold />
           </el-checkbox-button>
         </el-tooltip>

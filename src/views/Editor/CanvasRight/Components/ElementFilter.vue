@@ -14,9 +14,9 @@
         <el-col :span="2"></el-col>
         <el-col :span="22">
           <el-radio-group class="full-ratio" v-model="elementGrayscale">
-            <el-radio-button label="average" @click.prevent="changeGrayscaleMode('average')">平均</el-radio-button>
-            <el-radio-button label="luminosity" @click.prevent="changeGrayscaleMode('luminosity')">光度</el-radio-button>
-            <el-radio-button label="lightness" @click.prevent="changeGrayscaleMode('lightness')">明亮</el-radio-button>
+            <el-radio-button value="average" @click.prevent="changeGrayscaleMode('average')">平均</el-radio-button>
+            <el-radio-button value="luminosity" @click.prevent="changeGrayscaleMode('luminosity')">光度</el-radio-button>
+            <el-radio-button value="lightness" @click.prevent="changeGrayscaleMode('lightness')">明亮</el-radio-button>
           </el-radio-group>
         </el-col>
       </el-row>
@@ -26,9 +26,9 @@
         <el-col :span="2"></el-col>
         <el-col :span="22">
           <el-checkbox-group class="full-group" v-model="elementFilters" @change="changeFilters">
-            <el-checkbox-button label="Invert">倒置</el-checkbox-button>
-            <el-checkbox-button label="Sharpen">锐化</el-checkbox-button>
-            <el-checkbox-button label="Emboss">凹凸</el-checkbox-button>
+            <el-checkbox-button value="Invert">倒置</el-checkbox-button>
+            <el-checkbox-button value="Sharpen">锐化</el-checkbox-button>
+            <el-checkbox-button value="Emboss">凹凸</el-checkbox-button>
           </el-checkbox-group>
         </el-col>
       </el-row>
@@ -38,9 +38,9 @@
         <el-col :span="2"></el-col>
         <el-col :span="22">
           <el-checkbox-group class="full-group" v-model="elementFilters" @change="changeFilters">
-            <el-checkbox-button label="Sepia">棕褐色</el-checkbox-button>
-            <el-checkbox-button label="BlackWhite">黑白色</el-checkbox-button>
-            <el-checkbox-button label="Brownie">布朗尼</el-checkbox-button>
+            <el-checkbox-button value="Sepia">棕褐色</el-checkbox-button>
+            <el-checkbox-button value="BlackWhite">黑白色</el-checkbox-button>
+            <el-checkbox-button value="Brownie">布朗尼</el-checkbox-button>
           </el-checkbox-group>
         </el-col>
       </el-row>
@@ -48,10 +48,10 @@
         <el-col :span="2"></el-col>
         <el-col :span="22"> 
           <el-checkbox-group class="full-checkbox" v-model="elementFilters" @change="changeFilters">
-            <el-checkbox-button label="Vintage">年份色</el-checkbox-button>
-            <el-checkbox-button label="Technicolor">特艺彩</el-checkbox-button>
-            <el-checkbox-button label="Kodachrome">柯达彩</el-checkbox-button>
-            <el-checkbox-button label="Polaroid">宝丽来</el-checkbox-button>
+            <el-checkbox-button value="Vintage">年份色</el-checkbox-button>
+            <el-checkbox-button value="Technicolor">特艺彩</el-checkbox-button>
+            <el-checkbox-button value="Kodachrome">柯达彩</el-checkbox-button>
+            <el-checkbox-button value="Polaroid">宝丽来</el-checkbox-button>
           </el-checkbox-group>
         </el-col>
       </el-row>      

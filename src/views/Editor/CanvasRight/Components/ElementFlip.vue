@@ -1,10 +1,10 @@
 <template>
   <el-row>
     <el-checkbox-group class="full-group" v-model="handleFlip" @change="changeElementFlip">
-      <el-checkbox-button label="flipY">
+      <el-checkbox-button value="flipY">
         <IconFlipVertically />垂直翻转
       </el-checkbox-button>
-      <el-checkbox-button label="flipX">
+      <el-checkbox-button value="flipX">
         <IconFlipHorizontally />水平翻转
       </el-checkbox-button>
     </el-checkbox-group>
