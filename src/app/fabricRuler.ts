@@ -168,9 +168,7 @@ export class FabricRuler extends Disposable {
         pos.left = e.absolutePointer.x;
       }
       this.tempReferenceLine.set({ ...pos, visible: true });
-
       this.canvas.requestRenderAll();
-
       const event = this.getCommonEventInfo(e) as any;
       this.canvas.fire('object:moving', event);
       this.tempReferenceLine.fire('moving', event);
@@ -182,27 +180,27 @@ export class FabricRuler extends Disposable {
     this.canvas.defaultCursor = status === 'horizontal' ? 'ns-resize' : 'ew-resize';
   }
 
-  private mouseDown(e: any) {
+  private mouseDown(e: TPointerEventInfo<TPointerEvent>) {
     const pointHover = this.getPointHover(e.absolutePointer)
     if (!pointHover) return
     if (this.activeOn === 'up') {
       this.canvas.selection = false
       this.activeOn = 'down'
+      const point = pointHover === 'horizontal' ? e.absolutePointer.y : e.absolutePointer.x
       this.tempReferenceLine = new ReferenceLine(
-        pointHover === 'horizontal' ? e.absolutePointer.y : e.absolutePointer.x,
+        point,
         {
           type: 'ReferenceLine',
           axis: pointHover,
           visible: false,
           name: 'ReferenceLine',
-          // selectable: false,
           hasControls: false,
           hasBorders: false,
           stroke: 'pink',
           fill: 'pink',
           originX: 'center',
           originY: 'center',
-          padding: 4, // 填充，让辅助线选择范围更大，方便选中
+          padding: 4,
           globalCompositeOperation: 'difference',
         }
       );
@@ -227,7 +225,7 @@ export class FabricRuler extends Disposable {
     };
   }
 
-  private mouseUp(e: any) {
+  private mouseUp(e: TPointerEventInfo<TPointerEvent>) {
     if (this.activeOn !== 'down') return;
     this.canvas.selection = true
     this.activeOn = 'up';
@@ -236,7 +234,7 @@ export class FabricRuler extends Disposable {
     this.tempReferenceLine = undefined;
   }
 
-  public getWorkSpaceDraw() {
+  public setWorkSpaceDraw() {
     this.workSpaceDraw = this.canvas.getObjects().filter(item => item.id === WorkSpaceDrawType)[0] as fabricRect
   }
 
@@ -267,7 +265,7 @@ export class FabricRuler extends Disposable {
 
   referenceLineMoving(e: any) {
     if (!this.workSpaceDraw) {
-      this.getWorkSpaceDraw();
+      this.setWorkSpaceDraw();
       return;
     }
     const { target } = e;
@@ -278,7 +276,7 @@ export class FabricRuler extends Disposable {
 
   referenceLineMouseup(e: any) {
     if (!this.workSpaceDraw) {
-      this.getWorkSpaceDraw();
+      this.setWorkSpaceDraw();
       return;
     }
     const { target } = e;
