@@ -7,7 +7,7 @@
             <el-tag>{{ item.name }}</el-tag>
           </el-col>
           <el-col :span="7" class="col-name">
-            <el-button text @click="showTotal(item.type)">全部<IconRight/></el-button>
+            <el-button text @click="showTotal(item.type)">{{$t('message.all')}}<IconRight/></el-button>
           </el-col>
         </el-row>
         <el-row class="category-box mt-5" v-loading="item.category.length === 0">
@@ -29,7 +29,7 @@
         </div>
       </el-row>
     </div>
-    <el-row class="image-bottom">到底了~</el-row>
+    <el-row class="image-bottom">{{$t('message.all')}}</el-row>
   </div>
 </template>
 

@@ -77,6 +77,9 @@ export default {
     recommendImages: '推荐图片',
     myBookmarks: '我的收藏',
     teamTemplates: '团队模板',
+
+    all: '全部',
+    endOfContent: '到底啦~'
   },
 };
   

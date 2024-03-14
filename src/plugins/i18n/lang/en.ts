@@ -73,6 +73,9 @@ export default {
     searchImages: 'Search Images',
     recommendImages: 'Recommend Images ',
     myBookmarks: 'My BookMarks',
-    teamTemplates: 'Team Templates'
+    teamTemplates: 'Team Templates',
+
+    all: 'All',
+    endOfContent: 'End Of Content~',
   },
 };
