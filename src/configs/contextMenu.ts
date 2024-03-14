@@ -9,11 +9,12 @@ import useHandleTool from '@/hooks/useHandleTool'
 
 
 export const contextMenuThumbnails = (): ContextMenu[] => {
+  const { pasteElement } = useHandleElement()
   return [
     {
       text: '粘贴',
       subText: 'Ctrl + V',
-      // handler: pasteSlide,
+      handler: pasteElement,
     },
     {
       text: '全选',
@@ -34,7 +35,7 @@ export const contextMenuThumbnails = (): ContextMenu[] => {
 }
 
 export const contextMenus = (): ContextMenu[] => {
-  const { lockElement, deleteElement } = useHandleElement()
+  const { lockElement, deleteElement, cutElement, copyElement, pasteElement } = useHandleElement()
   const { alignElement, layerElement } = useHandleTool()
   const { canvasObject } = storeToRefs(useMainStore())
   const element = canvasObject.value as FabricObject
@@ -75,17 +76,17 @@ export const contextMenus = (): ContextMenu[] => {
     {
       text: '剪切',
       subText: 'Ctrl + X',
-      // handler: cutElement,
+      handler: cutElement,
     },
     {
       text: '复制',
       subText: 'Ctrl + C',
-      // handler: copyElement,
+      handler: copyElement,
     },
     {
       text: '粘贴',
       subText: 'Ctrl + V',
-      // handler: pasteElement,
+      handler: pasteElement,
     },
     { divider: true },
     {
