@@ -41,6 +41,7 @@ export default {
 
     exportImages: '导出图片',
     exportPDF: '导出PDF',
+    exportPSD: '导出PSD',
     exportJSON: 'Export JSON',
     exportSVG: 'Export SVG',
     quantityPerPage: '每页数量',

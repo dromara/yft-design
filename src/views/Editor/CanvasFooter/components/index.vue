@@ -26,6 +26,7 @@ import { ExportTypes } from '@/types/common'
 import ExportImage from './ExportImage.vue'
 import ExportSVG from './ExportSVG.vue'
 import ExportPDF from './ExportPDF.vue'
+import ExportPSD from './ExportPSD.vue'
 import ExportJSON from './ExportJSON.vue'
 
 const mainStore = useMainStore()
@@ -58,6 +59,7 @@ const tabs: TabItem[] = [
   { key: 'image', label: '导出图片' },
   { key: 'svg', label: '导出SVG' },
   { key: 'pdf', label: '导出PDF' },
+  // { key: 'psd', label: '导出PSD' },
   { key: 'json', label: '导出JSON' },
 ]
 
@@ -66,6 +68,7 @@ const currentDialogComponent = computed(() => {
     'image': ExportImage,
     'svg': ExportSVG,
     'pdf': ExportPDF,
+    'psd': ExportPSD,
     'json': ExportJSON,
     '': '',
   }

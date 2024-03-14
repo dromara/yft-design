@@ -25,7 +25,7 @@
     </div>
 
     <div class="btns">
-      <el-button class="btn export" type="primary" @click="expPDF()">{{ t('message.exportPDF') }}</el-button>
+      <el-button class="btn export" type="primary" @click="expPSD()">{{ t('message.exportPSD') }}</el-button>
       <el-button class="btn close" @click="emit('close')">{{ t('message.close') }}</el-button>
     </div>
   </div>
@@ -41,7 +41,7 @@ import useCanvasExport from '@/hooks/useCanvasExport'
 
 // import ThumbnailSlide from '@/views/components/ThumbnailSlide/index.vue'
 
-const { exportPDF } = useCanvasExport()
+const { exportPSD } = useCanvasExport()
 const { t } = useI18n()
 const emit = defineEmits<{
   (event: 'close'): void
@@ -53,8 +53,8 @@ const rangeType = ref<'all' | 'current'>('all')
 const count = ref(1)
 const padding = ref(false)
 
-const expPDF = () => {
-  exportPDF()
+const expPSD = () => {
+  exportPSD()
   // if (!pdfThumbnailsRef.value) return
   // const pageSize = {
   //   width: 1600,

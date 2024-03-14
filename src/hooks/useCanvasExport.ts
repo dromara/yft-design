@@ -97,14 +97,24 @@ export default () => {
 
   // 导出PDF
   const exportPDF = async () => {
+    convertFile('pdf')
+  }
+
+  // 导出PSD
+  const exportPSD = async () => {
+    convertFile('psd')
+  }
+
+  const convertFile = async (filetype: string) => {
     const content = {
       data: Base64.encode(getSVGData()),
+      filetype,
       width: currentTemplate.value.width / currentTemplate.value.zoom,
       height: currentTemplate.value.height / currentTemplate.value.zoom,
     }
     const result = await exportFile(content)
     if (result && result.data.link) {
-      downloadLinkFile(result.data.link, `yft-design-${Date.now()}.pdf`)
+      downloadLinkFile(result.data.link, `yft-design-${Date.now()}.${filetype}`)
     }
   }
 
@@ -118,6 +128,7 @@ export default () => {
   return {
     exportImage,
     exportPDF,
+    exportPSD,
     exportJSON,
     exportSVG,
     getJSONData,

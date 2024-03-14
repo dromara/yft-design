@@ -38,6 +38,7 @@ export default {
 
     exportImages: 'Export Images',
     exportPDF: 'Export PDF',
+    exportPSD: 'Export PSD',
     exportJSON: 'Export JSON',
     exportSVG: 'Export SVG',
     quantityPerPage: 'Quantity Per Page',
