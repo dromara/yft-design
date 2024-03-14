@@ -19,7 +19,7 @@ export const enum ElementNames {
   GROUP = 'group',
   ACTIVE = 'activeselection',
   CIRCLE = 'circle',
-  GUIDELINE = 'guideline',
+  REFERENCELINE = 'referenceline',
 }
 
 export interface ColorStop {

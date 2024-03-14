@@ -14,6 +14,7 @@ export class ReferenceLine extends Line {
     const isHorizontal = options.axis === 'horizontal'
     options[isHorizontal ? 'lockMovementX' : 'lockMovementY'] = true
     super(points as [number, number, number, number], options)
+    this.axis = options.axis
     this.initEvent()
     this.hoverCursor = isHorizontal ? 'ns-resize' : 'ew-resize'
   }

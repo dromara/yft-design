@@ -162,13 +162,13 @@ export class FabricRuler extends Disposable {
     if (this.tempReferenceLine && e.absolutePointer) {
       const pos: Partial<ReferenceLine> = {};
       if (this.tempReferenceLine.axis === 'horizontal') {
-        pos.top = e.absolutePointer.y;
+        pos.top = e.pointer.y;
       } 
       else {
-        pos.left = e.absolutePointer.x;
+        pos.left = e.pointer.x;
       }
       this.tempReferenceLine.set({ ...pos, visible: true });
-      this.canvas.requestRenderAll();
+      this.canvas.renderAll();
       const event = this.getCommonEventInfo(e) as any;
       this.canvas.fire('object:moving', event);
       this.tempReferenceLine.fire('moving', event);
@@ -186,7 +186,7 @@ export class FabricRuler extends Disposable {
     if (this.activeOn === 'up') {
       this.canvas.selection = false
       this.activeOn = 'down'
-      const point = pointHover === 'horizontal' ? e.absolutePointer.y : e.absolutePointer.x
+      const point = pointHover === 'horizontal' ? e.pointer.y : e.pointer.x
       this.tempReferenceLine = new ReferenceLine(
         point,
         {
@@ -555,8 +555,7 @@ export class FabricRuler extends Disposable {
       this.objectRect = undefined
       return
     }
-    // console.log('activeObjects[0].type:', activeObjects[0].type)
-    if (activeObjects[0].name.toLowerCase() === ElementNames.GUIDELINE) {
+    if (activeObjects[0].name.toLowerCase() === ElementNames.REFERENCELINE) {
       this.objectRect = undefined
       return
     }
