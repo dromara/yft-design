@@ -122,6 +122,7 @@ const initTemplate = async () => {
   setCanvasTransform()
   initCommon()
   initHammer()
+  canvas.on('object:modified', () => templatesStore.modifedElement())
 }
 
 export const initEditor = async () => {

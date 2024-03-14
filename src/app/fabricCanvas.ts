@@ -12,8 +12,8 @@ export class FabricCanvas extends Canvas {
 
   constructor(el: string | HTMLCanvasElement, options?: any) {
     super(el, options)
-    const templatesStore = useTemplatesStore()
-    this.on('object:modified', () => templatesStore.modifedElement())
+    // const templatesStore = useTemplatesStore()
+    // this.on('object:modified', () => templatesStore.modifedElement())
   }
 
   // @ts-ignore
