@@ -27,22 +27,26 @@
         <IconUpload class="pop-icon"/>
         <span class="pop-text">{{ t('message.uploadFiles') }}</span>
       </el-row>
-      <el-row class="pop-row">
+      <el-row class="pop-row" ref="referenceRef">
         <IconDividingLine class="pop-icon"/>
         <span class="pop-text">{{ t('message.referenceLine') }}</span>
       </el-row>
     </el-popover>
     <FileUpload :visible="dialogVisible" @close="closeUpload"/>
+    <ReferencePopover :reference-ref="referenceRef" :reference-popover-ref="referencePopoverRef" />
   </div>
 </template>
 <script lang="ts" setup>
 import { ref, watch } from 'vue'
 import useI18n from '@/hooks/useI18n'
+import ReferencePopover from './ReferencePopover.vue'
 
 const { t } = useI18n()
 const hasHelp = ref(false)
 const popoverVisible = ref(false)
 const dialogVisible = ref(false)
+const referenceRef = ref()
+const referencePopoverRef = ref()
 const props = defineProps({
   menuRef: {
     type: null,

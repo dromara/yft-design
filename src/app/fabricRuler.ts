@@ -4,8 +4,8 @@ import { computed, watchEffect } from 'vue'
 // import { useThemes } from '@/hooks/useThemes'
 import { DesignUnitMode } from '@/configs/background'
 import { PiBy180, isMobile } from '@/utils/common'
-import { TAxis, Canvas, Point, Rect as fabricRect, CanvasEvents, classRegistry, Object as FabricObject, TPointerEventInfo, TPointerEvent, CanvasPointerEvents } from 'fabric'
-import { useMainStore } from '@/store'
+import { TAxis, Point, Rect as fabricRect, Object as FabricObject, TPointerEventInfo, TPointerEvent } from 'fabric'
+import { useMainStore, useTemplatesStore } from '@/store'
 import { storeToRefs } from 'pinia'
 import { px2mm } from '@/utils/image'
 import { ElementNames } from '@/types/elements'
@@ -205,8 +205,10 @@ export class FabricRuler extends Disposable {
         }
       );
       this.canvas.add(this.tempReferenceLine)
+      // const templatesStore = useTemplatesStore()
+      // templatesStore.modifedElement()
       this.canvas.setActiveObject(this.tempReferenceLine)
-      this.canvas._setupCurrentTransform(e.e, this.tempReferenceLine, true);
+      this.canvas._setupCurrentTransform(e.e, this.tempReferenceLine, true)
       // @ts-ignore
       this.tempReferenceLine.fire('down', this.getCommonEventInfo(e));
     }
@@ -228,6 +230,8 @@ export class FabricRuler extends Disposable {
   private mouseUp(e: TPointerEventInfo<TPointerEvent>) {
     if (this.activeOn !== 'down') return;
     this.canvas.selection = true
+    this.tempReferenceLine!.selectable = false
+    this.canvas.renderAll()
     this.activeOn = 'up';
     // @ts-ignore
     this.tempReferenceLine?.fire('up', this.getCommonEventInfo(e));
@@ -239,26 +243,26 @@ export class FabricRuler extends Disposable {
   }
 
   public isRectOut(object: FabricObject, target: ReferenceLine): boolean {
-    const { top, height, left, width } = object;
+    // const { top, height, left, width } = object;
 
-    if (top === undefined || height === undefined || left === undefined || width === undefined) {
-      return false;
-    }
+    // if (top === undefined || height === undefined || left === undefined || width === undefined) {
+    //   return false;
+    // }
 
-    const targetRect = target.getBoundingRect(true, true);
-    const {
-      top: targetTop,
-      height: targetHeight,
-      left: targetLeft,
-      width: targetWidth,
-    } = targetRect;
+    // const targetRect = target.getBoundingRect(true, true);
+    // const {
+    //   top: targetTop,
+    //   height: targetHeight,
+    //   left: targetLeft,
+    //   width: targetWidth,
+    // } = targetRect;
 
-    if (target.isHorizontal() && (top > targetTop + 1 || top + height < targetTop + targetHeight - 1)) {
-      return true;
-    } 
-    else if (!target.isHorizontal() && (left > targetLeft + 1 || left + width < targetLeft + targetWidth - 1)) {
-      return true;
-    }
+    // if (target.isHorizontal() && (top > targetTop + 1 || top + height < targetTop + targetHeight - 1)) {
+    //   return true;
+    // } 
+    // else if (!target.isHorizontal() && (left > targetLeft + 1 || left + width < targetLeft + targetWidth - 1)) {
+    //   return true;
+    // }
 
     return false;
   };
