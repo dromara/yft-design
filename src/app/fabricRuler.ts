@@ -70,7 +70,7 @@ export class FabricRuler extends Disposable {
   public lastCursor: string
   public workSpaceDraw?: fabricRect
   public options: Required<RulerOptions>
-  private tempReferenceLine?: ReferenceLine
+  public tempReferenceLine?: ReferenceLine
   private activeOn: string = "up"
   private objectRect: undefined | { 
     x: HighlightRect[],

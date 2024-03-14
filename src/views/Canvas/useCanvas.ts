@@ -111,6 +111,12 @@ const initCanvas = () => {
   canvas.renderAll()
 }
 
+const initEvent = () => {
+  if (!canvas) return
+  const templatesStore = useTemplatesStore()
+  canvas.on('object:modified', () => templatesStore.modifedElement())
+}
+
 // 初始化模板
 const initTemplate = async () => {
   if (!canvas) return
@@ -122,7 +128,7 @@ const initTemplate = async () => {
   setCanvasTransform()
   initCommon()
   initHammer()
-  canvas.on('object:modified', () => templatesStore.modifedElement())
+  initEvent()
 }
 
 export const initEditor = async () => {

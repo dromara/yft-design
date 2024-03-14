@@ -33,7 +33,7 @@
       </el-row>
     </el-popover>
     <FileUpload :visible="dialogVisible" @close="closeUpload"/>
-    <ReferencePopover :reference-ref="referenceRef" :reference-popover-ref="referencePopoverRef" />
+    <ReferencePopover :reference-ref="referenceRef" :reference-popover-ref="referencePopoverRef"/>
   </div>
 </template>
 <script lang="ts" setup>
@@ -63,7 +63,6 @@ const props = defineProps({
 const emit = defineEmits<{
   (event: 'hide'): void
 }>()
-
 
 const setHome = (val: boolean) => {
   hasHelp.value = val
