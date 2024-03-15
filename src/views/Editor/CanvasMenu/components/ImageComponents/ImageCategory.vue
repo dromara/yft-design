@@ -14,7 +14,7 @@
           </el-col>
           <el-col :span="7" class="col-name">
             <el-button text @click="showTotal(item.type)"
-              >全部<IconRight
+              >{{ $t("message.all") }}<IconRight
             /></el-button>
           </el-col>
         </el-row>
@@ -75,7 +75,7 @@
         </div>
       </el-row>
     </div>
-    <el-row class="image-bottom">到底了~</el-row>
+    <el-row class="image-bottom">{{ $t("message.endOfContent") }}</el-row>
   </div>
 </template>
 

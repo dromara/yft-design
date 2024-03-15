@@ -74,7 +74,7 @@
         </div>
       </el-row>
     </div>
-    <el-row class="image-bottom">{{ $t("message.all") }}</el-row>
+    <el-row class="image-bottom">{{ $t("message.endOfContent") }}</el-row>
   </div>
 </template>
 
