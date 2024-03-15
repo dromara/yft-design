@@ -355,7 +355,7 @@ export class Polyline extends OriginPolyline {
 
   renderEndStyle(ctx: CanvasRenderingContext2D) {
     if (!this.endStyle) return
-    const firstPoint = this.points[0]
+    const firstPoint = this.points[this.points.length - 2]
     const lastPoint = this.points[this.points.length - 1]
     const xDiff = lastPoint.x - firstPoint.x;
     const yDiff = lastPoint.y - firstPoint.y;
