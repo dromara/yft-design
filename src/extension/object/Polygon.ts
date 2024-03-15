@@ -337,17 +337,49 @@ export class Polygon extends OriginPolygon {
   _render(ctx: CanvasRenderingContext2D) {
     super._render(ctx)
     this.clearGuideline()
-    this._renderEndStyle(ctx)
+    this.renderStartStyle(ctx)
+    this.renderEndStyle(ctx)
     this.drawGuideLines()
   }
 
-  _renderEndStyle(ctx: CanvasRenderingContext2D) {
+  renderStartStyle(ctx: CanvasRenderingContext2D) {
+    if (!this.startStyle) return
+    const xDiff = this.points[0].x - this.points[1].x;
+    const yDiff = this.points[0].y - this.points[1].y;
+    const angle = Math.atan2(yDiff, xDiff);
+    if (this.startStyle === ElementNames.ARROW) {
+      ctx.save();
+      ctx.translate((this.points[0].x - this.points[1].x) / 2, (this.points[0].y - this.points[1].y) / 2);
+      ctx.rotate(angle);
+      ctx.beginPath();
+      ctx.moveTo(5, 0);
+      ctx.lineTo(-5, 5);
+      ctx.lineTo(-5, -5);
+      ctx.closePath();
+      ctx.fillStyle = this.stroke as string;
+      ctx.fill();
+      ctx.restore();
+    }
+    if (this.startStyle === ElementNames.CIRCLE) {
+      ctx.save();
+      ctx.translate((this.points[0].x - this.points[1].x) / 2, (this.points[0].y - this.points[1].y) / 2);
+      ctx.rotate(angle);
+      ctx.beginPath();
+      ctx.arc(0, 0, 5, 0, 2 * Math.PI)
+      ctx.closePath();
+      ctx.fillStyle = this.stroke as string;
+      ctx.fill();
+      ctx.restore();
+    }
+  }
+
+  renderEndStyle(ctx: CanvasRenderingContext2D) {
     if (!this.endStyle) return
+    const xDiff = this.points[1].x - this.points[0].x;
+    const yDiff = this.points[1].y - this.points[0].y;
+    const angle = Math.atan2(yDiff, xDiff);
     if (this.endStyle === ElementNames.ARROW) {
       ctx.save();
-      const xDiff = this.points[1].x - this.points[0].x;
-      const yDiff = this.points[1].y - this.points[0].y;
-      const angle = Math.atan2(yDiff, xDiff);
       ctx.translate((this.points[1].x - this.points[0].x) / 2, (this.points[1].y - this.points[0].y) / 2);
       ctx.rotate(angle);
       ctx.beginPath();
@@ -361,22 +393,18 @@ export class Polygon extends OriginPolygon {
     }
     if (this.endStyle === ElementNames.CIRCLE) {
       ctx.save();
-      const xDiff = this.points[1].x - this.points[0].x;
-      const yDiff = this.points[1].y - this.points[0].y;
-      const angle = Math.atan2(yDiff, xDiff);
       ctx.translate((this.points[1].x - this.points[0].x) / 2, (this.points[1].y - this.points[0].y) / 2);
       ctx.rotate(angle);
       ctx.beginPath();
-      ctx.arc(2.5, 0, 5, 0, 2 * Math.PI)
-      // ctx.moveTo(5, 0);
-      // ctx.lineTo(-5, 5);
-      // ctx.lineTo(-5, -5);
+      ctx.arc(0, 0, 5, 0, 2 * Math.PI)
       ctx.closePath();
       ctx.fillStyle = this.stroke as string;
       ctx.fill();
       ctx.restore();
     }
   }
+
+
 
   private drawVerticalLine(coords: VerticalLineCoords, movingCoords: ACoordsAppendCenter) {
     // if (!Object.values(movingCoords).some((coord) => Math.abs(coord.x - coords.x) < 0.0001)) return
