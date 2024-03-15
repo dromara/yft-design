@@ -2,7 +2,7 @@ import { TControlSet } from '@/types/fabric'
 import { polygonPositionHandler, anchorWrapper, actionHandler} from '@/app/fabricControls'
 import type {  Group , Canvas , StaticCanvas , ActiveSelection, TSVGReviver } from 'fabric'
 import { Object as FabricObject, Point, TransformActionHandler, Control, Polygon as OriginPolygon, classRegistry, XY, util, CanvasEvents } from 'fabric'
-import { ElementNames } from '@/types/elements'
+import { ElementNames, LinePoint } from '@/types/elements'
 import { check } from '@/utils/check'
 
 
@@ -44,12 +44,13 @@ export class Polygon extends OriginPolygon {
   private ignoreObjTypes: IgnoreObjTypes = []
   private pickObjTypes: IgnoreObjTypes = []
 
-  public startStyle?: string
-  public endStyle?: string
+  public startStyle: LinePoint
+  public endStyle: LinePoint
 
-  constructor(points?: XY[], options?: FabricObject<Polygon>) {
+  constructor(points?: XY[], options?: any) {
     super(points, options)
-
+    this.startStyle = options.startStyle
+    this.endStyle = options.endStyle
     const mouseUp = () => {
       if (this.horizontalLines.length || this.verticalLines.length) {
         this.clearGuideline()
@@ -325,7 +326,7 @@ export class Polygon extends OriginPolygon {
     // )
   }
 
-  public setLineMode(value: string, mode: 'start' | 'end') {
+  public setLineMode(value: LinePoint, mode: 'start' | 'end') {
     if (mode === 'start') {
       this.startStyle = value
     }
@@ -360,7 +361,7 @@ export class Polygon extends OriginPolygon {
       ctx.fill();
       ctx.restore();
     }
-    if (this.startStyle === ElementNames.CIRCLE) {
+    if (this.startStyle === ElementNames.DOT) {
       ctx.save();
       ctx.translate((this.points[0].x - this.points[1].x) / 2, (this.points[0].y - this.points[1].y) / 2);
       ctx.rotate(angle);
@@ -391,7 +392,7 @@ export class Polygon extends OriginPolygon {
       ctx.fill();
       ctx.restore();
     }
-    if (this.endStyle === ElementNames.CIRCLE) {
+    if (this.endStyle === ElementNames.DOT) {
       ctx.save();
       ctx.translate((this.points[1].x - this.points[0].x) / 2, (this.points[1].y - this.points[0].y) / 2);
       ctx.rotate(angle);

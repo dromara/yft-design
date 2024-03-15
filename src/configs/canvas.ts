@@ -87,5 +87,7 @@ export const propertiesToInclude = [
   'radius',
   'curvature',
   'effect',
-  'reverse'
+  'reverse',
+  'startStyle',
+  'endStyle'
 ]

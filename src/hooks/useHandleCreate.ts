@@ -8,6 +8,7 @@ import { getImageSize } from '@/utils/image'
 import JsBarcode from 'jsbarcode'
 import { Object as FabricObject, Textbox, Path, classRegistry } from "fabric"
 import { Line } from '@/extension/object/Line'
+import { LinePoint } from '@/types/elements'
 import { Image } from '@/extension/object/Image'
 import { QRCode } from '@/extension/object/QRCode'
 import { BarCode } from '@/extension/object/BarCode'
@@ -80,7 +81,7 @@ export default () => {
     renderCanvas(pathElement)
   }
 
-  const createLineElement = (path: string) => {
+  const createLineElement = (path: string, startStyle: LinePoint, endStyle: LinePoint, strokeDashArray?: [number, number]) => {
     // const { centerPoint } = useCenter()
     // const lineElement = new Line([0, 0, 300, 0], {
     //   id: nanoid(10),
@@ -100,13 +101,13 @@ export default () => {
     // rightState.value = RightStates.ELEMENT_STYLE
     // templatesStore.modifedElement()
     // setZindex(canvas)
-    createPolygonElement(path)
+    createPolygonElement(path, startStyle, endStyle, strokeDashArray)
     // createArrowElement(path)
   }
 
-  const createPolygonElement = (path: string) => {
+  const createPolygonElement = (path: string, startStyle: LinePoint, endStyle: LinePoint, strokeDashArray?: [number, number]) => {
     const { centerPoint } = useCenter()
-    const points = [ { x: 0, y: 0 }, { x: 100, y: 0 } ]
+    const points = [ { x: 0, y: 0 }, { x: 200, y: 0 } ]
     const Polygon = classRegistry.getClass('Polygon')
 
     const element = new Polygon(points, {
@@ -114,14 +115,17 @@ export default () => {
       left: centerPoint.x,
       top: centerPoint.y,
       strokeWidth: 4,
-      stroke: 'green',
+      stroke: 'pink',
       scaleX: 1,
       scaleY: 1,
       originX: 'left',
       originY: 'top',
+      startStyle,
+      endStyle,
       hasBorders: false,
       objectCaching: false,
       transparentCorners: false,
+      strokeDashArray,
       name: ElementNames.LINE
     })
     renderCanvas(element)

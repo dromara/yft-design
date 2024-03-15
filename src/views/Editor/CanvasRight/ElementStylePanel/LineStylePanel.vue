@@ -26,17 +26,17 @@
     <div class="row">
       <div style="flex: 2;">起点样式：</div>
       <el-select style="flex: 3;" v-model="handleElement.startStyle" @change="(value) => changeLineMode(value, 'start')">
-        <el-option value="null" label="无"></el-option>
+        <el-option value="" label="无"></el-option>
         <el-option value="arrow" label="箭头"></el-option>
-        <el-option value="circle" label="圆点"></el-option>
+        <el-option value="dot" label="圆点"></el-option>
       </el-select>
     </div>
     <div class="row">
       <div style="flex: 2;">终点样式：</div>
       <el-select style="flex: 3;" v-model="handleElement.endStyle" @change="(value) => changeLineMode(value, 'end')">
-        <el-option value="null" label="无"></el-option>
+        <el-option value="" label="无"></el-option>
         <el-option value="arrow" label="箭头"></el-option>
-        <el-option value="circle" label="圆点"></el-option>
+        <el-option value="dot" label="圆点"></el-option>
       </el-select>
     </div>
 
