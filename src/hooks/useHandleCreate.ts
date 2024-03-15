@@ -6,7 +6,7 @@ import { nanoid } from 'nanoid'
 import { QRCodeElement, QRCodeOption } from '@/types/canvas'
 import { getImageSize } from '@/utils/image'
 import JsBarcode from 'jsbarcode'
-import { Object as FabricObject, Textbox, Path, classRegistry } from "fabric"
+import { Object as FabricObject, Textbox, Path, classRegistry, XY } from "fabric"
 import { Line } from '@/extension/object/Line'
 import { LinePoint } from '@/types/elements'
 import { Image } from '@/extension/object/Image'
@@ -81,7 +81,7 @@ export default () => {
     renderCanvas(pathElement)
   }
 
-  const createLineElement = (path: string, startStyle: LinePoint, endStyle: LinePoint, strokeDashArray?: [number, number]) => {
+  const createLineElement = (path: XY[], startStyle: LinePoint, endStyle: LinePoint, strokeDashArray?: [number, number]) => {
     // const { centerPoint } = useCenter()
     // const lineElement = new Line([0, 0, 300, 0], {
     //   id: nanoid(10),
@@ -105,12 +105,12 @@ export default () => {
     // createArrowElement(path)
   }
 
-  const createPolygonElement = (path: string, startStyle: LinePoint, endStyle: LinePoint, strokeDashArray?: [number, number]) => {
+  const createPolygonElement = (path: XY[], startStyle: LinePoint, endStyle: LinePoint, strokeDashArray?: [number, number]) => {
     const { centerPoint } = useCenter()
-    const points = [ { x: 0, y: 0 }, { x: 200, y: 0 } ]
+    // const points = [ { x: 0, y: 0 }, { x: 200, y: 0 } ]
     const Polygon = classRegistry.getClass('Polygon')
 
-    const element = new Polygon(points, {
+    const element = new Polygon(path, {
       id: nanoid(10),
       left: centerPoint.x,
       top: centerPoint.y,

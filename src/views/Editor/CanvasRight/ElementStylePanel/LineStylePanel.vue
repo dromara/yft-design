@@ -54,6 +54,7 @@ import { storeToRefs } from 'pinia'
 import { computed, ref, watch } from 'vue'
 import ElementPosition from '../Components/ElementPosition.vue'
 import ElementShadow from '../Components/ElementShadow.vue'
+import { LinePoint } from '@/types/elements'
 
 const mainStore = useMainStore()
 const templatesStore = useTemplatesStore()
@@ -75,7 +76,7 @@ const changeLineStyle = () => {
   updateTemplateElement()
 }
 
-const changeLineMode = (value: string, mode: 'start' | 'end') => {
+const changeLineMode = (value: LinePoint, mode: 'start' | 'end') => {
   handleElement.value.setLineMode(value, mode)
   updateTemplateElement()
 }

@@ -48,7 +48,7 @@ const activeMaterial = ref('data')
 
 const drawLine = (line: LinePoolItem) => {
   const strokeDashArray: [number, number] | undefined = line.style === 'dashed' ? [6, 6]: undefined
-  createLineElement(line.path, line.points[0], line.points[1], strokeDashArray)
+  createLineElement(line.data, line.points[0], line.points[1], strokeDashArray)
 }
 
 const drawPath = (shape: PathPoolItem) => {

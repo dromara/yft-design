@@ -1,4 +1,5 @@
 import { ImageHit } from "@/api/image/types"
+import { XY } from "fabric"
 
 export const enum ElementNames {
   TEXTBOX = 'textbox',
@@ -52,6 +53,7 @@ export interface LinePoolItem {
   path: string
   style: 'solid' | 'dashed'
   points: [LinePoint, LinePoint]
+  data: XY[]
   isBroken?: boolean
   isCurve?: boolean
   isCubic?: boolean
