@@ -134,7 +134,8 @@ const ungroup = () => {
 
 // 标尺显示隐藏
 const changeRuler = () => {
-  const [canvas] = useCanvas();
+  const [ canvas ] = useCanvas();
+  if (!canvas.ruler) return
   canvas.ruler.enabled = !canvas.ruler.enabled
 };
 
