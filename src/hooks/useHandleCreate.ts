@@ -101,21 +101,22 @@ export default () => {
     // rightState.value = RightStates.ELEMENT_STYLE
     // templatesStore.modifedElement()
     // setZindex(canvas)
-    createPolygonElement(path, startStyle, endStyle, strokeDashArray)
+    createPolylineElement(path, startStyle, endStyle, strokeDashArray)
     // createArrowElement(path)
   }
 
-  const createPolygonElement = (path: XY[], startStyle: LinePoint, endStyle: LinePoint, strokeDashArray?: [number, number]) => {
+  const createPolylineElement = (path: XY[], startStyle: LinePoint, endStyle: LinePoint, strokeDashArray?: [number, number]) => {
     const { centerPoint } = useCenter()
     // const points = [ { x: 0, y: 0 }, { x: 200, y: 0 } ]
-    const Polygon = classRegistry.getClass('Polygon')
+    const Polyline = classRegistry.getClass('Polyline')
 
-    const element = new Polygon(path, {
+    const element = new Polyline(path, {
       id: nanoid(10),
       left: centerPoint.x,
       top: centerPoint.y,
       strokeWidth: 4,
       stroke: 'pink',
+      fill: '',
       scaleX: 1,
       scaleY: 1,
       originX: 'left',
@@ -127,30 +128,6 @@ export default () => {
       transparentCorners: false,
       strokeDashArray,
       name: ElementNames.LINE
-    })
-    renderCanvas(element)
-  }
-
-  const createArrowElement = (path: string) => {
-    const { centerPoint } = useCenter()
-    // const points = [ { x: 0, y: 0 }, { x: 100, y: 0 } ]
-    const points = [ { x: 0, y: 0 }, { x: 100, y: 0 } ]
-    const Polygon = classRegistry.getClass('Polygon')
-
-    const element = new Polygon(points, {
-      id: nanoid(10),
-      left: centerPoint.x,
-      top: centerPoint.y,
-      strokeWidth: 4,
-      stroke: 'red',
-      scaleX: 1,
-      scaleY: 1,
-      originX: 'left',
-      originY: 'top',
-      objectCaching: false,
-      hasBorders: false,
-      transparentCorners: false,
-      name: ElementNames.ARROW
     })
     renderCanvas(element)
   }

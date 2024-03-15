@@ -1,6 +1,7 @@
 import './object/Image'
 import './object/Group'
 import './object/Polygon'
+import './object/Polyline'
 import './object/Line'
 import './object/BarCode'
 import './object/QRCode'

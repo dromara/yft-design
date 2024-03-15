@@ -48,7 +48,7 @@
 <script lang="ts" setup>
 import { useMainStore, useTemplatesStore } from '@/store'
 import useCanvas from '@/views/Canvas/useCanvas'
-import { Polygon } from '@/extension/object/Polygon'
+import { Polyline } from '@/extension/object/Polyline'
 import { LineElement } from '@/types/canvas'
 import { storeToRefs } from 'pinia'
 import { computed, ref, watch } from 'vue'
@@ -60,7 +60,7 @@ const mainStore = useMainStore()
 const templatesStore = useTemplatesStore()
 const { canvasObject } = storeToRefs(mainStore)
 const [ canvas ] = useCanvas()
-const handleElement = computed(() => canvasObject.value as Polygon)
+const handleElement = computed(() => canvasObject.value as Polyline)
 const lineStyle = ref<number>(handleElement.value.strokeDashArray ? 1 : 0)
 
 const updateStrokeColor = (color: string) => {
