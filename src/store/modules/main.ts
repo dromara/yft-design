@@ -35,7 +35,6 @@ export interface MainState {
   lastEdit: PoolType
   poolType: PoolType
   poolShow: boolean
-  rulerShow: boolean
 }
 
 const nanoid = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz')
@@ -68,7 +67,6 @@ export const useMainStore = defineStore('main', {
     lastHelp: 'editor', // 左边栏
     poolType: 'editor', // 左边栏
     poolShow: false, // 显示左边栏
-    rulerShow: true,
   }),
 
   getters: {

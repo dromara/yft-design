@@ -6,7 +6,9 @@ import { nanoid } from 'nanoid'
 import { QRCodeElement, QRCodeOption } from '@/types/canvas'
 import { getImageSize } from '@/utils/image'
 import JsBarcode from 'jsbarcode'
-import { Object as FabricObject, Textbox, Path, classRegistry } from "fabric"
+import { Object as FabricObject, Textbox, Path, classRegistry, XY } from "fabric"
+import { Line } from '@/extension/object/Line'
+import { LinePoint } from '@/types/elements'
 import { Image } from '@/extension/object/Image'
 import { QRCode } from '@/extension/object/QRCode'
 import { BarCode } from '@/extension/object/BarCode'
@@ -32,10 +34,10 @@ export default () => {
     templatesStore.modifedElement()
   }
 
-  const createTextElement = (fontSize: number, textStyle = 'transverse', textHollow = false) => {
+  const createTextElement = (fontSize: number, textStyle = 'transverse', textHollow = false, textValue = '双击修改文字') => {
     const { centerPoint } = useCenter()
     
-    const textBoxElement = new Textbox('双击修改文字', {
+    const textBoxElement = new Textbox(textValue, {
       id: nanoid(10),
       left: centerPoint.x,
       top: centerPoint.y,
@@ -79,10 +81,9 @@ export default () => {
     renderCanvas(pathElement)
   }
 
-  const createLineElement = (path: string) => {
-    // const [ canvas ] = useCanvas()
-    // const lineElement = new fabric.Line([0, 0, 100, 0], {
-    //   // @ts-ignore
+  const createLineElement = (path: XY[], startStyle: LinePoint, endStyle: LinePoint, strokeDashArray?: [number, number]) => {
+    // const { centerPoint } = useCenter()
+    // const lineElement = new Line([0, 0, 300, 0], {
     //   id: nanoid(10),
     //   left: centerPoint.x,
     //   top: centerPoint.y,
@@ -93,59 +94,40 @@ export default () => {
     //   originX: 'left',
     //   originY: 'top',
     //   transparentCorners: false,
-    // }) as LineElement
+    // })
+    // renderCanvas(lineElement)
     // canvas.add(lineElement)
     // canvas.setActiveObject(lineElement)
     // rightState.value = RightStates.ELEMENT_STYLE
     // templatesStore.modifedElement()
     // setZindex(canvas)
-    createPolygonElement(path)
-    createArrowElement(path)
+    createPolylineElement(path, startStyle, endStyle, strokeDashArray)
+    // createArrowElement(path)
   }
 
-  const createPolygonElement = (path: string) => {
+  const createPolylineElement = (path: XY[], startStyle: LinePoint, endStyle: LinePoint, strokeDashArray?: [number, number]) => {
     const { centerPoint } = useCenter()
-    const points = [ { x: 0, y: 0 }, { x: 100, y: 0 } ]
-    const Polygon = classRegistry.getClass('Polygon')
+    // const points = [ { x: 0, y: 0 }, { x: 200, y: 0 } ]
+    const Polyline = classRegistry.getClass('Polyline')
 
-    const element = new Polygon(points, {
+    const element = new Polyline(path, {
       id: nanoid(10),
       left: centerPoint.x,
       top: centerPoint.y,
       strokeWidth: 4,
-      stroke: 'green',
+      stroke: 'pink',
+      fill: '',
       scaleX: 1,
       scaleY: 1,
       originX: 'left',
       originY: 'top',
+      startStyle,
+      endStyle,
       hasBorders: false,
       objectCaching: false,
       transparentCorners: false,
+      strokeDashArray,
       name: ElementNames.LINE
-    })
-    renderCanvas(element)
-  }
-
-  const createArrowElement = (path: string) => {
-    const { centerPoint } = useCenter()
-    // const points = [ { x: 0, y: 0 }, { x: 100, y: 0 } ]
-    const points = [ { x: 0, y: 0 }, { x: 100, y: 0 } ]
-    const Polygon = classRegistry.getClass('Polygon')
-
-    const element = new Polygon(points, {
-      id: nanoid(10),
-      left: centerPoint.x,
-      top: centerPoint.y,
-      strokeWidth: 4,
-      stroke: 'red',
-      scaleX: 1,
-      scaleY: 1,
-      originX: 'left',
-      originY: 'top',
-      objectCaching: false,
-      hasBorders: false,
-      transparentCorners: false,
-      name: ElementNames.ARROW
     })
     renderCanvas(element)
   }

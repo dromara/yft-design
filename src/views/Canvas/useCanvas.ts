@@ -1,6 +1,6 @@
 import { watch } from 'vue'
 import { storeToRefs } from 'pinia'
-import { Canvas, Object as FabricObject, Textbox, Group, Point, IText } from 'fabric'
+import { Canvas, Object as FabricObject, Textbox, Group, Point, IText, Line } from 'fabric'
 import { WorkSpaceThumbType, WorkSpaceDrawType } from "@/configs/canvas"
 import { useFabricStore } from '@/store/modules/fabric'
 import { useElementBounding } from '@vueuse/core'
@@ -41,7 +41,6 @@ const initConf = () => {
 
   Object.assign(Textbox.ownDefaults, { controls: textboxControls() })
   Object.assign(IText.ownDefaults, { controls: textboxControls() })
-  // Object.assign(ArcText.ownDefaults, { controls: arcTextControls() })
 
   const mixin = {
     getWidthHeight(noFixed = false): Point {
@@ -111,6 +110,12 @@ const initCanvas = () => {
   canvas.renderAll()
 }
 
+const initEvent = () => {
+  if (!canvas) return
+  const templatesStore = useTemplatesStore()
+  canvas.on('object:modified', () => templatesStore.modifedElement())
+}
+
 // 初始化模板
 const initTemplate = async () => {
   if (!canvas) return
@@ -122,6 +127,7 @@ const initTemplate = async () => {
   setCanvasTransform()
   initCommon()
   initHammer()
+  initEvent()
 }
 
 export const initEditor = async () => {

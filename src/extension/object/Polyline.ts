@@ -1,7 +1,7 @@
 import { TControlSet } from '@/types/fabric'
 import { polygonPositionHandler, anchorWrapper, actionHandler} from '@/app/fabricControls'
 import type {  Group , Canvas , StaticCanvas , ActiveSelection, TSVGReviver } from 'fabric'
-import { Object as FabricObject, Point, TransformActionHandler, Control, Polygon as OriginPolygon, classRegistry, XY, util, CanvasEvents } from 'fabric'
+import { Object as FabricObject, Point, TransformActionHandler, Control, Polyline as OriginPolyline, classRegistry, XY, util, CanvasEvents } from 'fabric'
 import { ElementNames, LinePoint } from '@/types/elements'
 import { check } from '@/utils/check'
 
@@ -32,7 +32,7 @@ const Keys = <T extends object>(obj: T): (keyof T)[] => {
 }
 
 
-export class Polygon extends OriginPolygon {
+export class Polyline extends OriginPolyline {
   private canvasEvents
   private pointSize = 10
   private aligningLineMargin = 10
@@ -126,7 +126,7 @@ export class Polygon extends OriginPolygon {
       controls[index] = new Control({
         positionHandler: polygonPositionHandler,
         actionHandler: anchorWrapper(index > 0 ? index - 1 : this.points.length - 1, actionHandler) as TransformActionHandler ,
-        actionName: 'modifyPolygon',
+        actionName: 'modifyPolyline',
         pointIndex: index
       })
     })
@@ -508,4 +508,4 @@ export class Polygon extends OriginPolygon {
   }
 }
 
-classRegistry.setClass(Polygon)
+classRegistry.setClass(Polyline)

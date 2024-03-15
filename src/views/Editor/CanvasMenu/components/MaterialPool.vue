@@ -2,7 +2,7 @@
   <div class="layout-pool">
     <el-row class="layout-search">
       <el-col :span="5">
-        <FileInput @change="(files: File[]) => drawMaterial(files)">
+        <FileInput @change="(files) => drawMaterial(files)">
           <el-tooltip placement="top" :hide-after="0" content="上传素材">
             <el-button type="primary">
               <IconUpload />
@@ -17,8 +17,8 @@
     <div>
     <el-tabs v-model="activeMaterial" class="layout-tabs material-tab">
       <el-tab-pane label="推荐素材" name="data">
-        <LinePool @select="(line: LinePoolItem) => drawLine(line)"/>
-        <PathPool @select="(path: PathPoolItem) => drawPath(path)"/>
+        <LinePool @select="(line) => drawLine(line)"/>
+        <PathPool @select="(path) => drawPath(path)"/>
       </el-tab-pane>
       <el-tab-pane label="我的收藏" name="self">我的模板</el-tab-pane>
       <el-tab-pane label="我的购买" name="team">团队模板</el-tab-pane>
@@ -47,7 +47,8 @@ const { createLineElement, createPathElement } = useHandleCreate()
 const activeMaterial = ref('data')
 
 const drawLine = (line: LinePoolItem) => {
-  createLineElement(line.path)
+  const strokeDashArray: [number, number] | undefined = line.style === 'dashed' ? [6, 6]: undefined
+  createLineElement(line.data, line.points[0], line.points[1], strokeDashArray)
 }
 
 const drawPath = (shape: PathPoolItem) => {
@@ -64,11 +65,8 @@ const drawMaterial = async (files: File[]) => {
   const [ canvas ] = useCanvas()
   if (!materialFile) return
   const dataText = await getImageText(materialFile)
-  console.log('dataText:', dataText)
   await loadSVGFromString(dataText, svgCallback)
   canvas.renderAll()
-  // loadSVGFromURL(dataURl, svgCallback, svgRevier, {})
-  // getImageDataURL(imageFile).then(dataURL => createImageElement(dataURL))
 }
 
 </script>

@@ -1,4 +1,5 @@
 import { ImageHit } from "@/api/image/types"
+import { XY } from "fabric"
 
 export const enum ElementNames {
   TEXTBOX = 'textbox',
@@ -19,7 +20,8 @@ export const enum ElementNames {
   GROUP = 'group',
   ACTIVE = 'activeselection',
   CIRCLE = 'circle',
-  GUIDELINE = 'guideline',
+  REFERENCELINE = 'referenceline',
+  DOT = 'dot',
 }
 
 export interface ColorStop {
@@ -51,6 +53,7 @@ export interface LinePoolItem {
   path: string
   style: 'solid' | 'dashed'
   points: [LinePoint, LinePoint]
+  data: XY[]
   isBroken?: boolean
   isCurve?: boolean
   isCubic?: boolean

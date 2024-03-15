@@ -38,6 +38,7 @@ export default {
 
     exportImages: 'Export Images',
     exportPDF: 'Export PDF',
+    exportPSD: 'Export PSD',
     exportJSON: 'Export JSON',
     exportSVG: 'Export SVG',
     quantityPerPage: 'Quantity Per Page',
@@ -53,6 +54,7 @@ export default {
     redo: 'Redo',
     group: 'Group',
     ungroup: 'UnGroup',
+    ruler: 'Ruler',
     union: 'Union',
     difference: 'Difference',
     intersection: 'Intersection',
@@ -70,9 +72,9 @@ export default {
 
     uploadImages: 'Upload Images',
     searchImages: 'Search Images',
-    recommendImages: 'Recommend Images ',
-    myBookmarks: 'My BookMarks',
-    teamTemplates: 'Team Templates',
+    recommendImages: 'Recommend ',
+    myBookmarks: 'BookMarks',
+    teamTemplates: 'Templates',
 
     all: 'All',
     endOfContent: 'End Of Content~',

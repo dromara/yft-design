@@ -72,7 +72,7 @@ export default () => {
     clonedObject.value = await canvasObject.value.clone(propertiesToInclude)
   }
 
-  const patseEelement = async () => {
+  const pasteElement = async () => {
     const [ canvas ] = useCanvas()
     if (!clonedObject.value) return
     const clonedObj = await clonedObject.value.clone(propertiesToInclude) as FabricObject
@@ -380,7 +380,7 @@ export default () => {
     lockElement,
     copyElement,
     cutElement,
-    patseEelement,
+    pasteElement,
     deleteElement,
     moveElement,
     combineElements,

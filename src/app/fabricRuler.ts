@@ -4,8 +4,8 @@ import { computed, watchEffect } from 'vue'
 // import { useThemes } from '@/hooks/useThemes'
 import { DesignUnitMode } from '@/configs/background'
 import { PiBy180, isMobile } from '@/utils/common'
-import { TAxis, Canvas, Point, Rect as fabricRect, CanvasEvents, classRegistry, Object as FabricObject, TPointerEventInfo, TPointerEvent, CanvasPointerEvents } from 'fabric'
-import { useMainStore } from '@/store'
+import { TAxis, Point, Rect as fabricRect, Object as FabricObject, TPointerEventInfo, TPointerEvent } from 'fabric'
+import { useMainStore, useTemplatesStore } from '@/store'
 import { storeToRefs } from 'pinia'
 import { px2mm } from '@/utils/image'
 import { ElementNames } from '@/types/elements'
@@ -70,7 +70,7 @@ export class FabricRuler extends Disposable {
   public lastCursor: string
   public workSpaceDraw?: fabricRect
   public options: Required<RulerOptions>
-  private tempReferenceLine?: ReferenceLine
+  public tempReferenceLine?: ReferenceLine
   private activeOn: string = "up"
   private objectRect: undefined | { 
     x: HighlightRect[],
@@ -84,13 +84,13 @@ export class FabricRuler extends Disposable {
     this.options = Object.assign({
       ruleSize: 20,
       fontSize: 8,
-      enabled: true,
+      enabled: isMobile() ? false : true,
     })
 
     // const { isDark } = useThemes()
     const isDark = false
     
-    const { rulerShow, unitMode } = storeToRefs(useMainStore())
+    const { unitMode } = storeToRefs(useMainStore())
     watchEffect(() => {
       const unitName = DesignUnitMode.filter(ele => ele.id === unitMode.value)[0].name
       this.options = {
@@ -111,15 +111,13 @@ export class FabricRuler extends Disposable {
               unitName: unitName,
             }),
       }
-      this.enabled = rulerShow.value && !isMobile()
       this.render({ ctx: this.canvas.contextContainer })
     })
     // computed(() => {
-    //   this.enabled = rulerShow.value
     //   this.options.unit = unitName
     //   this.render({ ctx: this.canvas.contextContainer })
     // })
-
+    
     this.canvasEvents = {
       'after:render': this.render.bind(this),
       'mouse:move': this.mouseMove.bind(this),
@@ -162,15 +160,13 @@ export class FabricRuler extends Disposable {
     if (this.tempReferenceLine && e.absolutePointer) {
       const pos: Partial<ReferenceLine> = {};
       if (this.tempReferenceLine.axis === 'horizontal') {
-        pos.top = e.absolutePointer.y;
+        pos.top = e.pointer.y;
       } 
       else {
-        pos.left = e.absolutePointer.x;
+        pos.left = e.pointer.x;
       }
       this.tempReferenceLine.set({ ...pos, visible: true });
-
-      this.canvas.requestRenderAll();
-
+      this.canvas.renderAll();
       const event = this.getCommonEventInfo(e) as any;
       this.canvas.fire('object:moving', event);
       this.tempReferenceLine.fire('moving', event);
@@ -182,33 +178,35 @@ export class FabricRuler extends Disposable {
     this.canvas.defaultCursor = status === 'horizontal' ? 'ns-resize' : 'ew-resize';
   }
 
-  private mouseDown(e: any) {
+  private mouseDown(e: TPointerEventInfo<TPointerEvent>) {
     const pointHover = this.getPointHover(e.absolutePointer)
     if (!pointHover) return
     if (this.activeOn === 'up') {
       this.canvas.selection = false
       this.activeOn = 'down'
+      const point = pointHover === 'horizontal' ? e.pointer.y : e.pointer.x
       this.tempReferenceLine = new ReferenceLine(
-        pointHover === 'horizontal' ? e.absolutePointer.y : e.absolutePointer.x,
+        point,
         {
           type: 'ReferenceLine',
           axis: pointHover,
           visible: false,
           name: 'ReferenceLine',
-          // selectable: false,
           hasControls: false,
           hasBorders: false,
           stroke: 'pink',
           fill: 'pink',
           originX: 'center',
           originY: 'center',
-          padding: 4, // 填充，让辅助线选择范围更大，方便选中
+          padding: 4,
           globalCompositeOperation: 'difference',
         }
       );
       this.canvas.add(this.tempReferenceLine)
+      // const templatesStore = useTemplatesStore()
+      // templatesStore.modifedElement()
       this.canvas.setActiveObject(this.tempReferenceLine)
-      this.canvas._setupCurrentTransform(e.e, this.tempReferenceLine, true);
+      this.canvas._setupCurrentTransform(e.e, this.tempReferenceLine, true)
       // @ts-ignore
       this.tempReferenceLine.fire('down', this.getCommonEventInfo(e));
     }
@@ -227,47 +225,49 @@ export class FabricRuler extends Disposable {
     };
   }
 
-  private mouseUp(e: any) {
+  private mouseUp(e: TPointerEventInfo<TPointerEvent>) {
     if (this.activeOn !== 'down') return;
     this.canvas.selection = true
+    this.tempReferenceLine!.selectable = false
+    this.canvas.renderAll()
     this.activeOn = 'up';
     // @ts-ignore
     this.tempReferenceLine?.fire('up', this.getCommonEventInfo(e));
     this.tempReferenceLine = undefined;
   }
 
-  public getWorkSpaceDraw() {
+  public setWorkSpaceDraw() {
     this.workSpaceDraw = this.canvas.getObjects().filter(item => item.id === WorkSpaceDrawType)[0] as fabricRect
   }
 
   public isRectOut(object: FabricObject, target: ReferenceLine): boolean {
-    const { top, height, left, width } = object;
+    // const { top, height, left, width } = object;
 
-    if (top === undefined || height === undefined || left === undefined || width === undefined) {
-      return false;
-    }
+    // if (top === undefined || height === undefined || left === undefined || width === undefined) {
+    //   return false;
+    // }
 
-    const targetRect = target.getBoundingRect(true, true);
-    const {
-      top: targetTop,
-      height: targetHeight,
-      left: targetLeft,
-      width: targetWidth,
-    } = targetRect;
+    // const targetRect = target.getBoundingRect(true, true);
+    // const {
+    //   top: targetTop,
+    //   height: targetHeight,
+    //   left: targetLeft,
+    //   width: targetWidth,
+    // } = targetRect;
 
-    if (target.isHorizontal() && (top > targetTop + 1 || top + height < targetTop + targetHeight - 1)) {
-      return true;
-    } 
-    else if (!target.isHorizontal() && (left > targetLeft + 1 || left + width < targetLeft + targetWidth - 1)) {
-      return true;
-    }
+    // if (target.isHorizontal() && (top > targetTop + 1 || top + height < targetTop + targetHeight - 1)) {
+    //   return true;
+    // } 
+    // else if (!target.isHorizontal() && (left > targetLeft + 1 || left + width < targetLeft + targetWidth - 1)) {
+    //   return true;
+    // }
 
     return false;
   };
 
   referenceLineMoving(e: any) {
     if (!this.workSpaceDraw) {
-      this.getWorkSpaceDraw();
+      this.setWorkSpaceDraw();
       return;
     }
     const { target } = e;
@@ -278,7 +278,7 @@ export class FabricRuler extends Disposable {
 
   referenceLineMouseup(e: any) {
     if (!this.workSpaceDraw) {
-      this.getWorkSpaceDraw();
+      this.setWorkSpaceDraw();
       return;
     }
     const { target } = e;
@@ -557,8 +557,7 @@ export class FabricRuler extends Disposable {
       this.objectRect = undefined
       return
     }
-    // console.log('activeObjects[0].type:', activeObjects[0].type)
-    if (activeObjects[0].name.toLowerCase() === ElementNames.GUIDELINE) {
+    if (activeObjects[0].name.toLowerCase() === ElementNames.REFERENCELINE) {
       this.objectRect = undefined
       return
     }

@@ -14,6 +14,7 @@ export class ReferenceLine extends Line {
     const isHorizontal = options.axis === 'horizontal'
     options[isHorizontal ? 'lockMovementX' : 'lockMovementY'] = true
     super(points as [number, number, number, number], options)
+    this.axis = options.axis
     this.initEvent()
     this.hoverCursor = isHorizontal ? 'ns-resize' : 'ew-resize'
   }
@@ -46,6 +47,7 @@ export class ReferenceLine extends Line {
         return;
       }
       this.moveCursor = this.isHorizontal() ? 'ns-resize' : 'ew-resize';
+      this.selectable = false
       this.canvas?.fire('referenceline:mouseup', {
         target: this,
         e: e.e,

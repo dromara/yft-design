@@ -8,9 +8,11 @@
     </div>
     <div class="left-bottom-tabs">
       <div class="center-tabs">
-        <div :id="`left-tabs-${tab.key}`" class="center-tab" :class="{ 'left-active': tab.key === poolType }" v-for="tab in topTabs" :key="tab.key" @click="setPoolType(tab.key)">
-          <div><SvgIcon :icon-class="tab.icon" className="svg-size" /></div>
-          <div class="left-name">{{ $t(tab.label) }}</div>
+        <div class="center-tab" :class="{ 'left-active': tab.key === poolType }" v-for="tab in topTabs" :key="tab.key" @click="setPoolType(tab.key)">
+          <div :id="`left-tabs-${tab.key}`">
+            <div><SvgIcon :icon-class="tab.icon" className="svg-size" /></div>
+            <div class="left-name">{{ $t(tab.label) }}</div>
+          </div>
         </div>
       </div>
       <div class="bottom-tabs">
@@ -197,9 +199,18 @@ const setPoolType = (tab: PoolType) => {
   align-items: center;
   cursor: pointer;
   background: #fff;
+  position: relative;
 
   .help-handle {
     font-size: 20px;
+  }
+  #left-tabs-help,
+  #left-tabs-layer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
 }
 .has-help {
