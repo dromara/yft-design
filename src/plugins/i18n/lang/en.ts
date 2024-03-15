@@ -72,9 +72,9 @@ export default {
 
     uploadImages: 'Upload Images',
     searchImages: 'Search Images',
-    recommendImages: 'Recommend Images ',
-    myBookmarks: 'My BookMarks',
-    teamTemplates: 'Team Templates',
+    recommendImages: 'Recommend ',
+    myBookmarks: 'BookMarks',
+    teamTemplates: 'Templates',
 
     all: 'All',
     endOfContent: 'End Of Content~',
