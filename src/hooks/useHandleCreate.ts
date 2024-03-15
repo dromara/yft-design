@@ -32,10 +32,10 @@ export default () => {
     templatesStore.modifedElement()
   }
 
-  const createTextElement = (fontSize: number, textStyle = 'transverse', textHollow = false) => {
+  const createTextElement = (fontSize: number, textStyle = 'transverse', textHollow = false, textValue = '双击修改文字') => {
     const { centerPoint } = useCenter()
     
-    const textBoxElement = new Textbox('双击修改文字', {
+    const textBoxElement = new Textbox(textValue, {
       id: nanoid(10),
       left: centerPoint.x,
       top: centerPoint.y,

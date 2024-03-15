@@ -22,7 +22,7 @@ const fabricStore = useFabricStore()
 const mainStore = useMainStore()
 const { wrapperRef, canvasRef } = storeToRefs(fabricStore)
 const { drawAreaFocus } = storeToRefs(mainStore)
-const { keydownListener, keyupListener } = useCanvasHotkey()
+const { keydownListener, keyupListener, pasteListener } = useCanvasHotkey()
 
 onMounted(() => {
   initEditor()
@@ -30,6 +30,7 @@ onMounted(() => {
   document.addEventListener('keydown', keydownListener)
   document.addEventListener('keyup', keyupListener)
   window.addEventListener('blur', keyupListener)
+  window.addEventListener('paste', pasteListener)
 })
 
 onUnmounted(() => {
