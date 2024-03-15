@@ -12,7 +12,7 @@ import { FabricRuler } from '@/app/fabricRuler'
 
 import { FabricCanvas } from '@/app/fabricCanvas'
 import { Keybinding } from '@/app/keybinding'
-import { defaultControls, textboxControls, lineControls } from '@/app/fabricControls'
+import { defaultControls, textboxControls } from '@/app/fabricControls'
 import { useTemplatesStore } from '@/store'
 import useCommon from './useCommon'
 import useHammer from './useHammer'
@@ -41,7 +41,6 @@ const initConf = () => {
 
   Object.assign(Textbox.ownDefaults, { controls: textboxControls() })
   Object.assign(IText.ownDefaults, { controls: textboxControls() })
-  Object.assign(Line.ownDefaults, { controls: lineControls() })
 
   const mixin = {
     getWidthHeight(noFixed = false): Point {

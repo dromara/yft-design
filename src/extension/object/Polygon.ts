@@ -34,7 +34,7 @@ const Keys = <T extends object>(obj: T): (keyof T)[] => {
 
 export class Polygon extends OriginPolygon {
   private canvasEvents
-
+  private pointSize = 10
   private aligningLineMargin = 10
   private aligningLineWidth = 1
   private aligningLineColor = '#F68066'
@@ -353,9 +353,9 @@ export class Polygon extends OriginPolygon {
       ctx.translate((this.points[0].x - this.points[1].x) / 2, (this.points[0].y - this.points[1].y) / 2);
       ctx.rotate(angle);
       ctx.beginPath();
-      ctx.moveTo(5, 0);
-      ctx.lineTo(-5, 5);
-      ctx.lineTo(-5, -5);
+      ctx.moveTo(this.pointSize, 0);
+      ctx.lineTo(-this.pointSize, this.pointSize);
+      ctx.lineTo(-this.pointSize, -this.pointSize);
       ctx.closePath();
       ctx.fillStyle = this.stroke as string;
       ctx.fill();
@@ -366,7 +366,7 @@ export class Polygon extends OriginPolygon {
       ctx.translate((this.points[0].x - this.points[1].x) / 2, (this.points[0].y - this.points[1].y) / 2);
       ctx.rotate(angle);
       ctx.beginPath();
-      ctx.arc(0, 0, 5, 0, 2 * Math.PI)
+      ctx.arc(0, 0, this.pointSize, 0, 2 * Math.PI)
       ctx.closePath();
       ctx.fillStyle = this.stroke as string;
       ctx.fill();
@@ -384,9 +384,9 @@ export class Polygon extends OriginPolygon {
       ctx.translate((this.points[1].x - this.points[0].x) / 2, (this.points[1].y - this.points[0].y) / 2);
       ctx.rotate(angle);
       ctx.beginPath();
-      ctx.moveTo(5, 0);
-      ctx.lineTo(-5, 5);
-      ctx.lineTo(-5, -5);
+      ctx.moveTo(this.pointSize, 0);
+      ctx.lineTo(-this.pointSize, this.pointSize);
+      ctx.lineTo(-this.pointSize, -this.pointSize);
       ctx.closePath();
       ctx.fillStyle = this.stroke as string;
       ctx.fill();
@@ -397,7 +397,7 @@ export class Polygon extends OriginPolygon {
       ctx.translate((this.points[1].x - this.points[0].x) / 2, (this.points[1].y - this.points[0].y) / 2);
       ctx.rotate(angle);
       ctx.beginPath();
-      ctx.arc(0, 0, 5, 0, 2 * Math.PI)
+      ctx.arc(0, 0, this.pointSize, 0, 2 * Math.PI)
       ctx.closePath();
       ctx.fillStyle = this.stroke as string;
       ctx.fill();
@@ -493,7 +493,9 @@ export class Polygon extends OriginPolygon {
   }
 
   public toSVG(reviver?: TSVGReviver | undefined): string {
-    return super.toSVG(reviver)
+    const svg = super.toSVG(reviver)
+    console.log('svg:', svg)
+    return svg
   }
 
   public dispose(): void {
