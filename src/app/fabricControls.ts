@@ -470,6 +470,21 @@ export const arcTextControls = (): TControlSet => ({
   ...resizeControls(),
 })
 
+export const lineControls = (): TControlSet => ({
+  ml: new Control({
+    x: -0.5,
+    y: 0,
+    actionHandler: changeWidth,
+    cursorStyleHandler: controlsUtils.scaleSkewCursorStyleHandler,
+  }),
+  mr: new Control({
+    x: 0.5,
+    y: 0,
+    actionHandler: changeWidth,
+    cursorStyleHandler: controlsUtils.scaleSkewCursorStyleHandler,
+  }),
+})
+
 export const textboxControls = (): TControlSet => ({
   ...defaultControls(),
   ...resizeControls(),

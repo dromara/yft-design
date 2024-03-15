@@ -1,6 +1,6 @@
 import { watch } from 'vue'
 import { storeToRefs } from 'pinia'
-import { Canvas, Object as FabricObject, Textbox, Group, Point, IText } from 'fabric'
+import { Canvas, Object as FabricObject, Textbox, Group, Point, IText, Line } from 'fabric'
 import { WorkSpaceThumbType, WorkSpaceDrawType } from "@/configs/canvas"
 import { useFabricStore } from '@/store/modules/fabric'
 import { useElementBounding } from '@vueuse/core'
@@ -12,7 +12,7 @@ import { FabricRuler } from '@/app/fabricRuler'
 
 import { FabricCanvas } from '@/app/fabricCanvas'
 import { Keybinding } from '@/app/keybinding'
-import { defaultControls, textboxControls } from '@/app/fabricControls'
+import { defaultControls, textboxControls, lineControls } from '@/app/fabricControls'
 import { useTemplatesStore } from '@/store'
 import useCommon from './useCommon'
 import useHammer from './useHammer'
@@ -41,7 +41,7 @@ const initConf = () => {
 
   Object.assign(Textbox.ownDefaults, { controls: textboxControls() })
   Object.assign(IText.ownDefaults, { controls: textboxControls() })
-  // Object.assign(ArcText.ownDefaults, { controls: arcTextControls() })
+  Object.assign(Line.ownDefaults, { controls: lineControls() })
 
   const mixin = {
     getWidthHeight(noFixed = false): Point {
