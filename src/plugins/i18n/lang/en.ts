@@ -72,11 +72,11 @@ export default {
 
     uploadImages: 'Upload Images',
     searchImages: 'Search Images',
-    recommendImages: 'Recommend ',
+    recommendImages: 'Recommend',
     myBookmarks: 'BookMarks',
     teamTemplates: 'Templates',
 
     all: 'All',
-    endOfContent: 'End Of Content~',
+    endOfContent: 'End~',
   },
 };
