@@ -57,6 +57,7 @@ export default {
     redo: '重做',
     group: '组合',
     ungroup: '解组',
+    ruler: '标尺',
     union: '并集',
     difference: '减去顶层',
     intersection: '交集',

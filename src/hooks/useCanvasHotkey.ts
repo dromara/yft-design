@@ -2,6 +2,7 @@ import { storeToRefs } from "pinia";
 import { useMainStore, useTemplatesStore, useKeyboardStore } from "@/store";
 import { KEYS } from "@/configs/hotkey";
 import useHandleCreate from "@/hooks/useHandleCreate";
+import useCanvas from "@/views/Canvas/useCanvas";
 import useHandleTemplate from "./useHandleTemplate";
 import useHandleElement from "./useHandleElement";
 import useHistorySnapshot from "./useHistorySnapshot";
@@ -12,7 +13,7 @@ export default () => {
   const mainStore = useMainStore();
   const keyboardStore = useKeyboardStore();
   const templatesStore = useTemplatesStore();
-  const { disableHotkeys, handleElement, canvasObject, handleElementId, thumbnailsFocus, drawAreaFocus, rulerShow } = storeToRefs(mainStore);
+  const { disableHotkeys, handleElement, canvasObject, handleElementId, thumbnailsFocus, drawAreaFocus, } = storeToRefs(mainStore);
   const { currentTemplate, templateIndex } = storeToRefs(templatesStore);
   const { ctrlKeyState, shiftKeyState, spaceKeyState } = storeToRefs(keyboardStore);
 
@@ -113,6 +114,7 @@ export default () => {
   // }
 
   const keydownListener = (e: KeyboardEvent) => {
+    const [canvas] = useCanvas();
     const { ctrlKey, shiftKey, altKey, metaKey } = e;
     const ctrlOrMetaKeyActive = ctrlKey || metaKey;
 
@@ -252,7 +254,9 @@ export default () => {
       console.log("key:", key);
       if (disableHotkeys.value) return;
       e.preventDefault();
-      rulerShow.value = !rulerShow.value;
+      if (canvas.ruler) {
+        canvas.ruler.enabled = !canvas.ruler.enabled
+      }
     }
   };
 

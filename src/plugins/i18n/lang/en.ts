@@ -54,6 +54,7 @@ export default {
     redo: 'Redo',
     group: 'Group',
     ungroup: 'UnGroup',
+    ruler: 'Ruler',
     union: 'Union',
     difference: 'Difference',
     intersection: 'Intersection',

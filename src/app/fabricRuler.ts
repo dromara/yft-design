@@ -84,13 +84,13 @@ export class FabricRuler extends Disposable {
     this.options = Object.assign({
       ruleSize: 20,
       fontSize: 8,
-      enabled: true,
+      enabled: isMobile() ? false : true,
     })
 
     // const { isDark } = useThemes()
     const isDark = false
     
-    const { rulerShow, unitMode } = storeToRefs(useMainStore())
+    const { unitMode } = storeToRefs(useMainStore())
     watchEffect(() => {
       const unitName = DesignUnitMode.filter(ele => ele.id === unitMode.value)[0].name
       this.options = {
@@ -111,15 +111,13 @@ export class FabricRuler extends Disposable {
               unitName: unitName,
             }),
       }
-      this.enabled = rulerShow.value && !isMobile()
       this.render({ ctx: this.canvas.contextContainer })
     })
     // computed(() => {
-    //   this.enabled = rulerShow.value
     //   this.options.unit = unitName
     //   this.render({ ctx: this.canvas.contextContainer })
     // })
-
+    
     this.canvasEvents = {
       'after:render': this.render.bind(this),
       'mouse:move': this.mouseMove.bind(this),

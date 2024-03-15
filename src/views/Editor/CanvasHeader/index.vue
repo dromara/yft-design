@@ -2,20 +2,24 @@
   <div>
     <div class="left-handler">
       <el-tooltip placement="top" :hide-after="0">
-        <template #content>{{ t('message.undo') }}</template>
-        <IconBack class="handler-item" :class="{ 'disable': !canUndo }" @click="undo()"/>
+        <template #content>{{ t("message.undo") }}</template>
+        <IconBack class="handler-item" :class="{ disable: !canUndo }" @click="undo()" />
       </el-tooltip>
       <el-tooltip placement="top" :hide-after="0">
-        <template #content>{{ t('message.redo') }}</template>
-        <IconNext class="handler-item" :class="{ 'disable': !canRedo }" @click="redo()"/>
+        <template #content>{{ t("message.redo") }}</template>
+        <IconNext class="handler-item" :class="{ disable: !canRedo }" @click="redo()" />
       </el-tooltip>
       <el-tooltip placement="top" :hide-after="0">
-        <template #content>{{ t('message.group') }}</template>
-        <IconGroup class="handler-item" :class="{ 'disable': !canGroup }" @click="group()"/>
+        <template #content>{{ t("message.group") }}</template>
+        <IconGroup class="handler-item" :class="{ disable: !canGroup }" @click="group()" />
       </el-tooltip>
       <el-tooltip placement="top" :hide-after="0">
-        <template #content>{{ t('message.ungroup') }}</template>
-        <IconUngroup class="handler-item" :class="{ 'disable': !canUnGroup }" @click="ungroup()"/>
+        <template #content>{{ t("message.ungroup") }}</template>
+        <IconUngroup class="handler-item" :class="{ disable: !canUnGroup }" @click="ungroup()" />
+      </el-tooltip>
+      <el-tooltip placement="top" :hide-after="0">
+        <template #content>{{ t("message.ruler") }}</template>
+        <i class="handler-item iconfont icon-biaochi" @click="changeRuler()" />
       </el-tooltip>
     </div>
 
@@ -23,25 +27,17 @@
       <el-dropdown trigger="click">
         <span class="handler-dropdown">
           <el-tooltip placement="top" :hide-after="0">
-            <template #content>{{ t('message.union') }}</template>
-            <IconUnionSelection class="handler-icon"/>
+            <template #content>{{ t("message.union") }}</template>
+            <IconUnionSelection class="handler-icon" />
           </el-tooltip>
-          <IconDown class="handler-icon icon-down"/>
+          <IconDown class="handler-icon icon-down" />
         </span>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item @click="intersection(0)">
-              <IconUnionSelection class="handler-item"/>{{ t('message.union') }}
-            </el-dropdown-item>
-            <el-dropdown-item @click="intersection(1)">
-              <IconSubtractSelectionOne class="handler-item"/>{{ t('message.difference') }}
-            </el-dropdown-item>
-            <el-dropdown-item @click="intersection(2)">
-              <IconIntersectSelection class="handler-item"/>{{ t('message.intersection') }}
-            </el-dropdown-item>
-            <el-dropdown-item @click="intersection(3)">
-              <IconExcludeSelection class="handler-item"/>{{ t('message.xor') }}
-            </el-dropdown-item>
+            <el-dropdown-item @click="intersection(0)"> <IconUnionSelection class="handler-item" />{{ t("message.union") }} </el-dropdown-item>
+            <el-dropdown-item @click="intersection(1)"> <IconSubtractSelectionOne class="handler-item" />{{ t("message.difference") }} </el-dropdown-item>
+            <el-dropdown-item @click="intersection(2)"> <IconIntersectSelection class="handler-item" />{{ t("message.intersection") }} </el-dropdown-item>
+            <el-dropdown-item @click="intersection(3)"> <IconExcludeSelection class="handler-item" />{{ t("message.xor") }} </el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -50,16 +46,16 @@
       <IconMinus class="handler-item" @click="scaleCanvas('-')" />
       <el-popover placement="bottom" trigger="click" width="100" popper-class="viewport-size">
         <template #reference>
-          <span class="text" ref="scaleRef">{{canvasZoom}}</span>
+          <span class="text" ref="scaleRef">{{ canvasZoom }}</span>
         </template>
         <div class="viewport-size-preset">
-          <div class="preset-item" v-for="item in canvasZoomPresets" :key="item" @click="applyCanvasPresetScale(item)">{{item}}%</div>
+          <div class="preset-item" v-for="item in canvasZoomPresets" :key="item" @click="applyCanvasPresetScale(item)">{{ item }}%</div>
         </div>
       </el-popover>
-      <IconPlus class="handler-item"  @click="scaleCanvas('+')" />
+      <IconPlus class="handler-item" @click="scaleCanvas('+')" />
       <el-tooltip placement="top">
-        <template #content>{{ t('message.undo') }}</template>
-        <IconFullScreen class="handler-item" @click="resetCanvas()"/>
+        <template #content>{{ t("message.undo") }}</template>
+        <IconFullScreen class="handler-item" @click="resetCanvas()" />
       </el-tooltip>
       <Lang />
     </div>
@@ -67,84 +63,89 @@
 </template>
 
 <script lang="ts" setup>
-import Lang from '@/components/Lang/index.vue'
-import { ref, computed } from 'vue'
-import { ElementNames } from '@/types/elements'
-import { storeToRefs } from 'pinia'
-import { Object as FabricObject, Group } from 'fabric'
-import { useFabricStore, useMainStore, useSnapshotStore, useTemplatesStore } from "@/store"
-import useI18n from '@/hooks/useI18n'
-import useCanvas from '@/views/Canvas/useCanvas'
-import useHandleTool from '@/hooks/useHandleTool'
-import useCanvasScale from '@/hooks/useCanvasScale'
-import useHandleElement from '@/hooks/useHandleElement'
-import useHistorySnapshot from '@/hooks/useHistorySnapshot'
+import Lang from "@/components/Lang/index.vue";
+import { ref, computed } from "vue";
+import { ElementNames } from "@/types/elements";
+import { storeToRefs } from "pinia";
+import { Object as FabricObject, Group } from "fabric";
+import { useFabricStore, useMainStore, useSnapshotStore, useTemplatesStore } from "@/store";
+import useI18n from "@/hooks/useI18n";
+import useCanvas from "@/views/Canvas/useCanvas";
+import useHandleTool from "@/hooks/useHandleTool";
+import useCanvasScale from "@/hooks/useCanvasScale";
+import useHandleElement from "@/hooks/useHandleElement";
+import useHistorySnapshot from "@/hooks/useHistorySnapshot";
 
-const fabricStore = useFabricStore()
-const mainStore = useMainStore()
-const templatesStore = useTemplatesStore()
-const { t } = useI18n()
-const { alignElement, layerElement } = useHandleTool()
-const { setCanvasScalePercentage, scaleCanvas, resetCanvas } = useCanvasScale()
-const { combineElements, uncombineElements, intersectElements } = useHandleElement()
-const { zoom } = storeToRefs(fabricStore)
-const { canvasObject } = storeToRefs(mainStore)
+const fabricStore = useFabricStore();
+const mainStore = useMainStore();
+const templatesStore = useTemplatesStore();
+const { t } = useI18n();
+const { alignElement, layerElement } = useHandleTool();
+const { setCanvasScalePercentage, scaleCanvas, resetCanvas } = useCanvasScale();
+const { combineElements, uncombineElements, intersectElements } = useHandleElement();
+const { zoom } = storeToRefs(fabricStore);
+const { canvasObject } = storeToRefs(mainStore);
 
+const scaleRef = ref();
+const canvasZoom = computed(() => Math.round(zoom.value * 100) + "%");
+const canvasZoomPresets = [200, 150, 100, 80, 50];
 
-const scaleRef = ref()
-const canvasZoom = computed(() => Math.round(zoom.value * 100) + '%')
-const canvasZoomPresets = [200, 150, 100, 80, 50]
+const { canUndo, canRedo } = storeToRefs(useSnapshotStore());
 
-const { canUndo, canRedo } = storeToRefs(useSnapshotStore())
+const { redo, undo } = useHistorySnapshot();
 
-const { redo, undo } = useHistorySnapshot()
-
-const handleElement = computed(() => canvasObject.value as FabricObject)
+const handleElement = computed(() => canvasObject.value as FabricObject);
 
 const canGroup = computed(() => {
-  if (!handleElement.value) return false
-  return handleElement.value.type === ElementNames.ACTIVE
-})
+  if (!handleElement.value) return false;
+  return handleElement.value.type === ElementNames.ACTIVE;
+});
 const canUnGroup = computed(() => {
-  if (!handleElement.value) return false
-  return handleElement.value.type === ElementNames.GROUP
-})
+  if (!handleElement.value) return false;
+  return handleElement.value.type === ElementNames.GROUP;
+});
 
 const canIntersection = computed(() => {
-  const [ canvas ] = useCanvas()
-  if (!handleElement.value) return false
+  const [canvas] = useCanvas();
+  if (!handleElement.value) return false;
   if (handleElement.value.type === ElementNames.GROUP) {
-    const groupObject = handleElement.value as Group
-    const sonObjects = groupObject._objects.filter(ele => ele.type === ElementNames.PATH)
-    if (groupObject._objects.length === 2 && sonObjects && sonObjects.length === 2) return true
-    return false
+    const groupObject = handleElement.value as Group;
+    const sonObjects = groupObject._objects.filter((ele) => ele.type === ElementNames.PATH);
+    if (groupObject._objects.length === 2 && sonObjects && sonObjects.length === 2) return true;
+    return false;
   }
-  if (handleElement.value.type !== ElementNames.ACTIVE) return false
-  
-  const activeObjects = canvas.getActiveObjects()
-  return activeObjects.length === 2 && activeObjects.filter(ele => ele.type === ElementNames.PATH).length === 2
-})
+  if (handleElement.value.type !== ElementNames.ACTIVE) return false;
+
+  const activeObjects = canvas.getActiveObjects();
+  return activeObjects.length === 2 && activeObjects.filter((ele) => ele.type === ElementNames.PATH).length === 2;
+});
 
 // 组合
 const group = () => {
-  if (!handleElement.value || handleElement.value.type !== ElementNames.ACTIVE) return
-  combineElements()
-}
+  if (!handleElement.value || handleElement.value.type !== ElementNames.ACTIVE) return;
+  combineElements();
+};
 
 // 解除组合
 const ungroup = () => {
-  if (!handleElement.value || handleElement.value.type !== ElementNames.GROUP) return
-  uncombineElements()
-}
+  if (!handleElement.value || handleElement.value.type !== ElementNames.GROUP) return;
+  uncombineElements();
+};
+
+// 标尺显示隐藏
+const changeRuler = () => {
+  const [canvas] = useCanvas();
+  canvas.ruler.enabled = !canvas.ruler.enabled
+};
 
 const intersection = (val: number) => {
-  if (!handleElement.value) return
-  intersectElements(val)
-}
+  if (!handleElement.value) return;
+  intersectElements(val);
+};
 
 const applyCanvasPresetScale = (value: number) => {
-  setCanvasScalePercentage(value)
-}
+  setCanvasScalePercentage(value);
+};
 // const setZoom = ()
 </script>
 
@@ -183,7 +184,7 @@ const applyCanvasPresetScale = (value: number) => {
   cursor: pointer;
 
   &.disable {
-    opacity: .5;
+    opacity: 0.5;
     cursor: not-allowed;
   }
 }
