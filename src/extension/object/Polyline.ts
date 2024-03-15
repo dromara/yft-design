@@ -350,66 +350,37 @@ export class Polyline extends OriginPolyline {
     const xDiff = firstPoint.x - lastPoint.x;
     const yDiff = firstPoint.y - lastPoint.y;
     const angle = Math.atan2(yDiff, xDiff);
-    if (this.startStyle === ElementNames.ARROW) {
-      ctx.save();
-      ctx.translate((firstPoint.x - lastPoint.x) / 2, (firstPoint.y - lastPoint.y) / 2);
-      ctx.rotate(angle);
-      ctx.beginPath();
-      ctx.moveTo(this.pointSize, 0);
-      ctx.lineTo(-this.pointSize, this.pointSize);
-      ctx.lineTo(-this.pointSize, -this.pointSize);
-      ctx.closePath();
-      ctx.fillStyle = this.stroke as string;
-      ctx.fill();
-      ctx.restore();
-    }
-    if (this.startStyle === ElementNames.DOT) {
-      ctx.save();
-      ctx.translate((firstPoint.x - lastPoint.x) / 2, (firstPoint.y - lastPoint.y) / 2);
-      ctx.rotate(angle);
-      ctx.beginPath();
-      ctx.arc(0, 0, this.pointSize, 0, 2 * Math.PI)
-      ctx.closePath();
-      ctx.fillStyle = this.stroke as string;
-      ctx.fill();
-      ctx.restore();
-    }
+    this.renderPointStyle(ctx, xDiff, yDiff, angle, this.startStyle)
   }
 
   renderEndStyle(ctx: CanvasRenderingContext2D) {
     if (!this.endStyle) return
     const firstPoint = this.points[0]
     const lastPoint = this.points[this.points.length - 1]
-    const xDiff = lastPoint.x - this.points[0].x;
-    const yDiff = lastPoint.y - this.points[0].y;
+    const xDiff = lastPoint.x - firstPoint.x;
+    const yDiff = lastPoint.y - firstPoint.y;
     const angle = Math.atan2(yDiff, xDiff);
-    if (this.endStyle === ElementNames.ARROW) {
-      ctx.save();
-      ctx.translate((lastPoint.x - this.points[0].x) / 2, (lastPoint.y - this.points[0].y) / 2);
-      ctx.rotate(angle);
-      ctx.beginPath();
+    this.renderPointStyle(ctx, xDiff, yDiff, angle, this.endStyle)
+  }
+
+  renderPointStyle(ctx: CanvasRenderingContext2D, xDiff: number, yDiff: number, angle: number, style: LinePoint) {
+    ctx.save();
+    ctx.translate(xDiff / 2, yDiff / 2);
+    ctx.rotate(angle);
+    ctx.beginPath();
+    if (style === 'arrow') {
       ctx.moveTo(this.pointSize, 0);
       ctx.lineTo(-this.pointSize, this.pointSize);
       ctx.lineTo(-this.pointSize, -this.pointSize);
-      ctx.closePath();
-      ctx.fillStyle = this.stroke as string;
-      ctx.fill();
-      ctx.restore();
     }
-    if (this.endStyle === ElementNames.DOT) {
-      ctx.save();
-      ctx.translate((lastPoint.x - this.points[0].x) / 2, (lastPoint.y - this.points[0].y) / 2);
-      ctx.rotate(angle);
-      ctx.beginPath();
+    else {
       ctx.arc(0, 0, this.pointSize, 0, 2 * Math.PI)
-      ctx.closePath();
-      ctx.fillStyle = this.stroke as string;
-      ctx.fill();
-      ctx.restore();
     }
+    ctx.closePath();
+    ctx.fillStyle = this.stroke as string;
+    ctx.fill();
+    ctx.restore();
   }
-
-
 
   private drawVerticalLine(coords: VerticalLineCoords, movingCoords: ACoordsAppendCenter) {
     // if (!Object.values(movingCoords).some((coord) => Math.abs(coord.x - coords.x) < 0.0001)) return
