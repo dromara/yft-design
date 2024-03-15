@@ -47,6 +47,7 @@ export class ReferenceLine extends Line {
         return;
       }
       this.moveCursor = this.isHorizontal() ? 'ns-resize' : 'ew-resize';
+      this.selectable = false
       this.canvas?.fire('referenceline:mouseup', {
         target: this,
         e: e.e,

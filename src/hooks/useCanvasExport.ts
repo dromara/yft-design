@@ -11,6 +11,7 @@ import useCanvas from '@/views/Canvas/useCanvas'
 import useCenter from '@/views/Canvas/useCenter'
 import { exportFile } from '@/api/file'
 import { Base64 } from 'js-base64'
+import { ElementNames } from '@/types/elements'
 
 export default () => {
   
@@ -34,6 +35,7 @@ export default () => {
       canvas.renderAll()
     }
     if (activeObject) canvas.discardActiveObject()
+    canvas.getObjects().filter(item => item.type === ElementNames.REFERENCELINE && item.visible === true).map(item => item.set({visible: false}))
     canvas.set({background: 'rgba(255,255,255,0)'})
     canvas.renderAll()
     let result = canvas.toDataURL({
@@ -52,12 +54,14 @@ export default () => {
     canvas.getObjects().filter(obj => obj.id === WorkSpaceClipType).map(item => item.set({visible: showClip.value}))
     canvas.getObjects().filter(obj => obj.id === WorkSpaceSafeType).map(item => item.set({visible: showSafe.value}))
     if (activeObject) canvas.setActiveObject(activeObject)
+    canvas.getObjects().filter(item => item.type === ElementNames.REFERENCELINE && item.visible === false).map(item => item.set({visible: true}))
     canvas.renderAll()
   }
 
   const getSVGData = () => {
     const [ canvas ] = useCanvas()
     const { left, top, width, height } = useCenter()
+    canvas.getObjects().filter(item => item.type === ElementNames.REFERENCELINE && item.visible === true).map(item => item.set({visible: false}))
     canvas.renderAll()
     const data = canvas.toSVG({
       viewBox: {
@@ -69,6 +73,8 @@ export default () => {
       width: width + 'px',
       height: height + 'px'
     }, (element) => element)
+    canvas.getObjects().filter(item => item.type === ElementNames.REFERENCELINE && item.visible === false).map(item => item.set({visible: true}))
+    canvas.renderAll()
     return data
   }
 
