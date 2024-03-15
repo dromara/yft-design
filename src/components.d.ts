@@ -187,6 +187,10 @@ export declare module 'fabric' {
     pointMoving(index: number, point: Point): Point
   }
 
+  export declare class Line {
+    setLineMode(value: string, model: 'start' | 'end'): void
+  }
+
   type ExportedKeys =
     | 'crossOrigin'
     | 'offsetX'

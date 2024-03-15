@@ -6,7 +6,8 @@ import { nanoid } from 'nanoid'
 import { QRCodeElement, QRCodeOption } from '@/types/canvas'
 import { getImageSize } from '@/utils/image'
 import JsBarcode from 'jsbarcode'
-import { Object as FabricObject, Textbox, Path, classRegistry, Line } from "fabric"
+import { Object as FabricObject, Textbox, Path, classRegistry } from "fabric"
+import { Line } from '@/extension/object/Line'
 import { Image } from '@/extension/object/Image'
 import { QRCode } from '@/extension/object/QRCode'
 import { BarCode } from '@/extension/object/BarCode'
@@ -80,26 +81,26 @@ export default () => {
   }
 
   const createLineElement = (path: string) => {
-    const { centerPoint } = useCenter()
-    const lineElement = new Line([0, 0, 300, 0], {
-      id: nanoid(10),
-      left: centerPoint.x,
-      top: centerPoint.y,
-      strokeWidth: 4,
-      stroke: 'green',
-      scaleX: 1,
-      scaleY: 1,
-      originX: 'left',
-      originY: 'top',
-      transparentCorners: false,
-    })
-    renderCanvas(lineElement)
+    // const { centerPoint } = useCenter()
+    // const lineElement = new Line([0, 0, 300, 0], {
+    //   id: nanoid(10),
+    //   left: centerPoint.x,
+    //   top: centerPoint.y,
+    //   strokeWidth: 4,
+    //   stroke: 'green',
+    //   scaleX: 1,
+    //   scaleY: 1,
+    //   originX: 'left',
+    //   originY: 'top',
+    //   transparentCorners: false,
+    // })
+    // renderCanvas(lineElement)
     // canvas.add(lineElement)
     // canvas.setActiveObject(lineElement)
     // rightState.value = RightStates.ELEMENT_STYLE
     // templatesStore.modifedElement()
     // setZindex(canvas)
-    // createPolygonElement(path)
+    createPolygonElement(path)
     // createArrowElement(path)
   }
 

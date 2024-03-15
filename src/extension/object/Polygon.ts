@@ -44,6 +44,9 @@ export class Polygon extends OriginPolygon {
   private ignoreObjTypes: IgnoreObjTypes = []
   private pickObjTypes: IgnoreObjTypes = []
 
+  public startStyle?: string
+  public endStyle?: string
+
   constructor(points?: XY[], options?: FabricObject<Polygon>) {
     super(points, options)
 
@@ -322,11 +325,25 @@ export class Polygon extends OriginPolygon {
     // )
   }
 
+  public setLineMode(value: string, mode: 'start' | 'end') {
+    if (mode === 'start') {
+      this.startStyle = value
+    }
+    if (mode === 'end') {
+      this.endStyle = value
+    }
+  }
 
   _render(ctx: CanvasRenderingContext2D) {
     super._render(ctx)
     this.clearGuideline()
-    if (this.name === ElementNames.ARROW) {
+    this._renderEndStyle(ctx)
+    this.drawGuideLines()
+  }
+
+  _renderEndStyle(ctx: CanvasRenderingContext2D) {
+    if (!this.endStyle) return
+    if (this.endStyle === ElementNames.ARROW) {
       ctx.save();
       const xDiff = this.points[1].x - this.points[0].x;
       const yDiff = this.points[1].y - this.points[0].y;
@@ -342,7 +359,23 @@ export class Polygon extends OriginPolygon {
       ctx.fill();
       ctx.restore();
     }
-    this.drawGuideLines()
+    if (this.endStyle === ElementNames.CIRCLE) {
+      ctx.save();
+      const xDiff = this.points[1].x - this.points[0].x;
+      const yDiff = this.points[1].y - this.points[0].y;
+      const angle = Math.atan2(yDiff, xDiff);
+      ctx.translate((this.points[1].x - this.points[0].x) / 2, (this.points[1].y - this.points[0].y) / 2);
+      ctx.rotate(angle);
+      ctx.beginPath();
+      ctx.arc(2.5, 0, 5, 0, 2 * Math.PI)
+      // ctx.moveTo(5, 0);
+      // ctx.lineTo(-5, 5);
+      // ctx.lineTo(-5, -5);
+      ctx.closePath();
+      ctx.fillStyle = this.stroke as string;
+      ctx.fill();
+      ctx.restore();
+    }
   }
 
   private drawVerticalLine(coords: VerticalLineCoords, movingCoords: ACoordsAppendCenter) {

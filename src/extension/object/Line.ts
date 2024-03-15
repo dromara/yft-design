@@ -43,8 +43,9 @@ export class Line extends OriginLine {
   private horizontalLines: HorizontalLineCoords[] = []
   private ignoreObjTypes: IgnoreObjTypes = []
   private pickObjTypes: IgnoreObjTypes = []
-
-  constructor([x1, y1, x2, y2]: [number, number, number, number], options?: FabricObject<Line>) {
+  public startStyle?: string
+  public endStyle?: string
+  constructor([x1, y1, x2, y2]: [number, number, number, number], options?: any) {
     super([x1, y1, x2, y2], options)
 
     const mouseUp = () => {
@@ -56,7 +57,7 @@ export class Line extends OriginLine {
 
     this.canvasEvents = {'mouseup': mouseUp}
     this.on(this.canvasEvents)
-    this.initControls()
+    // this.initControls()
   }
 
   public pointMoving(pointIndex: number, point: Point): Point {
@@ -111,33 +112,33 @@ export class Line extends OriginLine {
     this.verticalLines.length = this.horizontalLines.length = 0
   }
 
-  public initControls() {
-    const controls: TControlSet = {
-      ml: new Control({
-        x: -0.5,
-        y: 0,
-        actionHandler: controlsUtils.scalingXOrSkewingY,
-        cursorStyleHandler: controlsUtils.scaleSkewCursorStyleHandler,
-        actionName: 'scaling',
-      }),
-      mr: new Control({
-        x: 0.5,
-        y: 0,
-        actionHandler: controlsUtils.scalingXOrSkewingY,
-        cursorStyleHandler: controlsUtils.scaleSkewCursorStyleHandler,
-        actionName: 'scaling',
-      }),
-    }
-    // this.points.forEach((point, index) => {
-    //   controls[index] = new Control({
-    //     positionHandler: polygonPositionHandler,
-    //     actionHandler: anchorWrapper(index > 0 ? index - 1 : this.points.length - 1, actionHandler) as TransformActionHandler ,
-    //     actionName: 'modifyPolygon',
-    //     pointIndex: index
-    //   })
-    // })
-    this.controls = controls
-  }
+  // public initControls() {
+  //   const controls: TControlSet = {
+  //     ml: new Control({
+  //       x: -0.5,
+  //       y: 0,
+  //       actionHandler: controlsUtils.scalingXOrSkewingY,
+  //       cursorStyleHandler: controlsUtils.scaleSkewCursorStyleHandler,
+  //       actionName: 'scaling',
+  //     }),
+  //     mr: new Control({
+  //       x: 0.5,
+  //       y: 0,
+  //       actionHandler: controlsUtils.scalingXOrSkewingY,
+  //       cursorStyleHandler: controlsUtils.scaleSkewCursorStyleHandler,
+  //       actionName: 'scaling',
+  //     }),
+  //   }
+  //   // this.points.forEach((point, index) => {
+  //   //   controls[index] = new Control({
+  //   //     positionHandler: polygonPositionHandler,
+  //   //     actionHandler: anchorWrapper(index > 0 ? index - 1 : this.points.length - 1, actionHandler) as TransformActionHandler ,
+  //   //     actionName: 'modifyPolygon',
+  //   //     pointIndex: index
+  //   //   })
+  //   // })
+  //   this.controls = controls
+  // }
 
   private traversAllObjects(pointIndex: number, point: Point, canvasObjects: FabricObject[]): Point {
     const objCoordsByMovingDistance = this.getObjDraggingObjCoords() // { tl, tr, bl, br, c }
@@ -149,10 +150,6 @@ export class Line extends OriginLine {
         ...this.__getCoords(canvasObjects[i]),
         c: canvasObjects[i].getCenterPoint(),
       } as ACoordsAppendCenter
-      // const y = objCoords.tl.y, x1 = objCoords.tl.x, x2 = objCoords.tr.x
-      // const x = objCoords.tl.x, y1 = objCoords.tl.y, y2 = objCoords.bl.y
-      // this.horizontalLines.push({ y, x1, x2 })
-      // this.verticalLines.push({ x, y1, y2 })
       const { objHeight, objWidth } = this.getObjMaxWidthHeightByCoords(objCoords)
       Keys(objCoordsByMovingDistance).forEach((activeObjPoint) => {
         const newCoords = canvasObjects[i].angle !== 0 ? this.omitCoords(objCoords, 'horizontal') : objCoords
@@ -209,10 +206,8 @@ export class Line extends OriginLine {
         Keys(newCoords).forEach((objPoint) => {
           if (this.isInRange(objCoordsByMovingDistance[activeObjPoint].x, objCoords[objPoint].x)) {
             const x = objCoords[objPoint].x
-
             const offset = objCoordsByMovingDistance[activeObjPoint].x - x
             snapXPoints.add(objCoordsByMovingDistance.c.x - offset)
-
             const aCoords = this.__getCoords(this)
             const { y1, y2 } = calcVerticalLineCoords(objPoint, {
               ...aCoords,
@@ -223,7 +218,6 @@ export class Line extends OriginLine {
         })
       })
     }
-    // this.points[pointIndex] = point
     return this.snap({
       point,
       snapXPoints,
@@ -265,9 +259,6 @@ export class Line extends OriginLine {
     return newCoords
   }
 
-  /**
-   * 检查 value1 和 value2 是否在指定的范围内，用于对齐线的计算
-   */
   private isInRange(value1: number, value2: number) {
     if (!this.canvas) return false
     return Math.abs(Math.round(value1) - Math.round(value2)) <= this.aligningLineMargin / this.canvas.getZoom()
@@ -278,10 +269,6 @@ export class Line extends OriginLine {
     return { tl, tr, br, bl }
   }
 
-  /**
-   * fabric.Object.getCenterPoint will return the center point of the object calc by mouse moving & dragging distance.
-   * calcCenterPointByACoords will return real center point of the object position.
-   */
   private calcCenterPointByACoords(coords: NonNullable<FabricObject['aCoords']>): Point {
     return new Point((coords.tl.x + coords.br.x) / 2, (coords.tl.y + coords.br.y) / 2)
   }
@@ -308,38 +295,30 @@ export class Line extends OriginLine {
       if (list.size === 0) {
         return originPoint
       }
-
       const sortedList = [...list].sort(
         (a, b) => Math.abs(originPoint - a) - Math.abs(originPoint - b),
       )
-
       return sortedList[0]
     }
     const snapPoint = new Point(sortPoints(snapXPoints, point.x), sortPoints(snapYPoints, point.y))
-    //   new Point(
-    //     sortPoints(snapXPoints, point.x),
-    //     sortPoints(snapYPoints, point.y),
-    //   ),
     return snapPoint
-    // auto snap nearest object, record all the snap points, and then find the nearest one
-    // this.setXY(
-    //   new Point(
-    //     sortPoints(snapXPoints, point.x),
-    //     sortPoints(snapYPoints, point.y),
-    //   ),
-    //   'center',
-    //   'center',
-    // )
   }
 
+  public setLineMode(value: string, mode: 'start' | 'end') {
+    if (mode === 'start') {
+      this.startStyle = value
+    }
+    if (mode === 'end') {
+      this.endStyle = value
+    }
+  }
 
   _render(ctx: CanvasRenderingContext2D) {
     super._render(ctx)
-    // this.clearGuideline()
-    if (this.name === ElementNames.ARROW) {
+    if (this.endStyle === ElementNames.ARROW) {
       ctx.save();
-      const xDiff = this.x2 - this.x1;
-      const yDiff = this.y2 - this.y1;
+      const xDiff = (this.x2 - this.x1);
+      const yDiff = (this.y2 - this.y1);
       const angle = Math.atan2(yDiff, xDiff);
       ctx.translate(xDiff / 2, yDiff / 2);
       ctx.rotate(angle);
@@ -385,28 +364,20 @@ export class Line extends OriginLine {
     const ctx = this.canvas.getTopContext()
     const point1 = util.transformPoint(new Point(x1, y1), this.canvas.viewportTransform)
     const point2 = util.transformPoint(new Point(x2, y2), this.canvas.viewportTransform)
-
-    // use origin canvas api to draw guideline
     ctx.save()
     ctx.lineWidth = this.aligningLineWidth
     ctx.strokeStyle = this.aligningLineColor
     ctx.beginPath()
-
     ctx.moveTo(point1.x, point1.y)
     ctx.lineTo(point2.x, point2.y)
-
     ctx.stroke()
-
     this.drawSign(point1.x, point1.y)
     this.drawSign(point2.x, point2.y)
-
     ctx.restore()
-
     this.dirty = true
   }
 
   private drawHorizontalLine(coords: HorizontalLineCoords, movingCoords: ACoordsAppendCenter) {
-    // if (!Object.values(movingCoords).some((coord) => Math.abs(coord.y - coords.y) < 0.0001)) return
     this.drawLine(
       Math.min(coords.x1, coords.x2),
       coords.y,
