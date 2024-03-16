@@ -39,8 +39,8 @@ export default () => {
     
     const textBoxElement = new Textbox(textValue, {
       id: nanoid(10),
-      left: centerPoint.x,
-      top: centerPoint.y,
+      left: centerPoint.x - textValue.length * fontSize / 2,
+      top: centerPoint.y - fontSize / 2,
       fontSize,
       fontFamily: systemFonts.value[0].value,
       fillType: 0,
@@ -149,8 +149,8 @@ export default () => {
       const imageElement = await Image.fromURL(url, {
         id: nanoid(10),
         angle: 0,
-        left: centerPoint.x,
-        top: centerPoint.y,
+        left: centerPoint.x - ((width * imageScale ) / 2),
+        top: centerPoint.y - ((height * imageScale) / 2),
         scaleX: imageScale,
         scaleY: imageScale,
         hasControls: true,
