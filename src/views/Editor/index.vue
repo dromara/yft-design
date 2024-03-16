@@ -1,5 +1,5 @@
 <template>
-  <div class="yft-design" v-drop-image="{ highlightStyle: { backgroundColor: 'lightblue' } }">
+  <div class="yft-design" v-drop-image="{ url: 'YourUploadUrl', highlightStyle: { backgroundColor: 'lightblue' } }">
     <div class="layout-content">
       <CanvasLeft class="layout-content-left" />
       <CanvasMenu class="layout-content-menu" />

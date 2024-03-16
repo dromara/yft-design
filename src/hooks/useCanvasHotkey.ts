@@ -2,7 +2,11 @@ import { storeToRefs } from "pinia";
 import { useMainStore, useTemplatesStore, useKeyboardStore } from "@/store";
 import { KEYS } from "@/configs/hotkey";
 import useHandleCreate from "@/hooks/useHandleCreate";
+import useCanvasScale from "@/hooks/useCanvasScale";
 import useCanvas from "@/views/Canvas/useCanvas";
+import { loadSVGFromString } from "fabric";
+import { getImageDataURL, getImageText } from "@/utils/image";
+import { uploadFile } from "@/api/file";
 import useHandleTemplate from "./useHandleTemplate";
 import useHandleElement from "./useHandleElement";
 import useHistorySnapshot from "./useHistorySnapshot";
@@ -13,7 +17,7 @@ export default () => {
   const mainStore = useMainStore();
   const keyboardStore = useKeyboardStore();
   const templatesStore = useTemplatesStore();
-  const { disableHotkeys, handleElement, canvasObject, handleElementId, thumbnailsFocus, drawAreaFocus, } = storeToRefs(mainStore);
+  const { disableHotkeys, handleElement, canvasObject, handleElementId, thumbnailsFocus, drawAreaFocus } = storeToRefs(mainStore);
   const { currentTemplate, templateIndex } = storeToRefs(templatesStore);
   const { ctrlKeyState, shiftKeyState, spaceKeyState } = storeToRefs(keyboardStore);
 
@@ -255,7 +259,7 @@ export default () => {
       if (disableHotkeys.value) return;
       e.preventDefault();
       if (canvas.ruler) {
-        canvas.ruler.enabled = !canvas.ruler.enabled
+        canvas.ruler.enabled = !canvas.ruler.enabled;
       }
     }
   };
@@ -266,20 +270,66 @@ export default () => {
     if (spaceKeyState.value) keyboardStore.setSpaceKeyState(false);
   };
 
-  const pasteListener = (event: { preventDefault: () => void; clipboardData: any; originalEvent: { clipboardData: any } }) => {
+  const pasteListener = async (event: { preventDefault: () => void; clipboardData: any; originalEvent: { clipboardData: any } }) => {
+    const [canvas] = useCanvas();
     event.preventDefault(); // 阻止默认粘贴行为
 
     const items = (event.clipboardData || event.originalEvent.clipboardData).items;
+    const fileAccept = ".pdf,.psd,.cdr,.ai,.svg,.jpg,.jpeg,.png,.webp,.json";
+    const { addTemplate } = useHandleTemplate();
+    const { setCanvasTransform } = useCanvasScale();
     for (let item of items) {
-      if (item.kind === "file" && item.type.indexOf("image/") === 0) {
-        // 这是一个图片文件
+      if (item.kind === "file") {
         const file = item.getAsFile();
-        const imageUrl = URL.createObjectURL(file);
-        createImageElement(imageUrl);
+        const curFileSuffix: string | undefined = file.name.split(".").pop();
+        if (!fileAccept.split(",").includes(`.${curFileSuffix}`)) return;
+        if (curFileSuffix === "svg") {
+          const dataText = await getImageText(file);
+          const content = await loadSVGFromString(dataText);
+          canvas.add(...content.objects);
+          canvas.renderAll();
+        }
+        if (curFileSuffix === "json") {
+          const dataText = await getImageText(file);
+          const template = JSON.parse(dataText);
+          addTemplate(template);
+        }
+        if (item.type.indexOf("image/") === 0) {
+          // 这是一个图片文件
+          const imageUrl = URL.createObjectURL(file);
+          createImageElement(imageUrl);
+        }
+        const res1 = await uploadFile(file, curFileSuffix as string);
+        if (res1 && res1.data.code === 200) {
+          const template = res1.data.data;
+          if (!template) return;
+          await templatesStore.addTemplate(template);
+          setCanvasTransform();
+        }
       } else if (item.kind === "string" && item.type.indexOf("text/plain") === 0) {
         // 文本数据
         item.getAsString((text: any) => {
-          createTextElement(50, undefined, false, text);
+          // 插入到文本框
+          const activeObject = canvas.getActiveObject();
+          // 如果是激活的文字把复制的内容插入到对应光标位置
+          if (activeObject && (activeObject.type === "textbox" || activeObject.type === "i-text")) {
+            const cursorPosition = activeObject.selectionStart;
+            const textBeforeCursorPosition = activeObject.text.substring(0, cursorPosition);
+            const textAfterCursorPosition = activeObject.text.substring(cursorPosition);
+
+            // 更新文本对象的文本
+            activeObject.set("text", textBeforeCursorPosition + text + textAfterCursorPosition);
+
+            // 重新设置光标的位置
+            activeObject.selectionStart = cursorPosition + text.length;
+            activeObject.selectionEnd = cursorPosition + text.length;
+
+            // 重新渲染画布展示更新后的文本
+            activeObject.dirty = true;
+            canvas.renderAll();
+          } else {
+            createTextElement(50, undefined, false, text);
+          }
         });
       }
     }
