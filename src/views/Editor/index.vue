@@ -1,33 +1,33 @@
 <template>
-  <div class="yft-design">
+  <div class="yft-design" v-drop-image="{ highlightStyle: { backgroundColor: 'lightblue' } }">
     <div class="layout-content">
       <CanvasLeft class="layout-content-left" />
       <CanvasMenu class="layout-content-menu" />
       <CanvasThumb class="layout-content-thumb" />
       <div class="layout-content-center">
         <CanvasHeader class="center-header" />
-        <CanvasCenter class="center-body"/>
-        <CanvasFooter class="center-footer"/>
-        <CanvasAffix class="center-affix"/>
+        <CanvasCenter class="center-body" />
+        <CanvasFooter class="center-footer" />
+        <CanvasAffix class="center-affix" />
       </div>
       <CanvasRight class="layout-content-right" />
-      <CanvasDom class="layout-content-dom"/>
+      <CanvasDom class="layout-content-dom" />
     </div>
     <CanvasTour />
   </div>
 </template>
 
 <script lang="ts" setup>
-import CanvasLeft from './CanvasLeft/index.vue'
-import CanvasMenu from './CanvasMenu/index.vue'
-import CanvasThumb from './CanvasThumb/index.vue'
-import CanvasHeader from './CanvasHeader/index.vue'
-import CanvasCenter from './CanvasCenter/index.vue'
-import CanvasRight from './CanvasRight/index.vue'
-import CanvasFooter from './CanvasFooter/index.vue'
-import CanvasAffix from './CanvasAffix/index.vue'
-import CanvasDom from './CanvasDom/index.vue'
-import CanvasTour from './CanvasTour/index.vue'
+import CanvasLeft from "./CanvasLeft/index.vue";
+import CanvasMenu from "./CanvasMenu/index.vue";
+import CanvasThumb from "./CanvasThumb/index.vue";
+import CanvasHeader from "./CanvasHeader/index.vue";
+import CanvasCenter from "./CanvasCenter/index.vue";
+import CanvasRight from "./CanvasRight/index.vue";
+import CanvasFooter from "./CanvasFooter/index.vue";
+import CanvasAffix from "./CanvasAffix/index.vue";
+import CanvasDom from "./CanvasDom/index.vue";
+import CanvasTour from "./CanvasTour/index.vue";
 </script>
 
 <style lang="scss" scoped>
