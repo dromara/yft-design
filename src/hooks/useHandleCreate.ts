@@ -78,6 +78,8 @@ export default () => {
       fill: '#ff5e17',
       name: ElementNames.PATH,
     })
+    pathElement.left -= (pathElement.width / 2)
+    pathElement.top -= (pathElement.height / 2)
     renderCanvas(pathElement)
   }
 
@@ -185,6 +187,9 @@ export default () => {
       codeOption,
       crossOrigin: 'anonymous'
     }) as QRCodeElement
+    console.log('codeObject', codeObject);
+    codeObject.left -= (codeObject.width / 2)
+    codeObject.top -= (codeObject.height / 2)
     renderCanvas(codeObject)
   }
 
@@ -207,6 +212,9 @@ export default () => {
       codeOption,
       crossOrigin: 'anonymous'
     })
+    barcodeObject.left -= (barcodeObject.width / 2)
+    barcodeObject.top -= (barcodeObject.height / 2)
+    
     renderCanvas(barcodeObject)
   }
 
