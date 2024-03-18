@@ -6,8 +6,8 @@ import { nanoid } from 'nanoid'
 import { QRCodeElement, QRCodeOption } from '@/types/canvas'
 import { getImageSize } from '@/utils/image'
 import JsBarcode from 'jsbarcode'
-import { Object as FabricObject, Textbox, Path, classRegistry, XY } from "fabric"
-import { Line } from '@/extension/object/Line'
+import { Object as FabricObject, Path, classRegistry, XY } from "fabric"
+import { Textbox } from '@/extension/object/Textbox'
 import { LinePoint } from '@/types/elements'
 import { Image } from '@/extension/object/Image'
 import { QRCode } from '@/extension/object/QRCode'
