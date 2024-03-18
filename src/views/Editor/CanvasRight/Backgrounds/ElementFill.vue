@@ -257,8 +257,6 @@ const mainStore = useMainStore();
 const templatesStore = useTemplatesStore();
 const { canvasObject } = storeToRefs(mainStore);
 
-console.log("canvasObject", canvasObject.value);
-
 // 渐变偏移
 const gradientOpacity = ref(1);
 const gradientRotate = ref(0);

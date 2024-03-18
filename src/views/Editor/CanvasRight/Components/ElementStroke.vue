@@ -3,10 +3,10 @@
     <div class="row">
       <div style="flex: 2;"><b>启用描边：</b></div>
       <div class="switch-wrapper" style="flex: 3;">
-        <el-switch v-model="openStroke" @change="toggleStroke()"></el-switch>
+        <el-switch v-model="props.hasStroke" @change="toggleStroke()"></el-switch>
       </div>
     </div>
-    <template v-if="openStroke">
+    <template v-if="props.hasStroke">
       <div class="row">
         <div style="flex: 2;">描边厚度：</div>
         <el-slider class="slider" v-model="handleElement.strokeWidth" @change="updateStrokeWidth"></el-slider>
@@ -31,14 +31,19 @@ import { useMainStore } from '@/store'
 import { TextboxElement } from '@/types/canvas'
 import useCanvas from '@/views/Canvas/useCanvas'
 
+const props = defineProps({
+  hasStroke: {
+    type: Boolean,
+    required: true,
+  },
+})
+
 const [ canvas ] = useCanvas()
 const { canvasObject } = storeToRefs(useMainStore())
 
 
 const handleElement = computed(() => canvasObject.value as TextboxElement)
-const hasStroke = computed(() => handleElement.value.stroke ? true : false)
-const openStroke = ref(hasStroke.value)
-
+const openStroke = ref(props.hasStroke)
 const updateStrokeColor = (stroke: string) => {
   if (!handleElement.value) return
   handleElement.value.set({stroke})
