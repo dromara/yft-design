@@ -73,6 +73,19 @@ export default {
     standardMargin: '标准边距',
     errorRate: '容错率',
 
+    searchTemp: '搜索模板',
+    recommendTemp: '推荐模板',
+    myTemp: '我的模板',
+    myPurchases: '我的购买',
+    myFavorites: '我的收藏',
+    teamTemp: '团队模板',
+
+    searchMat: '搜索素材',
+    recommendMat: '推荐素材',
+    myBookmarksMat: '我的收藏',
+    myPurchasesMat: '我的购买',
+    StraightLine: '直线',
+
     uploadImages: '上传图片',
     searchImages: '搜索图片',
     recommendImages: '推荐图片',
@@ -80,7 +93,15 @@ export default {
     teamTemplates: '团队模板',
 
     all: '全部',
-    endOfContent: '到底啦~'
+    endOfContent: '到底啦~',
+
+    searchTools: '搜索工具',
+    barCode: '条形码',
+    barCodeTips: '快速生成一维码,支持4种码制',
+    QRCode: '二维码',
+    QRCodeTips: '快速生成二维码,支持13种样式',
+    AICutoutImage: 'AI抠图',
+    AICutoutImageTips: '运用AI技术，实现智能识别',
   },
 };
   

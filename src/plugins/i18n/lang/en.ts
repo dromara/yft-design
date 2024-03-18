@@ -70,6 +70,19 @@ export default {
     standardMargin: 'Standard Margin',
     errorRate: 'Error Rate',
 
+    searchTemp: 'Search Template',
+    recommendTemp: 'Recommend',
+    myTemp: 'My',
+    myPurchases: 'My Purchases',
+    myFavorites: 'My Favorites',
+    teamTemp: 'Team',
+
+    searchMat: 'Search For Materials',
+    recommendMat: 'Recommend',
+    myBookmarksMat: 'BookMarks',
+    myPurchasesMat: 'Purchases',
+    StraightLine: 'Straight Line',
+
     uploadImages: 'Upload Images',
     searchImages: 'Search Images',
     recommendImages: 'Recommend',
@@ -78,5 +91,13 @@ export default {
 
     all: 'All',
     endOfContent: 'End~',
+
+    searchTools: 'Search tools',
+    barCode: 'Bar code',
+    barCodeTips: 'Quickly generate one-dimensional codes, supporting 4 types of coding',
+    QRCode: 'QR code',
+    QRCodeTips: 'Quickly generate QR codes, supporting 13 styles',
+    AICutoutImage: 'AI cutout images',
+    AICutoutImageTips: 'Utilizing AI technology to achieve intelligent recognition'
   },
 };
