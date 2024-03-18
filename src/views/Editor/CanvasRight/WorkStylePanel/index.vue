@@ -5,7 +5,7 @@
     <div class="mb-10">
       <el-row>
         <el-col :span="11">
-          <el-input v-model="canvasWidth" :value="(Math.round(canvasWidth * 100/100))" @change="changeTemplateWidth" oninput="value=value.replace(/[^\d]/g,'')">
+          <el-input v-model="canvasWidth" :value="(Math.round(canvasWidth * 100) / 100)" @change="changeTemplateWidth" oninput="value=value.replace(/[^\d.]/g,'')">
             <template #prepend>宽</template>
           </el-input>
         </el-col>
@@ -18,7 +18,7 @@
           </el-tooltip>
         </el-col>
         <el-col :span="11">
-          <el-input v-model="canvasHeight" :value="(Math.round(canvasHeight * 100/100))" @change="changeTemplateHeight" oninput="value=value.replace(/[^\d]/g,'')">
+          <el-input v-model="canvasHeight" :value="(Math.round(canvasHeight * 100) / 100)" @change="changeTemplateHeight" oninput="value=value.replace(/[^\d.]/g,'')">
             <template #prepend>高</template>
           </el-input>
         </el-col>
