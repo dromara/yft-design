@@ -203,11 +203,11 @@
     </div>
 
     <el-divider />
-    <ElementStroke />
+    <ElementStroke :hasStroke="hasStroke" />
     <el-divider />
-    <ElementShadow />
+    <ElementShadow :hasShadow="hasShadow" />
     <el-divider />
-    <ElementPatterns />
+    <ElementPatterns :hasPatterns="hasPatterns" />
     <el-divider />
     <ElementOpacity />
   </div>
@@ -260,6 +260,9 @@ const hasUnderline = computed(() => handleElement.value.underline)
 const hasLinethrough = computed(() => handleElement.value.linethrough)
 const textAlign = computed(() => handleElement.value.textAlign)
 const radius = computed(() => 0)
+const hasStroke = computed(() => handleElement.value.stroke ? true : false)
+const hasShadow = computed(() => handleElement.value.shadow ? true : false)
+const hasPatterns = computed(() => (handleElement.value as TextboxElement).fillType === 1 ? true : false)
 const elementFontFamily = ref<string>(hasFontFamily.value)
 const fontSizeRef = ref<Element>()
 const fontOptionGroups = ref<FontGroupOption[]>([

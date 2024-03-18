@@ -15,8 +15,8 @@
     <el-row class="layout-style">
       <el-col :span="16">
         <el-radio-group class="full-ratio" v-model="textStyle">
-          <el-radio-button label="transverse"><IconTextRotationNone />横向</el-radio-button>
-          <el-radio-button label="direction"><IconTextRotationDown />竖向</el-radio-button>
+          <el-radio-button label="横向" value="transverse"><IconTextRotationNone /></el-radio-button>
+          <el-radio-button label="竖向" value="direction"><IconTextRotationDown /></el-radio-button>
         </el-radio-group>
       </el-col>
       <el-col :span="8">

@@ -6,8 +6,8 @@ import { nanoid } from 'nanoid'
 import { QRCodeElement, QRCodeOption } from '@/types/canvas'
 import { getImageSize } from '@/utils/image'
 import JsBarcode from 'jsbarcode'
-import { Object as FabricObject, Textbox, Path, classRegistry, XY } from "fabric"
-import { Line } from '@/extension/object/Line'
+import { Object as FabricObject, Path, classRegistry, XY } from "fabric"
+import { Textbox } from '@/extension/object/Textbox'
 import { LinePoint } from '@/types/elements'
 import { Image } from '@/extension/object/Image'
 import { QRCode } from '@/extension/object/QRCode'
@@ -39,8 +39,8 @@ export default () => {
     
     const textBoxElement = new Textbox(textValue, {
       id: nanoid(10),
-      left: centerPoint.x,
-      top: centerPoint.y,
+      left: centerPoint.x - textValue.length * fontSize / 2,
+      top: centerPoint.y - fontSize / 2,
       fontSize,
       fontFamily: systemFonts.value[0].value,
       fillType: 0,
@@ -78,6 +78,8 @@ export default () => {
       fill: '#ff5e17',
       name: ElementNames.PATH,
     })
+    pathElement.left -= (pathElement.width / 2)
+    pathElement.top -= (pathElement.height / 2)
     renderCanvas(pathElement)
   }
 
@@ -149,8 +151,8 @@ export default () => {
       const imageElement = await Image.fromURL(url, {
         id: nanoid(10),
         angle: 0,
-        left: centerPoint.x,
-        top: centerPoint.y,
+        left: centerPoint.x - ((width * imageScale ) / 2),
+        top: centerPoint.y - ((height * imageScale) / 2),
         scaleX: imageScale,
         scaleY: imageScale,
         hasControls: true,
@@ -185,6 +187,9 @@ export default () => {
       codeOption,
       crossOrigin: 'anonymous'
     }) as QRCodeElement
+    console.log('codeObject', codeObject);
+    codeObject.left -= (codeObject.width / 2)
+    codeObject.top -= (codeObject.height / 2)
     renderCanvas(codeObject)
   }
 
@@ -207,6 +212,9 @@ export default () => {
       codeOption,
       crossOrigin: 'anonymous'
     })
+    barcodeObject.left -= (barcodeObject.width / 2)
+    barcodeObject.top -= (barcodeObject.height / 2)
+    
     renderCanvas(barcodeObject)
   }
 

@@ -1,5 +1,6 @@
 import { useFabricStore, useTemplatesStore } from "@/store"
 import { DefaultDPI, DefaultRatio } from '@/configs/size'
+import { Padding } from "@/configs/background"
 import { storeToRefs } from "pinia"
 import {
   WorkSpaceClipType,
@@ -24,14 +25,14 @@ export default () => {
     const workSpaceDraw = canvas.getObjects().filter(ele => ele.id === WorkSpaceDrawType)[0]
     if (!workSpaceDraw) return
     const fabricStore = useFabricStore()
-    const templatesStore = useTemplatesStore()
-    const { currentTemplate } = storeToRefs(templatesStore)
+    // const templatesStore = useTemplatesStore()
+    // const { currentTemplate } = storeToRefs(templatesStore)
     const { clip, safe, diagonal, opacity, showClip, showSafe } = storeToRefs(fabricStore)
     canvas.remove(...canvas.getObjects().filter(ele => WorkSpaceThumbType.includes(ele.id)))
     // const workWidth = currentTemplate.value.width / currentTemplate.value.zoom
     // const workHeight = currentTemplate.value.height / currentTemplate.value.zoom
     const workWidth = workSpaceDraw.width, workHeight = workSpaceDraw.height
-    const Padding = 50000, PaddingHalf = Padding / 2
+    const PaddingHalf = Padding / 2
     const clipPX = clip.value * DefaultDPI / DefaultRatio
     const diagonalPX = diagonal.value * DefaultDPI / DefaultRatio
     const safePX = 2 * safe.value * DefaultDPI / DefaultRatio

@@ -1,6 +1,7 @@
 export const TransparentFill = 'rgba(0,0,0,0)'
 export const MinSize = 30
 export const MaxSize = 800
+export const Padding = 50000
 
 export const DesignUnitMode = [
   {id: 0, name: 'mm'}, 

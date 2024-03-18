@@ -3,10 +3,10 @@
     <div class="row">
       <div style="flex: 2;"><b>启用阴影：</b></div>
       <div class="switch-wrapper" style="flex: 3;">
-        <el-switch v-model="openShadow" @change="toggleShadow"></el-switch>
+        <el-switch v-model="props.hasShadow" @change="toggleShadow()"></el-switch>
       </div>
     </div>
-    <template v-if="openShadow">
+    <template v-if="props.hasShadow">
       <el-row>
         <el-col :span="7" class="slider-name">水平阴影：</el-col>
         <el-col :span="3"></el-col>
@@ -54,6 +54,14 @@ import { useMainStore } from '@/store'
 import * as fabric from 'fabric'
 import useCanvas from '@/views/Canvas/useCanvas'
 import { CanvasElement } from '@/types/canvas'
+
+const props = defineProps({
+  hasShadow: {
+    type: Boolean,
+    required: true,
+  },
+})
+
 const [ canvas ] = useCanvas()
 const { canvasObject } = storeToRefs(useMainStore())
 
@@ -63,18 +71,18 @@ const blur = ref<number | undefined>(5)
 const shadowColor = ref('#000000')
 
 const handleElement = computed(() => canvasObject.value as CanvasElement)
-const hasShadow = computed(() => {
-  if (!handleElement.value) return false
-  if (handleElement.value.shadow) {
-    offsetX.value = (handleElement.value.shadow as fabric.Shadow).offsetX
-    offsetY.value = (handleElement.value.shadow as fabric.Shadow).offsetY
-    blur.value = (handleElement.value.shadow as fabric.Shadow).blur
-    shadowColor.value = (handleElement.value.shadow as fabric.Shadow).color
-    return true
-  }
-  return false
-})
-const openShadow = ref(hasShadow.value)
+// const hasShadow = computed(() => {
+//   if (!handleElement.value) return false
+//   if (handleElement.value.shadow) {
+//     offsetX.value = (handleElement.value.shadow as fabric.Shadow).offsetX
+//     offsetY.value = (handleElement.value.shadow as fabric.Shadow).offsetY
+//     blur.value = (handleElement.value.shadow as fabric.Shadow).blur
+//     shadowColor.value = (handleElement.value.shadow as fabric.Shadow).color
+//     return true
+//   }
+//   return false
+// })
+const openShadow = ref(props.hasShadow)
 
 
 const updateShadowColor = (color: string) => {
