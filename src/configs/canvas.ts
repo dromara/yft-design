@@ -62,6 +62,7 @@ export const WorkSpaceCommonOption = {
 export const propertiesToInclude = [
   'id', 
   'name', 
+  'layer',
   'isShow',
   'editable',
   'color', 
@@ -89,5 +90,5 @@ export const propertiesToInclude = [
   'effect',
   'reverse',
   'startStyle',
-  'endStyle'
+  'endStyle',
 ]
