@@ -20,7 +20,7 @@
         </el-tooltip>
         <div class="element-type">{{ element.type }}</div>
         <div class="element-text" v-if="element.type === ElementNames.TEXTBOX || element.type === ElementNames.TEXT">{{ (element as TextboxElement).text }}</div>
-        <div class="element-name" v-if="element.layer">{{ element.layer }}</div>
+        <div class="element-layer" v-if="element.layer">{{ element.layer }}</div>
       </div>
       
       <div class="element-handler">
@@ -132,7 +132,18 @@ const handleElement = computed(() => canvasObject.value as FabricObject)
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-
+.element-layer {
+  width: 80px;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow:ellipsis;
+  white-space: nowrap;
+  &:hover {
+    text-overflow:inherit; 
+    overflow: visible; 
+    white-space: pre-line;
+  }
+}
 .common-icon {
   width: 24px;
   height: 24px;
