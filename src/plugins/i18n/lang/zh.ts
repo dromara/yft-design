@@ -84,14 +84,26 @@ export default {
     recommendMat: '推荐素材',
     myBookmarksMat: '我的收藏',
     myPurchasesMat: '我的购买',
-    StraightLine: '直线',
+    straightLine: '直线',
+
+    searchText: '搜索文字',
+    addTitle: '点击添加标题文字',
+    addSubtitle: '点击添加副标题文字',
+    addBodyText: '点击添加正文文字',
+    direction: '竖向',
+    transverse: '横向',
+    hollowOut: '镂空',
+    recommendText: '推荐素材',
+    myBookmarksText: '我的收藏',
+    myPurchasesText: '我的购买',
+    myTemplate: '我的模板',
+    TeamTemplate: '团队模板',
 
     uploadImages: '上传图片',
     searchImages: '搜索图片',
     recommendImages: '推荐图片',
     myBookmarks: '我的收藏',
     teamTemplates: '团队模板',
-
     all: '全部',
     endOfContent: '到底啦~',
 
@@ -102,6 +114,7 @@ export default {
     QRCodeTips: '快速生成二维码,支持13种样式',
     AICutoutImage: 'AI抠图',
     AICutoutImageTips: '运用AI技术，实现智能识别',
+
+    SearchLayer: '搜索图层',
   },
 };
-  
