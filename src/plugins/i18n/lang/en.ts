@@ -70,7 +70,7 @@ export default {
     standardMargin: 'Standard Margin',
     errorRate: 'Error Rate',
 
-    searchTemp: 'Search Template',
+    searchTemp: 'Search For Template',
     recommendTemp: 'Recommend',
     myTemp: 'My',
     myPurchases: 'My Purchases',
@@ -81,14 +81,26 @@ export default {
     recommendMat: 'Recommend',
     myBookmarksMat: 'BookMarks',
     myPurchasesMat: 'Purchases',
-    StraightLine: 'Straight Line',
+    straightLine: 'Straight Line',
+
+    searchText: 'Search For Text',
+    addTitle: 'Click To Add Title Text',
+    addSubtitle: 'Click To Add Subtitle Text',
+    addBodyText: 'Click To Add Body Text',
+    hollowOut: 'Hollow',
+    direction: 'Direction',
+    transverse: 'Transverse',
+    recommendText: 'Recommend',
+    myBookmarksText: 'BookMarks',
+    myPurchasesText: 'Purchases',
+    myTemplate: 'My Templates',
+    TeamTemplate: 'Team Templates',
 
     uploadImages: 'Upload Images',
     searchImages: 'Search Images',
     recommendImages: 'Recommend',
     myBookmarks: 'BookMarks',
     teamTemplates: 'Templates',
-
     all: 'All',
     endOfContent: 'End~',
 
@@ -98,6 +110,8 @@ export default {
     QRCode: 'QR code',
     QRCodeTips: 'Quickly generate QR codes, supporting 13 styles',
     AICutoutImage: 'AI cutout images',
-    AICutoutImageTips: 'Utilizing AI technology to achieve intelligent recognition'
+    AICutoutImageTips: 'Utilizing AI technology to achieve intelligent recognition',
+
+    SearchLayer: 'Search For Layer',
   },
 };
