@@ -70,11 +70,7 @@ export default {
     standardMargin: 'Standard Margin',
     errorRate: 'Error Rate',
 
-<<<<<<< HEAD
     searchTemp: 'Search For Template',
-=======
-    searchTemp: 'Search Template',
->>>>>>> 203d5e65b0c9ecd66ddb3738d6c98a68db16d184
     recommendTemp: 'Recommend',
     myTemp: 'My',
     myPurchases: 'My Purchases',
@@ -114,12 +110,8 @@ export default {
     QRCode: 'QR code',
     QRCodeTips: 'Quickly generate QR codes, supporting 13 styles',
     AICutoutImage: 'AI cutout images',
-<<<<<<< HEAD
     AICutoutImageTips: 'Utilizing AI technology to achieve intelligent recognition',
 
     SearchLayer: 'Search For Layer',
-=======
-    AICutoutImageTips: 'Utilizing AI technology to achieve intelligent recognition'
->>>>>>> 203d5e65b0c9ecd66ddb3738d6c98a68db16d184
   },
 };
