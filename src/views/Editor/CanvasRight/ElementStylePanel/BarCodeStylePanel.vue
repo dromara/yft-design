@@ -54,7 +54,7 @@
     <el-divider />
     <ElementOutline />
     <el-divider />
-    <ElementShadow />
+    <ElementShadow :hasShadow="hasShadow" />
     <el-divider />
   </div>
 </template>
@@ -78,17 +78,8 @@ const templatesStore = useTemplatesStore()
 const [ canvas ] = useCanvas()
 const { canvasObject } = storeToRefs(mainStore)
 
-
-
 const handleElement = computed(() => canvasObject.value as BarCodeElement)
-
-onMounted(() => {
-  if (!handleElement.value) return
-  // const codeItem = CodeStyleLibs.filter(item => item.name === handleElement.value.codeStyle)[0]
-  // if (codeItem.index) {
-  //   carousel.value?.setActiveItem(codeItem.index)
-  // }
-})
+const hasShadow = computed(() => handleElement.value.shadow ? true : false)
 
 // 更新背景颜色
 const updateBackgroundColor = (color: string) => {
@@ -101,7 +92,6 @@ const updateLineColor = (color: string) => {
   handleElement.value.codeOption.lineColor = color
   generateBarCode()
 }
-
 
 // 输入二位码内容
 const updateCodeContent = () => {

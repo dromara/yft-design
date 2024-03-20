@@ -52,7 +52,7 @@
     <el-divider />
     <ElementOutline />
     <el-divider />
-    <ElementShadow />
+    <ElementShadow :hasShadow="hasShadow" />
     <el-divider />
     
     <el-row>
@@ -93,7 +93,7 @@ const templatesStore = useTemplatesStore()
 const [ canvas ] = useCanvas()
 const { canvasObject } = storeToRefs(mainStore)
 const handleElement = computed(() => canvasObject.value as Image)
-
+const hasShadow = computed(() => handleElement.value.shadow ? true : false)
 
 // 打开自由裁剪
 const clipImage = () => {

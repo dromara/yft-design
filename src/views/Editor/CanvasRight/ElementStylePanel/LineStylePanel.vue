@@ -15,7 +15,7 @@
         <template #reference>
           <ColorButton :color="handleElement.stroke" style="flex: 3;" />
         </template>
-        <ColorPicker :modelValue="handleElement.stroke" @update:modelValue="(color) => updateStrokeColor(color)"/>
+        <ColorPicker :modelValue="handleElement.stroke" @update:modelValue="(color: string) => updateStrokeColor(color)"/>
       </el-popover>
     </div>
     <div class="row">
@@ -25,7 +25,7 @@
     
     <div class="row">
       <div style="flex: 2;">起点样式：</div>
-      <el-select style="flex: 3;" v-model="handleElement.startStyle" @change="(value) => changeLineMode(value, 'start')">
+      <el-select style="flex: 3;" v-model="handleElement.startStyle" @change="(value: LinePoint) => changeLineMode(value, 'start')">
         <el-option value="" label="无"></el-option>
         <el-option value="arrow" label="箭头"></el-option>
         <el-option value="dot" label="圆点"></el-option>
@@ -33,7 +33,7 @@
     </div>
     <div class="row">
       <div style="flex: 2;">终点样式：</div>
-      <el-select style="flex: 3;" v-model="handleElement.endStyle" @change="(value) => changeLineMode(value, 'end')">
+      <el-select style="flex: 3;" v-model="handleElement.endStyle" @change="(value: LinePoint) => changeLineMode(value, 'end')">
         <el-option value="" label="无"></el-option>
         <el-option value="arrow" label="箭头"></el-option>
         <el-option value="dot" label="圆点"></el-option>
@@ -41,7 +41,7 @@
     </div>
 
     <el-divider />
-    <ElementShadow />
+    <ElementShadow :hasShadow="hasShadow"/>
   </div>
 </template>
 
@@ -61,6 +61,7 @@ const templatesStore = useTemplatesStore()
 const { canvasObject } = storeToRefs(mainStore)
 const [ canvas ] = useCanvas()
 const handleElement = computed(() => canvasObject.value as Polyline)
+const hasShadow = computed(() => handleElement.value.shadow ? true : false)
 const lineStyle = ref<number>(handleElement.value.strokeDashArray ? 1 : 0)
 
 const updateStrokeColor = (color: string) => {
