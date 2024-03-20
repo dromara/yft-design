@@ -22,11 +22,7 @@ const templatesStore = useTemplatesStore()
 const { t } = useI18n()
 const { currentTemplate } = storeToRefs(templatesStore)
 const { cancelElement } = useHandleElement()
-const layerObjects = computed(() => {
-  const res = currentTemplate.value.objects.filter(item => !WorkSpaceThumbType.includes(item.id) && item.type.toLowerCase() !== ElementNames.REFERENCELINE)
-  console.log('res:', res)
-  return res
-})
+const layerObjects = computed(() => currentTemplate.value.objects.filter(item => !WorkSpaceThumbType.includes(item.id) && item.type.toLowerCase() !== ElementNames.REFERENCELINE))
 </script>
 
 <style lang="scss" scoped>
