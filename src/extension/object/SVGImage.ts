@@ -1,27 +1,27 @@
 import { getImageSize } from '@/utils/image'
-import { Image, Point, Object as FabricObject, util, classRegistry, TPointerEventInfo, TPointerEvent, ImageProps, TClassProperties, ImageSource } from 'fabric'
+import { Image, Object as FabricObject, util, classRegistry, ImageProps, ImageSource } from 'fabric'
 
 export class SVGImage extends Image {
-  
-  constructor(element: ImageSource, options?: FabricObject<ImageProps>) {
-    super(element, { filters: [], ...options });
-  }
+  static type: string = 'svgimage'
 
-  _render(ctx: CanvasRenderingContext2D) {
-    super._render(ctx);
+  static async getScale (src: string, object: any) : Promise<number> {
+    const { width, height } = await getImageSize(src)
+    const widthScale = object.width / width
+    const heigthScale = object.height / height
+    return widthScale > heigthScale ? widthScale : heigthScale
   }
   
   static async fromURL(url: string, options: any = {}): Promise<Image> {
-    const { width, height } = await getImageSize(url)
-    options.scaleX = options.width / width
-    options.scaleY = options.height / height
+    const scale = await this.getScale(url, options)
+    options.scaleX = options.scaleY = scale
     return util.loadImage(url, options).then((img) => new this(img, options));
   }
 
   static async fromObject({ filters: f, resizeFilter: rf, src, crossOrigin, ...object }: any, options: { signal: AbortSignal }): Promise<Image> {
-    const { width, height } = await getImageSize(src)
-    object.scaleX = object.width / width
-    object.scaleY = object.height / height
+    const scale = await this.getScale(src, object)
+    object.scaleX = object.scaleY = scale
+    object.width /= scale
+    object.height /= scale
     return Promise.all([
       util.loadImage(src, { ...options, crossOrigin }),
       f && util.enlivenObjects(f, options),

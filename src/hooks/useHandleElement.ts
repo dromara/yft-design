@@ -245,7 +245,7 @@ export default () => {
         return item
       }
       if (item.type === ElementNames.GROUP) {
-        return findElement(eid, (item as GroupElement).objects)
+        return findElement(eid, (item as GroupElement)._objects)
       }
     }
     return

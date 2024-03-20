@@ -6,7 +6,7 @@
     <el-divider />
     <ElementOutline />
     <el-divider />
-    <ElementShadow />
+    <ElementShadow :hasShadow="false" />
     <el-divider />
     <ElementOpacity />
   </div>

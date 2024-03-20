@@ -34,7 +34,7 @@
     <el-divider />
     <ElementOutline />
     <el-divider />
-    <ElementShadow />
+    <ElementShadow :hasShadow="hasShadow" />
     <el-divider />
   </div>
 </template>
@@ -89,6 +89,7 @@ const generateQRCodeMap = {
 }
 
 const handleElement = computed(() => canvasObject.value as QRCodeElement)
+const hasShadow = computed(() => handleElement.value.shadow ? true : false)
 const initialIndex = computed(() => {
   if (!handleElement.value) return 0
   const codeItem = QRCodeStyleLibs.filter(item => item.name === handleElement.value.codeOption.codeStyle)[0]

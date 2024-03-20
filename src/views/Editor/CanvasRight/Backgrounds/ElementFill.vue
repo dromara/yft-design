@@ -298,9 +298,9 @@ watch(
 );
 const handleElement = computed(() => {
   gradientOpacity.value = canvasObject.value?.opacity ?? 1
-  gradientRotate.value = canvasObject.value.fill.gradientRotate ?? 0
-  gradientOffsetX.value = (canvasObject.value.fill.offsetX ?? 0) / canvasObject.value.width
-  gradientOffsetY.value = (canvasObject.value.fill.offsetY ?? 0) / canvasObject.value?.height
+  gradientRotate.value = canvasObject.value.fill?.gradientRotate ?? 0
+  gradientOffsetX.value = (canvasObject.value.fill?.offsetX ?? 0) / canvasObject.value?.width
+  gradientOffsetY.value = (canvasObject.value.fill?.offsetY ?? 0) / canvasObject.value?.height
   return canvasObject.value as CanvasElement;
 });
 

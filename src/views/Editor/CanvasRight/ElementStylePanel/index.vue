@@ -24,6 +24,7 @@ const panelMap = {
   [ElementNames.TEXT]: TextboxStylePanel,
   [ElementNames.ITEXT]: TextboxStylePanel,
   [ElementNames.IMAGE]: ImageStylePanel,
+  [ElementNames.SVGIMAGE]: ImageStylePanel,
   [ElementNames.CROPIMAGE]: ImageStylePanel,
   [ElementNames.PATH]: PathStylePanel,
   [ElementNames.RECT]: PathStylePanel,
