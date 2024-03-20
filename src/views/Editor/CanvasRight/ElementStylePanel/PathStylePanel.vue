@@ -10,7 +10,7 @@
     <el-divider />
     <ElementOutline />
     <el-divider />
-    <ElementShadow />
+    <ElementShadow :hasShadow="hasShadow" />
     <el-divider />
     <ElementOpacity />
   </div>
@@ -26,7 +26,14 @@ import ElementFlip from '../Components/ElementFlip.vue'
 import ElementClip from '../Components/ElementClip.vue'
 import ElementText from '../Components/ElementText.vue'
 import ElementFill from '../Backgrounds/ElementFill.vue'
+import { storeToRefs } from 'pinia'
+import { useMainStore } from '@/store'
+import { Path } from 'fabric'
 
+const mainStore = useMainStore()
+const { canvasObject } = storeToRefs(mainStore)
+const handleElement = computed(() => canvasObject.value as Path) 
+const hasShadow = computed(() => handleElement.value.shadow ? true : false)
 </script>
 
 <style lang="scss" scoped>
