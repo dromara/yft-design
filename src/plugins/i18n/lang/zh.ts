@@ -73,6 +73,8 @@ export default {
     standardMargin: '标准边距',
     errorRate: '容错率',
 
+    canvas: 'canvas',
+
     searchTemp: '搜索模板',
     recommendTemp: '推荐模板',
     myTemp: '我的模板',
@@ -116,5 +118,10 @@ export default {
     AICutoutImageTips: '运用AI技术，实现智能识别',
 
     SearchLayer: '搜索图层',
+    BeginnerGuide: "新手入门",
+    UserGuide: '使用教程',
+    Shortcuts: '快捷键',
+    Suggestions: '反馈建议',
+    OnlineSupport: '在线客服'
   },
 };
