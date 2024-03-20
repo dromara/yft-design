@@ -70,6 +70,8 @@ export default {
     standardMargin: 'Standard Margin',
     errorRate: 'Error Rate',
 
+    canvas: 'canvas',
+
     searchTemp: 'Search For Template',
     recommendTemp: 'Recommend',
     myTemp: 'My',
@@ -113,5 +115,10 @@ export default {
     AICutoutImageTips: 'Utilizing AI technology to achieve intelligent recognition',
 
     SearchLayer: 'Search For Layer',
+    BeginnerGuide: "Beginner's Guide",
+    UserGuide: 'User Guide',
+    Shortcuts: 'Shortcuts',
+    Suggestions: 'Suggestions',
+    OnlineSupport: 'Online Support'
   },
 };
