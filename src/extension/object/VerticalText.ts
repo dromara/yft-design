@@ -1,4 +1,4 @@
-import { Textbox, Point, classRegistry, TPointerEvent, util, Object as FabricObject } from 'fabric'
+import { Point, classRegistry, TPointerEvent, util, IText } from 'fabric'
 import { VerticalTextMixin } from '@/extension/mixins/verticaltext.mixin'
 
 interface CursorOffsetCache {
@@ -11,7 +11,7 @@ const NUMBERIC_REGX = /[0-9]/;
 const BRACKETS_REGX = /[\(\)\]\[\{\}\]]/;
 const BRACKETS = /[ー「」『』（）〔〕［］｛｝｟｠〈〉《》【】〖〗〘〙〚〛゛゜。、・゠＝〜…•‥◦﹅﹆]/;
 
-export class VerticalText extends Textbox {
+export class VerticalText extends IText {
   static type: string = 'VerticalText';
   public minHeight: number
   private __isMousedown: boolean = false
@@ -120,8 +120,7 @@ export class VerticalText extends Textbox {
     if (BRACKETS.test(char)) {
       charTop += this.lineHeight * this._fontSizeMult;
       charLeft -= this.lineHeight * this._fontSizeMult;
-      const tx = charLeft - charbox.width / 2,
-        ty = charTop - charbox.height / 2; 
+      const tx = charLeft - charbox.width / 2, ty = charTop - charbox.height / 2; 
       ctx.translate(tx, ty);
       ctx.rotate(-Math.PI / 2);
       ctx.translate(-tx, -ty);
@@ -181,7 +180,8 @@ export class VerticalText extends Textbox {
           endChar = null;
           actualStyle = nextStyle;
         }
-      } else {
+      } 
+      else {
         this._renderCJKChar(method, ctx, lineIndex, i, left, top);
       }
     }
@@ -352,6 +352,7 @@ export class VerticalText extends Textbox {
     this.cursorOffsetCache = boundaries;
     return this.cursorOffsetCache as CursorOffsetCache
   }
+
   _getGraphemeBox(grapheme: string, lineIndex: number, charIndex: number, prevGrapheme: string, skipLeft: boolean) {
     let box = super._getGraphemeBox(grapheme, lineIndex, charIndex, prevGrapheme, skipLeft) as any;
     box.top = 0;
@@ -417,7 +418,6 @@ export class VerticalText extends Textbox {
       if (this.direction === 'rtl') {
         drawStart = this.width - drawStart - drawWidth;
       }
-      console.log('ctx:', ctx)
       ctx.fillRect(
         drawStart,
         boundaries.top + boxStart,
@@ -427,7 +427,6 @@ export class VerticalText extends Textbox {
       boundaries.leftOffset -= lineHeight;
     }
   }
-
 
   renderCursor(ctx: CanvasRenderingContext2D, boundaries: any) {
     let cursorLocation = this.get2DCursorLocation(),
@@ -442,7 +441,7 @@ export class VerticalText extends Textbox {
       drawStart = boundaries.left - boundaries.leftOffset + (lineHeight / this.lineHeight + charBox.height) / 2;
 
     if (this.inCompositionMode) {
-      this.renderSelection(boundaries, ctx);
+      this.renderSelection(ctx, boundaries);
     }
     if (this.direction === 'rtl') {
       drawStart = this.width - drawStart;
@@ -459,9 +458,9 @@ export class VerticalText extends Textbox {
 
 
   _renderTextLinesBackground(ctx: CanvasRenderingContext2D) {
-    if (!this.textBackgroundColor && !this.styleHas('textBackgroundColor', 0)) {
-      return;
-    }
+    // if (!this.textBackgroundColor && !this.styleHas('textBackgroundColor', 0)) {
+    //   return;
+    // }
     let heightOfLine,
       originalFill = ctx.fillStyle,
       line, lastColor,
@@ -544,9 +543,9 @@ export class VerticalText extends Textbox {
   }
 
   _renderTextDecoration(ctx: CanvasRenderingContext2D, type: any) {
-    if (!this.get(type) && !this.styleHas(type, 0)) {
-      return;
-    }
+    // if (!this.get(type) && !this.styleHas(type, 0)) {
+    //   return;
+    // }
     let heightOfLine, size, _size = 0,
       dy, _dy,
       left = 0,
@@ -635,8 +634,6 @@ export class VerticalText extends Textbox {
   }
 }
 
-// Object.assign(VerticalText.prototype, {
-//   ...VerticalTextMixin
-// })
+Object.assign(VerticalText.prototype, { ...VerticalTextMixin })
 
 classRegistry.setClass(VerticalText, 'VerticalText')
