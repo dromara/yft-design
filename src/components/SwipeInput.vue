@@ -15,10 +15,12 @@
 import { usePointerSwipe, useVModel, isDefined, useMagicKeys } from '@vueuse/core'
 import { useSlots, watch, ref, computed } from 'vue'
 import { toFixed } from '@/utils/common'
-import { useMainStore } from '@/store';
-import { storeToRefs } from 'pinia';
-import { mm2px, px2mm } from '@/utils/image';
+// import { useMainStore } from '@/store';
+// import { storeToRefs } from 'pinia';
+// import { mm2px, px2mm } from '@/utils/image';
+import useHandleActive from '@/hooks/useHandleActive'
 
+const { handleInput } = useHandleActive()
 
 const props = withDefaults(
   defineProps<{
@@ -51,6 +53,8 @@ watch(numberValue, (value) => {
 }, { immediate: true})
 
 const change = (value: number | undefined, ev: Event) => {
+  if (!value) return
+  value = handleInput(value)
   emit('change', value, ev)
 }
 
