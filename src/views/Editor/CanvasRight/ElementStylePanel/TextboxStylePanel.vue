@@ -29,7 +29,7 @@
                   </TextColorButton>
                 </el-button>
               </template>
-              <ColorPicker :modelValue="handleElement.color" @update:modelValue="(color) => updateFontColor(color)"/>
+              <ColorPicker :modelValue="handleElement.color" @update:modelValue="(color: string) => updateFontColor(color)"/>
             </el-popover>
           </div>
         </el-tooltip>
@@ -45,7 +45,7 @@
                   </TextColorButton>
                 </el-button>
               </template>
-              <ColorPicker :modelValue="elementBackgrounColor" @update:modelValue="(color) => updateBackgroundColor(color)"/>
+              <ColorPicker :modelValue="elementBackgrounColor" @update:modelValue="(color: string) => updateBackgroundColor(color)"/>
             </el-popover>
           </div>
         </el-tooltip>
@@ -227,7 +227,7 @@ import { loadFont } from '@/utils/fonts'
 import { nanoid } from 'nanoid'
 import { ArcText } from '@/extension/object/ArcText'
 import { CurvedText } from '@/extension/object/CurvedText'
-import { RotateText } from '@/extension/object/RotateText'
+import { VerticalText } from '@/extension/object/VerticalText'
 import opentype from "opentype.js"
 import ElementPosition from '../Components/ElementPosition.vue'
 import ElementStroke from '../Components/ElementStroke.vue'
@@ -467,6 +467,11 @@ const changeCharSpacing = (charSpacing: number) => {
 
 const handleElementArrange = (status: boolean) => {
   handleElement.value.set({splitByGrapheme: status, width: handleElement.value.fontSize})
+  const options = handleElement.value.toObject(propertiesToInclude as any[]) as any
+  delete options.type
+  options.id = nanoid(10)
+  const verticalText = new VerticalText(handleElement.value.text, options)
+  canvas.add(verticalText)
   templatesStore.modifedElement()
   canvas.renderAll()
 }
