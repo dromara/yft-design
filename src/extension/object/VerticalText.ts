@@ -192,8 +192,6 @@ export class VerticalText extends IText {
   }
 
   calcTextWidth() {
-    // const textWidth = super.calcTextHeight()
-    console.log('textWidth:', super.calcTextHeight())
     return super.calcTextHeight()
   }
 
@@ -335,12 +333,11 @@ export class VerticalText extends IText {
     if (this.direction === 'rtl') {
       boundaries.left *= -1;
     }
-
     this.cursorOffsetCache = boundaries;
     return this.cursorOffsetCache as CursorOffsetCache
   }
 
-  _getGraphemeBox(grapheme: string, lineIndex: number, charIndex: number, prevGrapheme: string, skipLeft: boolean) {
+  _getGraphemeBox(grapheme: string, lineIndex: number, charIndex: number, prevGrapheme: string, skipLeft?: boolean) {
     let box = super._getGraphemeBox(grapheme, lineIndex, charIndex, prevGrapheme, skipLeft) as any;
     box.top = 0;
     box.height = Number(box.height)
@@ -350,7 +347,6 @@ export class VerticalText extends IText {
       const isAlphaNumeric = this._isLatin(this._textLines[lineIndex][charIndex - 1]);
       box.top = previousBox.top + previousBox[isAlphaNumeric ? 'width' : 'height'];
     }
-    console.log('box:', box)
     return box;
   }
 

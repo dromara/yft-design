@@ -468,6 +468,7 @@ const changeCharSpacing = (charSpacing: number) => {
 const handleElementArrange = (status: boolean) => {
   // handleElement.value.set({splitByGrapheme: status, width: handleElement.value.fontSize})
   const options = handleElement.value.toObject(propertiesToInclude as any[]) as any
+  options.lineHeight = 10
   delete options.type
   options.id = nanoid(10)
   const verticalText = new VerticalText(handleElement.value.text, options)
