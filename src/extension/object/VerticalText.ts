@@ -1,84 +1,81 @@
-import { Textbox } from 'fabric'
+import { Point, classRegistry, TPointerEvent, util, IText } from 'fabric'
+import { VerticalTextMixin } from '@/extension/mixins/verticaltext.mixin'
+
+interface CursorOffsetCache {
+  left: number
+  top: number
+}
 
 const LATIN_CHARS_REGX = /[a-zA-Z\.\s]+/;
 const NUMBERIC_REGX = /[0-9]/;
 const BRACKETS_REGX = /[\(\)\]\[\{\}\]]/;
-const JP_BRACKETS = /[ー「」『』（）〔〕［］｛｝｟｠〈〉《》【】〖〗〘〙〚〛゛゜。、・゠＝〜…•‥◦﹅﹆]/;
-class VerticalTextbox extends Textbox {
+const BRACKETS = /[ー「」『』（）〔〕［］｛｝｟｠〈〉《》【】〖〗〘〙〚〛゛゜。、・゠＝〜…•‥◦﹅﹆]/;
+
+export class VerticalText extends IText {
+  static type: string = 'VerticalText';
+  public minHeight: number
+  private __isMousedown: boolean = false
+
   constructor(text: string, options: any) {
     super(text, options)
-    this.textAlign = 'right';
-    this.direction = 'rtl';
-    this.type = 'vertical-textbox';
-    this.typeObject = 'vertical-textbox';
-    this.minHeight = options.width;
-
-    // re-map keys movements
-    this.keysMapRtl = Object.assign(this.keysMapRtl, {
-      33: 'moveCursorLeft',
-      34: 'moveCursorDown',
-      35: 'moveCursorUp',
-      36: 'moveCursorRight',
-      37: 'moveCursorDown',
-      38: 'moveCursorLeft',
-      39: 'moveCursorUp',
-      40: 'moveCursorRight',
-    });
+    this.textAlign = 'right'
+    this.direction = 'rtl'
+    this.minHeight = options.width
 
     this.offsets = {
       underline: 0.05,
       linethrough: 0.65,
       overline: 1.10
     };
-
-    return super.initialize.call(this, text, options);
   }
 
   initDimensions() {
-    super.initDimensions.call(this);
+    super.initDimensions();
 
     if (this.height < this.minHeight) {
       this._set('height', this.minHeight);
     }
   }
 
-  static fromObject(object, callback) {
-    const objectCopy = fabric.util.object.clone(object);
-    delete objectCopy.path;
-    return fabric.Object._fromObject('VerticalTextbox', objectCopy, function (textInstance) {
-      callback(textInstance);
-    }, 'vertical-textbox');
-  };
-
-  toTextbox(callback) {
-    const objectCopy = fabric.util.object.clone(this.toObject());
-    delete objectCopy.path;
-    objectCopy.direction = 'ltr';
-    objectCopy.textAlign = 'left';
-    delete objectCopy.minHeight;
-    return fabric.Object._fromObject('Textbox', objectCopy, function (textbox) {
-      textbox.type = 'textbox';
-      textbox.typeObject = 'text';
-      callback(textbox);
-    }, 'text');
+  get type() {
+    return 'VerticalText'
   }
 
-  static fromTextbox(textbox, callback) {
-    const objectCopy = fabric.util.object.clone(textbox.toObject());
-    delete objectCopy.path;
-    return fabric.Object._fromObject('VerticalTextbox', objectCopy, function (textInstance) {
-      textInstance.textAlign = 'right';
-      textInstance.direction = 'rtl';
-      textInstance.type = 'vertical-textbox';
-      textInstance.typeObject = 'vertical-textbox';
-      callback(textInstance);
-    }, 'vertical-textbox');
-  }
+  // static fromObject(object: FabricObject, callback) {
+  //   const objectCopy = fabric.util.object.clone(object);
+  //   delete objectCopy.path;
+  //   return FabricObject._fromObject('VerticalTextbox', objectCopy, function (textInstance) {
+  //     callback(textInstance);
+  //   }, 'vertical-textbox');
+  // };
+  // toTextbox(callback) {
+  //   const objectCopy = fabric.util.object.clone(this.toObject());
+  //   delete objectCopy.path;
+  //   objectCopy.direction = 'ltr';
+  //   objectCopy.textAlign = 'left';
+  //   delete objectCopy.minHeight;
+  //   return fabric.Object._fromObject('Textbox', objectCopy, function (textbox) {
+  //     textbox.type = 'textbox';
+  //     textbox.typeObject = 'text';
+  //     callback(textbox);
+  //   }, 'text');
+  // }
+  // static fromTextbox(textbox, callback) {
+  //   const objectCopy = fabric.util.object.clone(textbox.toObject());
+  //   delete objectCopy.path;
+  //   return fabric.Object._fromObject('VerticalTextbox', objectCopy, function (textInstance) {
+  //     textInstance.textAlign = 'right';
+  //     textInstance.direction = 'rtl';
+  //     textInstance.type = 'vertical-textbox';
+  //     textInstance.typeObject = 'vertical-textbox';
+  //     callback(textInstance);
+  //   }, 'vertical-textbox');
+  // }
 
-  _renderTextCommon(ctx, method) {
+  _renderTextCommon(ctx: CanvasRenderingContext2D, method: 'fillText' | 'strokeText') {
     ctx.save();
-    var lineHeights = 0, left = this._getLeftOffset(), top = this._getTopOffset();
-    for (var i = 0, len = this._textLines.length; i < len; i++) {
+    let lineHeights = 0, left = this._getLeftOffset(), top = this._getTopOffset();
+    for (let i = 0, len = this._textLines.length; i < len; i++) {
 
       !this.__charBounds[i] && this.measureLine(i);
 
@@ -95,7 +92,7 @@ class VerticalTextbox extends Textbox {
     ctx.restore();
   }
 
-  _renderCJKChar(method, ctx, lineIndex, charIndex, left, top) {
+  _renderCJKChar(method: 'fillText' | 'strokeText', ctx: CanvasRenderingContext2D, lineIndex: number, charIndex: number, left: number, top: number) {
     let charbox = this.__charBounds[lineIndex][charIndex],
       char = this._textLines[lineIndex][charIndex],
       localLineHeight = this.getHeightOfLine(lineIndex),
@@ -107,31 +104,20 @@ class VerticalTextbox extends Textbox {
     ctx.direction = isLtr ? 'ltr' : 'rtl';
     ctx.textAlign = isLtr ? 'left' : 'right';
 
-    if (JP_BRACKETS.test(char)) {
-      // TODO: why the fuck do we need plus 3 and minus 5 here...
+    if (BRACKETS.test(char)) {
       charTop += this.lineHeight * this._fontSizeMult;
       charLeft -= this.lineHeight * this._fontSizeMult;
-      const tx = charLeft - charbox.width / 2,
-        ty = charTop - charbox.height / 2; // somehow, the char is a bit higher after rotation;
+      const tx = charLeft - charbox.width / 2, ty = charTop - charbox.height / 2; 
       ctx.translate(tx, ty);
       ctx.rotate(-Math.PI / 2);
       ctx.translate(-tx, -ty);
     }
 
-    this._renderChar(method,
-      ctx,
-      lineIndex,
-      charIndex,
-      char,
-      charLeft,
-      charTop,
-      0
-    );
-
+    this._renderChar(method, ctx, lineIndex, charIndex, char, charLeft, charTop);
     ctx.restore();
   }
 
-  _renderAlphanumeric(method, ctx, lineIndex, startIndex, endIndex, left, top) {
+  _renderAlphanumeric(method: 'fillText' | 'strokeText', ctx: CanvasRenderingContext2D, lineIndex: number, startIndex: number, endIndex: number, left: number, top: number) {
     let charBox = this.__charBounds[lineIndex][startIndex],
       chars = '',
       drawWidth = 0,
@@ -149,32 +135,18 @@ class VerticalTextbox extends Textbox {
     drawTop = drawTop + heightFactor;
     ctx.save();
     const _boxHeight = charBox.height;
-    const tx = drawLeft + drawWidth / 2 - _boxHeight / 8,
-      ty = drawTop - _boxHeight / 8;
+    const tx = drawLeft + drawWidth / 2 - _boxHeight / 8, ty = drawTop - _boxHeight / 8;
     ctx.translate(tx, ty);
     ctx.rotate(Math.PI / 2);
     ctx.translate(-tx, -ty);
-    this._renderChar(method,
-      ctx,
-      lineIndex,
-      startIndex,
-      chars,
-      drawLeft,
-      drawTop,
-      0
-    );
-
+    this._renderChar(method, ctx, lineIndex, startIndex, chars, drawLeft, drawTop);
     ctx.restore();
   }
 
-  _renderChars(method, ctx, line, left, top, lineIndex) {
-    let timeToRender,
-      startChar = null,
-      actualStyle,
-      nextStyle,
-      endChar = null;
+  _renderChars(method: 'fillText' | 'strokeText', ctx: CanvasRenderingContext2D, line: Array<any>, left: number, top: number, lineIndex: number) {
+    let timeToRender, startChar = null, actualStyle, nextStyle, endChar = null;
     ctx.save();
-    for (var i = 0, len = line.length - 1; i <= len; i++) {
+    for (let i = 0, len = line.length - 1; i <= len; i++) {
       if (this._isLatin(line[i])) {
         timeToRender = (i === len || !this._isLatin(line[i + 1]));
         if (startChar === null && this._isLatin(line[i])) {
@@ -189,25 +161,38 @@ class VerticalTextbox extends Textbox {
 
         if (timeToRender) {
           endChar = i;
-          this._renderAlphanumeric(method, ctx, lineIndex, startChar, endChar, left, top);
+          this._renderAlphanumeric(method, ctx, lineIndex, startChar as number, endChar, left, top);
           timeToRender = false;
           startChar = null;
           endChar = null;
           actualStyle = nextStyle;
         }
-      } else {
+      } 
+      else {
         this._renderCJKChar(method, ctx, lineIndex, i, left, top);
       }
     }
     ctx.restore();
   }
 
-  _isLatin(char) {
+  _hasStyleChanged(prevStyle: any, thisStyle: any) {
+    if(Object.keys(prevStyle).length !== Object.keys(thisStyle).length ){
+      return true
+    }
+    for(let prop in prevStyle){
+      if(prevStyle[prop] !== thisStyle[prop]){
+        return true;
+      }
+    }
+    return false;
+  }
+
+  _isLatin(char: string) {
     return LATIN_CHARS_REGX.test(char) || BRACKETS_REGX.test(char) || NUMBERIC_REGX.test(char);
   }
 
   calcTextWidth() {
-    return super.calcTextHeight.call(this)
+    return super.calcTextHeight()
   }
 
   calcTextHeight() {
@@ -220,7 +205,7 @@ class VerticalTextbox extends Textbox {
     if (this.charSpacing !== 0) {
       space = this._getWidthOfCharSpacing();
     }
-    for (var lineIndex = 0, len = this._textLines.length; lineIndex < len; lineIndex++) {
+    for (let lineIndex = 0, len = this._textLines.length; lineIndex < len; lineIndex++) {
       !this.__charBounds[lineIndex] && this._measureLine(lineIndex);
 
       currentLineHeight = 0;
@@ -242,8 +227,8 @@ class VerticalTextbox extends Textbox {
     return longestLine + this.cursorWidth;
   }
 
-  getSelectionStartFromPointer(e) {
-    var mouseOffset = this.getLocalPointer(e),
+  getSelectionStartFromPointer(e: TPointerEvent) {
+    let mouseOffset = this.getLocalPointer(e),
       prevHeight = 0,
       width = 0,
       height = 0,
@@ -257,12 +242,8 @@ class VerticalTextbox extends Textbox {
     if (this.charSpacing !== 0) {
       space = this._getWidthOfCharSpacing();
     }
-    // handling of RTL: in order to get things work correctly,
-    // we assume RTL writing is mirrored compared to LTR writing.
-    // so in position detection we mirror the X offset, and when is time
-    // of rendering it, we mirror it again.
     mouseOffset.x = this.width * this.scaleX - mouseOffset.x + width;
-    for (var i = 0, len = this._textLines.length; i < len; i++) {
+    for (let i = 0, len = this._textLines.length; i < len; i++) {
       if (width <= mouseOffset.x) {
         lineHeight = this.getHeightOfLine(i) * this.scaleY;
         width += lineHeight;
@@ -276,7 +257,8 @@ class VerticalTextbox extends Textbox {
       }
     }
     line = this._textLines[lineIndex];
-    for (var j = 0, jlen = line.length; j < jlen; j++) {
+    const charLen = line.length
+    for (let j = 0; j < charLen; j++) {
       prevHeight = height;
       charBox = this.__charBounds[lineIndex][j];
       if (this._isLatin(this._textLines[lineIndex][j])) {
@@ -292,19 +274,17 @@ class VerticalTextbox extends Textbox {
       }
     }
 
-    return this._getNewSelectionStartFromOffset(mouseOffset, prevHeight, height, charIndex, jlen);
+    return this._getNewSelectionStartFromOffset(mouseOffset as Point, prevHeight, height, charIndex, charLen);
   }
 
-  _getNewSelectionStartFromOffset(mouseOffset, prevHeight, height, index, jlen) {
-    // we need Math.abs because when width is after the last char, the offset is given as 1, while is 0
-    var distanceBtwLastCharAndCursor = mouseOffset.y - prevHeight,
+  _getNewSelectionStartFromOffset(mouseOffset: Point, prevHeight: number, height: number, index: number, charLen: number) {
+    let distanceBtwLastCharAndCursor = mouseOffset.y - prevHeight,
       distanceBtwNextCharAndCursor = height - mouseOffset.y,
       offset = distanceBtwNextCharAndCursor > distanceBtwLastCharAndCursor ||
         distanceBtwNextCharAndCursor < 0 ? 0 : 1,
       newSelectionStart = index + offset;
-    // if object is horizontally flipped, mirror cursor location from the end
     if (this.flipX) {
-      newSelectionStart = jlen - newSelectionStart;
+      newSelectionStart = charLen - newSelectionStart;
     }
 
     if (newSelectionStart > this._text.length) {
@@ -314,11 +294,11 @@ class VerticalTextbox extends Textbox {
     return newSelectionStart;
   }
 
-  _getCursorBoundariesOffsets(position) {
+  _getCursorBoundariesOffsets(position: number, skipCaching?: boolean): CursorOffsetCache {
     if (this.cursorOffsetCache && 'top' in this.cursorOffsetCache) {
-      return this.cursorOffsetCache;
+      return this.cursorOffsetCache as CursorOffsetCache;
     }
-    var lineLeftOffset,
+    let lineLeftOffset,
       lineIndex,
       charIndex,
       topOffset = 0,
@@ -328,11 +308,11 @@ class VerticalTextbox extends Textbox {
       cursorPosition = this.get2DCursorLocation(position);
     charIndex = cursorPosition.charIndex;
     lineIndex = cursorPosition.lineIndex;
-    for (var i = 0; i < lineIndex; i++) {
+    for (let i = 0; i < lineIndex; i++) {
       leftOffset += this.getHeightOfLine(i);
     }
 
-    for (var i = 0; i < charIndex; i++) {
+    for (let i = 0; i < charIndex; i++) {
       charBox = this.__charBounds[lineIndex][i];
       if (this._isLatin(this._textLines[lineIndex][i])) {
         topOffset += charBox.width;
@@ -353,12 +333,12 @@ class VerticalTextbox extends Textbox {
     if (this.direction === 'rtl') {
       boundaries.left *= -1;
     }
-
     this.cursorOffsetCache = boundaries;
-    return this.cursorOffsetCache;
+    return this.cursorOffsetCache as CursorOffsetCache
   }
-  _getGraphemeBox(grapheme, lineIndex, charIndex, prevGrapheme, skipLeft) {
-    let box = super._getGraphemeBox(grapheme, lineIndex, charIndex, prevGrapheme, skipLeft);
+
+  _getGraphemeBox(grapheme: string, lineIndex: number, charIndex: number, prevGrapheme: string, skipLeft?: boolean) {
+    let box = super._getGraphemeBox(grapheme, lineIndex, charIndex, prevGrapheme, skipLeft) as any;
     box.top = 0;
     box.height = Number(box.height)
 
@@ -367,18 +347,12 @@ class VerticalTextbox extends Textbox {
       const isAlphaNumeric = this._isLatin(this._textLines[lineIndex][charIndex - 1]);
       box.top = previousBox.top + previousBox[isAlphaNumeric ? 'width' : 'height'];
     }
-
     return box;
   }
 
-  /**
-   * 
-   * @param {*} boundaries 
-   * @param {CanvasRenderingContext2D} ctx 
-   */
-  renderSelection(boundaries, ctx) {
-    var selectionStart = this.inCompositionMode ? this.hiddenTextarea.selectionStart : this.selectionStart,
-      selectionEnd = this.inCompositionMode ? this.hiddenTextarea.selectionEnd : this.selectionEnd,
+  renderSelection(ctx: CanvasRenderingContext2D, boundaries: any) {
+    let selectionStart = this.inCompositionMode ? this.hiddenTextarea?.selectionStart : this.selectionStart,
+      selectionEnd = this.inCompositionMode ? this.hiddenTextarea?.selectionEnd : this.selectionEnd,
       isJustify = this.textAlign.indexOf('justify') !== -1,
       start = this.get2DCursorLocation(selectionStart),
       end = this.get2DCursorLocation(selectionEnd),
@@ -386,22 +360,21 @@ class VerticalTextbox extends Textbox {
       endLine = end.lineIndex,
       startChar = start.charIndex < 0 ? 0 : start.charIndex,
       endChar = end.charIndex < 0 ? 0 : end.charIndex;
-    for (var i = startLine; i <= endLine; i++) {
-      var lineHeight = this.getHeightOfLine(i),
-        boxStart = 0, boxEnd = 0;
+    for (let i = startLine; i <= endLine; i++) {
+      let lineHeight = this.getHeightOfLine(i), boxStart = 0, boxEnd = 0;
 
       if (i === startLine) {
         boxStart = this.__charBounds[startLine][startChar].top;
       }
       if (i >= startLine && i < endLine) {
-        boxEnd = isJustify && !this.isEndOfWrapping(i) ? this.height : this.getLineWidth(i) || 5; // WTF is this 5?
+        boxEnd = isJustify && !this.isEndOfWrapping(i) ? this.height : this.getLineWidth(i) || 5;
       }
       else if (i === endLine) {
         if (endChar === 0) {
           boxEnd = this.__charBounds[endLine][endChar].top;
         }
         else {
-          var charSpacing = this._getWidthOfCharSpacing();
+          let charSpacing = this._getWidthOfCharSpacing();
           const prevCharBox = this.__charBounds[endLine][endChar - 1];
           boxEnd = prevCharBox.top - charSpacing;
           if (this._isLatin(this._textLines[endLine][endChar - 1])) {
@@ -438,41 +411,35 @@ class VerticalTextbox extends Textbox {
     }
   }
 
-
-  renderCursor(boundaries, ctx) {
-    var cursorLocation = this.get2DCursorLocation(),
+  renderCursor(ctx: CanvasRenderingContext2D, boundaries: any) {
+    let cursorLocation = this.get2DCursorLocation(),
       lineIndex = cursorLocation.lineIndex,
       charIndex = cursorLocation.charIndex > 0 ? cursorLocation.charIndex - 1 : 0,
       charBox = this.__charBounds[lineIndex][charIndex],
       charHeight = this.getValueOfPropertyAt(lineIndex, charIndex, 'fontSize'),
-      multiplier = this.scaleX * this.canvas.getZoom(),
+      multiplier = this.scaleX * this.canvas!.getZoom(),
       cursorWidth = this.cursorWidth / multiplier,
       topOffset = boundaries.topOffset,
       lineHeight = this.getHeightOfLine(lineIndex),
       drawStart = boundaries.left - boundaries.leftOffset + (lineHeight / this.lineHeight + charBox.height) / 2;
 
     if (this.inCompositionMode) {
-      this.renderSelection(boundaries, ctx);
+      this.renderSelection(ctx, boundaries);
     }
     if (this.direction === 'rtl') {
       drawStart = this.width - drawStart;
     }
     ctx.fillStyle = this.cursorColor || this.getValueOfPropertyAt(lineIndex, charIndex, 'fill');
     ctx.globalAlpha = this.__isMousedown ? 1 : this._currentCursorOpacity;
-    ctx.fillRect(
-      drawStart,
-      topOffset + boundaries.top,
-      charHeight,
-      cursorWidth,
-    );
+    ctx.fillRect(drawStart, topOffset + boundaries.top, charHeight, cursorWidth);
   }
 
 
-  _renderTextLinesBackground(ctx) {
+  _renderTextLinesBackground(ctx: CanvasRenderingContext2D) {
     if (!this.textBackgroundColor && !this.styleHas('textBackgroundColor')) {
       return;
     }
-    var heightOfLine,
+    let heightOfLine,
       originalFill = ctx.fillStyle,
       line, lastColor,
       leftOffset = this.width - this._getLeftOffset(),
@@ -483,7 +450,7 @@ class VerticalTextbox extends Textbox {
       top = null,
       char;
 
-    for (var i = 0, len = this._textLines.length; i < len; i++) {
+    for (let i = 0, len = this._textLines.length; i < len; i++) {
       heightOfLine = this.getHeightOfLine(i);
       left += heightOfLine;
       if (!this.textBackgroundColor && !this.styleHas('textBackgroundColor', i)) {
@@ -493,7 +460,7 @@ class VerticalTextbox extends Textbox {
       boxHeight = 0;
       lastColor = this.getValueOfPropertyAt(i, 0, 'textBackgroundColor');
       top = this.__charBounds[i][0].top;
-      for (var j = 0, jlen = line.length; j < jlen; j++) {
+      for (let j = 0, charLen = line.length; j < charLen; j++) {
         char = line[j];
         charBox = this.__charBounds[i][j];
         currentColor = this.getValueOfPropertyAt(i, j, 'textBackgroundColor');
@@ -537,16 +504,25 @@ class VerticalTextbox extends Textbox {
 
     }
     ctx.fillStyle = originalFill;
-    // if there is text background color no
-    // other shadows should be casted
     this._removeShadow(ctx);
   }
 
-  _renderTextDecoration(ctx, type) {
-    if (!this[type] && !this.styleHas(type)) {
-      return;
+  getLocalPointer(e: TPointerEvent, pointer?: Point) {
+    pointer = pointer || this.canvas!.getPointer(e);
+    let pClicked = new Point(pointer.x, pointer.y)
+    const objectLeftTop = this._getLeftTopCoords();
+    if (this.angle) {
+      pClicked = util.rotatePoint(pClicked, objectLeftTop, util.degreesToRadians(-this.angle));
     }
-    let heightOfLine, size, _size,
+    return {
+      x: pClicked.x - objectLeftTop.x,
+      y: pClicked.y - objectLeftTop.y
+    };
+  }
+
+  _renderTextDecoration(ctx: CanvasRenderingContext2D, type: any) {
+    if (!this.get(type) && !this.styleHas(type)) return
+    let heightOfLine, size, _size = 0,
       dy, _dy,
       left = 0,
       top = 0,
@@ -557,12 +533,13 @@ class VerticalTextbox extends Textbox {
       topOffset = this._getTopOffset(),
       boxWidth, charBox, currentDecoration,
       currentFill, lastFill,
+      //@ts-ignore
       offsetY = this.offsets[type];
 
-    for (var i = 0, len = this._textLines.length; i < len; i++) {
+    for (let i = 0, len = this._textLines.length; i < len; i++) {
       heightOfLine = this.getHeightOfLine(i);
       left += heightOfLine;
-      if (!this[type] && !this.styleHas(type, i)) { continue; }
+      if (!this.get(type) && !this.styleHas(type, i)) { continue; }
 
       boxHeight = 0;
       line = this._textLines[i];
@@ -573,7 +550,7 @@ class VerticalTextbox extends Textbox {
 
       size = heightOfLine / this.lineHeight;
       dy = this.getValueOfPropertyAt(i, 0, 'deltaY');
-      for (var j = 0, jlen = line.length; j < jlen; j++) {
+      for (let j = 0, charLen = line.length; j < charLen; j++) {
         charBox = this.__charBounds[i][j];
         char = line[j];
         currentDecoration = this.getValueOfPropertyAt(i, j, type);
@@ -633,4 +610,6 @@ class VerticalTextbox extends Textbox {
   }
 }
 
-export default VerticalTextbox;
+Object.assign(VerticalText.prototype, { ...VerticalTextMixin })
+
+classRegistry.setClass(VerticalText, 'VerticalText')

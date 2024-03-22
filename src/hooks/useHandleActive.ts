@@ -7,7 +7,7 @@ import { check } from '@/utils/check'
 import { ref, watchEffect, computed } from 'vue'
 import { useMainStore } from '@/store'
 import { storeToRefs } from 'pinia'
-import { px2mm } from '@/utils/image'
+import { px2mm, mm2px } from '@/utils/image'
 import type { WritableComputedRef } from 'vue'
 import NP from 'number-precision'
 import useCanvas from '@/views/Canvas/useCanvas'
@@ -20,6 +20,9 @@ export default () => {
 
   const handleUnit = (val: number) => {
     return unitMode.value === 0 ? px2mm(val) : val
+  }
+  const handleInput = (val: number) => {
+    return unitMode.value === 0 ? mm2px(val) : val
   }
   const handleActive = <K extends keyof ObjectRef, T = ObjectRef[K] | undefined>(key: K): WritableComputedRef<{
     modelValue: T
@@ -87,10 +90,12 @@ export default () => {
             }
             if (!allSameStyle) {
               value = '多个值'
-            } else {
+            } 
+            else {
               value = activeObject.fontSize
             }
-          } else {
+          } 
+          else {
             value = activeObject[key]
           }
           break
@@ -118,29 +123,13 @@ export default () => {
      */
     const changeValue = (newValue: T, type: 'swipe' | 'change') => {
       const activeObject = canvas.activeObject.value as FabricObject & Textbox
-
       if (lockChange || !isDefined(activeObject)) return
-
-      // 左上宽高旋转
       if (['width', 'height', 'left', 'top', 'angle'].includes(key)) {
-        // activeObject[
-        //   key === 'width'
-        //     ? 'setWidth'
-        //     : key === 'height'
-        //       ? 'setHeight'
-        //       : key === 'left'
-        //         ? 'setLeft'
-        //         : key === 'top'
-        //           ? 'setTop'
-        //           : 'setAngle'
-        // ](Number(newValue))
         activeObject.set(key, Number(newValue))
-        // 更改值后，更新组的布局
         if (type === 'change' && activeObject.group?.updateLayout) {
           activeObject.group.updateLayout()
         }
       }
-      // 文字
       else if (
         activeObject.isType<Textbox | Text>('Text', 'Textbox') &&
         ['fontSize'].includes(key) &&
@@ -179,6 +168,8 @@ export default () => {
   }
 
   return {
-    handleActive
+    handleActive,
+    handleInput,
+    handleUnit
   }
 }
