@@ -1,7 +1,7 @@
 <template>
   <div class="slide-design-panel">
     <div class="mb-10">
-      <b>{{ t("message.canvasSize") }}</b>
+      <b>{{ t("style.canvasSize") }}</b>
     </div>
     <div class="mb-10">
       <el-row>
@@ -12,14 +12,14 @@
             @change="changeTemplateWidth"
             oninput="value=value.replace(/[^\d.]/g,'')"
           >
-            <template #prepend>{{ t("message.width") }}</template>
+            <template #prepend>{{ t("style.width") }}</template>
           </el-input>
         </el-col>
         <el-col :span="2" class="fixed-ratio">
           <el-tooltip
             effect="dark"
             placement="top"
-            :content="t('message.unlockAspectRatio')"
+            :content="t('style.unlockAspectRatio')"
             v-if="isFixed"
           >
             <IconLock class="icon-btn" @click="changeFixedRatio(false)" />
@@ -27,7 +27,7 @@
           <el-tooltip
             effect="dark"
             placement="top"
-            :content="t('message.lockAspectRatio')"
+            :content="t('style.lockAspectRatio')"
             v-else
           >
             <IconUnlock class="icon-btn" @click="changeFixedRatio(true)" />
@@ -40,7 +40,7 @@
             @change="changeTemplateHeight"
             oninput="value=value.replace(/[^\d.]/g,'')"
           >
-            <template #prepend>{{ t("message.height") }}</template>
+            <template #prepend>{{ t("style.height") }}</template>
           </el-input>
         </el-col>
       </el-row>
@@ -58,7 +58,7 @@
               <el-tooltip
                 placement="top"
                 :hide-after="0"
-                :content="t('message.bleedingLine')"
+                :content="t('style.bleedingLine')"
               >
                 <IconCuttingOne />
               </el-tooltip>
@@ -69,7 +69,7 @@
           <el-tooltip
             effect="dark"
             placement="top"
-            :content="t('message.fillet')"
+            :content="t('style.fillet')"
             v-if="isRound"
           >
             <IconRound class="icon-btn" @click="changeWorkRound(false)" />
@@ -77,7 +77,7 @@
           <el-tooltip
             effect="dark"
             placement="top"
-            :content="t('message.rightAngle')"
+            :content="t('style.rightAngle')"
             v-else
           >
             <IconRightAngle class="icon-btn" @click="changeWorkRound(true)" />
@@ -94,7 +94,7 @@
               <el-tooltip
                 placement="top"
                 :hide-after="0"
-                :content="t('message.safetyLine')"
+                :content="t('style.safetyLine')"
               >
                 <IconShield />
               </el-tooltip>
@@ -111,7 +111,7 @@
               <el-tooltip
                 placement="top"
                 :hide-after="0"
-                :content="t('message.unit')"
+                :content="t('style.unit')"
               >
                 <IconRuler />
               </el-tooltip>
@@ -131,7 +131,7 @@
               <el-tooltip
                 placement="top"
                 :hide-after="0"
-                :content="t('message.template')"
+                :content="t('style.template')"
               >
                 <IconIdCard />
               </el-tooltip>
@@ -151,11 +151,11 @@
     <el-divider />
 
     <div class="title">
-      <b>{{ t("message.canvasFill") }}</b>
+      <b>{{ t("style.canvasFill") }}</b>
     </div>
     <div class="row">
       <el-button class="full-row" @click="changeAllBackgroud">{{
-        t("message.applyCanvasToAll")
+        t("style.applyCanvasToAll")
       }}</el-button>
     </div>
     <Backgrounds />
@@ -163,12 +163,10 @@
     <el-divider />
 
     <div class="title">
-      <b>{{ t("message.canvasMask") }}</b>
+      <b>{{ t("style.canvasMask") }}</b>
     </div>
     <el-row>
-      <el-col :span="7" class="slider-name"
-        >{{ t("message.opacity") }}：</el-col
-      >
+      <el-col :span="7" class="slider-name">{{ t("style.opacity") }}：</el-col>
       <el-col :span="13">
         <el-slider
           :min="0.1"
@@ -268,14 +266,14 @@ const changeTemplateWidth = () => {
   let { width, height } = getCanvasSize();
   if (width / zoom.value < mm2px(MinSize)) {
     ElMessage({
-      message: t("message.minimumSizeLimit") + MinSize,
+      message: t("style.minimumSizeLimit") + MinSize,
       type: "warning",
     });
     width = mm2px(MinSize) * zoom.value;
   }
   if (width / zoom.value > mm2px(MaxSize)) {
     ElMessage({
-      message: t("message.maximumSizeLimit") + MaxSize,
+      message: t("style.maximumSizeLimit") + MaxSize,
       type: "warning",
     });
     width = mm2px(MaxSize) * zoom.value;
@@ -299,14 +297,14 @@ const changeTemplateHeight = () => {
   let { width, height } = getCanvasSize();
   if (height / zoom.value < mm2px(MinSize)) {
     ElMessage({
-      message: t("message.minimumSizeLimit") + MinSize,
+      message: t("style.minimumSizeLimit") + MinSize,
       type: "warning",
     });
     height = mm2px(MinSize) * zoom.value;
   }
   if (height / zoom.value > mm2px(MaxSize)) {
     ElMessage({
-      message: t("message.maximumSizeLimit") + MaxSize,
+      message: t("style.maximumSizeLimit") + MaxSize,
       type: "warning",
     });
     height = mm2px(MaxSize) * zoom.value;
