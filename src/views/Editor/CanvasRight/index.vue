@@ -1,13 +1,19 @@
 <template>
   <div>
     <div class="right-tabs">
-      <div 
-        class="tab" 
-        :class="[ tab.value === rightState && currentTabs.length > 1 ? 'active':  'no-active']"
-        v-for="tab in currentTabs" 
+      <div
+        class="tab"
+        :class="[
+          tab.value === rightState && currentTabs.length > 1
+            ? 'active'
+            : 'no-active',
+        ]"
+        v-for="tab in currentTabs"
         :key="tab.value"
         @click="setRightState(tab.value)"
-      >{{tab.label}}</div>
+      >
+        {{ tab.label }}
+      </div>
     </div>
     <div class="right-content">
       <component :is="currentPanelComponent"></component>
@@ -15,49 +21,53 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { computed, watch } from 'vue'
-import { RightStates } from '@/types/elements'
-import { storeToRefs } from 'pinia'
-import { useMainStore } from '@/store/modules/main'
-import WorkStylePanel from './WorkStylePanel/index.vue'
-import ElemnetStylePanel from './ElementStylePanel/index.vue'
+import { computed, watch } from "vue";
+import { RightStates } from "@/types/elements";
+import { storeToRefs } from "pinia";
+import { useMainStore } from "@/store/modules/main";
+import WorkStylePanel from "./WorkStylePanel/index.vue";
+import ElemnetStylePanel from "./ElementStylePanel/index.vue";
+import useI18n from "@/hooks/useI18n";
+const { t } = useI18n();
 
-const mainStore = useMainStore()
-const { canvasObject, rightState } = storeToRefs(mainStore)
+const mainStore = useMainStore();
+const { canvasObject, rightState } = storeToRefs(mainStore);
 
 const designTabs = [
-  { label: '画布', value: RightStates.ELEMENT_WORKER },
-]
+  { label: t("message.canvas"), value: RightStates.ELEMENT_WORKER },
+];
 const styleTabs = [
-  { label: '样式', value: RightStates.ELEMENT_STYLE },
+  { label: t("message.style"), value: RightStates.ELEMENT_STYLE },
   // { label: '位置', value: RightStates.ELEMENT_POSITION },
-]
+];
 
 const setRightState = (value: RightStates) => {
-  mainStore.setRightState(value)
-}
+  mainStore.setRightState(value);
+};
 
 const currentTabs = computed(() => {
-  if (!canvasObject.value) return designTabs
-  if (canvasObject.value.type.toLowerCase() === 'referenceline') return designTabs
-  return styleTabs
-})
+  if (!canvasObject.value) return designTabs;
+  if (canvasObject.value.type.toLowerCase() === "referenceline")
+    return designTabs;
+  return styleTabs;
+});
 
 watch(currentTabs, () => {
-  const currentTabsValue: RightStates[] = currentTabs.value.map(tab => tab.value)
+  const currentTabsValue: RightStates[] = currentTabs.value.map(
+    (tab) => tab.value
+  );
   if (!currentTabsValue.includes(rightState.value)) {
-    mainStore.setRightState(currentTabsValue[0])
+    mainStore.setRightState(currentTabsValue[0]);
   }
-})
+});
 
 const currentPanelComponent = computed(() => {
   const panelMap = {
     [RightStates.ELEMENT_WORKER]: WorkStylePanel,
     [RightStates.ELEMENT_STYLE]: ElemnetStylePanel,
-  }
-  return panelMap[rightState.value as RightStates.ELEMENT_STYLE]
-})
-
+  };
+  return panelMap[rightState.value as RightStates.ELEMENT_STYLE];
+});
 </script>
 
 

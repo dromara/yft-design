@@ -16,16 +16,19 @@ import useCenter from '@/views/Canvas/useCenter'
 import useCanvas from '@/views/Canvas/useCanvas'
 import useCanvasZindex from './useCanvasZindex'
 
+import useI18n from "@/hooks/useI18n";
+
 
 export default () => {
-  
+  const { t } = useI18n();
+
   const mainStore = useMainStore()
   const templatesStore = useTemplatesStore()
   const { setZindex } = useCanvasZindex()
   const { rightState, systemFonts } = storeToRefs(mainStore)
 
   const renderCanvas = (element: FabricObject) => {
-    const [ canvas ] = useCanvas()
+    const [canvas] = useCanvas()
     canvas.add(element)
     canvas.setActiveObject(element)
     rightState.value = RightStates.ELEMENT_STYLE
@@ -34,9 +37,8 @@ export default () => {
     templatesStore.modifedElement()
   }
 
-  const createTextElement = (fontSize: number, textStyle = 'transverse', textHollow = false, textValue = '双击修改文字') => {
+  const createTextElement = (fontSize: number, textStyle = 'transverse', textHollow = false, textValue = t('default.textValue')) => {
     const { centerPoint } = useCenter()
-    
     const textBoxElement = new Textbox(textValue, {
       id: nanoid(10),
       left: centerPoint.x - textValue.length * fontSize / 2,
@@ -59,7 +61,7 @@ export default () => {
     if (textHollow) {
       textBoxElement.fill = ''
       textBoxElement.stroke = 'black'
-      textBoxElement.strokeWidth = 1 
+      textBoxElement.strokeWidth = 1
     }
     renderCanvas(textBoxElement)
   }
@@ -138,8 +140,8 @@ export default () => {
     const { zoom } = storeToRefs(useFabricStore())
     const { currentTemplateWidth, currentTemplateHeight } = storeToRefs(useTemplatesStore())
     const { centerPoint } = useCenter()
-    const [ canvas ] = useCanvas()
-    getImageSize(url).then( async ({width, height}) => {
+    const [canvas] = useCanvas()
+    getImageSize(url).then(async ({ width, height }) => {
       const scale = height / width
       let imageScale = 1
       if (scale < zoom.value && width > currentTemplateWidth.value) {
@@ -151,7 +153,7 @@ export default () => {
       const imageElement = await Image.fromURL(url, {
         id: nanoid(10),
         angle: 0,
-        left: centerPoint.x - ((width * imageScale ) / 2),
+        left: centerPoint.x - ((width * imageScale) / 2),
         top: centerPoint.y - ((height * imageScale) / 2),
         scaleX: imageScale,
         scaleY: imageScale,
@@ -214,7 +216,7 @@ export default () => {
     })
     barcodeObject.left -= (barcodeObject.width / 2)
     barcodeObject.top -= (barcodeObject.height / 2)
-    
+
     renderCanvas(barcodeObject)
   }
 
