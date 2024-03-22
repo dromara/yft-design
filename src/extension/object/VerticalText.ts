@@ -21,17 +21,6 @@ export class VerticalText extends IText {
     this.textAlign = 'right'
     this.direction = 'rtl'
     this.minHeight = options.width
-    this.width = options.fontSize
-    this.keysMapRtl = Object.assign(this.keysMapRtl, {
-      33: 'moveCursorLeft',
-      34: 'moveCursorDown',
-      35: 'moveCursorUp',
-      36: 'moveCursorRight',
-      37: 'moveCursorDown',
-      38: 'moveCursorLeft',
-      39: 'moveCursorUp',
-      40: 'moveCursorRight',
-    });
 
     this.offsets = {
       underline: 0.05,
@@ -59,7 +48,6 @@ export class VerticalText extends IText {
   //     callback(textInstance);
   //   }, 'vertical-textbox');
   // };
-
   // toTextbox(callback) {
   //   const objectCopy = fabric.util.object.clone(this.toObject());
   //   delete objectCopy.path;
@@ -72,7 +60,6 @@ export class VerticalText extends IText {
   //     callback(textbox);
   //   }, 'text');
   // }
-
   // static fromTextbox(textbox, callback) {
   //   const objectCopy = fabric.util.object.clone(textbox.toObject());
   //   delete objectCopy.path;
@@ -205,7 +192,9 @@ export class VerticalText extends IText {
   }
 
   calcTextWidth() {
-    return super.calcTextHeight.call(this)
+    // const textWidth = super.calcTextHeight()
+    console.log('textWidth:', super.calcTextHeight())
+    return super.calcTextHeight()
   }
 
   calcTextHeight() {
@@ -291,13 +280,11 @@ export class VerticalText extends IText {
   }
 
   _getNewSelectionStartFromOffset(mouseOffset: Point, prevHeight: number, height: number, index: number, charLen: number) {
-    // we need Math.abs because when width is after the last char, the offset is given as 1, while is 0
     let distanceBtwLastCharAndCursor = mouseOffset.y - prevHeight,
       distanceBtwNextCharAndCursor = height - mouseOffset.y,
       offset = distanceBtwNextCharAndCursor > distanceBtwLastCharAndCursor ||
         distanceBtwNextCharAndCursor < 0 ? 0 : 1,
       newSelectionStart = index + offset;
-    // if object is horizontally flipped, mirror cursor location from the end
     if (this.flipX) {
       newSelectionStart = charLen - newSelectionStart;
     }
@@ -363,7 +350,7 @@ export class VerticalText extends IText {
       const isAlphaNumeric = this._isLatin(this._textLines[lineIndex][charIndex - 1]);
       box.top = previousBox.top + previousBox[isAlphaNumeric ? 'width' : 'height'];
     }
-
+    console.log('box:', box)
     return box;
   }
 
@@ -448,19 +435,14 @@ export class VerticalText extends IText {
     }
     ctx.fillStyle = this.cursorColor || this.getValueOfPropertyAt(lineIndex, charIndex, 'fill');
     ctx.globalAlpha = this.__isMousedown ? 1 : this._currentCursorOpacity;
-    ctx.fillRect(
-      drawStart,
-      topOffset + boundaries.top,
-      charHeight,
-      cursorWidth,
-    );
+    ctx.fillRect(drawStart, topOffset + boundaries.top, charHeight, cursorWidth);
   }
 
 
   _renderTextLinesBackground(ctx: CanvasRenderingContext2D) {
-    // if (!this.textBackgroundColor && !this.styleHas('textBackgroundColor', 0)) {
-    //   return;
-    // }
+    if (!this.textBackgroundColor && !this.styleHas('textBackgroundColor')) {
+      return;
+    }
     let heightOfLine,
       originalFill = ctx.fillStyle,
       line, lastColor,
@@ -543,9 +525,7 @@ export class VerticalText extends IText {
   }
 
   _renderTextDecoration(ctx: CanvasRenderingContext2D, type: any) {
-    // if (!this.get(type) && !this.styleHas(type, 0)) {
-    //   return;
-    // }
+    if (!this.get(type) && !this.styleHas(type)) return
     let heightOfLine, size, _size = 0,
       dy, _dy,
       left = 0,

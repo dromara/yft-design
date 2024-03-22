@@ -466,7 +466,7 @@ const changeCharSpacing = (charSpacing: number) => {
 }
 
 const handleElementArrange = (status: boolean) => {
-  handleElement.value.set({splitByGrapheme: status, width: handleElement.value.fontSize})
+  // handleElement.value.set({splitByGrapheme: status, width: handleElement.value.fontSize})
   const options = handleElement.value.toObject(propertiesToInclude as any[]) as any
   delete options.type
   options.id = nanoid(10)
