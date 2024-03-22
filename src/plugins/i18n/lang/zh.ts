@@ -73,7 +73,33 @@ export default {
     standardMargin: '标准边距',
     errorRate: '容错率',
 
-    canvas: 'canvas',
+    canvas: '画布',
+    canvasSize: '画布尺寸',
+    style: '样式',
+    width: '宽',
+    height: '高',
+    bleedingLine: '出血线',
+    rightAngle: '直角',
+    fillet: '圆角',
+    unit: '单位',
+    card: '名片',
+    singlePage: '单页',
+    custom: '自定义',
+    canvasFill: '画布填充',
+    lockAspectRatio: '锁定宽高比',
+    unlockAspectRatio: '解除宽高比',
+    applyCanvasToAll: '应用画布到全部',
+    solidColorFill: '纯色填充',
+    imageFill: '图片填充',
+    gradientFill: '渐变填充',
+    gridFill: '网格填充',
+    shapeFill: '形状填充',
+    intelligentFill: '智能填充',
+    canvasMask: '画布蒙版',
+    opacity: '不透明度',
+    safetyLine: '安全线',
+    minimumSizeLimit: '尺寸限制最小为',
+    maximumSizeLimit: '尺寸限制最大为',
 
     searchTemp: '搜索模板',
     recommendTemp: '推荐模板',
@@ -99,7 +125,7 @@ export default {
     myBookmarksText: '我的收藏',
     myPurchasesText: '我的购买',
     myTemplate: '我的模板',
-    TeamTemplate: '团队模板',
+    teamTemplate: '团队模板',
 
     uploadImages: '上传图片',
     searchImages: '搜索图片',
@@ -117,11 +143,14 @@ export default {
     AICutoutImage: 'AI抠图',
     AICutoutImageTips: '运用AI技术，实现智能识别',
 
-    SearchLayer: '搜索图层',
-    BeginnerGuide: "新手入门",
-    UserGuide: '使用教程',
-    Shortcuts: '快捷键',
-    Suggestions: '反馈建议',
-    OnlineSupport: '在线客服'
+    searchLayer: '搜索图层',
+    beginnerGuide: "新手入门",
+    userGuide: '使用教程',
+    shortcuts: '快捷键',
+    suggestions: '反馈建议',
+    onlineSupport: '在线客服'
   },
+  default: {
+    textValue: '双击修改文字'
+  }
 };

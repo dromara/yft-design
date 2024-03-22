@@ -70,7 +70,33 @@ export default {
     standardMargin: 'Standard Margin',
     errorRate: 'Error Rate',
 
-    canvas: 'canvas',
+    canvas: 'Canvas',
+    canvasSize: 'Canvas Size',
+    style: 'Style',
+    width: 'Width',
+    height: 'Height',
+    bleedingLine: 'Bleeding Line',
+    rightAngle: 'right Angle',
+    fillet: 'Fillet',
+    unit: 'unit',
+    card: 'Card',
+    singlePage: 'Single Page',
+    custom: 'Custom',
+    canvasFill: 'Canvas Fill',
+    lockAspectRatio: 'Lock Aspect Ratio',
+    unlockAspectRatio: 'Unlock Aspect Ratio',
+    applyCanvasToAll: 'Apply Canvas To All',
+    solidColorFill: 'Solid Color Fill',
+    imageFill: 'Image Fill',
+    gradientFill: 'Gradient Fill',
+    gridFill: 'Grid Fill',
+    shapeFill: 'Shape Fill',
+    intelligentFill: 'Intelligent Fill',
+    canvasMask: 'Canvas Mask',
+    opacity: 'Opacity',
+    safetyLine: 'Safety Line',
+    minimumSizeLimit: 'The Minimum size Limit Is',
+    maximumSizeLimit: 'The Maximum Size Limit Is',
 
     searchTemp: 'Search For Template',
     recommendTemp: 'Recommend',
@@ -96,7 +122,7 @@ export default {
     myBookmarksText: 'BookMarks',
     myPurchasesText: 'Purchases',
     myTemplate: 'My Templates',
-    TeamTemplate: 'Team Templates',
+    teamTemplate: 'Team Templates',
 
     uploadImages: 'Upload Images',
     searchImages: 'Search Images',
@@ -114,11 +140,16 @@ export default {
     AICutoutImage: 'AI cutout images',
     AICutoutImageTips: 'Utilizing AI technology to achieve intelligent recognition',
 
-    SearchLayer: 'Search For Layer',
-    BeginnerGuide: "Beginner's Guide",
-    UserGuide: 'User Guide',
-    Shortcuts: 'Shortcuts',
-    Suggestions: 'Suggestions',
-    OnlineSupport: 'Online Support'
+    searchLayer: 'Search For Layer',
+    beginnerGuide: "Beginner's Guide",
+    userGuide: 'User Guide',
+    shortcuts: 'Shortcuts',
+    suggestions: 'Suggestions',
+    onlineSupport: 'Online Support',
+
   },
+
+  default: {
+    textValue: 'Double Click Edit Text'
+  }
 };
