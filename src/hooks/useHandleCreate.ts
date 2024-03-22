@@ -15,12 +15,12 @@ import { BarCode } from '@/extension/object/BarCode'
 import useCenter from '@/views/Canvas/useCenter'
 import useCanvas from '@/views/Canvas/useCanvas'
 import useCanvasZindex from './useCanvasZindex'
-
+import { unref } from 'vue'
 import useI18n from "@/hooks/useI18n";
 
 
 export default () => {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
 
   const mainStore = useMainStore()
   const templatesStore = useTemplatesStore()
@@ -39,9 +39,10 @@ export default () => {
 
   const createTextElement = (fontSize: number, textStyle = 'transverse', textHollow = false, textValue = t('default.textValue')) => {
     const { centerPoint } = useCenter()
+    const _locale = unref(locale)
     const textBoxElement = new Textbox(textValue, {
       id: nanoid(10),
-      left: centerPoint.x - textValue.length * fontSize / 2,
+      left: _locale === 'zh' ? centerPoint.x - textValue.length * fontSize / 2 : centerPoint.x,
       top: centerPoint.y - fontSize / 2,
       fontSize,
       fontFamily: systemFonts.value[0].value,
