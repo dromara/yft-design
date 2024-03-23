@@ -34,10 +34,10 @@ const mainStore = useMainStore();
 const { canvasObject, rightState } = storeToRefs(mainStore);
 
 const designTabs = [
-  { label: t("message.canvas"), value: RightStates.ELEMENT_WORKER },
+  { label: t("style.canvas"), value: RightStates.ELEMENT_WORKER },
 ];
 const styleTabs = [
-  { label: t("message.style"), value: RightStates.ELEMENT_STYLE },
+  { label: t("style.style"), value: RightStates.ELEMENT_STYLE },
   // { label: '位置', value: RightStates.ELEMENT_POSITION },
 ];
 
