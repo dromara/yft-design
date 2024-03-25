@@ -119,6 +119,18 @@ export default {
     suggestions: 'Suggestions',
     onlineSupport: 'Online Support',
 
+    model: 'Model',
+    dragAndDropFiles: 'Drag And Drop Files Here Or ',
+    selectFileUpload: 'Select File Upload',
+    imageLimit2MTips: 'For Better Experience, Please Upload Images Within 2MB',
+    common: 'Common',
+    portrait: 'Portrait',
+    rawImage: 'Raw Image',
+    resultImage: 'Result Image',
+    clear: 'Clear',
+    download: 'Download',
+    uploading: 'Uploading',
+    CompleteImageCutout: 'Complete Image Cutout'
   },
   default: {
     textValue: 'Double Click Edit Text'
