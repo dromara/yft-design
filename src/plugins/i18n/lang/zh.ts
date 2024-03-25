@@ -120,7 +120,20 @@ export default {
     userGuide: '使用教程',
     shortcuts: '快捷键',
     suggestions: '反馈建议',
-    onlineSupport: '在线客服'
+    onlineSupport: '在线客服',
+
+    model: '模型',
+    dragAndDropFiles: '拖拽文件到这里，或者',
+    selectFileUpload: '选择文件上传',
+    imageLimit2MTips: '为了更好的体验，请上传2M以内的图片',
+    common: '通用',
+    portrait: '人像',
+    rawImage: '原始图像',
+    resultImage: '结果图像',
+    clear: '清除',
+    download: '下载',
+    uploading: '上传中',
+    CompleteImageCutout: '完成抠图'
   },
   default: {
     textValue: '双击修改文字'
