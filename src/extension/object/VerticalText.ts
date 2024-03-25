@@ -41,37 +41,6 @@ export class VerticalText extends IText {
     return 'VerticalText'
   }
 
-  // static fromObject(object: FabricObject, callback) {
-  //   const objectCopy = fabric.util.object.clone(object);
-  //   delete objectCopy.path;
-  //   return FabricObject._fromObject('VerticalTextbox', objectCopy, function (textInstance) {
-  //     callback(textInstance);
-  //   }, 'vertical-textbox');
-  // };
-  // toTextbox(callback) {
-  //   const objectCopy = fabric.util.object.clone(this.toObject());
-  //   delete objectCopy.path;
-  //   objectCopy.direction = 'ltr';
-  //   objectCopy.textAlign = 'left';
-  //   delete objectCopy.minHeight;
-  //   return fabric.Object._fromObject('Textbox', objectCopy, function (textbox) {
-  //     textbox.type = 'textbox';
-  //     textbox.typeObject = 'text';
-  //     callback(textbox);
-  //   }, 'text');
-  // }
-  // static fromTextbox(textbox, callback) {
-  //   const objectCopy = fabric.util.object.clone(textbox.toObject());
-  //   delete objectCopy.path;
-  //   return fabric.Object._fromObject('VerticalTextbox', objectCopy, function (textInstance) {
-  //     textInstance.textAlign = 'right';
-  //     textInstance.direction = 'rtl';
-  //     textInstance.type = 'vertical-textbox';
-  //     textInstance.typeObject = 'vertical-textbox';
-  //     callback(textInstance);
-  //   }, 'vertical-textbox');
-  // }
-
   _renderTextCommon(ctx: CanvasRenderingContext2D, method: 'fillText' | 'strokeText') {
     ctx.save();
     let lineHeights = 0, left = this._getLeftOffset(), top = this._getTopOffset();
@@ -134,6 +103,8 @@ export class VerticalText extends IText {
     drawLeft = drawLeft - widthFactor / 2;
     drawTop = drawTop + heightFactor;
     ctx.save();
+    ctx.direction = 'ltr'
+    ctx.textAlign = 'start'
     const _boxHeight = charBox.height;
     const tx = drawLeft + drawWidth / 2 - _boxHeight / 8, ty = drawTop - _boxHeight / 8;
     ctx.translate(tx, ty);
@@ -152,7 +123,6 @@ export class VerticalText extends IText {
         if (startChar === null && this._isLatin(line[i])) {
           startChar = i;
         };
-
         if (!timeToRender) {
           actualStyle = actualStyle || this.getCompleteStyleDeclaration(lineIndex, i);
           nextStyle = this.getCompleteStyleDeclaration(lineIndex, i + 1);

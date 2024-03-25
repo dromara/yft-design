@@ -126,7 +126,7 @@ const initTemplate = async () => {
   await canvas.loadFromJSON(currentTemplate.value)
   setCanvasTransform()
   initCommon()
-  initHammer()
+  // initHammer()
   initEvent()
 }
 
