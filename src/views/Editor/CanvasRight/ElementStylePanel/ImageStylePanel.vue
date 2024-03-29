@@ -8,41 +8,48 @@
     <ElementFlip />
 
     <el-row class="mt-10">
-      <el-button-group class="clip-image">
-        <el-button class="clip-button" @click="clipImage">
-          <IconTailoring class="btn-icon" /> 裁剪图片
-        </el-button>
-        <el-popover trigger="click" width="284">
-          <template #reference>
-            <el-button><IconDown /></el-button>
-          </template>
-          <div class="clip">
-            <div class="title">按形状：</div>
-            <div class="shape-clip">
-              <div 
-                class="shape-clip-item" 
-                v-for="(item, key) in CLIPPATHS" 
-                :key="key"
-                @click="presetImageClip(key)"
-              >
-                <div class="shape" :style="{ clipPath: item.style }"></div>
-              </div>
-            </div>
-
-            <template v-for="type in ratioClipOptions" :key="type.label">
-              <div class="title" v-if="type.label">按{{type.label}}：</div>
-              <el-button-group class="row">
-                <el-button 
-                  style="flex: 1;"
-                  v-for="item in type.children"
-                  :key="item.key"
-                  @click="presetImageClip('rect', item.ratio)"
-                >{{item.key}}</el-button>
-              </el-button-group>
+      <el-col :span="12">
+        <el-button-group class="clip-image">
+          <el-button class="clip-button" @click="clipImage">
+            <IconTailoring class="btn-icon" /> 裁剪
+          </el-button>
+          <el-popover trigger="click" width="284">
+            <template #reference>
+              <el-button><IconDown /></el-button>
             </template>
-          </div>
-        </el-popover>
-      </el-button-group>
+            <div class="clip">
+              <div class="title">按形状：</div>
+              <div class="shape-clip">
+                <div 
+                  class="shape-clip-item" 
+                  v-for="(item, key) in CLIPPATHS" 
+                  :key="key"
+                  @click="presetImageClip(key)"
+                >
+                  <div class="shape" :style="{ clipPath: item.style }"></div>
+                </div>
+              </div>
+
+              <template v-for="type in ratioClipOptions" :key="type.label">
+                <div class="title" v-if="type.label">按{{type.label}}：</div>
+                <el-button-group class="row">
+                  <el-button 
+                    style="flex: 1;"
+                    v-for="item in type.children"
+                    :key="item.key"
+                    @click="presetImageClip('rect', item.ratio)"
+                  >{{item.key}}</el-button>
+                </el-button-group>
+              </template>
+            </div>
+          </el-popover>
+        </el-button-group>
+      </el-col>
+      <el-col :span="12">
+        <el-button class="matting-button" @click="openMatting">
+          <IconMagicWand class="btn-icon" /> 抠图
+        </el-button>
+      </el-col>
     </el-row>
 
     <el-divider />
@@ -66,12 +73,12 @@
     <el-row>
       <el-button class="full-width-btn" @click="setBackgroundImage()"><IconTheme class="btn-icon" /> 设为背景</el-button>
     </el-row>
-    
+    <ImageMatting :visible="dialogVisible" @close="closeMatting" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useMainStore, useTemplatesStore } from '@/store'
 import { CLIPPATHS, ClipPathType } from '@/configs/images'
@@ -94,7 +101,7 @@ const [ canvas ] = useCanvas()
 const { canvasObject } = storeToRefs(mainStore)
 const handleElement = computed(() => canvasObject.value as Image)
 const hasShadow = computed(() => handleElement.value.shadow ? true : false)
-
+const dialogVisible = ref(false);
 // 打开自由裁剪
 const clipImage = () => {
   if (!handleElement.value) return
@@ -105,31 +112,31 @@ const clipImage = () => {
 // 预设裁剪
 const presetImageClip = (key: ClipPathType, ratio = 0) => {
   if (!handleElement.value) return
-  const originImage = handleElement.value._originalElement
-  const originHeight = originImage.height
-  const originWidth = originImage.width
+  // const originImage = handleElement.value._originalElement
+  // const originHeight = originImage.height
+  // const originWidth = originImage.width
 
   // 纵横比裁剪（形状固定为矩形）
   if (ratio) {
-    const imageRatio = originHeight / originWidth
+    // const imageRatio = originHeight / originWidth
 
-    const min = 0
-    const max = 100
-    let range: [[number, number], [number, number]]
+    // const min = 0
+    // const max = 100
+    // let range: [[number, number], [number, number]]
 
-    if (imageRatio > ratio) {
-      const distance = ((1 - ratio / imageRatio) / 2) * 100
-      range = [[min, distance], [max, max - distance]]
-    }
-    else {
-      const distance = ((1 - imageRatio / ratio) / 2) * 100
-      range = [[distance, min], [max - distance, max]]
-    }
-    handleElement.value.set({
-        width: originWidth * (range[1][0] - range[0][0]) / 100,
-        height: originHeight * (range[1][1] - range[0][1]) / 100,
-    })
-    canvas.renderAll()
+    // if (imageRatio > ratio) {
+    //   const distance = ((1 - ratio / imageRatio) / 2) * 100
+    //   range = [[min, distance], [max, max - distance]]
+    // }
+    // else {
+    //   const distance = ((1 - imageRatio / ratio) / 2) * 100
+    //   range = [[distance, min], [max - distance, max]]
+    // }
+    // handleElement.value.set({
+    //     width: originWidth * (range[1][0] - range[0][0]) / 100,
+    //     height: originHeight * (range[1][1] - range[0][1]) / 100,
+    // })
+    // canvas.renderAll()
   }
   // 形状裁剪（保持当前裁剪范围）
   else {
@@ -137,6 +144,14 @@ const presetImageClip = (key: ClipPathType, ratio = 0) => {
     handleElement.value.set({__isCropping: true, _cropKey: key})
     canvas.renderAll()
   }
+}
+
+const openMatting = () => {
+  dialogVisible.value = true
+}
+
+const closeMatting = () => {
+  dialogVisible.value = false
 }
 
 // 替换图片（保持当前的样式）
@@ -241,8 +256,14 @@ const setBackgroundImage = () => {
   display: flex;
   flex: 1;
   .clip-button {
-    width: 100%;
+    width: 70%;
   }
+  .clip-popover {
+    width: 30%;
+  }
+}
+.matting-button {
+  width: 100%;
 }
 .mt-10 {
   margin-top: 10px;
