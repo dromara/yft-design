@@ -205,6 +205,7 @@ import {
 import useCanvas from "@/views/Canvas/useCanvas";
 import Backgrounds from "../Backgrounds/index.vue";
 import useHistorySnapshot from "@/hooks/useHistorySnapshot";
+import useCanvasScale from '@/hooks/useCanvasScale'
 
 const { t } = useI18n();
 
@@ -215,6 +216,7 @@ const { addHistorySnapshot } = useHistorySnapshot();
 const { sizeMode, unitMode } = storeToRefs(mainStore);
 const { currentTemplate } = storeToRefs(templatesStore);
 const { clip, safe, zoom, opacity } = storeToRefs(fabricStore);
+const { setCanvasSize, resetCanvas } = useCanvasScale()
 
 const templateWidth = computed(() => {
   // const [ canvas ] = useCanvas()
@@ -283,6 +285,7 @@ const changeTemplateWidth = () => {
   templatesStore.setSize(width, height, zoom.value);
   sizeMode.value = 2;
   canvas.renderAll();
+  // resetCanvas()
   addHistorySnapshot();
 };
 
@@ -314,6 +317,7 @@ const changeTemplateHeight = () => {
   templatesStore.setSize(width, height, zoom.value);
   sizeMode.value = 2;
   canvas.renderAll();
+  // resetCanvas()
   addHistorySnapshot();
 };
 
