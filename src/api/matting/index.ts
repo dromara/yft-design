@@ -20,3 +20,18 @@ import { UploadResult } from './types'
     },
   })
 }
+
+/**
+ * 上传URL
+ *
+ * @param image
+ */
+export function uploadURL(image: string): AxiosPromise<UploadResult> {
+  // const formData = new FormData()
+  // formData.append('image', image)
+  return request({
+    url: '/api/matting/url',
+    method: 'post',
+    data: {image},
+  })
+}

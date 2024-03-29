@@ -98,6 +98,14 @@
               : t("message.CompleteImageCutout")
           }}
         </el-button>
+        <el-button
+          v-show="state.resultImage && props.image"
+          v-loading="state.loading"
+          type="primary"
+          @click="replaceImage"
+        >
+          替换
+        </el-button>
       </div>
     </template>
   </el-dialog>
@@ -115,14 +123,16 @@ import {
   UploadProps,
   UploadRawFile,
 } from "element-plus";
-import { uploadImage } from "@/api/matting";
+import { uploadImage, uploadURL } from "@/api/matting";
 import { useTemplatesStore } from "@/store";
 import { MattingModel } from "@/configs/images";
+import { Image } from "fabric";
 import useCanvasScale from "@/hooks/useCanvasScale";
 import useHandleCreate from "@/hooks/useHandleCreate";
 import useHandleTemplate from "@/hooks/useHandleTemplate";
 import useCanvas from "@/views/Canvas/useCanvas";
 import useI18n from "@/hooks/useI18n";
+
 
 const { t } = useI18n();
 const templatesStore = useTemplatesStore();
@@ -168,6 +178,15 @@ const props = defineProps({
     type: Boolean,
     required: true,
   },
+  imageId: {
+    type: String,
+    required: false
+  },
+  image: {
+    type: String,
+    required: false
+  },
+  
 });
 
 const emit = defineEmits<{
@@ -180,6 +199,7 @@ watch(
     state.dialogVisible = val;
     if (val) {
       uploadRef.value?.clearFiles();
+      updateElement(props.image)
     }
   }
 );
@@ -202,6 +222,28 @@ const uploadHandle = async (option: any) => {
     requestAnimationFrame(run);
   }
 };
+
+const updateElement = async (image?: string) => {
+  if (!image) return
+  const res = await uploadURL(image);
+  const mattingData = res.data;
+  state.originImage = image;
+  const { width, height } = await getImageSize(state.originImage);
+  if (mattingData.code === 200) {
+    state.resultImage = mattingData.resultImage;
+    // state.offsetWidth = mattingData.size.width
+    requestAnimationFrame(run);
+  }
+}
+
+const replaceImage = async () => {
+  const [ canvas ] = useCanvas()
+  const activeObject = canvas.getActiveObject() as Image
+  if (!activeObject) return
+  await activeObject.setSrc(state.resultImage)
+  canvas.renderAll()
+  emit('close')
+}
 
 const handleExceed: UploadProps["onExceed"] = (files: File[]) => {
   uploadRef.value!.clearFiles();

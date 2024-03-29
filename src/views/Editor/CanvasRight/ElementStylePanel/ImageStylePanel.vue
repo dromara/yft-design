@@ -73,7 +73,7 @@
     <el-row>
       <el-button class="full-width-btn" @click="setBackgroundImage()"><IconTheme class="btn-icon" /> 设为背景</el-button>
     </el-row>
-    <ImageMatting :visible="dialogVisible" @close="closeMatting" />
+    <ImageMatting :visible="dialogVisible" :image="handleElement.originSrc ? handleElement.originSrc : handleElement.getSrc()" @close="closeMatting" />
   </div>
 </template>
 
