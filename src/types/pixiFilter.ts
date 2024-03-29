@@ -29,3 +29,8 @@ export interface PixiColorGradientFilter extends PixiFilter {
   alpha?: number
   maxColors?: number
 }
+
+export interface PixiBlendModeFilter extends PixiFilter {
+  mode: number
+  alpha: number
+}

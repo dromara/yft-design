@@ -1,5 +1,5 @@
-import { Application, Texture, Sprite, Container, Filter } from '@pixi/webworker';
-import { PixiFilter, PixiGlowFilter, PixiColorOverlayFilter, PixiColorGradientFilter } from '@/types/pixiFilter';
+import { Application, Texture, Sprite, Container, Filter, BLEND_MODES } from '@pixi/webworker';
+import { PixiFilter, PixiGlowFilter, PixiColorOverlayFilter, PixiColorGradientFilter, PixiBlendModeFilter } from '@/types/pixiFilter';
 import { GlowFilter, ColorOverlayFilter, ColorGradientFilter } from 'pixi-filters'
 
 let app: Application | undefined = undefined
@@ -28,6 +28,9 @@ self.onmessage = async (e) => {
       }
       if (ele.type === 'ColorGradientFilter') {
         handleColorGradientFilter(ele as PixiColorGradientFilter, sprite.filters)
+      }
+      if (ele.type === 'BlendColorFilter') {
+        handleBlendColorFilter(ele as PixiBlendModeFilter, sprite)
       }
     }
     console.log('sprite.filters:', sprite.filters)
@@ -64,4 +67,8 @@ const handleColorGradientFilter = (item: PixiColorGradientFilter, filters: Filte
     stops: item.stops
   })
   filters.push(colorGradientFilter)
+}
+
+const handleBlendColorFilter = (item: PixiBlendModeFilter, sprite: Sprite) => {
+  sprite.blendMode = item.mode
 }
