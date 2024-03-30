@@ -75,6 +75,7 @@
                 </el-button-group>
               </template>
             </div>
+          </div>
           </el-popover>
         </el-button-group>
       </el-col>
