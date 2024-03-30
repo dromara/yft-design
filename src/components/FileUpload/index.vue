@@ -32,11 +32,11 @@ import useCanvas from '@/views/Canvas/useCanvas'
 
 const templatesStore = useTemplatesStore()
 const { setCanvasTransform } = useCanvasScale()
-const { createImageElement } = useHandleCreate()
+const { createImageElement, createVideoElement } = useHandleCreate()
 const { addTemplate } = useHandleTemplate()
 const dialogVisible = ref(false)
 const uploading = ref(false)
-const fileAccept = ref('.pdf,.psd,.cdr,.ai,.svg,.jpg,.jpeg,.png,.webp,.json')
+const fileAccept = ref('.pdf,.psd,.cdr,.ai,.svg,.jpg,.jpeg,.png,.webp,.json,.mp4')
 const uploadRef = ref<UploadInstance>()
 const props = defineProps({
   visible: {
@@ -81,6 +81,11 @@ const uploadHandle = async (option: any) => {
   if (['jpg', 'jpeg', 'png', 'webp'].includes(fileSuffix)) {
     const dataURL = await getImageDataURL(option.file)
     createImageElement(dataURL)
+    emit('close')
+  }
+  if (['mp4'].includes(fileSuffix)) {
+    const dataURL = URL.createObjectURL(option.file)
+    createVideoElement(dataURL)
     emit('close')
   }
   uploading.value = true
