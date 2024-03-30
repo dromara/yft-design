@@ -1,9 +1,5 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
-
 dependencies:
   '@element-plus/icons-vue':
     specifier: ^2.0.10
@@ -54,8 +50,8 @@ dependencies:
     specifier: ^3.0.3
     version: 3.2.4
   element-plus:
-    specifier: ^2.2.28
-    version: 2.4.2(vue@3.3.8)
+    specifier: ^2.6.1
+    version: 2.6.1(vue@3.3.8)
   fabric:
     specifier: ^6.0.0-beta12
     version: 6.0.0-beta9
@@ -1455,6 +1451,14 @@ packages:
 
   /@element-plus/icons-vue@2.1.0(vue@3.3.8):
     resolution: {integrity: sha512-PSBn3elNoanENc1vnCfh+3WA9fimRC7n+fWkf3rE5jvv+aBohNHABC/KAR5KWPecxWxDTVT1ERpRbOMRcOV/vA==}
+    peerDependencies:
+      vue: ^3.2.0
+    dependencies:
+      vue: 3.3.8(typescript@4.9.5)
+    dev: false
+
+  /@element-plus/icons-vue@2.3.1(vue@3.3.8):
+    resolution: {integrity: sha512-XxVUZv48RZAd87ucGS48jPf6pKu0yV5UCg9f4FFwtrYxXOwWuVJo6wOvSLKEoMQKjv8GsX/mhP6UsC1lRwbUWg==}
     peerDependencies:
       vue: ^3.2.0
     dependencies:
@@ -4291,13 +4295,13 @@ packages:
     resolution: {integrity: sha512-c7+Hhj87zWmdpmjDONbvNKNo24tvmD4mjal1+qqTYTrlF0/sNpAcDlU0Ki84ftA/5yj3BF2QhSGEC0Rky6larg==}
     dev: true
 
-  /element-plus@2.4.2(vue@3.3.8):
-    resolution: {integrity: sha512-E/HwXX7JF1LPvQSjs0fZ8WblIoc0quoXsRXQZiL7QDq7xJdNGSUaXtdk7xiEv7axPmLfEFtxE5du9fFspDrmJw==}
+  /element-plus@2.6.1(vue@3.3.8):
+    resolution: {integrity: sha512-6VRpLjwtIVdtUuITJPPKtpOH1NM6nuAkRE3q5O4Lrx0N1bYMhTkiqb2Jy7zfQuDPbOIkkF2OABTzegpNnzgsnQ==}
     peerDependencies:
       vue: ^3.2.0
     dependencies:
       '@ctrl/tinycolor': 3.6.1
-      '@element-plus/icons-vue': 2.1.0(vue@3.3.8)
+      '@element-plus/icons-vue': 2.3.1(vue@3.3.8)
       '@floating-ui/dom': 1.5.3
       '@popperjs/core': /@sxzz/popperjs-es@2.11.7
       '@types/lodash': 4.14.202
@@ -8929,3 +8933,7 @@ packages:
       synchronous-promise: 2.0.17
       toposort: 2.0.2
     dev: false
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false

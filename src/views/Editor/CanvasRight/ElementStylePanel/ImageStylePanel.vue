@@ -17,45 +17,21 @@
     <ElementFlip />
 
     <el-row class="mt-10">
-      <el-button-group class="clip-image">
-        <el-button class="clip-button" @click="clipImage">
-          <IconTailoring class="btn-icon" /> {{ $t("style.cropImage") }}
-        </el-button>
-        <el-popover trigger="click" width="284">
-          <template #reference>
-            <el-button><IconDown /></el-button>
-          </template>
-          <div class="clip">
-            <div class="title">{{ $t("style.byShape") }}：</div>
-            <div class="shape-clip">
-              <div
-                class="shape-clip-item"
-                v-for="(item, key) in CLIPPATHS"
-                :key="key"
-                @click="presetImageClip(key)"
-              >
-                <div class="shape" :style="{ clipPath: item.style }"></div>
-              </div>
-            </div>
-
-            <template v-for="type in ratioClipOptions" :key="type.label">
-              <div class="title" v-if="type.label">按{{ type.label }}：</div>
-              <el-button-group class="row">
-                <el-button
-                  style="flex: 1"
-                  v-for="item in type.children"
-                  :key="item.key"
-                  @click="presetImageClip('rect', item.ratio)"
-                  >{{ item.key }}</el-button
-                >
-              </el-button-group>
+      <el-col>
+        <el-button-group class="clip-image">
+          <el-button class="clip-button" @click="clipImage">
+            <IconTailoring class="btn-icon" /> {{ $t("style.cropImage") }}
+          </el-button>
+          <el-popover trigger="click" width="284">
+            <template #reference>
+              <el-button><IconDown /></el-button>
             </template>
             <div class="clip">
-              <div class="title">按形状：</div>
+              <div class="title">{{ $t("style.byShape") }}：</div>
               <div class="shape-clip">
-                <div 
-                  class="shape-clip-item" 
-                  v-for="(item, key) in CLIPPATHS" 
+                <div
+                  class="shape-clip-item"
+                  v-for="(item, key) in CLIPPATHS"
                   :key="key"
                   @click="presetImageClip(key)"
                 >
@@ -64,18 +40,43 @@
               </div>
 
               <template v-for="type in ratioClipOptions" :key="type.label">
-                <div class="title" v-if="type.label">按{{type.label}}：</div>
+                <div class="title" v-if="type.label">按{{ type.label }}：</div>
                 <el-button-group class="row">
-                  <el-button 
-                    style="flex: 1;"
+                  <el-button
+                    style="flex: 1"
                     v-for="item in type.children"
                     :key="item.key"
                     @click="presetImageClip('rect', item.ratio)"
-                  >{{item.key}}</el-button>
+                    >{{ item.key }}</el-button
+                  >
                 </el-button-group>
               </template>
-            </div>
-          </div>
+              <div class="clip">
+                <div class="title">按形状：</div>
+                <div class="shape-clip">
+                  <div 
+                    class="shape-clip-item" 
+                    v-for="(item, key) in CLIPPATHS" 
+                    :key="key"
+                    @click="presetImageClip(key)"
+                  >
+                    <div class="shape" :style="{ clipPath: item.style }"></div>
+                  </div>
+                </div>
+
+                <template v-for="type in ratioClipOptions" :key="type.label">
+                  <div class="title" v-if="type.label">按{{type.label}}：</div>
+                  <el-button-group class="row">
+                    <el-button 
+                      style="flex: 1;"
+                      v-for="item in type.children"
+                      :key="item.key"
+                      @click="presetImageClip('rect', item.ratio)"
+                    >{{item.key}}</el-button>
+                  </el-button-group>
+                </template>
+              </div>
+            </div>    
           </el-popover>
         </el-button-group>
       </el-col>
