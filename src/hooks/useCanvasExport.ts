@@ -85,6 +85,8 @@ export default () => {
     serializer.zoom = currentTemplate.value.zoom
     serializer.width = currentTemplate.value.width
     serializer.height = currentTemplate.value.height
+    console.log(JSON.stringify(serializer));
+    
     return serializer
   }
 
