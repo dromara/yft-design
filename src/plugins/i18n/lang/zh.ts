@@ -201,7 +201,7 @@ export default {
     flipHorizontal: '水平翻转',
     cropImage: '裁剪图像',
     byShape: '按形状',
-    ByAspectRatio: '按纵横比',
+    byAspectRatio: '按纵横比',
     square: '(方形)',
     direction: '(纵向)',
     transverse: '(横向)',

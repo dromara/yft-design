@@ -5,10 +5,7 @@
         <b>{{ $t("style.enableShadow") }}：</b>
       </div>
       <div class="switch-wrapper" style="flex: 3">
-        <el-switch
-          v-model="props.hasShadow"
-          @change="toggleShadow()"
-        ></el-switch>
+        <el-switch v-model="openShadow" @change="toggleShadow()"></el-switch>
       </div>
     </div>
     <template v-if="props.hasShadow">

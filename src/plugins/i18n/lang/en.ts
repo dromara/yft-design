@@ -198,7 +198,7 @@ export default {
     flipHorizontal: 'Flip Horizontal',
     cropImage: 'Crop Image',
     byShape: 'By Shape',
-    ByAspectRatio: 'By Aspect Ratio',
+    byAspectRatio: 'By Aspect Ratio',
     square: '(Square)',
     direction: '(Direction)',
     enableMask: 'Enable Mask',
