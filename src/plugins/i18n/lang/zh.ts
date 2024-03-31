@@ -199,7 +199,7 @@ export default {
     shadowColor: '阴影颜色',
     flipVertical: '垂直翻转',
     flipHorizontal: '水平翻转',
-    cropImage: '裁剪图像',
+    cropImage: '裁剪',
     byShape: '按形状',
     byAspectRatio: '按纵横比',
     square: '(方形)',
