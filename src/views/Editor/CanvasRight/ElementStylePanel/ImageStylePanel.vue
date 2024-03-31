@@ -40,31 +40,6 @@
                   <el-button style="flex: 1" v-for="item in type.children" :key="item.key" @click="presetImageClip('rect', item.ratio)">{{ item.key }}</el-button>
                 </el-button-group>
               </template>
-              <div class="clip">
-                <div class="title">按形状：</div>
-                <div class="shape-clip">
-                  <div 
-                    class="shape-clip-item" 
-                    v-for="(item, key) in CLIPPATHS" 
-                    :key="key"
-                    @click="presetImageClip(key)"
-                  >
-                    <div class="shape" :style="{ clipPath: item.style }"></div>
-                  </div>
-                </div>
-
-                <template v-for="type in ratioClipOptions" :key="type.label">
-                  <div class="title" v-if="type.label">按{{type.label}}：</div>
-                  <el-button-group class="row">
-                    <el-button 
-                      style="flex: 1;"
-                      v-for="item in type.children"
-                      :key="item.key"
-                      @click="presetImageClip('rect', item.ratio)"
-                    >{{item.key}}</el-button>
-                  </el-button-group>
-                </template>
-              </div>
             </div>    
           </el-popover>
         </el-button-group>
