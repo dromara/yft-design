@@ -1,4 +1,4 @@
-import { debounce, throttle } from 'lodash'
+import { debounce, throttle } from 'lodash-es'
 import { useSnapshotStore } from '@/store'
 
 export default () => {

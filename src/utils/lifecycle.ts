@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { once } from 'lodash'
+import { once } from 'lodash-es'
 
 function isIterable<T = any>(thing: any): thing is Iterable<T> {
   return thing && typeof thing === 'object' && typeof thing[Symbol.iterator] === 'function'

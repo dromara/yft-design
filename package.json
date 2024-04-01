@@ -37,7 +37,7 @@
     "html-to-image": "^1.11.11",
     "js-base64": "^3.7.5",
     "jsbarcode": "^3.11.5",
-    "lodash": "^4.17.21",
+    "lodash-es": "^4.17.21",
     "mousetrap": "^1.6.5",
     "nanoid": "^5.0.3",
     "number-precision": "^1.6.0",

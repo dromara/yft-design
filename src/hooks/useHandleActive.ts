@@ -2,7 +2,7 @@
 import { isDefined } from '@vueuse/core'
 import { ObjectRef, Textbox, Object as FabricObject, Rect } from 'fabric'
 import { clampAngle, toFixed } from '@/utils/common'
-import { isEqual, isNumber } from 'lodash'
+import { isEqual, isNumber } from 'lodash-es'
 import { check } from '@/utils/check'
 import { ref, watchEffect, computed } from 'vue'
 import { useMainStore } from '@/store'

@@ -1,7 +1,7 @@
 import { DEFAULT_IMAGE_SMOOTH_CHOICE, GLOBAL_COMPOSITE_OPERATION_DESTINATION_IN, GRADIENT_BEGIN_OFFSET, GRADIENT_END_OFFSET, GRADIENT_INNER_RADIUS, IMAGE_BORDER_STYLE, INITIAL_IMAGE_BORDER_WIDTH, ONE_TURN_DEGREES, REPAIR_POINT_INNER_COLOR, REPAIR_POINT_OUTER_COLOR, ZERO_DEGREES } from '../constants'
 import { PositionRange } from '../types/common'
 import { CreateContext2DConfig, DrawImageLineBorderConfig, DrawingCircularConfig, GetImageSourceConfig, InitHiddenBoardConfig, InitHiddenBoardWithImageConfig, ResizeCanvasConfig, TransformedDrawingImageConfig } from '../types/dom'
-// import { isString } from 'lodash'
+// import { isString } from 'lodash-es'
 
 function isString(value: string) {
   return typeof value === 'string'

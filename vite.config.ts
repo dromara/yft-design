@@ -176,7 +176,7 @@ export default ({ command }: ConfigEnv): UserConfigExport => {
           manualChunks: {
             vue: ['vue'],
             fabric: ['fabric'],
-            lodash: ['lodash'],
+            'lodash-es': ['lodash-es'],
             'opentype.js': ['opentype.js'],
             'clipper-lib': ['clipper-lib'],
             'element-plus': ['element-plus'],

@@ -81,7 +81,7 @@
 
 <script lang="ts" setup>
 import { onMounted, ref, computed } from "vue";
-import { debounce, throttle } from "lodash";
+import { debounce, throttle } from "lodash-es";
 import { getImageCategory, getImagePages } from "@/api/image";
 import { ImageHit } from "@/api/image/types";
 import { useMainStore } from "@/store";

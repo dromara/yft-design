@@ -503,7 +503,7 @@
 import { ref, computed, watch, onMounted } from "vue";
 import { useMainStore, useTemplatesStore } from "@/store";
 import { storeToRefs } from "pinia";
-import { debounce } from "lodash";
+import { debounce } from "lodash-es";
 import { Gradient, Pattern, Image, util } from "fabric";
 import {
   TransparentFill,
