@@ -1,26 +1,28 @@
 import { storeToRefs } from "pinia";
+import { unref } from "vue";
 import { useFabricStore, useTemplatesStore } from "@/store";
 import { useMainStore } from "@/store/modules/main";
 import { RightStates, ElementNames } from "@/types/elements";
 import { nanoid } from "nanoid";
 import { QRCodeElement, QRCodeOption } from "@/types/canvas";
 import { getImageSize } from "@/utils/image";
-import JsBarcode from "jsbarcode";
 import { Object as FabricObject, Path, classRegistry, XY, util, Image as FabricImage } from "fabric";
 import { Textbox } from "@/extension/object/Textbox";
 import { LinePoint } from "@/types/elements";
 import { Image } from "@/extension/object/Image";
 import { QRCode } from "@/extension/object/QRCode";
 import { BarCode } from "@/extension/object/BarCode";
+import { ArcText } from '@/extension/object/ArcText'
+import { VerticalText } from '@/extension/object/VerticalText'
+import JsBarcode from "jsbarcode";
 import useCenter from "@/views/Canvas/useCenter";
 import useCanvas from "@/views/Canvas/useCanvas";
 import useCanvasZindex from "./useCanvasZindex";
-import { unref } from "vue";
 import useI18n from "@/hooks/useI18n";
-import { ArcText } from '@/extension/object/ArcText'
+
 
 export default () => {
-  const { t, locale } = useI18n();
+  const { t } = useI18n();
 
   const mainStore = useMainStore();
   const templatesStore = useTemplatesStore();
@@ -38,12 +40,15 @@ export default () => {
   };
 
   const createTextElement = (fontSize: number, textStyle = "transverse", textHollow = false, textValue = t("default.textValue")) => {
+    if (textStyle === "direction") {
+      createVerticalTextElement(fontSize, textHollow, textValue)
+      return
+    }
     const { centerPoint } = useCenter();
-    const _locale = unref(locale);
     const textBoxElement = new Textbox(textValue, {
       id: nanoid(10),
-      left: _locale === "zh" ? centerPoint.x - (textValue.length * fontSize) / 2 : centerPoint.x,
-      top: centerPoint.y - fontSize / 2,
+      left: centerPoint.x,
+      top: centerPoint.y,
       fontSize,
       fontFamily: systemFonts.value[0].value,
       fillType: 0,
@@ -57,8 +62,10 @@ export default () => {
       originY: "top",
       textAlign: "justify-center",
       name: ElementNames.TEXTBOX,
-      splitByGrapheme: textStyle === "direction" ? true : false,
+      splitByGrapheme: false,
+      width: fontSize * textValue.length / 2
     });
+    textBoxElement.set({left: textBoxElement.left - textBoxElement.width / 2, top: textBoxElement.top - textBoxElement.height / 2})
     if (textHollow) {
       textBoxElement.fill = "";
       textBoxElement.stroke = "black";
@@ -72,8 +79,8 @@ export default () => {
     
     const textBoxElement = new ArcText(textValue, {
       id: nanoid(10),
-      left: centerPoint.x - textValue.length * fontSize / 2,
-      top: centerPoint.y - fontSize / 2,
+      left: centerPoint.x,
+      top: centerPoint.y,
       fontSize,
       fontFamily: systemFonts.value[0].value,
       fillType: 0,
@@ -89,10 +96,40 @@ export default () => {
       name: ElementNames.TEXTBOX,
       splitByGrapheme: textStyle === 'direction' ? true : false,
     })
+    textBoxElement.set({left: textBoxElement.left - textBoxElement.width / 2, top: textBoxElement.top - textBoxElement.height / 2})
     if (textHollow) {
       textBoxElement.fill = ''
       textBoxElement.stroke = 'black'
       textBoxElement.strokeWidth = 1 
+    }
+    renderCanvas(textBoxElement)
+  }
+
+  const createVerticalTextElement = (fontSize: number, textHollow = false, textValue = '双击修改文字') => {
+    const { centerPoint } = useCenter()
+    
+    const textBoxElement = new VerticalText(textValue, {
+      id: nanoid(10),
+      left: centerPoint.x,
+      top: centerPoint.y,
+      fontSize,
+      fontFamily: systemFonts.value[0].value,
+      fillType: 0,
+      hasControls: true,
+      hasBorders: true,
+      fontWeight: 'normal',
+      charSpacing: 3,
+      opacity: 1,
+      lineHeight: 1.3,
+      originX: 'left',
+      originY: 'top',
+      name: ElementNames.VERTICALTEXT,
+    })
+    textBoxElement.set({left: textBoxElement.left - textBoxElement.width / 2, top: textBoxElement.top - textBoxElement.height / 2})
+    if (textHollow) {
+      textBoxElement.fill = "";
+      textBoxElement.stroke = "black";
+      textBoxElement.strokeWidth = 1;
     }
     renderCanvas(textBoxElement)
   }
@@ -266,15 +303,16 @@ export default () => {
     videoEl.addEventListener("loadeddata", function () {
       videoEl.width = videoEl.videoWidth;
       videoEl.height = videoEl.videoHeight;
-      const video1 = new FabricImage(videoEl, {
+      const videoElement = new FabricImage(videoEl, {
         left: centerPoint.x,
         top: centerPoint.y,
         originX: "center",
         originY: "center",
         objectCaching: false,
       });
-      canvas.add(video1);
-      video1.getElement().play();
+      canvas.add(videoElement);
+      const viedoSource = videoElement.getElement() as any
+      viedoSource.play();
       util.requestAnimFrame(function render() {
         canvas.renderAll();
         util.requestAnimFrame(render);
@@ -291,5 +329,6 @@ export default () => {
     createBarCodeElement,
     createVideoElement,
     createArcTextElement,
+    createVerticalTextElement,
   };
 };
