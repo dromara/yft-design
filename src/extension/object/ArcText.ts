@@ -785,6 +785,9 @@ export class ArcText extends OriginIText {
   }
 
   _renderText(ctx: CanvasRenderingContext2D) {
+    if(this.fill) {
+      ctx.fillStyle = this.fill as string;
+    }
     if(this.useBothRenderingMethod){
       return this._renderTextCommon(ctx, 'both');
     }
