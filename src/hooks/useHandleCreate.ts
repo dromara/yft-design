@@ -17,6 +17,7 @@ import useCanvas from "@/views/Canvas/useCanvas";
 import useCanvasZindex from "./useCanvasZindex";
 import { unref } from "vue";
 import useI18n from "@/hooks/useI18n";
+import { ArcText } from '@/extension/object/ArcText'
 
 export default () => {
   const { t, locale } = useI18n();
@@ -65,6 +66,36 @@ export default () => {
     }
     renderCanvas(textBoxElement);
   };
+
+  const createArcTextElement = (fontSize: number, textStyle = 'transverse', textHollow = false, textValue = '双击修改文字') => {
+    const { centerPoint } = useCenter()
+    
+    const textBoxElement = new ArcText(textValue, {
+      id: nanoid(10),
+      left: centerPoint.x - textValue.length * fontSize / 2,
+      top: centerPoint.y - fontSize / 2,
+      fontSize,
+      fontFamily: systemFonts.value[0].value,
+      fillType: 0,
+      hasControls: true,
+      hasBorders: true,
+      fontWeight: 'normal',
+      charSpacing: 3,
+      opacity: 1,
+      lineHeight: 1.3,
+      originX: 'left',
+      originY: 'top',
+      textAlign: 'justify-center',
+      name: ElementNames.TEXTBOX,
+      splitByGrapheme: textStyle === 'direction' ? true : false,
+    })
+    if (textHollow) {
+      textBoxElement.fill = ''
+      textBoxElement.stroke = 'black'
+      textBoxElement.strokeWidth = 1 
+    }
+    renderCanvas(textBoxElement)
+  }
 
   const createPathElement = (path: string, left?: number, top?: number) => {
     const { centerPoint } = useCenter();
@@ -259,5 +290,6 @@ export default () => {
     createQRCodeElement,
     createBarCodeElement,
     createVideoElement,
+    createArcTextElement,
   };
 };

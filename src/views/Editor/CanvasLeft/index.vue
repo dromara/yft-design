@@ -73,7 +73,7 @@ const setPoolType = (tab: PoolType) => {
   if (poolShow.value && tab === poolType.value) {
     poolShow.value = false;
   } else {
-    poolShow.value = tab !== "editor" && tab !== "help" ? true : false;
+    poolShow.value = tab !== "help" ? true : false;
   }
   mainStore.setPoolType(tab);
 };

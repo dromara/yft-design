@@ -14,6 +14,7 @@
 import { useMainStore } from '@/store'
 import { storeToRefs } from 'pinia'
 import { computed } from 'vue'
+import EditorPool from './components/EditorPool.vue'
 import TemplatePool from './components/TemplatePool.vue'
 import MaterialPool from './components/MaterialPool.vue'
 import TextboxPool from './components/TextboxPool.vue'
@@ -26,7 +27,7 @@ const mainStore = useMainStore()
 const { lastHelp, lastEdit, poolType, poolShow } = storeToRefs(mainStore)
 
 const leftMap = {
-  'editor': null,
+  'editor': EditorPool,
   'template': TemplatePool,
   'material': MaterialPool,
   'text': TextboxPool,
@@ -39,7 +40,7 @@ const leftMap = {
 }
 const currentComponent = computed(() => {
   if (poolType.value === 'help') return leftMap[lastHelp.value]
-  if (poolType.value === 'editor') return leftMap[lastEdit.value]
+  // if (poolType.value === 'editor') return leftMap[lastEdit.value]
   return leftMap[poolType.value] || null
 })
 
