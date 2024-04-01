@@ -144,6 +144,8 @@ export default {
     style: '样式',
     width: '宽',
     height: '高',
+    w: '宽',
+    h: '高',
     bleedingLine: '出血线',
     rightAngle: '直角',
     fillet: '圆角',

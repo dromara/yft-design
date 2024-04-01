@@ -235,6 +235,7 @@ export declare namespace fabric {
 declare global {
   interface Window {
     queryLocalFonts(): any[];
+    gifler: any
   }
 
   declare type Recordable<T = any> = Record<string, T>;
