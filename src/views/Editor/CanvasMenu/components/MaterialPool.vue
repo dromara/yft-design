@@ -2,7 +2,7 @@
   <div class="layout-pool">
     <el-row class="layout-search">
       <el-col :span="5">
-        <FileInput @change="(files) => drawMaterial(files)">
+        <FileInput @change="(files: File[]) => drawMaterial(files)">
           <el-tooltip
             placement="top"
             :hide-after="0"

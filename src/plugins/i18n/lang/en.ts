@@ -141,6 +141,8 @@ export default {
     style: 'Style',
     width: 'Width',
     height: 'Height',
+    w: 'W',
+    h: 'H',
     bleedingLine: 'Bleeding Line',
     rightAngle: 'right Angle',
     fillet: 'Fillet',

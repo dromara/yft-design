@@ -4,7 +4,7 @@
       <b>{{ t("style.canvasSize") }}</b>
     </div>
     <div class="mb-10">
-      <el-row>
+      <el-row class="size-row">
         <el-col :span="11">
           <el-input
             v-model="canvasWidth"
@@ -12,7 +12,7 @@
             @change="changeTemplateWidth"
             oninput="value=value.replace(/[^\d.]/g,'')"
           >
-            <template #prepend>{{ t("style.width") }}</template>
+            <template #prepend>{{ t("style.w") }}</template>
           </el-input>
         </el-col>
         <el-col :span="2" class="fixed-ratio">
@@ -40,7 +40,7 @@
             @change="changeTemplateHeight"
             oninput="value=value.replace(/[^\d.]/g,'')"
           >
-            <template #prepend>{{ t("style.height") }}</template>
+            <template #prepend>{{ t("style.h") }}</template>
           </el-input>
         </el-col>
       </el-row>
@@ -578,5 +578,8 @@ const changeMaskOpacity = () => {
 }
 :deep(.full-ratio .el-radio-button__inner) {
   width: 100%;
+}
+:deep(.size-row .el-input-group__prepend) {
+  min-width: 14px;
 }
 </style>

@@ -7,37 +7,37 @@
       ></el-input>
     </el-row>
     <el-row>
-      <div class="code-common" @click="createBarElement">
-        <div class="code-icon">
+      <el-row class="code-common" @click="createBarElement">
+        <el-col :span="4" class="code-icon">
           <IconPayCodeTwo class="icon-font" />
-        </div>
-        <div class="code-text">
+        </el-col>
+        <el-col :span="20" class="code-text">
           <div class="font-middle">{{ $t("message.barCode") }}</div>
           <div class="font-little">{{ $t("message.barCodeTips") }}</div>
-        </div>
-      </div>
+        </el-col>
+      </el-row>
     </el-row>
     <el-row>
-      <div class="code-common" @click="createQRElement('A1')">
-        <div class="code-icon">
+      <el-row class="code-common" @click="createQRElement('A1')">
+        <el-col :span="4" class="code-icon">
           <IconTwoDimensionalCodeTwo class="icon-font" />
-        </div>
-        <div class="code-text">
+        </el-col>
+        <el-col :span="20" class="code-text">
           <div class="font-middle">{{ $t("message.QRCode") }}</div>
           <div class="font-little">{{ $t("message.QRCodeTips") }}</div>
-        </div>
-      </div>
+        </el-col>
+      </el-row>
     </el-row>
     <el-row>
-      <div class="code-common" @click="openUpload">
-        <div class="code-icon">
+      <el-row class="code-common" @click="openUpload">
+        <el-col :span="4" class="code-icon">
           <IconMagicWand class="icon-font" />
-        </div>
-        <div class="code-text">
+        </el-col>
+        <el-col :span="20" class="code-text">
           <div class="font-middle">{{ $t("message.AICutoutImage") }}</div>
           <div class="font-little">{{ $t("message.AICutoutImageTips") }}</div>
-        </div>
-      </div>
+        </el-col>
+      </el-row>
     </el-row>
     <ImageMatting :visible="dialogVisible" @close="closeUpload" />
   </div>

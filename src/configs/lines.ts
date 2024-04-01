@@ -12,10 +12,22 @@ export interface LinePoolItem {
   isCubic?: boolean
 }
 
-interface PresetLine {
+export interface PresetLine {
   type: string
   children: LinePoolItem[]
 }
+
+export const LinePoolItems: LinePoolItem[] = [
+  {
+    path: "M 0 0 L 20 20",
+    style: "solid",
+    points: ["", ""],
+    data: [
+      { x: 0, y: 0 },
+      { x: 200, y: 0 },
+    ],
+  },
+];
 
 export const PathLineLibs: PresetLine[] = [
   {

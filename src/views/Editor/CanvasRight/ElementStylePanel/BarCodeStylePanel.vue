@@ -25,20 +25,14 @@
       <el-col :span="11">
         <div class="title">{{ $t("style.width") }}：</div>
         <div class="row">
-          <el-input
-            v-model="handleElement.codeOption.width"
-            @change="generateBarCode"
-          ></el-input>
+          <el-input v-model="handleElement.codeOption.width" @change="generateBarCode"></el-input>
         </div>
       </el-col>
       <el-col :span="2"></el-col>
       <el-col :span="11">
         <div class="title">{{ $t("style.height") }}：</div>
         <div class="row">
-          <el-input
-            v-model="handleElement.codeOption.height"
-            @change="generateBarCode"
-          ></el-input>
+          <el-input v-model="handleElement.codeOption.height" @change="generateBarCode"></el-input>
         </div>
       </el-col>
     </el-row>
@@ -265,5 +259,8 @@ const generateBarCode = async () => {
 }
 .el-carousel__item:nth-child(2n + 1) {
   background-color: #d3dce6;
+}
+:deep(.size-row .el-input-group__prepend) {
+  min-width: 14px;
 }
 </style>

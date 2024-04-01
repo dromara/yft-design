@@ -51,8 +51,6 @@
 <script lang="ts" setup>
 import { PathLineLibs, LinePoolItem } from '@/configs/lines'
 
-import LinePointMarker from './Components/LinePointMarker.vue'
-
 const emit = defineEmits<{
   (event: 'select', payload: LinePoolItem): void
 }>()
