@@ -3,11 +3,7 @@
     <el-row class="layout-search">
       <el-col :span="5">
         <FileInput @change="(files: FileList) => drawImage(files)">
-          <el-tooltip
-            placement="top"
-            :hide-after="0"
-            :content="$t('message.uploadImages')"
-          >
+          <el-tooltip placement="top" :hide-after="0" :content="$t('message.uploadImages')">
             <el-button type="primary">
               <IconUpload />
             </el-button>
@@ -15,22 +11,15 @@
         </FileInput>
       </el-col>
       <el-col :span="19">
-        <el-input
-          :prefix-icon="Search"
-          :placeholder="$t('message.searchImages')"
-        ></el-input>
+        <el-input :prefix-icon="Search" :placeholder="$t('message.searchImages')"></el-input>
       </el-col>
     </el-row>
     <el-tabs v-model="activeImage" class="layout-tabs">
       <el-tab-pane :label="$t('message.recommendImages')" name="data">
         <IllustrationCategory />
       </el-tab-pane>
-      <el-tab-pane :label="$t('message.myBookmarks')" name="self">
-        {{ $t("message.myBookmarks") }}
-      </el-tab-pane>
-      <el-tab-pane :label="$t('message.teamTemplates')" name="team">{{
-        $t("message.teamTemplates")
-      }}</el-tab-pane>
+      <el-tab-pane :label="$t('message.myBookmarks')" name="self">{{ $t("message.myBookmarks") }}</el-tab-pane>
+      <el-tab-pane :label="$t('message.teamTemplates')" name="team">{{ $t("message.teamTemplates")}}</el-tab-pane>
     </el-tabs>
   </div>
 </template>

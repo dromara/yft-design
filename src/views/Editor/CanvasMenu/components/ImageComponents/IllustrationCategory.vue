@@ -1,76 +1,31 @@
 <template>
   <div>
-    <div
-      class="category-container"
-      ref="categoryRef"
-      @scroll="onCategoryScroll"
-      v-if="typeRef === 'all'"
-    >
+    <div class="category-container" ref="categoryRef" @scroll="onCategoryScroll" v-if="typeRef === 'all'">
       <div v-for="(item, index) in illustrationCategoryData" :key="index">
         <el-row class="col-tip mt-5">
           <el-col :span="5" class="col-name">
             <el-tag>{{ item.name }}</el-tag>
           </el-col>
           <el-col :span="7" class="col-name">
-            <el-button text @click="showTotal(item.type)"
-              >{{ $t("message.all") }}<IconRight
-            /></el-button>
+            <el-button text @click="showTotal(item.type)">{{ $t("message.all") }}<IconRight/></el-button>
           </el-col>
         </el-row>
-        <el-row
-          class="category-box mt-5"
-          v-loading="item.category.length === 0"
-        >
-          <div
-            class="box-image"
-            :style="{
-              width:
-                (img.previewHeight <= 120
-                  ? (img.previewWidth / img.previewHeight) * 120
-                  : img.previewWidth) + 'px',
-            }"
-            v-for="(img, index) in item.category"
-            :key="index"
-          >
-            <img
-              :src="img.previewURL"
-              :alt="img.tags"
-              @click="createImage(img)"
-            />
+        <el-row class="category-box mt-5" v-loading="item.category.length === 0">
+          <div class="box-image" :style="{ width: (img.previewHeight <= 120 ? (img.previewWidth / img.previewHeight) * 120 : img.previewWidth) + 'px'}" v-for="(img, index) in item.category" :key="index">
+            <img :src="img.previewURL" :alt="img.tags" @click="createImage(img)"/>
           </div>
         </el-row>
       </div>
     </div>
-    <div
-      class="category-container"
-      ref="totalRef"
-      @scroll="onTotalScroll"
-      v-else
-    >
+    <div class="category-container" ref="totalRef" @scroll="onTotalScroll" v-else>
       <el-row class="col-tip mt-5">
         <el-col :span="7" class="col-name">
-          <el-button text @click="hideTotal()"
-            ><IconLeft />{{ categoryData.name }}</el-button
-          >
+          <el-button text @click="hideTotal()"><IconLeft />{{ categoryData.name }}</el-button>
         </el-col>
       </el-row>
-      <el-row
-        class="total-box mt-5"
-        v-loading="categoryData.total.length === 0"
-      >
-        <div
-          class="box-image"
-          v-for="(img, index) in categoryData.total"
-          :key="index"
-          :style="{
-            justifyContent: index % 2 === 0 ? 'flex-start' : 'flex-end',
-          }"
-        >
-          <img
-            :src="img.previewURL"
-            :alt="img.tags"
-            @click="createImage(img)"
-          />
+      <el-row class="total-box mt-5" v-loading="categoryData.total.length === 0">
+        <div class="box-image" v-for="(img, index) in categoryData.total" :key="index" :style="{ justifyContent: index % 2 === 0 ? 'flex-start' : 'flex-end'}">
+          <img :src="img.previewURL" :alt="img.tags" @click="createImage(img)"/>
         </div>
       </el-row>
     </div>

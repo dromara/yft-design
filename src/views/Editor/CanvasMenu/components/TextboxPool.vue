@@ -91,7 +91,6 @@ const drawText = (fontSize: number) => {
 }
 .layout-text {
   margin: 0 auto;
-  width: 75%;
   padding: 10px;
   justify-content: center;
   cursor: pointer;
