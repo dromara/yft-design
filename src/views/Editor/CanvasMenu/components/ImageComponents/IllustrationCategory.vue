@@ -11,9 +11,9 @@
           </el-col>
         </el-row>
         <el-row class="category-box mt-5" v-loading="item.category.length === 0">
-          <div class="box-image" :style="{ width: (img.previewHeight <= 120 ? (img.previewWidth / img.previewHeight) * 120 : img.previewWidth) + 'px'}" v-for="(img, index) in item.category" :key="index">
+          <el-col :span="8" class="box-image" v-for="(img, index) in item.category" :key="index">
             <img :src="img.previewURL" :alt="img.tags" @click="createImage(img)"/>
-          </div>
+          </el-col>
         </el-row>
       </div>
     </div>
@@ -61,7 +61,7 @@ const getImageCategoryData = throttle(
     if (res && res.data.code === 200) {
       illustrationCategoryData.value
         .filter((item) => item.type === t)
-        .map((ele) => (ele.category = res.data.data.slice(0, 2)));
+        .map((ele) => (ele.category = res.data.data));
     }
   },
   100,
