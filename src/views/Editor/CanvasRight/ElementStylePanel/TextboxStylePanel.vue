@@ -35,7 +35,7 @@
         </el-tooltip>
       </el-col>
       <el-col :span="6">
-        <el-tooltip placement="top" content="文字高亮" :hide-after="0">
+        <el-tooltip placement="top" content="背景颜色" :hide-after="0">
           <div @click.stop class="tooltip-popover">
             <el-popover trigger="click" placement="bottom" :width="265">
               <template #reference>
