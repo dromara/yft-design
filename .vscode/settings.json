@@ -1,0 +1,14 @@
+{
+    "eslint.enable": true,
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "explicit"
+    },
+    "editor.formatOnSave": false,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "prettier.configPath": ".prettierrc.js",
+    "prettier.requireConfig": true,
+    "i18n-ally.localesPaths": [
+        "src/language"
+    ],
+    "i18n-ally.sourceLanguage": "zh" // 需要Prettier的配置文件
+}
