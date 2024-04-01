@@ -53,7 +53,6 @@ import CanvasTour from "./CanvasTour/index.vue";
   height: 100%;
   display: flex;
   flex-shrink: 0;
-  border-right: solid 1px $borderColor;
   background-color: #fff;
   flex-direction: column;
   user-select: none;
@@ -63,7 +62,7 @@ import CanvasTour from "./CanvasTour/index.vue";
 
   .center-header {
     position: relative;
-    border-bottom: 1px solid $borderColor;
+    border-left: 1px solid $borderColor;
     background-color: #fff;
     display: flex;
     justify-content: space-between;
