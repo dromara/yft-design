@@ -134,7 +134,7 @@ import { PresetLine } from "@/configs/lines";
 import { ArcText } from '@/extension/object/ArcText'
 
 const { t } = useI18n();
-const { createQRCodeElement, createBarCodeElement, createImageElement, createTextElement, createPathElement, createLineElement, createArcTextElement } = useHandleCreate();
+const { createQRCodeElement, createBarCodeElement, createImageElement, createTextElement, createPathElement, createLineElement, createArcTextElement, createVideoElement } = useHandleCreate();
 const codeContent = ref<string>(window.location.href);
 const codeSpace = ref<boolean>(true);
 const codeError = ref<number>(0);
@@ -153,7 +153,7 @@ const generateQRCodeMap = {
   A_b1: rendererFuncA,
   A_b2: rendererFuncB,
 };
-const fileAccept = ref(".pdf,.psd,.cdr,.ai,.svg,.jpg,.jpeg,.png,.webp,.json");
+const fileAccept = ref(".pdf,.psd,.cdr,.ai,.svg,.jpg,.jpeg,.png,.webp,.json,.mp4");
 const uploading = ref(false);
 const PathShapeLibs: PathListItem[] = [
   {
@@ -248,6 +248,10 @@ const uploadHandle = async (option: any) => {
   if (["jpg", "jpeg", "png", "webp"].includes(fileSuffix)) {
     const dataURL = await getImageDataURL(option.file);
     createImageElement(dataURL);
+  }
+  if (['mp4'].includes(fileSuffix)) {
+    const dataURL = URL.createObjectURL(option.file)
+    createVideoElement(dataURL)
   }
   //   uploading.value = true
   const res = await uploadFile(option.file, fileSuffix);
