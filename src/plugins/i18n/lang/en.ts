@@ -109,7 +109,7 @@ export default {
     barCodeTips: 'Quickly generate one-dimensional codes, supporting 4 types of coding',
     QRCode: 'QR code',
     QRCodeTips: 'Quickly generate QR codes, supporting 13 styles',
-    AICutoutImage: 'AI cutout images',
+    AICutoutImage: 'Cut img',
     AICutoutImageTips: 'Utilizing AI technology to achieve intelligent recognition',
 
     searchLayer: 'Search For Layer',

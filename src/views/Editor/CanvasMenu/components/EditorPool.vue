@@ -300,7 +300,7 @@ const drawLine = (line: LinePoolItem) => {
   .item-box {
     background-color: #f6f6f6;
     border-radius: 5px;
-    padding: 16px;
+    padding: 15px 10px;
     display: flex;
     justify-content: center;
     align-items: center;
