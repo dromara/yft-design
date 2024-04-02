@@ -130,19 +130,20 @@ export default () => {
       ...WorkSpaceCommonOption
     })
 
-    const referenceLines = canvas.getObjects('ReferenceLine').forEach(item => {
-      const referenceLine = item as ReferenceLine
-      if (referenceLine.axis === 'horizontal') {
-        referenceLine.set({y0: -0, y1: 0})
-        canvas.renderAll()
-      }
-    })
+    
     
     canvas.add(workSpaceClip)
     canvas.add(workSpaceSafe)
     canvas.add(workLineGroup)
     canvas.add(workSpaceMask)
     canvas.renderAll()
+
+    canvas.getObjects('ReferenceLine').forEach(item => {
+      const referenceLine = item as ReferenceLine
+      referenceLine.set({selectable: true})
+      canvas.bringObjectToFront(referenceLine)
+      canvas.renderAll()
+    })
   }
 
   return {

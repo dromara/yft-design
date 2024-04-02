@@ -6,14 +6,17 @@ export class ReferenceLine extends Line {
   static type: string = 'ReferenceLine';
   public axis: string = ''
 
-  constructor(point: number, options: any) {
+  constructor(point: number | [number, number, number, number], options: any) {
     // 设置新的点
     // point += 100
     const size = 999999
-    const points = options.axis === 'horizontal' ? [-size, point, size, point] : [point, -size, point, size]
+    let points = options.axis === 'horizontal' ? [-size, 0, size, 0] : [0, -size, 0, size]
+    if (typeof point === 'number') {
+      points = options.axis === 'horizontal' ? [-size, point, size, point] : [point, -size, point, size]
+    }
+    console.log('points:', points, typeof point === 'number')
     const isHorizontal = options.axis === 'horizontal'
     options[isHorizontal ? 'lockMovementX' : 'lockMovementY'] = true
-    console.log('points:', points)
     super(points as [number, number, number, number], options)
     this.axis = options.axis
     this.initEvent()
