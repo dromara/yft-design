@@ -159,7 +159,7 @@ const createImage = async (item: ImageHit) => {
   const { centerPoint } = useCenter()
   let loading = canvas.loading
   if (!loading) {
-    loading = await GifImage.fromURL('src/assets/images/loading.gif')
+    loading = await GifImage.fromURL(new URL(`/src/assets/images/loading.gif`, import.meta.url).href)
     loading.set({left: centerPoint.x - loading.width / 2, top: centerPoint.y - loading.height / 2})
     canvas.add(loading);
     canvas.renderAll()
