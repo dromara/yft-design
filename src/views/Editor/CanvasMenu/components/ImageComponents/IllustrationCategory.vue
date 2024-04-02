@@ -147,18 +147,30 @@ const hideTotal = () => {
   categoryRef.value.scrollTo({ top: categoryTop.value, behavior: "smooth" });
 };
 
+const hideLoading = async (item: ImageHit, loading: Image) => {
+  const [ canvas ] = useCanvas()
+  await util.loadImage(item.largeImageURL)
+  loading.set({visible: false})
+  canvas.renderAll()
+}
+
 const createImage = async (item: ImageHit) => {
   const [ canvas ] = useCanvas()
   const { centerPoint } = useCenter()
-  const gif = await GifImage.fromURL('src/assets/images/loading.gif')
-  gif.set({left: centerPoint.x - gif.width / 2, top: centerPoint.y - gif.height / 2})
-  canvas.add(gif);
-  canvas.renderAll()
-  const image = await util.loadImage(item.largeImageURL)
-  if (image) {
-    gif.set({visible: false})
+  let loading = canvas.loading
+  if (!loading) {
+    loading = await GifImage.fromURL('src/assets/images/loading.gif')
+    loading.set({left: centerPoint.x - loading.width / 2, top: centerPoint.y - loading.height / 2})
+    canvas.add(loading);
+    canvas.renderAll()
+    canvas.loading = loading
+  }
+  else {
+    loading.set({visible: true})
+    canvas.bringObjectToFront(loading)
     canvas.renderAll()
   }
+  await hideLoading(item, loading)
   createImageElement(item.largeImageURL);
 };
 
