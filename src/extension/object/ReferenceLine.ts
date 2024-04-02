@@ -13,6 +13,7 @@ export class ReferenceLine extends Line {
     const points = options.axis === 'horizontal' ? [-size, point, size, point] : [point, -size, point, size]
     const isHorizontal = options.axis === 'horizontal'
     options[isHorizontal ? 'lockMovementX' : 'lockMovementY'] = true
+    console.log('points:', points)
     super(points as [number, number, number, number], options)
     this.axis = options.axis
     this.initEvent()
@@ -52,6 +53,7 @@ export class ReferenceLine extends Line {
         target: this,
         e: e.e,
       });
+      this.canvas?.fire('object:modified')
     });
 
     this.on('removed', () => {
@@ -59,6 +61,7 @@ export class ReferenceLine extends Line {
       this.off('mousedown:before', callback);
       this.off('moving', callback);
       this.off('mouseup', callback);
+      this.canvas?.fire('object:modified')
     });
   }
 
@@ -83,6 +86,10 @@ export class ReferenceLine extends Line {
       return hoveredRuler;
     }
     return false;
+  }
+
+  fire(eventName: any, options?: any) {
+    super.fire(eventName, options)
   }
 
   async fromObject(options: any): Promise<Line> {

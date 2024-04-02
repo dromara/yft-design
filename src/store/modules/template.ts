@@ -64,6 +64,7 @@ export const useTemplatesStore = defineStore('Templates', {
       const [ canvas ] = useCanvas()
       const { initCommon } = useCommon()
       const { setCanvasSize } = useCanvasScale()
+      console.log('this.currentTemplate:', this.currentTemplate)
       await canvas.loadFromJSON(this.currentTemplate)
       this.setObjectFilter(this.currentTemplate.objects as CanvasElement[])
       setCanvasSize()

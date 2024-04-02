@@ -17,11 +17,13 @@ import { Line, Group, Rect, Path } from 'fabric'
 import { LineOption } from '@/types/canvas'
 import { TransparentFill } from '@/configs/background'
 import useCanvas from "./useCanvas"
+import { ReferenceLine } from "@/extension/object/ReferenceLine"
 
 export default () => {
   const initCommon = () => {
     const [canvas] = useCanvas()
     if (!canvas) return
+    console.log('canvas.getObjects():', canvas.getObjects())
     const workSpaceDraw = canvas.getObjects().filter(ele => ele.id === WorkSpaceDrawType)[0]
     if (!workSpaceDraw) return
     const fabricStore = useFabricStore()
@@ -126,6 +128,14 @@ export default () => {
       top: top - diagonalHalfPX,
       visible: showClip.value,
       ...WorkSpaceCommonOption
+    })
+
+    const referenceLines = canvas.getObjects('ReferenceLine').forEach(item => {
+      const referenceLine = item as ReferenceLine
+      if (referenceLine.axis === 'horizontal') {
+        referenceLine.set({y0: -0, y1: 0})
+        canvas.renderAll()
+      }
     })
     
     canvas.add(workSpaceClip)

@@ -32,8 +32,8 @@
 
 import { ref } from 'vue'
 import { ReferenceLine } from '@/extension/object/ReferenceLine'
+import { useMainStore, useTemplatesStore } from '@/store'
 import useCanvas from '@/views/Canvas/useCanvas'
-
 const hasReference = ref(false)
 const direction = ref<'horizontal' | 'vertical'>('horizontal')
 const distance = ref(0)
@@ -78,6 +78,8 @@ const addReference = () => {
   );
   canvas.add(tempReferenceLine)
   canvas.renderAll()
+  const templatesStore = useTemplatesStore()
+  templatesStore.modifedElement()
 }
 
 </script>
