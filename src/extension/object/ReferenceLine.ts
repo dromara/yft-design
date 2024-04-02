@@ -11,10 +11,13 @@ export class ReferenceLine extends Line {
     // point += 100
     const size = 999999
     let points = options.axis === 'horizontal' ? [-size, 0, size, 0] : [0, -size, 0, size]
+    if (typeof point === 'object') {
+      points = point
+    }
     if (typeof point === 'number') {
       points = options.axis === 'horizontal' ? [-size, point, size, point] : [point, -size, point, size]
     }
-    console.log('points:', points, typeof point === 'number')
+    
     const isHorizontal = options.axis === 'horizontal'
     options[isHorizontal ? 'lockMovementX' : 'lockMovementY'] = true
     super(points as [number, number, number, number], options)

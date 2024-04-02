@@ -23,7 +23,6 @@ export default () => {
   const initCommon = () => {
     const [canvas] = useCanvas()
     if (!canvas) return
-    console.log('canvas.getObjects():', canvas.getObjects())
     const workSpaceDraw = canvas.getObjects().filter(ele => ele.id === WorkSpaceDrawType)[0]
     if (!workSpaceDraw) return
     const fabricStore = useFabricStore()
@@ -130,8 +129,6 @@ export default () => {
       ...WorkSpaceCommonOption
     })
 
-    
-    
     canvas.add(workSpaceClip)
     canvas.add(workSpaceSafe)
     canvas.add(workLineGroup)
@@ -140,7 +137,7 @@ export default () => {
 
     canvas.getObjects('ReferenceLine').forEach(item => {
       const referenceLine = item as ReferenceLine
-      referenceLine.set({selectable: true})
+      referenceLine.set({selectable: true, hasControls: false, hasBorders: false, padding: 5})
       canvas.bringObjectToFront(referenceLine)
       canvas.renderAll()
     })

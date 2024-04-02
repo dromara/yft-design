@@ -67,6 +67,7 @@ export const propertiesToInclude = [
   'editable',
   'color', 
   'axis',
+  'padding',
   'cropKey', 
   'cropPath', 
   'cropSize', 
@@ -91,4 +92,5 @@ export const propertiesToInclude = [
   'reverse',
   'startStyle',
   'endStyle',
+  'globalCompositeOperation',
 ]

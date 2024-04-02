@@ -59,7 +59,7 @@ const addReference = () => {
   const ruler = canvas.ruler
   if (!ruler) return
   const tempReferenceLine = new ReferenceLine(
-    distance.value,
+    Number(distance.value),
     {
       type: 'ReferenceLine',
       axis: direction.value,

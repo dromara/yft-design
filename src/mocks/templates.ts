@@ -318,6 +318,63 @@ export const Templates: Template[] = [
         "skewY": 0
       },
       // {
+      //   "id": "D-tH96-i5Y",
+      //   "name": "line",
+      //   "fill": "",
+      //   "selectable": true,
+      //   "evented": true,
+      //   "lockMovementX": false,
+      //   "lockMovementY": false,
+      //   "objectCaching": false,
+      //   "transparentCorners": false,
+      //   "hasBorders": false,
+      //   "startStyle": "",
+      //   "endStyle": "arrow",
+      //   "type": "Polyline",
+      //   "version": "6.0.0-beta9",
+      //   "originX": "left",
+      //   "originY": "top",
+      //   "left": 566.3713,
+      //   "top": 201.0314,
+      //   "width": 200,
+      //   "height": 100,
+      //   "stroke": "pink",
+      //   "strokeWidth": 4,
+      //   "strokeLineCap": "butt",
+      //   "strokeDashOffset": 0,
+      //   "strokeLineJoin": "miter",
+      //   "strokeUniform": false,
+      //   "strokeMiterLimit": 4,
+      //   "scaleX": 1,
+      //   "scaleY": 1,
+      //   "angle": 0,
+      //   "flipX": false,
+      //   "flipY": false,
+      //   "opacity": 1,
+      //   "shadow": null,
+      //   "visible": true,
+      //   "backgroundColor": "",
+      //   "fillRule": "nonzero",
+      //   "paintFirst": "fill",
+      //   "globalCompositeOperation": "source-over",
+      //   "skewX": 0,
+      //   "skewY": 0,
+      //   "points": [
+      //     {
+      //       "x": 0,
+      //       "y": 0
+      //     },
+      //     {
+      //       "x": 0,
+      //       "y": 100
+      //     },
+      //     {
+      //       "x": 200,
+      //       "y": 100
+      //     }
+      //   ]
+      // },
+      // {
       //   "fontSize": 80,
       //   "fontWeight": "normal",
       //   "fontFamily": "Arial",
