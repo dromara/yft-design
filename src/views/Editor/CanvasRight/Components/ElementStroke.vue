@@ -3,10 +3,10 @@
     <div class="row">
       <div style="flex: 2;"><b>启用描边：</b></div>
       <div class="switch-wrapper" style="flex: 3;">
-        <el-switch v-model="props.hasStroke" @change="toggleStroke()"></el-switch>
+        <el-switch v-model="openStroke" @change="toggleStroke()"></el-switch>
       </div>
     </div>
-    <template v-if="props.hasStroke">
+    <template v-if="openStroke">
       <div class="row">
         <div style="flex: 2;">描边厚度：</div>
         <el-slider class="slider" v-model="handleElement.strokeWidth" @change="updateStrokeWidth"></el-slider>
