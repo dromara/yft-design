@@ -271,6 +271,7 @@ export default () => {
   };
 
   const pasteListener = async (event: { preventDefault: () => void; clipboardData: any; originalEvent: { clipboardData: any } }) => {
+    const { pasteElement } = useHandleElement()
     const [canvas] = useCanvas();
     event.preventDefault(); // 阻止默认粘贴行为
 
@@ -332,6 +333,9 @@ export default () => {
           }
         });
       }
+    }
+    if (!items.length) {
+      pasteElement();
     }
   };
 

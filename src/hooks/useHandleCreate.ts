@@ -18,11 +18,9 @@ import JsBarcode from "jsbarcode";
 import useCenter from "@/views/Canvas/useCenter";
 import useCanvas from "@/views/Canvas/useCanvas";
 import useCanvasZindex from "./useCanvasZindex";
-import useI18n from "@/hooks/useI18n";
 
 
 export default () => {
-  const { t } = useI18n();
 
   const mainStore = useMainStore();
   const templatesStore = useTemplatesStore();

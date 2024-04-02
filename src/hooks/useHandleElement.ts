@@ -11,6 +11,7 @@ import { useActiveElement } from '@vueuse/core'
 import { computed } from 'vue'
 import useCanvas from "@/views/Canvas/useCanvas"
 import useCanvasZindex from "./useCanvasZindex"
+import { copyText } from '@/utils/clipboard'
 
 export default () => {
   const templatesStore = useTemplatesStore()
@@ -70,6 +71,7 @@ export default () => {
   const copyElement = async () => {
     if (!canvasObject.value) return
     clonedObject.value = await canvasObject.value.clone(propertiesToInclude)
+    navigator.clipboard.writeText('')
   }
 
   const pasteElement = async () => {
