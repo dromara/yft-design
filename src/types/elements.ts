@@ -6,6 +6,7 @@ export const enum ElementNames {
   TEXT = 'text',
   ITEXT = 'i-text',
   ARCTEXT = 'arctext',
+  VERTICALTEXT = 'verticaltext',
   IMAGE = 'image',
   SVGIMAGE = 'svgimage',
   CROPIMAGE = 'cropimage',

@@ -1,6 +1,6 @@
 
 import { Object as FabricObject, CanvasEvents, Canvas, Rect, Textbox } from 'fabric'
-import { clone } from 'lodash'
+import { clone } from 'lodash-es'
 import { check } from '@/utils/check'
 import { Disposable } from '@/utils/lifecycle'
 import { addDisposableListener } from '@/utils/dom'

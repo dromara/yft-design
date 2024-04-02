@@ -2,7 +2,7 @@
 import { CanvasEvents, Canvas, Point, TPointerEvent, TPointerEventInfo } from 'fabric'
 import { useIntervalFn, useMagicKeys } from '@vueuse/core'
 import { Disposable, toDisposable } from '@/utils/lifecycle'
-import { debounce } from 'lodash'
+import { debounce } from 'lodash-es'
 import { storeToRefs } from 'pinia'
 import { useFabricStore } from '@/store'
 

@@ -1,4 +1,4 @@
-import { padStart } from 'lodash'
+import { padStart } from 'lodash-es'
 /**
  * 1. 随机颜色
  * 2. 图片转成 Base64

@@ -1,5 +1,5 @@
 import mousetrap, { ExtendedKeyboardEvent } from 'mousetrap'
-import { isArray, isFunction, isObject, isString } from 'lodash'
+import { isArray, isFunction, isObject, isString } from 'lodash-es'
 import { createDecorator } from './instantiation/instantiation'
 import { registerSingleton, InstantiationType } from './instantiation/extensions'
 import { runWhenIdle } from '@/utils/async'

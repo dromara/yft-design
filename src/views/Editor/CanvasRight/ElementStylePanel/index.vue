@@ -23,6 +23,8 @@ const panelMap = {
   [ElementNames.TEXTBOX]: TextboxStylePanel,
   [ElementNames.TEXT]: TextboxStylePanel,
   [ElementNames.ITEXT]: TextboxStylePanel,
+  [ElementNames.VERTICALTEXT]: TextboxStylePanel,
+  [ElementNames.ARCTEXT]: TextboxStylePanel,
   [ElementNames.IMAGE]: ImageStylePanel,
   [ElementNames.SVGIMAGE]: ImageStylePanel,
   [ElementNames.CROPIMAGE]: ImageStylePanel,

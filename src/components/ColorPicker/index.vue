@@ -75,7 +75,7 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref, watch } from 'vue'
 import tinycolor, { ColorFormats } from 'tinycolor2'
-import { debounce } from 'lodash'
+import { debounce } from 'lodash-es'
 import { toCanvas } from 'html-to-image'
 
 import Alpha from './Alpha.vue'

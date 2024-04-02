@@ -34,7 +34,7 @@
             <div class="mt-8px">横排正文</div>
           </div>
         </el-col>
-        <el-col :span="8" @click="drawText(36, 'direction')">
+        <el-col :span="8" @click="drawVerticalText(36)">
           <div class="item-box">
             <IconTextRotationDown class="icon-font" />
             <div class="mt-8px">竖排正文</div>
@@ -138,7 +138,17 @@ import useCanvas from "@/views/Canvas/useCanvas";
 const { t } = useI18n();
 const { addTemplate } = useHandleTemplate()
 const { setCanvasTransform } = useCanvasScale()
-const { createQRCodeElement, createBarCodeElement, createImageElement, createTextElement, createPathElement, createLineElement, createArcTextElement, createVideoElement } = useHandleCreate();
+const { 
+  createQRCodeElement, 
+  createBarCodeElement, 
+  createImageElement, 
+  createTextElement, 
+  createPathElement, 
+  createLineElement, 
+  createArcTextElement, 
+  createVerticalTextElement, 
+  createVideoElement 
+} = useHandleCreate();
 const codeContent = ref<string>(window.location.href);
 const codeSpace = ref<boolean>(true);
 const codeError = ref<number>(0);
@@ -272,7 +282,11 @@ const drawText = (fontSize: number, textStyle: "transverse" | "direction" = "tra
 
 // 添加环形文字
 const drawArcText = () => {
-    createArcTextElement(36,)
+  createArcTextElement(36)
+}
+
+const drawVerticalText = (fontSize: number) => {
+  createVerticalTextElement(fontSize)
 }
 
 // 添加形状

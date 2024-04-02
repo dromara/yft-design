@@ -3,7 +3,7 @@ import { resizeCanvas } from '../helpers/domHelper'
 import { computeBoardRect } from '../helpers/initCompute'
 import { initMatting } from '../helpers/initMatting'
 import { MattingProps, UseInitMattingBoardsConfig } from '../types/initMatting'
-import { debounce } from 'lodash'
+import { debounce } from 'lodash-es'
 import { onMounted, onUnmounted, watch } from 'vue'
 
 export function useInitMattingBoards(props: MattingProps, useInitMattingBoardsConfig: UseInitMattingBoardsConfig) {

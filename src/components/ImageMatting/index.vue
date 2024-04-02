@@ -7,8 +7,8 @@
     :before-close="closeUpload"
   >
     <el-row class="model-row">
-      <el-col :span="4" class="model-tip">{{ t("message.model") }}</el-col>
-      <el-col :span="8">
+      <el-col :span="2" class="model-tip">{{ t("message.model") }}</el-col>
+      <el-col :span="4">
         <el-select v-model="mattingModel">
           <el-option
             v-for="item in MattingModel"
