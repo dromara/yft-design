@@ -14,6 +14,7 @@ import { QRCode } from "@/extension/object/QRCode";
 import { BarCode } from "@/extension/object/BarCode";
 import { ArcText } from '@/extension/object/ArcText'
 import { VerticalText } from '@/extension/object/VerticalText'
+import useI18n from "@/hooks/useI18n";
 import JsBarcode from "jsbarcode";
 import useCenter from "@/views/Canvas/useCenter";
 import useCanvas from "@/views/Canvas/useCanvas";
@@ -25,6 +26,7 @@ export default () => {
   const mainStore = useMainStore();
   const templatesStore = useTemplatesStore();
   const { setZindex } = useCanvasZindex();
+  const { t } = useI18n();
   const { rightState, systemFonts } = storeToRefs(mainStore);
 
   const renderCanvas = (element: FabricObject) => {

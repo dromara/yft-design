@@ -30,13 +30,14 @@ onMounted(() => {
   document.addEventListener('keydown', keydownListener)
   document.addEventListener('keyup', keyupListener)
   window.addEventListener('blur', keyupListener)
-  window.addEventListener('paste', pasteListener)
+  window.addEventListener('paste', pasteListener as any)
 })
 
 onUnmounted(() => {
   document.removeEventListener('keydown', keydownListener)
   document.removeEventListener('keyup', keyupListener)
   window.removeEventListener('blur', keyupListener)
+  window.removeEventListener('paste', pasteListener as any)
 })
 
 // 点击画布区域
