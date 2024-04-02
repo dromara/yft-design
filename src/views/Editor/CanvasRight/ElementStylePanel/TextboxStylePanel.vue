@@ -154,7 +154,7 @@
       </el-col>
       <el-col :span="12">
         <el-tooltip placement="top" content="变形" :hide-after="0">
-          <el-button class="full-button" @click="handleElementDeformation">
+          <el-button class="full-button" :type="handleElement.type.toLowerCase() === ElementNames.ARCTEXT ? 'primary' : ''" @click="handleElementDeformation">
             <IconDistortion />
           </el-button>
         </el-tooltip>
@@ -218,6 +218,7 @@ import { computed, ref, onMounted } from 'vue'
 import { useMainStore, useTemplatesStore } from '@/store'
 import { storeToRefs } from 'pinia'
 import { ElMessage } from 'element-plus'
+import { IText } from 'fabric'
 import { FontSizeLibs, LineHeightLibs, CharSpaceLibs } from '@/configs/texts'
 import { WEB_FONTS } from '@/configs/fonts'
 import { propertiesToInclude } from '@/configs/canvas'
@@ -500,13 +501,19 @@ const handleElementCurve = async () => {
 
 const handleElementDeformation = () => {
   const options = handleElement.value.toObject(propertiesToInclude as any[]) as any
+  options.originType = options.type
   delete options.type
   options.id = nanoid(10)
-  const arcText = new ArcText(options.text, options)
-  canvas.add(arcText)
+  let text
+  if (handleElement.value.type.toLowerCase() === ElementNames.ARCTEXT) {
+    text = new IText(options.text, options)
+  } else {
+    text = new ArcText(options.text, options)
+  }
+  canvas.add(text)
   handleElement.value.set({visible: false})
   templatesStore.modifedElement()
-  canvas.setActiveObject(arcText)
+  canvas.setActiveObject(text)
   canvas.renderAll()
 }
 
