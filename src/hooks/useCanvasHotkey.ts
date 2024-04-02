@@ -4,7 +4,7 @@ import { KEYS } from "@/configs/hotkey";
 import useHandleCreate from "@/hooks/useHandleCreate";
 import useCanvasScale from "@/hooks/useCanvasScale";
 import useCanvas from "@/views/Canvas/useCanvas";
-import { loadSVGFromString } from "fabric";
+import { Textbox, loadSVGFromString } from "fabric";
 import { getImageDataURL, getImageText } from "@/utils/image";
 import { uploadFile } from "@/api/file";
 import useHandleTemplate from "./useHandleTemplate";
@@ -23,7 +23,7 @@ export default () => {
 
   const { copyTemplate, cutTemplate, deleteTemplate, updateTemplateIndex } = useHandleTemplate();
 
-  const { copyElement, cutElement, patseEelement, deleteElement, moveElement, lockElement, combineElements, uncombineElements } = useHandleElement();
+  const { copyElement, cutElement, pasteElement, deleteElement, moveElement, lockElement, combineElements, uncombineElements } = useHandleElement();
   const { createImageElement, createTextElement } = useHandleCreate();
   // const { selectAllElement } = useSelectAllElement()
   // const { moveElement } = useMoveElement()
@@ -44,7 +44,7 @@ export default () => {
   };
 
   const patse = () => {
-    if (canvasObject.value) patseEelement();
+    if (canvasObject.value) pasteElement();
     else if (thumbnailsFocus.value) copyTemplate();
   };
 
@@ -310,7 +310,7 @@ export default () => {
         // 文本数据
         item.getAsString((text: any) => {
           // 插入到文本框
-          const activeObject = canvas.getActiveObject();
+          const activeObject = canvas.getActiveObject() as Textbox;
           // 如果是激活的文字把复制的内容插入到对应光标位置
           if (activeObject && (activeObject.type === "textbox" || activeObject.type === "i-text")) {
             const cursorPosition = activeObject.selectionStart;
