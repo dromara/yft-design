@@ -67,6 +67,9 @@ export const changeLocale = async (locale: string) => {
   return locale;
 }
 
+const localeData = await createI18nOptions()
+export const i18nObj = createI18n(localeData)
+
 export const setupI18n = async (app: App) => {
   const options = await createI18nOptions();
   console.log(options)

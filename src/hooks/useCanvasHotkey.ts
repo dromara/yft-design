@@ -271,9 +271,14 @@ export default () => {
   };
 
   const pasteListener = async (event: { preventDefault: () => void; clipboardData: any; originalEvent: { clipboardData: any } }) => {
+    console.log('document.activeElement', document.activeElement);
     const { pasteElement } = useHandleElement()
     const [canvas] = useCanvas();
-    event.preventDefault(); // 阻止默认粘贴行为
+    if (document.activeElement === document.body) {
+      event.preventDefault(); // 阻止默认粘贴行为
+    } else {
+      return
+    }
 
     const items = (event.clipboardData || event.originalEvent.clipboardData).items;
     const fileAccept = ".pdf,.psd,.cdr,.ai,.svg,.jpg,.jpeg,.png,.webp,.json";
