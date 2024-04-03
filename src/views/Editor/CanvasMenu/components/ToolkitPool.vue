@@ -39,7 +39,19 @@
         </el-col>
       </el-row>
     </el-row>
+    <el-row>
+      <el-row class="code-common" @click="openImageFillColor">
+        <el-col :span="4" class="code-icon">
+          <IconPlatte class="icon-font" />
+        </el-col>
+        <el-col :span="20" class="code-text">
+          <div class="font-middle">{{ $t("message.ColorFillImage") }}</div>
+          <div class="font-little">{{ $t("message.ColorFillImageTips") }}</div>
+        </el-col>
+      </el-row>
+    </el-row>
     <ImageMatting :visible="dialogVisible" @close="closeUpload" />
+    <ImageFillColor :visible="ImageFillColorVisible" @close="closeImageFillColor" />
   </div>
 </template>
 
@@ -76,6 +88,7 @@ const codeContent = ref<string>(window.location.href);
 const codeSpace = ref<boolean>(true);
 const codeError = ref<number>(0);
 const dialogVisible = ref(false);
+const ImageFillColorVisible = ref(false);
 const generateQRCodeMap = {
   A1: rendererRect,
   A2: rendererRound,
@@ -137,6 +150,14 @@ const openUpload = () => {
 
 const closeUpload = () => {
   dialogVisible.value = false;
+};
+
+const openImageFillColor = () => {
+  ImageFillColorVisible.value = true;
+};
+
+const closeImageFillColor = () => {
+  ImageFillColorVisible.value = false;
 };
 </script>
 

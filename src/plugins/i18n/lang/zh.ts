@@ -114,6 +114,8 @@ export default {
     QRCodeTips: '快速生成二维码,支持13种样式',
     AICutoutImage: 'AI抠图',
     AICutoutImageTips: '运用AI技术，实现智能识别',
+    ColorFillImage: '图片填充颜色',
+    ColorFillImageTips: '图片颜色填充，常用改背景色',
 
     searchLayer: '搜索图层',
     beginnerGuide: "新手入门",
