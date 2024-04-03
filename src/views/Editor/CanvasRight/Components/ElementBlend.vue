@@ -22,11 +22,8 @@ import { BlendModes } from '@/configs/images';
 import useCanvas from "@/views/Canvas/useCanvas";
 
 
-
 const { canvasObject } = storeToRefs(useMainStore());
-
 const handleElement = computed(() => canvasObject.value as Image);
-
 const imageBlend = computed(() => handleElement.value.globalCompositeOperation)
 const elementBlend = ref(imageBlend.value);
 
