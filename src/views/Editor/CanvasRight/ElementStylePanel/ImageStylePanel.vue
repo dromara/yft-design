@@ -51,6 +51,7 @@
       </el-col>
     </el-row>
 
+    <ElementBlend />
     <el-divider />
     <ElementMask />
     <el-divider />
@@ -62,25 +63,21 @@
     <el-divider />
 
     <el-row>
-      <FileInput
-        class="full-width-btn"
-        @change="(files: FileList) => replaceImage(files)"
-      >
-        <el-button class="full-btn"
-          ><IconTransform class="btn-icon" />
-          {{ $t("style.replaceimage") }}</el-button
-        >
+      <FileInput class="full-width-btn" @change="(files: FileList) => replaceImage(files)">
+        <el-button class="full-btn">
+          <IconTransform class="btn-icon" />{{ $t("style.replaceimage") }}
+        </el-button>
       </FileInput>
     </el-row>
     <el-row>
-      <el-button class="full-width-btn" @click="resetImage()"
-        ><IconUndo class="btn-icon" /> {{ $t("style.resetStyle") }}</el-button
-      >
+      <el-button class="full-width-btn" @click="resetImage()">
+        <IconUndo class="btn-icon" /> {{ $t("style.resetStyle") }}
+        </el-button>
     </el-row>
     <el-row>
-      <el-button class="full-width-btn" @click="setBackgroundImage()"
-        ><IconTheme class="btn-icon" /> {{ $t("style.setAsBg") }}</el-button
-      >
+      <el-button class="full-width-btn" @click="setBackgroundImage()">
+        <IconTheme class="btn-icon" /> {{ $t("style.setAsBg") }}
+      </el-button>
     </el-row>
     <ImageMatting :visible="dialogVisible" :image="handleElement.originSrc ? handleElement.originSrc : handleElement.getSrc()" @close="closeMatting" />
   </div>
@@ -102,6 +99,7 @@ import ElementShadow from "../Components/ElementShadow.vue";
 import ElementFlip from "../Components/ElementFlip.vue";
 import ElementFilter from "../Components/ElementFilter.vue";
 import ElementMask from "../Components/ElementMask.vue";
+import ElementBlend from "../Components/ElementBlend.vue";
 import useCanvas from "@/views/Canvas/useCanvas";
 
 const mainStore = useMainStore();
