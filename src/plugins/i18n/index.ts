@@ -29,7 +29,7 @@ const getLocalLang = () => {
   return localLang;
 }
 
-const  createI18nOptions = async (): Promise<I18nOptions> =>   {
+const createI18nOptions = (): I18nOptions => {
   const locale = getLocalLang();
   const modules: Record<string, any> = import.meta.glob('./lang/*', { eager: true })
   const messages: Record<string, any> = {}
@@ -67,11 +67,8 @@ export const changeLocale = async (locale: string) => {
   return locale;
 }
 
-const localeData = await createI18nOptions()
-export const i18nObj = createI18n(localeData)
-
 export const setupI18n = async (app: App) => {
-  const options = await createI18nOptions();
+  const options = createI18nOptions();
   console.log(options)
   i18n = createI18n(options) as I18n;
   app.use(i18n);
