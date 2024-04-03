@@ -74,4 +74,9 @@ export const setupI18n = async (app: App) => {
   app.use(i18n);
 }
 
+export const i18nObj = () => {
+  const localeData = createI18nOptions()
+  return createI18n(localeData)
+} 
+
   
