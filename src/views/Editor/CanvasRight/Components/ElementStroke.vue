@@ -11,20 +11,20 @@
         <div class="stroke-name">描边厚度：</div>
         <el-slider class="slider" v-model="handleElement.strokeWidth" @change="updateStrokeWidth"></el-slider>
       </div>
-      <div class="row">
+      <!-- <div class="row">
         <div class="stroke-name">线冒样式：</div>
         <el-select class="stroke-option" v-model="handleElement.strokeLineCap" @change="updateStrokeLineCap">
           <el-option value="butt" label="无"></el-option>
           <el-option value="round" label="圆形"></el-option>
           <el-option value="square" label="方形"></el-option>
         </el-select>
-      </div>
+      </div> -->
       <div class="row">
         <div class="stroke-name">角落风格：</div>
-        <el-select class="stroke-option" v-model="handleElement.strokeLineJoin" @change="updateStrokeLineCap">
+        <el-select class="stroke-option" v-model="handleElement.strokeLineJoin" @change="updateStrokeLineJoin">
           <el-option value="bevel" label="斜面"></el-option>
           <el-option value="round" label="圆形"></el-option>
-          <el-option value="miter" label="斜面"></el-option>
+          <el-option value="miter" label="斜接"></el-option>
         </el-select>
       </div>
       <div class="row">
@@ -76,7 +76,15 @@ const updateStrokeWidth = (strokeWidth: number) => {
 const updateStrokeLineCap = (strokeLineCap: string) => {
   if (!handleElement.value) return
   handleElement.value.set({strokeLineCap})
-  canvas.renderAll()
+  updateStrokeWidth(handleElement.value.strokeWidth - 1)
+  updateStrokeWidth(handleElement.value.strokeWidth + 1)
+}
+
+const updateStrokeLineJoin = (strokeLineJoin: string) => {
+  if (!handleElement.value) return
+  handleElement.value.set({strokeLineJoin})
+  updateStrokeWidth(handleElement.value.strokeWidth - 1)
+  updateStrokeWidth(handleElement.value.strokeWidth + 1)
 }
 
 const toggleStroke = () => {
