@@ -5,6 +5,7 @@
     width="35%"
     class="matting-dialog"
     :before-close="closeUpload"
+    :close-on-click-modal="false"
   >
     <el-row class="model-row">
       <el-col :span="2" class="model-tip">{{ t("message.model") }}</el-col>

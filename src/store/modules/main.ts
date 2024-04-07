@@ -66,7 +66,7 @@ export const useMainStore = defineStore('main', {
     lastEdit: 'editor', // 左边栏
     lastHelp: 'editor', // 左边栏
     poolType: 'editor', // 左边栏
-    poolShow: true, // 显示左边栏
+    poolShow: false, // 显示左边栏
   }),
 
   getters: {
