@@ -155,7 +155,7 @@
       <el-col :span="12">
         <el-tooltip placement="top" content="变形" :hide-after="0">
           <el-button class="full-button" :type="handleElement.type.toLowerCase() === ElementNames.ARCTEXT ? 'primary' : ''" @click="handleElementDeformation">
-            <IconDistortion />
+            <i class="handler-item iconfont icon-text-path" />
           </el-button>
         </el-tooltip>
       </el-col>
@@ -645,6 +645,9 @@ onMounted(() => {
 }
 .full-button {
   width: 100%;
+  .iconfont {
+    font-size: 32px;
+  }
 }
 
 </style>

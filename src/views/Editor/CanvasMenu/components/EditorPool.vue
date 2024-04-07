@@ -48,7 +48,7 @@
         </el-col>
         <el-col :span="8" @click="drawArcText">
           <div class="item-box">
-            <IconDistortion class="icon-font" />
+            <i class="icon-font iconfont icon-text-path" />
             <div class="mt-5px">环形正文</div>
           </div>
         </el-col>
