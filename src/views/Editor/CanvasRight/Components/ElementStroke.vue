@@ -12,11 +12,19 @@
         <el-slider class="slider" v-model="handleElement.strokeWidth" @change="updateStrokeWidth"></el-slider>
       </div>
       <div class="row">
-        <div class="stroke-name">描边样式：</div>
+        <div class="stroke-name">线冒样式：</div>
         <el-select class="stroke-option" v-model="handleElement.strokeLineCap" @change="updateStrokeLineCap">
-          <el-option value="butt" label="butt"></el-option>
-          <el-option value="round" label="round"></el-option>
-          <el-option value="square" label="square"></el-option>
+          <el-option value="butt" label="无"></el-option>
+          <el-option value="round" label="圆形"></el-option>
+          <el-option value="square" label="方形"></el-option>
+        </el-select>
+      </div>
+      <div class="row">
+        <div class="stroke-name">角落风格：</div>
+        <el-select class="stroke-option" v-model="handleElement.strokeLineJoin" @change="updateStrokeLineCap">
+          <el-option value="bevel" label="斜面"></el-option>
+          <el-option value="round" label="圆形"></el-option>
+          <el-option value="miter" label="斜面"></el-option>
         </el-select>
       </div>
       <div class="row">
@@ -75,7 +83,8 @@ const toggleStroke = () => {
   if (!handleElement.value) return
   const stroke = openStroke.value ? (!handleElement.value.stroke ? '#000' : '') : ''
   const strokeWidth = openStroke.value ? (!handleElement.value.stroke ? 1 : 0) : 0
-  handleElement.value.set({stroke, strokeWidth})
+  const paintFirst = openStroke.value ? 'stroke' : 'fill'
+  handleElement.value.set({stroke, strokeWidth, paintFirst})
   canvas.renderAll()
 }
 </script>
