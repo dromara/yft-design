@@ -135,7 +135,17 @@ export default {
     clear: '清除',
     download: '下载',
     uploading: '上传中',
-    CompleteImageCutout: '完成抠图'
+    completeImageCutout: '完成抠图',
+
+    files: '文件',
+    title: '标题',
+    subtitle: '副标题',
+    horizontalText: '横排正文',
+    verticalText: '竖排正文',
+    hollowOutText: '镂空正文',
+    circularText: '环形正文',
+    shape: '形状',
+    module: '组件',
   },
   default: {
     textValue: '双击修改文字'

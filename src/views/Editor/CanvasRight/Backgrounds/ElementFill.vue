@@ -37,7 +37,7 @@
         </el-col>
 
         <el-col :span="11" v-else-if="background.fillType === 4">
-          <el-button class="full-row" @click="generateShadingBackgroundRandom">随机形状</el-button>
+          <el-button class="full-row" @click="generateShadingBackgroundRandom">{{ $t('style.randomShape') }}</el-button>
         </el-col>
       </el-row>
     </div>
@@ -61,28 +61,28 @@
         </div>
       </div>
       <el-row>
-        <el-col :span="7" class="slider-name">不透明度：</el-col>
+        <el-col :span="7" class="slider-name">{{$t('style.opacity')}}：</el-col>
         <el-col :span="13">
           <el-slider class="common-slider" :min="0" :max="1" :step="0.01" v-model="gradientOpacity" @change="generateGradientBackground" />
         </el-col>
         <el-col :span="4" class="slider-num">{{ gradientOpacity }}</el-col>
       </el-row>
       <el-row v-if="background.gradientType === 'linear'">
-        <el-col :span="7" class="slider-name">渐变角度：</el-col>
+        <el-col :span="7" class="slider-name">{{$t('style.gradientAngle')}}：</el-col>
         <el-col :span="13">
           <el-slider class="common-slider" :min="0" :max="360" :step="1" v-model="gradientRotate" @change="generateGradientBackground" />
         </el-col>
         <el-col :span="4" class="slider-num">{{ gradientRotate }}</el-col>
       </el-row>
       <el-row>
-        <el-col :span="7" class="slider-name">水平位置：</el-col>
+        <el-col :span="7" class="slider-name">{{$t('style.horizontalPosition')}}：</el-col>
         <el-col :span="13">
           <el-slider class="common-slider" :min="0" :max="1" :step="0.01" v-model="gradientOffsetX" @change="generateGradientBackground" />
         </el-col>
         <el-col :span="4" class="slider-num">{{ gradientOffsetX }}</el-col>
       </el-row>
       <el-row>
-        <el-col :span="7" class="slider-name">垂直位置：</el-col>
+        <el-col :span="7" class="slider-name">{{$t('style.verticalPosition')}}：</el-col>
         <el-col :span="13">
           <el-slider class="common-slider" :min="0" :max="1" :step="0.01" v-model="gradientOffsetY" @change="generateGradientBackground" />
         </el-col>
@@ -103,33 +103,33 @@
     <!-- 网格填充 -->
     <div class="mb-10" v-if="background.fillType === 3">
       <el-row>
-        <el-col :span="4" class="slider-name">强度：</el-col>
+        <el-col :span="4" class="slider-name">{{$t('style.strength')}}：</el-col>
         <el-col :span="16">
           <el-slider class="common-slider" :min="0" :max="1" :step="0.01" v-model="gridStrengthRef" @change="changeGridStrength" />
         </el-col>
         <el-col :span="4" class="slider-num">{{ gridStrengthRef }}</el-col>
       </el-row>
       <el-row>
-        <el-col :span="4" class="slider-name">方差：</el-col>
+        <el-col :span="4" class="slider-name">{{$t('style.variance')}}：</el-col>
         <el-col :span="16">
           <el-slider class="common-slider" :min="0" :max="1" :step="0.01" v-model="gridVarianceRef" @change="changeGridVariance" />
         </el-col>
         <el-col :span="4" class="slider-num">{{ gridVarianceRef }}</el-col>
       </el-row>
       <el-row class="mb-10">
-        <el-col :span="4" class="slider-name">尺寸：</el-col>
+        <el-col :span="4" class="slider-name">{{$t('style.size')}}：</el-col>
         <el-col :span="16">
           <el-slider class="common-slider" :min="0.1" :max="0.25" :step="0.01" v-model="gridSizeRef" @change="changeGridSize" />
         </el-col>
         <el-col :span="4" class="slider-num">{{ gridSizeRef }}</el-col>
       </el-row>
       <el-row class="mb-10">
-        <el-button class="full-row" @click="generateGridBackgroundRandom">随机生成</el-button>
+        <el-button class="full-row" @click="generateGridBackgroundRandom">{{$t('style.randomGeneration')}}</el-button>
       </el-row>
       <el-row class="mb-10">
         <el-radio-group class="full-ratio" v-model="isGridLibData">
-          <el-radio-button :label="true">色彩选择</el-radio-button>
-          <el-radio-button :label="false">自定义</el-radio-button>
+          <el-radio-button :label="true">{{$t('style.colorSelect')}}</el-radio-button>
+          <el-radio-button :label="false">{{$t('style.customize')}}</el-radio-button>
         </el-radio-group>
       </el-row>
       <el-row>
@@ -155,21 +155,21 @@
     <!-- 底纹填充 -->
     <div class="mb-10" v-if="background.fillType === 4">
       <el-row>
-        <el-col :span="7" class="slider-name">图形缩放：</el-col>
+        <el-col :span="7" class="slider-name">{{$t('style.graphScale')}}：</el-col>
         <el-col :span="13">
           <el-slider class="common-slider" :min="1" :max="shadingColorLib.maxScale" :step="1" v-model="shadingBackground.scale" @change="changeShadingZoom" />
         </el-col>
         <el-col :span="4" class="slider-num">{{ shadingBackground.colorCounts }}</el-col>
       </el-row>
       <el-row>
-        <el-col :span="7" class="slider-name">水平位置：</el-col>
+        <el-col :span="7" class="slider-name">{{$t('style.horizontalPosition')}}：</el-col>
         <el-col :span="13">
           <el-slider class="common-slider" :min="0" :max="shadingColorLib.width * 2" :step="1" v-model="shadingBackground.moveLeft" @change="changeShadingHorizontal" />
         </el-col>
         <el-col :span="4" class="slider-num">{{ shadingBackground.moveLeft }}</el-col>
       </el-row>
       <el-row>
-        <el-col :span="7" class="slider-name">垂直位置：</el-col>
+        <el-col :span="7" class="slider-name">{{$t('style.verticalPosition')}}：</el-col>
         <el-col :span="13">
           <el-slider class="common-slider" :min="0" :max="shadingColorLib.height" :step="1" v-model="shadingBackground.moveTop" @change="changeShadingVertical" />
         </el-col>
@@ -177,7 +177,7 @@
       </el-row>
 
       <el-row v-if="shadingColorLib.mode === 'stroke-join' || shadingColorLib.mode === 'stroke'">
-        <el-col :span="7" class="slider-name">线条粗细：</el-col>
+        <el-col :span="7" class="slider-name">{{$t('style.lineThickness')}}：</el-col>
         <el-col :span="13">
           <el-slider class="common-slider" :min="0.5" :max="shadingColorLib.maxStroke" :step="0.5" v-model="shadingBackground.stroke" @change="changeShadingStroke" />
         </el-col>
@@ -185,7 +185,7 @@
       </el-row>
 
       <el-row v-if="shadingColorLib.maxSpacing[0] > 0">
-        <el-col :span="7" class="slider-name">垂直间距：</el-col>
+        <el-col :span="7" class="slider-name">{{$t('style.verticalSpace')}}：</el-col>
         <el-col :span="13">
           <el-slider class="common-slider" :min="0" :max="shadingColorLib.maxSpacing[0]" :step="0.5" v-model="shadingBackground.spacing[0]" @change="changeShadingHSpacing" />
         </el-col>
@@ -193,7 +193,7 @@
       </el-row>
 
       <el-row v-if="shadingColorLib.maxSpacing[1] > 0">
-        <el-col :span="7" class="slider-name">水平间距：</el-col>
+        <el-col :span="7" class="slider-name">{{$t('style.horizontalSpace')}}：</el-col>
         <el-col :span="13">
           <el-slider class="common-slider" :min="0" :max="shadingColorLib.maxSpacing[1]" :step="0.5" v-model="shadingBackground.spacing[1]" @change="changeShadingVSpacing" />
         </el-col>
@@ -201,14 +201,14 @@
       </el-row>
 
       <el-row>
-        <el-col :span="7" class="slider-name">旋转角度：</el-col>
+        <el-col :span="7" class="slider-name">{{$t('style.rotationAngle')}}：</el-col>
         <el-col :span="13">
           <el-slider class="common-slider" :min="0" :max="180" :step="1" v-model="shadingBackground.angle" @change="changeShadingAngle" />
         </el-col>
         <el-col :span="4" class="slider-num">{{ shadingBackground.angle }}</el-col>
       </el-row>
       <el-row>
-        <el-col :span="7" class="slider-name">颜色数量：</el-col>
+        <el-col :span="7" class="slider-name">{{$t('style.colorNumber')}}：</el-col>
         <el-col :span="13">
           <el-slider class="common-slider" :min="2" :max="shadingColorLib.colors" :step="1" v-model="shadingBackground.colorCounts" @change="changeShadingColors" />
         </el-col>

@@ -1,61 +1,61 @@
 <template>
   <div class="edit-pool">
     <div class="edit-section pt-20px">
-      <div class="font-bold text-lg mb-6px">文件</div>
+      <div class="font-bold text-lg mb-6px">{{ $t('message.files') }}</div>
       <el-row :gutter="10" class="mt-10">
         <el-col :span="8">
           <el-upload ref="uploadRef" :on-exceed="handleExceed" action="http" :http-request="uploadHandle" :limit="1" :accept="fileAccept" v-loading="uploading" class="edit-upload">
             <div class="item-box">
               <IconUpload class="icon-font" />
-              <div class="mt-5px">上传文件</div>
+              <div class="mt-8px">{{ $t('message.uploadFiles') }}</div>
             </div>
           </el-upload>
         </el-col>
       </el-row>
     </div>
     <div class="edit-section">
-      <div class="font-bold text-lg mb-6px">文字</div>
+      <div class="font-bold text-lg mb-6px">{{ $t('message.text') }}</div>
       <el-row :gutter="10" class="mt-10">
         <el-col :span="8">
           <div class="item-box" @click="drawText(80)">
             <IconH1 class="icon-font" />
-            <div class="mt-5px">标题</div>
+            <div class="mt-5px">{{ $t('message.title') }}</div>
           </div>
         </el-col>
         <el-col :span="8" @click="drawText(60)">
           <div class="item-box">
             <IconH3 class="icon-font" />
-            <div class="mt-5px">副标题</div>
+            <div class="mt-5px">{{ $t('message.subtitle') }}</div>
           </div>
         </el-col>
         <el-col :span="8" @click="drawText(36)">
           <div class="item-box">
             <IconTextRotationNone class="icon-font" />
-            <div class="mt-5px">横排正文</div>
+            <div class="mt-5px">{{ $t('message.horizontalText') }}</div>
           </div>
         </el-col>
         <el-col :span="8" @click="drawVerticalText(36)">
           <div class="item-box">
             <IconTextRotationDown class="icon-font" />
-            <div class="mt-5px">竖排正文</div>
+            <div class="mt-5px">{{ $t('message.verticalText') }}</div>
           </div>
         </el-col>
         <el-col :span="8" @click="drawText(36, undefined, true)">
           <div class="item-box">
             <IconText class="icon-font" />
-            <div class="mt-5px">镂空正文</div>
+            <div class="mt-5px">{{ $t('message.hollowOutText') }}</div>
           </div>
         </el-col>
         <el-col :span="8" @click="drawArcText">
           <div class="item-box">
             <i class="icon-font iconfont icon-text-path" />
-            <div class="mt-5px">环形正文</div>
+            <div class="mt-5px">{{ $t('message.circularText') }}</div>
           </div>
         </el-col>
       </el-row>
     </div>
     <div class="edit-section">
-      <div class="font-bold text-lg mb-6px">形状</div>
+      <div class="font-bold text-lg mb-6px">{{ $t('message.shape') }}</div>
       <el-row :gutter="10" class="mt-10">
         <el-col :span="8" v-for="(shape, index) in PathShapeLibs" :key="index" @click="drawPath(shape)">
           <div class="item-box">
@@ -89,7 +89,7 @@
       </el-row>
     </div>
     <div class="edit-section">
-      <div class="font-bold text-lg mb-6px">组件</div>
+      <div class="font-bold text-lg mb-6px">{{ $t('message.module') }}</div>
       <el-row :gutter="10" class="mt-10">
         <el-col :span="8">
           <div class="item-box" @click="createBarElement">
@@ -276,7 +276,7 @@ const handleExceed: UploadProps["onExceed"] = (files: File[]) => {
 };
 
 // 添加标题文字
-const drawText = (fontSize: number, textStyle: "transverse" | "direction" = "transverse", textHollow: boolean = false) => {
+const drawText = (fontSize: number, textStyle: "transverse" | "direction" = "transverse", textHollow = false) => {
   createTextElement(fontSize, textStyle, textHollow);
 };
 

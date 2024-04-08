@@ -132,7 +132,17 @@ export default {
     clear: 'Clear',
     download: 'Download',
     uploading: 'Uploading',
-    CompleteImageCutout: 'Complete Image Cutout'
+    completeImageCutout: 'Complete Image Cutout',
+
+    files: 'Files',
+    title: 'Title',
+    subtitle: 'Subtitle',
+    horizontalText: 'Horizontal Text',
+    verticalText: 'Vertical Text',
+    hollowOutText: 'Hollow Out Text',
+    circularText: 'Circular Text',
+    shape: 'Shape',
+    module: 'Module',
   },
   default: {
     textValue: 'Double Click Edit Text'

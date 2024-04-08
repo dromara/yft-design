@@ -94,7 +94,7 @@
           {{
             state.loading
               ? t("message.uploading")
-              : t("message.CompleteImageCutout")
+              : t("message.completeImageCutout")
           }}
         </el-button>
         <el-button
