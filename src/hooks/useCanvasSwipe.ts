@@ -4,6 +4,18 @@ import { useCanvasEvent } from './useCanvasEvent'
 import type { TPointerEventInfo, TPointerEvent, Point } from 'fabric'
 
 
+class TouchEvent extends UIEvent {
+  public touches: any
+  public targetTouches: any
+  public changedTouches: any
+  constructor(name: any, initDict: any) {
+    super(name, initDict);
+    this.touches = initDict.touches;
+    this.targetTouches = initDict.targetTouches;
+    this.changedTouches = initDict.changedTouches;
+  }
+}
+
 export interface UseSwipeOptions {
   onSwipeStart?: (e: TPointerEventInfo<TPointerEvent>) => void
   onSwipe?: (e: TPointerEventInfo<TPointerEvent>) => void

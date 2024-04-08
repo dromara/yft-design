@@ -40,10 +40,14 @@ import { getIllustrationPages, getIllustrationCategory } from "@/api/image";
 import { ImageHit } from "@/api/image/types";
 import { useMainStore } from "@/store";
 import { storeToRefs } from "pinia";
+import { util } from "fabric";
+import { GifImage } from '@/extension/object/GifImage'
 import useHandleCreate from "@/hooks/useHandleCreate";
+import useCanvas from "@/views/Canvas/useCanvas";
+import { Image } from "fabric";
+import useCenter from "@/views/Canvas/useCenter";
 const mainStore = useMainStore();
-const { illustrationCategoryType, illustrationCategoryData } =
-  storeToRefs(mainStore);
+const { illustrationCategoryType, illustrationCategoryData } = storeToRefs(mainStore);
 const { createImageElement } = useHandleCreate();
 
 const categoryRef = ref<HTMLDivElement>();
@@ -143,7 +147,30 @@ const hideTotal = () => {
   categoryRef.value.scrollTo({ top: categoryTop.value, behavior: "smooth" });
 };
 
-const createImage = (item: ImageHit) => {
+const hideLoading = async (item: ImageHit, loading: Image) => {
+  const [ canvas ] = useCanvas()
+  await util.loadImage(item.largeImageURL)
+  loading.set({visible: false})
+  canvas.renderAll()
+}
+
+const createImage = async (item: ImageHit) => {
+  const [ canvas ] = useCanvas()
+  const { centerPoint } = useCenter()
+  let loading = canvas.loading
+  if (!loading) {
+    loading = await GifImage.fromURL(new URL(`/src/assets/images/loading.gif`, import.meta.url).href)
+    loading.set({left: centerPoint.x - loading.width / 2, top: centerPoint.y - loading.height / 2})
+    canvas.add(loading);
+    canvas.renderAll()
+    canvas.loading = loading
+  }
+  else {
+    loading.set({visible: true})
+    canvas.bringObjectToFront(loading)
+    canvas.renderAll()
+  }
+  await hideLoading(item, loading)
   createImageElement(item.largeImageURL);
 };
 

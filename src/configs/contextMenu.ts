@@ -45,6 +45,7 @@ export const contextMenus = (): ContextMenu[] => {
         text: '粘贴',
         subText: 'Ctrl + V',
         // handler: pasteSlide,
+        handler: pasteElement,
       },
       {
         text: '全选',

@@ -4,10 +4,10 @@
       <div class="font-bold text-lg mb-6px">文件</div>
       <el-row :gutter="10" class="mt-10">
         <el-col :span="8">
-          <el-upload ref="uploadRef" :on-exceed="handleExceed" action="http" :http-request="uploadHandle" :limit="1" :accept="fileAccept" v-loading="uploading">
+          <el-upload ref="uploadRef" :on-exceed="handleExceed" action="http" :http-request="uploadHandle" :limit="1" :accept="fileAccept" v-loading="uploading" class="edit-upload">
             <div class="item-box">
               <IconUpload class="icon-font" />
-              <div class="mt-8px">上传文件</div>
+              <div class="mt-5px">上传文件</div>
             </div>
           </el-upload>
         </el-col>
@@ -19,37 +19,37 @@
         <el-col :span="8">
           <div class="item-box" @click="drawText(80)">
             <IconH1 class="icon-font" />
-            <div class="mt-8px">标题</div>
+            <div class="mt-5px">标题</div>
           </div>
         </el-col>
         <el-col :span="8" @click="drawText(60)">
           <div class="item-box">
             <IconH3 class="icon-font" />
-            <div class="mt-8px">副标题</div>
+            <div class="mt-5px">副标题</div>
           </div>
         </el-col>
         <el-col :span="8" @click="drawText(36)">
           <div class="item-box">
             <IconTextRotationNone class="icon-font" />
-            <div class="mt-8px">横排正文</div>
+            <div class="mt-5px">横排正文</div>
           </div>
         </el-col>
         <el-col :span="8" @click="drawVerticalText(36)">
           <div class="item-box">
             <IconTextRotationDown class="icon-font" />
-            <div class="mt-8px">竖排正文</div>
+            <div class="mt-5px">竖排正文</div>
           </div>
         </el-col>
         <el-col :span="8" @click="drawText(36, undefined, true)">
           <div class="item-box">
             <IconText class="icon-font" />
-            <div class="mt-8px">镂空正文</div>
+            <div class="mt-5px">镂空正文</div>
           </div>
         </el-col>
         <el-col :span="8" @click="drawArcText">
           <div class="item-box">
-            <IconDistortion class="icon-font" />
-            <div class="mt-8px">环形正文</div>
+            <i class="icon-font iconfont icon-text-path" />
+            <div class="mt-5px">环形正文</div>
           </div>
         </el-col>
       </el-row>
@@ -94,19 +94,19 @@
         <el-col :span="8">
           <div class="item-box" @click="createBarElement">
             <IconPayCodeTwo class="icon-font" />
-            <div class="mt-8px">{{ $t("message.barCode") }}</div>
+            <div class="mt-5px">{{ $t("message.barCode") }}</div>
           </div>
         </el-col>
         <el-col :span="8">
           <div class="item-box" @click="createQRElement('A1')">
             <IconTwoDimensionalCodeTwo class="icon-font" />
-            <div class="mt-8px">{{ $t("message.QRCode") }}</div>
+            <div class="mt-5px">{{ $t("message.QRCode") }}</div>
           </div>
         </el-col>
         <el-col :span="8">
           <div class="item-box" @click="openUpload">
             <IconMagicWand class="icon-font" />
-            <div class="mt-8px">{{ $t("message.AICutoutImage") }}</div>
+            <div class="mt-5px">{{ $t("message.AICutoutImage") }}</div>
           </div>
         </el-col>
       </el-row>
@@ -321,10 +321,20 @@ const drawLine = (line: LinePoolItem) => {
     cursor: pointer;
     flex-direction: column;
     font-size: 12px;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
+    &:hover {
+      background-color: #e8eaec;
+    }
   }
 }
-
+.mt-5px {
+  margin-top: 5px;
+}
+.edit-upload {
+  .item-box {
+    width: 100%;
+  }
+}
 .code-common {
   width: 100%;
   height: 80px;
@@ -362,5 +372,8 @@ const drawLine = (line: LinePoolItem) => {
 }
 .icon-font {
   font-size: 20px;
+}
+:deep(.edit-upload .el-upload) {
+  width: 100%;
 }
 </style>

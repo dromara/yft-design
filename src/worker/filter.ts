@@ -29,9 +29,9 @@ self.onmessage = async (e) => {
       if (ele.type === 'ColorGradientFilter') {
         handleColorGradientFilter(ele as PixiColorGradientFilter, sprite.filters)
       }
-      if (ele.type === 'BlendColorFilter') {
-        handleBlendColorFilter(ele as PixiBlendModeFilter, sprite)
-      }
+      // if (ele.type === 'BlendColorFilter') {
+      //   handleBlendColorFilter(ele as PixiBlendModeFilter, sprite)
+      // }
     }
     console.log('sprite.filters:', sprite.filters)
     app?.stage.addChild(sprite)
@@ -69,6 +69,6 @@ const handleColorGradientFilter = (item: PixiColorGradientFilter, filters: Filte
   filters.push(colorGradientFilter)
 }
 
-const handleBlendColorFilter = (item: PixiBlendModeFilter, sprite: Sprite) => {
-  sprite.blendMode = item.mode
-}
+// const handleBlendColorFilter = (item: PixiBlendModeFilter, sprite: Sprite) => {
+//   sprite.blendMode = item.mode
+// }

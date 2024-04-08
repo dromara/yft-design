@@ -1,5 +1,5 @@
 import { useMainStore, useTemplatesStore } from '@/store'
-import { Canvas, Object as FabricObject } from 'fabric'
+import { Canvas, Object as FabricObject, Image } from 'fabric'
 import { shallowRef } from 'vue'
 import { toRef } from './attribute/toRef'
 import { check } from '@/utils/check'
@@ -8,6 +8,7 @@ import { FabricRuler } from './fabricRuler'
 
 export class FabricCanvas extends Canvas {
   public ruler?: FabricRuler
+  public loading?: Image 
   public activeObject = shallowRef<FabricObject>()
 
   constructor(el: string | HTMLCanvasElement, options?: any) {

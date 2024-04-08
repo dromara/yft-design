@@ -9,6 +9,7 @@ import LinePointMarker from '@/components/LinePointMarker.vue'
 import SwipeInput from '@/components/SwipeInput.vue'
 import FileUpload from '@/components/FileUpload/index.vue'
 import ImageMatting from '@/components/ImageMatting/index.vue'
+import ImageFillColor from '@/components/ImageFillColor.vue'
 
 const components = {
   FileInput,
@@ -20,6 +21,7 @@ const components = {
   SwipeInput,
   FileUpload,
   ImageMatting,
+  ImageFillColor,
 }
 
 export default {

@@ -6,11 +6,18 @@ export class ReferenceLine extends Line {
   static type: string = 'ReferenceLine';
   public axis: string = ''
 
-  constructor(point: number, options: any) {
+  constructor(point: number | [number, number, number, number], options: any) {
     // 设置新的点
     // point += 100
     const size = 999999
-    const points = options.axis === 'horizontal' ? [-size, point, size, point] : [point, -size, point, size]
+    let points = options.axis === 'horizontal' ? [-size, 0, size, 0] : [0, -size, 0, size]
+    if (typeof point === 'object') {
+      points = point
+    }
+    if (typeof point === 'number') {
+      points = options.axis === 'horizontal' ? [-size, point, size, point] : [point, -size, point, size]
+    }
+    
     const isHorizontal = options.axis === 'horizontal'
     options[isHorizontal ? 'lockMovementX' : 'lockMovementY'] = true
     super(points as [number, number, number, number], options)
@@ -52,6 +59,7 @@ export class ReferenceLine extends Line {
         target: this,
         e: e.e,
       });
+      this.canvas?.fire('object:modified')
     });
 
     this.on('removed', () => {
@@ -59,6 +67,7 @@ export class ReferenceLine extends Line {
       this.off('mousedown:before', callback);
       this.off('moving', callback);
       this.off('mouseup', callback);
+      this.canvas?.fire('object:modified')
     });
   }
 
@@ -83,6 +92,10 @@ export class ReferenceLine extends Line {
       return hoveredRuler;
     }
     return false;
+  }
+
+  fire(eventName: any, options?: any) {
+    super.fire(eventName, options)
   }
 
   async fromObject(options: any): Promise<Line> {

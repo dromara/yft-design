@@ -5,6 +5,7 @@
     width="35%"
     class="matting-dialog"
     :before-close="closeUpload"
+    :close-on-click-modal="false"
   >
     <el-row class="model-row">
       <el-col :span="2" class="model-tip">{{ t("message.model") }}</el-col>
@@ -46,9 +47,7 @@
       <div
         v-show="state.originImage"
         v-loading="!state.resultImage"
-        :style="{
-          width: state.offsetWidth ? state.offsetWidth + 'px' : '100%',
-        }"
+        :style="{ width: state.offsetWidth ? state.offsetWidth + 'px' : '100%' }"
         class="scan-effect transparent-background"
       >
         <img
@@ -212,9 +211,9 @@ const uploadHandle = async (option: any) => {
   state.filename = option.file.name;
   const fileSuffix = state.filename.split(".").pop();
   if (!state.fileAccept.split(",").includes(`.${fileSuffix}`)) return;
+  state.originImage = await getImageDataURL(option.file);
   const res = await uploadImage(option.file, fileSuffix);
   const mattingData = res.data;
-  state.originImage = await getImageDataURL(option.file);
   const { width, height } = await getImageSize(state.originImage);
   if (mattingData.code === 200) {
     state.resultImage = mattingData.resultImage;
@@ -225,9 +224,9 @@ const uploadHandle = async (option: any) => {
 
 const updateElement = async (image?: string) => {
   if (!image) return
+  state.originImage = image;
   const res = await uploadURL(image);
   const mattingData = res.data;
-  state.originImage = image;
   const { width, height } = await getImageSize(state.originImage);
   if (mattingData.code === 200) {
     state.resultImage = mattingData.resultImage;
@@ -277,8 +276,7 @@ const download = () => {
 };
 
 const mousemove = (e: MouseEvent) => {
-  !isRuning.value &&
-    (state.percent = (e.offsetX / (e.target as any).width) * 100);
+  !isRuning.value && (state.percent = (e.offsetX / (e.target as any).width) * 100);
 };
 </script>
 
@@ -311,7 +309,7 @@ const mousemove = (e: MouseEvent) => {
   top: 0;
   width: 1.5px;
   height: 100%;
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(0, 0, 0, 0.6);
   // background-image: linear-gradient(to top, transparent, rgba(255, 255, 255, 0.7), transparent);
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
 }

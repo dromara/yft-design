@@ -4,7 +4,7 @@ import { KEYS } from "@/configs/hotkey";
 import useHandleCreate from "@/hooks/useHandleCreate";
 import useCanvasScale from "@/hooks/useCanvasScale";
 import useCanvas from "@/views/Canvas/useCanvas";
-import { loadSVGFromString } from "fabric";
+import { Textbox, loadSVGFromString } from "fabric";
 import { getImageDataURL, getImageText } from "@/utils/image";
 import { uploadFile } from "@/api/file";
 import useHandleTemplate from "./useHandleTemplate";
@@ -23,7 +23,7 @@ export default () => {
 
   const { copyTemplate, cutTemplate, deleteTemplate, updateTemplateIndex } = useHandleTemplate();
 
-  const { copyElement, cutElement, patseEelement, deleteElement, moveElement, lockElement, combineElements, uncombineElements } = useHandleElement();
+  const { copyElement, cutElement, pasteElement, deleteElement, moveElement, lockElement, combineElements, uncombineElements } = useHandleElement();
   const { createImageElement, createTextElement } = useHandleCreate();
   // const { selectAllElement } = useSelectAllElement()
   // const { moveElement } = useMoveElement()
@@ -44,7 +44,7 @@ export default () => {
   };
 
   const patse = () => {
-    if (canvasObject.value) patseEelement();
+    if (canvasObject.value) pasteElement();
     else if (thumbnailsFocus.value) copyTemplate();
   };
 
@@ -117,6 +117,12 @@ export default () => {
 
   // }
 
+  const golbelPreventDefault = (e: KeyboardEvent) => {
+    if (document.activeElement === document.body) {
+      e.preventDefault();
+    }
+  }
+
   const keydownListener = (e: KeyboardEvent) => {
     const [canvas] = useCanvas();
     const { ctrlKey, shiftKey, altKey, metaKey } = e;
@@ -134,14 +140,14 @@ export default () => {
     //   return
     // }
     if (shiftKey && key === KEYS.F5) {
-      e.preventDefault();
+      golbelPreventDefault(e);
       keyboardStore.setShiftKeyState(false);
       return;
     }
 
     if (ctrlOrMetaKeyActive && key === KEYS.C) {
       if (disableHotkeys.value) return;
-      e.preventDefault();
+      golbelPreventDefault(e);
       copy();
     }
     // if (ctrlOrMetaKeyActive && key === KEYS.V) {
@@ -151,87 +157,87 @@ export default () => {
     // }
     if (ctrlOrMetaKeyActive && key === KEYS.X) {
       if (disableHotkeys.value) return;
-      e.preventDefault();
+      golbelPreventDefault(e);
       cut();
     }
     if (ctrlOrMetaKeyActive && key === KEYS.D) {
       if (disableHotkeys.value) return;
-      e.preventDefault();
+      golbelPreventDefault(e);
       // quickCopy()
     }
     if (ctrlOrMetaKeyActive && key === KEYS.Z) {
       if (disableHotkeys.value) return;
-      e.preventDefault();
+      golbelPreventDefault(e);
       undo();
     }
     if (ctrlOrMetaKeyActive && key === KEYS.Y) {
       if (disableHotkeys.value) return;
-      e.preventDefault();
+      golbelPreventDefault(e);
       redo();
     }
     if (ctrlOrMetaKeyActive && key === KEYS.A) {
       if (disableHotkeys.value) return;
-      e.preventDefault();
+      golbelPreventDefault(e);
       // selectAll()
     }
     if (ctrlOrMetaKeyActive && key === KEYS.L) {
       if (disableHotkeys.value) return;
-      e.preventDefault();
+      golbelPreventDefault(e);
       lock();
     }
     if (!shiftKey && ctrlOrMetaKeyActive && key === KEYS.G) {
       if (disableHotkeys.value) return;
-      e.preventDefault();
+      golbelPreventDefault(e);
       combine();
     }
     if (shiftKey && ctrlOrMetaKeyActive && key === KEYS.G) {
       if (disableHotkeys.value) return;
-      e.preventDefault();
+      golbelPreventDefault(e);
       uncombine();
     }
     if (altKey && key === KEYS.F) {
       if (disableHotkeys.value) return;
-      e.preventDefault();
+      golbelPreventDefault(e);
       // order(ElementOrderCommands.TOP)
     }
     if (altKey && key === KEYS.B) {
       if (disableHotkeys.value) return;
-      e.preventDefault();
+      golbelPreventDefault(e);
       // order(ElementOrderCommands.BOTTOM)
     }
     if (key === KEYS.DELETE) {
       if (disableHotkeys.value) return;
-      e.preventDefault();
+      golbelPreventDefault(e);
       remove();
     }
     if (key === KEYS.UP) {
       if (disableHotkeys.value) return;
-      e.preventDefault();
+      golbelPreventDefault(e);
       move(KEYS.UP);
     }
     if (key === KEYS.DOWN) {
       if (disableHotkeys.value) return;
-      e.preventDefault();
+      golbelPreventDefault(e);
       move(KEYS.DOWN);
     }
     if (key === KEYS.LEFT) {
       if (disableHotkeys.value) return;
-      e.preventDefault();
+      golbelPreventDefault(e);
       move(KEYS.LEFT);
     }
     if (key === KEYS.RIGHT) {
       if (disableHotkeys.value) return;
-      e.preventDefault();
+      golbelPreventDefault(e);
       move(KEYS.RIGHT);
     }
     if (key === KEYS.PAGEUP) {
       if (disableHotkeys.value) return;
-      e.preventDefault();
+      golbelPreventDefault(e);
       // moveSlide(KEYS.PAGEUP)
     }
     if (key === KEYS.PAGEDOWN) {
       if (disableHotkeys.value) return;
-      e.preventDefault();
+      golbelPreventDefault(e);
       // moveSlide(KEYS.PAGEDOWN)
     }
     // if (key === KEYS.ENTER) {
@@ -241,23 +247,23 @@ export default () => {
     // }
     if (key === KEYS.MINUS) {
       if (disableHotkeys.value) return;
-      e.preventDefault();
+      golbelPreventDefault(e);
       // scaleCanvas('-')
     }
     if (key === KEYS.EQUAL) {
       if (disableHotkeys.value) return;
-      e.preventDefault();
+      golbelPreventDefault(e);
       // scaleCanvas('+')
     }
     if (key === KEYS.TAB) {
       if (disableHotkeys.value) return;
-      e.preventDefault();
+      golbelPreventDefault(e);
       // tabActiveElement()
     }
     if (shiftKey && key === KEYS.R) {
       console.log("key:", key);
       if (disableHotkeys.value) return;
-      e.preventDefault();
+      golbelPreventDefault(e);
       if (canvas.ruler) {
         canvas.ruler.enabled = !canvas.ruler.enabled;
       }
@@ -271,8 +277,14 @@ export default () => {
   };
 
   const pasteListener = async (event: { preventDefault: () => void; clipboardData: any; originalEvent: { clipboardData: any } }) => {
+    console.log('document.activeElement', document.activeElement);
+    const { pasteElement } = useHandleElement()
     const [canvas] = useCanvas();
-    event.preventDefault(); // 阻止默认粘贴行为
+    if (document.activeElement === document.body) {
+      event.preventDefault(); // 阻止默认粘贴行为
+    } else {
+      return
+    }
 
     const items = (event.clipboardData || event.originalEvent.clipboardData).items;
     const fileAccept = ".pdf,.psd,.cdr,.ai,.svg,.jpg,.jpeg,.png,.webp,.json";
@@ -310,7 +322,7 @@ export default () => {
         // 文本数据
         item.getAsString((text: any) => {
           // 插入到文本框
-          const activeObject = canvas.getActiveObject();
+          const activeObject = canvas.getActiveObject() as Textbox;
           // 如果是激活的文字把复制的内容插入到对应光标位置
           if (activeObject && (activeObject.type === "textbox" || activeObject.type === "i-text")) {
             const cursorPosition = activeObject.selectionStart;
@@ -332,6 +344,9 @@ export default () => {
           }
         });
       }
+    }
+    if (!items.length) {
+      pasteElement();
     }
   };
 

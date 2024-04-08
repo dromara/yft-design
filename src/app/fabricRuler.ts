@@ -203,11 +203,10 @@ export class FabricRuler extends Disposable {
         }
       );
       this.canvas.add(this.tempReferenceLine)
-      // const templatesStore = useTemplatesStore()
-      // templatesStore.modifedElement()
+      const templatesStore = useTemplatesStore()
+      templatesStore.modifedElement()
       this.canvas.setActiveObject(this.tempReferenceLine)
       this.canvas._setupCurrentTransform(e.e, this.tempReferenceLine, true)
-      // @ts-ignore
       this.tempReferenceLine.fire('down', this.getCommonEventInfo(e));
     }
   }

@@ -111,6 +111,8 @@ export default {
     QRCodeTips: 'Quickly generate QR codes, supporting 13 styles',
     AICutoutImage: 'Cut img',
     AICutoutImageTips: 'Utilizing AI technology to achieve intelligent recognition',
+    ColorFillImage: 'Image fill color',
+    ColorFillImageTips: 'Image color filling, commonly used to change background color',
 
     searchLayer: 'Search For Layer',
     beginnerGuide: "Beginner's Guide",

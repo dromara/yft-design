@@ -1,4 +1,4 @@
-import { Image, ImageSource, classRegistry } from 'fabric';
+import { Image, ImageSource, classRegistry, util, Object as FabricObject, ImageProps } from 'fabric';
 import 'gifler';
 
 export class GifImage extends Image {
@@ -7,7 +7,7 @@ export class GifImage extends Image {
 	public gifler = undefined
 	public isStarted: boolean = false
 
-  constructor(element: ImageSource, options?: any) {
+  constructor(element: ImageSource, options?: FabricObject<ImageProps>) {
     super(element, options)
     this.gifCanvas = document.createElement('canvas');
   }
@@ -17,19 +17,26 @@ export class GifImage extends Image {
 		this.gifCanvas.width = frame.width
 		this.gifCanvas.height = frame.height
 		ctx.drawImage(frame.buffer, 0, 0)
+		this.setSrc(this.gifCanvas.toDataURL())
 		this.canvas?.renderAll();
 	}
+
 	_render(ctx: CanvasRenderingContext2D) {
 		super._render(ctx);
 		this.dirty = true;
 		if (!this.isStarted) {
 			this.isStarted = true;
-			this.gifler = window.gifler('https://themadcreator.github.io/gifler/assets/gif/nyan.gif').frames(this.gifCanvas, (context: CanvasRenderingContext2D, frame: any) => {
+			this.gifler = window.gifler(this.getSrc()).frames(this.gifCanvas, (context: CanvasRenderingContext2D, frame: any) => {
+				
         this.isStarted = true;
         this.drawFrame(context, frame);
       });
 		}
 	}
+
+	static fromURL(url: string, options: any = {}): Promise<Image> {
+    return util.loadImage(url, options).then((img) => new this(img, options));
+  }
 }
 
 classRegistry.setClass(GifImage)

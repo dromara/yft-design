@@ -6,9 +6,16 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "7473782",
+      "name": "text-path",
+      "font_class": "text-path",
+      "unicode": "e609",
+      "unicode_decimal": 58889
+    },
+    {
       "icon_id": "123877",
-      "name": "标尺",
-      "font_class": "biaochi",
+      "name": "ruler",
+      "font_class": "ruler",
       "unicode": "e606",
       "unicode_decimal": 58886
     },

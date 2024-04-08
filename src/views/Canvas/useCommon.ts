@@ -17,6 +17,7 @@ import { Line, Group, Rect, Path } from 'fabric'
 import { LineOption } from '@/types/canvas'
 import { TransparentFill } from '@/configs/background'
 import useCanvas from "./useCanvas"
+import { ReferenceLine } from "@/extension/object/ReferenceLine"
 
 export default () => {
   const initCommon = () => {
@@ -127,12 +128,19 @@ export default () => {
       visible: showClip.value,
       ...WorkSpaceCommonOption
     })
-    
+
     canvas.add(workSpaceClip)
     canvas.add(workSpaceSafe)
     canvas.add(workLineGroup)
     canvas.add(workSpaceMask)
     canvas.renderAll()
+
+    canvas.getObjects('ReferenceLine').forEach(item => {
+      const referenceLine = item as ReferenceLine
+      referenceLine.set({selectable: true, hasControls: false, hasBorders: false, padding: 5})
+      canvas.bringObjectToFront(referenceLine)
+      canvas.renderAll()
+    })
   }
 
   return {
