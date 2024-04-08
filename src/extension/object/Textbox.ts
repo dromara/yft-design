@@ -46,7 +46,7 @@ export class Textbox extends OriginTextbox {
         ctx.save();
         ctx.strokeStyle = item.stroke;
         ctx.lineWidth = item.strokeWidth;
-        ctx.strokeText(this.text, this.left, this.top);
+        ctx.strokeText(this.text, 0, 0);
         ctx.restore()
       })
     }
