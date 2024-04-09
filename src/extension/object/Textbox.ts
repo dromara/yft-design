@@ -1,8 +1,9 @@
-import { Object as FabricObject, Textbox as OriginTextbox, classRegistry, ImageSource } from "fabric"
+import { Textbox as OriginTextbox, classRegistry } from "fabric"
+import { StrokeItem } from "@/types/common"
 
 export class Textbox extends OriginTextbox {
 
-  public strokes?: any[];
+  public strokes?: StrokeItem[];
 
   constructor(text: string, options?: any) {
     super(text, options);
@@ -40,7 +41,6 @@ export class Textbox extends OriginTextbox {
   }
 
   _renderChar(method: "fillText" | "strokeText", ctx: CanvasRenderingContext2D, lineIndex: number, charIndex: number, _char: string, left: number, top: number): void {
-    super._renderChar(method, ctx, lineIndex, charIndex, _char, left, top)
     if (this.strokes) {
       for (let i = 0; i < this.strokes.length; i++) {
         const item = this.strokes[i]
@@ -51,6 +51,7 @@ export class Textbox extends OriginTextbox {
         ctx.restore()
       }
     }
+    super._renderChar(method, ctx, lineIndex, charIndex, _char, left, top)
   }
 }
 
