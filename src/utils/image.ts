@@ -64,6 +64,45 @@ export const getImageText = (file: File): Promise<string> => {
   })
 }
 
+const isUrl = (src: string) => {
+  const urlPattern = new RegExp('^(https?:\/\/)?'+ // validate protocol
+  '((([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}|'+ // validate domain name
+  '((\d{1,3}\.){3}\d{1,3}))'+ // validate OR ip (v4) address
+  '(\:\d+)?(\/[-a-z\d%_.~+]*)*'+ // validate port and path
+  '(\?[;&a-z\d%_.~+=-]*)?'+ // validate query string
+  '(\#[-a-z\d_]*)?$','i'); // validate fragment locator
+  return !!urlPattern.test(src);
+}
+
+const toDataUrl = (url: string): Promise<string | ArrayBuffer | null> => {
+  return new Promise(function (resolve) {
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+      var reader = new FileReader();
+      reader.onloadend = function () {
+        resolve(reader.result);
+      };
+      reader.readAsDataURL(xhr.response);
+    };
+    xhr.open("GET", url);
+    xhr.responseType = "blob";
+    xhr.send();
+  })
+}
+
+export const src2blob = async (src: string) => {
+  let dataURL = src
+  if (isUrl(src)) {
+    dataURL = await toDataUrl(src) as string
+  }
+  if (!dataURL) return
+  let arr = dataURL.split(',') as any[]
+  let mime = arr[0].match(/:(.*?);/)[1], bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+  return new Blob([u8arr], { type: mime });
+}
 
 // px2mm
 export const px2mm = (value: number) => {
