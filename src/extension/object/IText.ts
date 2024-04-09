@@ -8,18 +8,20 @@ export class IText extends OriginIText {
     this.strokes = options.strokes
   }
 
-  _render(ctx: CanvasRenderingContext2D): void {
-    super._render(ctx)
+  _renderChar(method: "fillText" | "strokeText", ctx: CanvasRenderingContext2D, lineIndex: number, charIndex: number, _char: string, left: number, top: number): void {
+    super._renderChar(method, ctx, lineIndex, charIndex, _char, left, top)
     if (this.strokes) {
-      this.strokes.forEach((item) => {
+      for (let i = 0; i < this.strokes.length; i++) {
+        const item = this.strokes[i]
         ctx.save();
         ctx.strokeStyle = item.stroke;
         ctx.lineWidth = item.strokeWidth;
-        ctx.strokeText(this.text, -this.width / 2, 0);
+        ctx.strokeText(_char, left, top);
         ctx.restore()
-      })
+      }
     }
   }
+
 }
 
 classRegistry.setClass(IText, 'IText')
