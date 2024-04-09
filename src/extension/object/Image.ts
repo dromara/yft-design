@@ -3,7 +3,6 @@ import { addCropImageInteractions, isolateObjectForEdit } from '@/extension/mixi
 import { croppingControlSet, flipXCropControls, flipXYCropControls, flipYCropControls } from '@/extension/controls/cropping/cropping.controls'
 import { Image as OriginImage, Point, Object as FabricObject, util, classRegistry, TPointerEventInfo, TPointerEvent, ImageProps, TClassProperties, ImageSource } from 'fabric'
 import { StrokeItem } from '@/types/common'
-import { src2blob } from '@/utils/image'
 
 export class Image extends OriginImage {
   public isCropping?: false
@@ -169,7 +168,7 @@ export class Image extends OriginImage {
       );
       ctx.globalAlpha = 1;
     }
-    this.renderStroke()
+    this.renderStroke(ctx)
     super._render(ctx);
     this._drawCroppingLines(ctx)
     this._drawCroppingPath(ctx)
@@ -181,15 +180,12 @@ export class Image extends OriginImage {
     super.drawBorders(ctx, options, styleOverride);
   }
 
-  renderStroke() {
+  renderStroke(ctx: CanvasRenderingContext2D) {
     if (this.strokes) {
+      const imageData = ctx.getImageData(this.left, this.top, this.width * this.scaleX, this.height * this.scaleY)
       const canvas = document.createElement('canvas');
       const tempCanvas = document.createElement('canvas');
-      const imageData = {
-        data: src2blob(this.src),
-        width: this.width,
-        height: this.height
-      }
+      
       for (let i = 0; i < this.strokes.length; i++) {
         const item = this.strokes[i]
         this.imageBorder(imageData, item.stroke, item.strokeWidth, canvas, tempCanvas)
@@ -212,7 +208,7 @@ export class Image extends OriginImage {
     return canvas;
   }
 
-  imageBorder(imageData: any, stroke: string, strokeWidth: number, canvas: HTMLCanvasElement, tempCanvas: HTMLCanvasElement) {
+  imageBorder(imageData: ImageData, stroke: string, strokeWidth: number, canvas: HTMLCanvasElement, tempCanvas: HTMLCanvasElement) {
 
     const nPixels = imageData.data.length;
     canvas.width = imageData.width;
