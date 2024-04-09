@@ -92,5 +92,6 @@ export const propertiesToInclude = [
   'reverse',
   'startStyle',
   'endStyle',
+  'strokes',
   'globalCompositeOperation',
 ]

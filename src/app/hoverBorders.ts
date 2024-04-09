@@ -1,5 +1,5 @@
 
-import { Object as FabricObject, CanvasEvents, Canvas, Rect, Textbox } from 'fabric'
+import { Object as FabricObject, CanvasEvents, Canvas, Rect, Textbox, IText } from 'fabric'
 import { clone } from 'lodash-es'
 import { check } from '@/utils/check'
 import { Disposable } from '@/utils/lifecycle'
@@ -88,13 +88,12 @@ export class HoverBorders extends Disposable {
     const object = clone(target)
 
     // 文字特殊处理，显示下划线
-    if (object instanceof Textbox) {
-      object.underline = true
-      object.fill = 'rgb(60,126,255)'
-      object._renderTextDecoration(ctx, 'underline')
-      object._drawClipPath(ctx, object.clipPath)
-      ctx.restore()
-      this.canvas.contextTopDirty = true
+    if (object instanceof Textbox && object.isType('Textbox')) {
+      this.showUnderline(ctx, object as Textbox)
+      return
+    }
+    if (object instanceof IText && object.isType('IText')) {
+      this.showUnderline(ctx, object as Textbox)
       return
     }
     // 分组特殊处理，显示矩形边框
@@ -144,6 +143,15 @@ export class HoverBorders extends Disposable {
 
     object._render(ctx)
 
+    ctx.restore()
+    this.canvas.contextTopDirty = true
+  }
+
+  public showUnderline(ctx: CanvasRenderingContext2D, object: Textbox) {
+    object.underline = true
+    object.fill = 'rgb(60,126,255)'
+    object._renderTextDecoration(ctx, 'underline')
+    object._drawClipPath(ctx, object.clipPath)
     ctx.restore()
     this.canvas.contextTopDirty = true
   }
