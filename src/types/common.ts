@@ -9,3 +9,8 @@ export interface PathPoint {
   X: number
   Y: number
 }
+
+export interface StrokeItem {
+  stroke: string
+  strokeWidth: number
+}
