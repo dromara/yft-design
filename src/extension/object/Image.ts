@@ -168,7 +168,7 @@ export class Image extends OriginImage {
       );
       ctx.globalAlpha = 1;
     }
-    this.renderStroke(ctx)
+    // this.renderStroke(ctx)
     super._render(ctx);
     this._drawCroppingLines(ctx)
     this._drawCroppingPath(ctx)
