@@ -2,7 +2,7 @@ import { ClipPathType } from '@/configs/images'
 import { strokeImage } from '@/extension/strokes/image.stroke'
 import { addCropImageInteractions, isolateObjectForEdit } from '@/extension/mixins/cropping.mixin'
 import { croppingControlSet, flipXCropControls, flipXYCropControls, flipYCropControls } from '@/extension/controls/cropping/cropping.controls'
-import { Image as OriginImage, Point, Object as FabricObject, util, classRegistry, TPointerEventInfo, TPointerEvent, ImageProps, TClassProperties, ImageSource } from 'fabric'
+import { Image as OriginImage, Point, Object as FabricObject, util, classRegistry, TPointerEventInfo, TPointerEvent, ImageProps, TClassProperties, ImageSource, StaticCanvas } from 'fabric'
 import { StrokeItem } from '@/types/common'
 
 export class Image extends OriginImage {
@@ -10,13 +10,14 @@ export class Image extends OriginImage {
   public cropKey?: ClipPathType
   public cropPath?: string
   public cropSize?: number
+  public originWidth?: number
+  public originHeight?: number
   public strokes?: StrokeItem[]
-  public hasStrokes?: boolean
   
   constructor(element: ImageSource, options?: any) {
     super(element, { filters: [], ...options });
     this.strokes = options.strokes
-    this.hasStrokes = false
+    this.renderStroke()
     this.on('mousedblclick', this.doubleClickHandler.bind(this))
   }
 
@@ -171,7 +172,6 @@ export class Image extends OriginImage {
       );
       ctx.globalAlpha = 1;
     }
-    this.renderStroke()
     super._render(ctx);
     this._drawCroppingLines(ctx)
     this._drawCroppingPath(ctx)
@@ -183,13 +183,17 @@ export class Image extends OriginImage {
     super.drawBorders(ctx, options, styleOverride);
   }
 
-  renderStroke() {
-    if (this.strokes && !this.hasStrokes) {
-      for (let i = 0; i < this.strokes.length; i++) {
+  async renderStroke() {
+    
+    if (this.strokes) {
+      this.originSrc = this.src
+      this.originWidth = this.width
+      this.originHeight = this.height
+      const canvas = document.createElement('canvas');
+      for (let i = this.strokes.length - 1; i >= 0; i--) {
         const item = this.strokes[i]
-        strokeImage(item.stroke, item.strokeWidth, this)
+        await strokeImage(item.stroke, item.strokeWidth, this, canvas)
       }
-      this.hasStrokes = true
     }
   }
 
@@ -221,6 +225,9 @@ export class Image extends OriginImage {
   }
 
   static fromObject({ filters: f, resizeFilter: rf, src, crossOrigin, ...object }: any, options: { signal: AbortSignal }): Promise<Image> {
+    if (object.originSrc) src = object.originSrc
+    if (object.originWidth) object.width = object.originWidth
+    if (object.originHeight) object.height = object.originHeight
     return Promise.all([
       util.loadImage(src, { ...options, crossOrigin }),
       f && util.enlivenObjects(f, options),

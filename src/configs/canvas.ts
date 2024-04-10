@@ -93,5 +93,8 @@ export const propertiesToInclude = [
   'startStyle',
   'endStyle',
   'strokes',
+  'originSrc',
+  'originWidth',
+  'originHeight',
   'globalCompositeOperation',
 ]
