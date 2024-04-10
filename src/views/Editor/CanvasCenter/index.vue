@@ -58,7 +58,7 @@ const remDrawAreaFocus = () => {
 .background-grid {
   --offsetX: 0px;
   --offsetY: 0px;
-  --size: 16px;
+  --size: 8px;
   --color: #dedcdc;
   background-image: 
     linear-gradient(45deg, var(--color) 25%, transparent 0, transparent 75%, var(--color) 0), 

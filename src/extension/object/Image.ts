@@ -1,4 +1,5 @@
 import { ClipPathType } from '@/configs/images'
+import { strokeImage } from '@/extension/strokes/image.stroke'
 import { addCropImageInteractions, isolateObjectForEdit } from '@/extension/mixins/cropping.mixin'
 import { croppingControlSet, flipXCropControls, flipXYCropControls, flipYCropControls } from '@/extension/controls/cropping/cropping.controls'
 import { Image as OriginImage, Point, Object as FabricObject, util, classRegistry, TPointerEventInfo, TPointerEvent, ImageProps, TClassProperties, ImageSource } from 'fabric'
@@ -10,10 +11,12 @@ export class Image extends OriginImage {
   public cropPath?: string
   public cropSize?: number
   public strokes?: StrokeItem[]
+  public hasStrokes?: boolean
   
   constructor(element: ImageSource, options?: any) {
     super(element, { filters: [], ...options });
-    this.strokes = options?.strokes
+    this.strokes = options.strokes
+    this.hasStrokes = false
     this.on('mousedblclick', this.doubleClickHandler.bind(this))
   }
 
@@ -168,154 +171,25 @@ export class Image extends OriginImage {
       );
       ctx.globalAlpha = 1;
     }
-    // this.renderStroke(ctx)
+    this.renderStroke()
     super._render(ctx);
     this._drawCroppingLines(ctx)
     this._drawCroppingPath(ctx)
     ctx.restore();
   }
 
-  drawBorders(ctx:CanvasRenderingContext2D, options:any, styleOverride:any) {
+  drawBorders(ctx: CanvasRenderingContext2D, options:any, styleOverride:any) {
     this._renderCroppingBorders(ctx);
     super.drawBorders(ctx, options, styleOverride);
   }
 
-  renderStroke(ctx: CanvasRenderingContext2D) {
-    if (this.strokes) {
-      const imageData = ctx.getImageData(this.left, this.top, this.width * this.scaleX, this.height * this.scaleY)
-      const canvas = document.createElement('canvas');
-      const tempCanvas = document.createElement('canvas');
-      
+  renderStroke() {
+    if (this.strokes && !this.hasStrokes) {
       for (let i = 0; i < this.strokes.length; i++) {
         const item = this.strokes[i]
-        this.imageBorder(imageData, item.stroke, item.strokeWidth, canvas, tempCanvas)
+        strokeImage(item.stroke, item.strokeWidth, this)
       }
-    }
-  }
-
-  removeTransparency(canvas: HTMLCanvasElement) {
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return
-    var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    var nPixels = imageData.data.length;
-    for (var i = 3; i < nPixels; i += 4) {
-      if (imageData.data[i] > 0) {
-        imageData.data[i] = 255;
-      }
-    }
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.putImageData(imageData, 0, 0);
-    return canvas;
-  }
-
-  imageBorder(imageData: ImageData, stroke: string, strokeWidth: number, canvas: HTMLCanvasElement, tempCanvas: HTMLCanvasElement) {
-
-    const nPixels = imageData.data.length;
-    canvas.width = imageData.width;
-    canvas.height = imageData.height;
-
-    tempCanvas.width = imageData.width;
-    tempCanvas.height = imageData.height;
-
-    tempCanvas.getContext('2d')?.putImageData(imageData, 0, 0);
-
-    this.removeTransparency(tempCanvas);
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return
-    ctx.save();
-    ctx.shadowColor = stroke;
-    ctx.shadowBlur = strokeWidth;
-    ctx.drawImage(tempCanvas, 0, 0);
-    ctx.restore();
-
-    var tempImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-
-    var SMOOTH_MIN_THRESHOLD = 3;
-    var SMOOTH_MAX_THRESHOLD = 10;
-
-    let val, hasValue;
-
-    var offset = 3;
-
-    for (var i = 3; i < nPixels; i += 4) {
-      if (imageData.data[i] === 255) {
-        continue;
-      }
-
-      val = tempImageData.data[i];
-      hasValue = val !== 0;
-      if (!hasValue) {
-        continue;
-      }
-      if (val > SMOOTH_MAX_THRESHOLD) {
-        val = 255;
-      } else if (val < SMOOTH_MIN_THRESHOLD) {
-        val = 0;
-      } else {
-        val =
-          ((val - SMOOTH_MIN_THRESHOLD) /
-            (SMOOTH_MAX_THRESHOLD - SMOOTH_MIN_THRESHOLD)) *
-          255;
-      }
-      tempImageData.data[i] = val;
-    }
-
-    ctx.putImageData(tempImageData, 0, 0);
-
-    ctx.save();
-    ctx.globalCompositeOperation = 'source-in';
-    ctx.fillStyle = stroke;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.restore();
-
-    let newImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-
-    let indexesToProcess = [];
-    for (let i = 3; i < nPixels; i += 4) {
-      let hasTransparentOnTop = imageData.data[i - imageData.width * 4 * offset] === 0;
-      let hasTransparentOnTopRight = imageData.data[i - (imageData.width * 4 + 4) * offset] === 0;
-      let hasTransparentOnTopLeft = imageData.data[i - (imageData.width * 4 - 4) * offset] === 0;
-      let hasTransparentOnRight = imageData.data[i + 4 * offset] === 0;
-      let hasTransparentOnLeft = imageData.data[i - 4 * offset] === 0;
-      let hasTransparentOnBottom = imageData.data[i + imageData.width * 4 * offset] === 0;
-      let hasTransparentOnBottomRight = imageData.data[i + (imageData.width * 4 + 4) * offset] === 0;
-      let hasTransparentOnBottomLeft = imageData.data[i + (imageData.width * 4 - 4) * offset] === 0;
-      let hasTransparentAround =
-        hasTransparentOnTop ||
-        hasTransparentOnRight ||
-        hasTransparentOnLeft ||
-        hasTransparentOnBottom ||
-        hasTransparentOnTopRight ||
-        hasTransparentOnTopLeft ||
-        hasTransparentOnBottomRight ||
-        hasTransparentOnBottomLeft;
-
-      if ( imageData.data[i] === 255 || (imageData.data[i] && !hasTransparentAround)) {
-        continue;
-      }
-      if (!newImageData.data[i]) {
-        continue;
-      }
-      indexesToProcess.push(i);
-    }
-
-    for (let index = 0; index < indexesToProcess.length; index += 1) {
-      let i = indexesToProcess[index];
-
-      let alpha = imageData.data[i] / 255;
-
-      if (alpha > 0 && alpha < 1) {
-        let aa = 1 + 1;
-      }
-      imageData.data[i] = newImageData.data[i];
-      imageData.data[i - 1] = newImageData.data[i - 1] * (1 - alpha) + imageData.data[i - 1] * alpha;
-      imageData.data[i - 2] = newImageData.data[i - 2] * (1 - alpha) + imageData.data[i - 2] * alpha;
-      imageData.data[i - 3] = newImageData.data[i - 3] * (1 - alpha) + imageData.data[i - 3] * alpha;
-
-      if (newImageData.data[i] < 255 && alpha > 0) {
-        var bb = 1 + 1;
-      }
+      this.hasStrokes = true
     }
   }
 
