@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { Templates } from '@/mocks/templates'
-import { Template, CanvasElement, ImageElement, GroupElement } from '@/types/canvas'
+import { Template, CanvasElement, ImageElement, GroupElement, RectElement } from '@/types/canvas'
 import { Object as FabricObject, SerializedImageProps, Image, Group } from 'fabric'
 import { WorkSpaceDrawType, propertiesToInclude } from '@/configs/canvas'
 import { useMainStore } from './main'
@@ -121,6 +121,10 @@ export const useTemplatesStore = defineStore('Templates', {
         if (ele.type.toLowerCase() === ElementNames.IMAGE) {
           this.setImageFilter(ele as ImageElement)
         }
+        if (ele.type.toLowerCase() === ElementNames.RECT) {
+          console.log('ele:', ele)
+          this.setRectMask(ele as RectElement)
+        }
         if (ele.type.toLowerCase() === ElementNames.GROUP) {
           this.setObjectFilter(((ele as GroupElement).objects) as CanvasElement[])
         }
@@ -137,6 +141,18 @@ export const useTemplatesStore = defineStore('Templates', {
         pixiFilters: JSON.stringify(image.pixiFilters), 
         width: image.width, 
         height: image.height
+      });
+    },
+
+    setRectMask(rect: RectElement) {
+      if (!rect.mask) return
+      const [ pixi ] = usePixi()
+      pixi.postMessage({
+        id: rect.id,
+        type: "mask", 
+        mask: JSON.stringify(rect.mask), 
+        width: rect.width, 
+        height: rect.height
       });
     },
 

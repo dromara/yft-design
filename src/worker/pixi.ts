@@ -1,4 +1,4 @@
-import { Application, Texture, Sprite, Container, Filter, BLEND_MODES } from '@pixi/webworker';
+import { Application, Texture, Sprite, Container, Filter, Graphics } from '@pixi/webworker';
 import { PixiFilter, PixiGlowFilter, PixiColorOverlayFilter, PixiColorGradientFilter, PixiBlendModeFilter } from '@/types/pixiFilter';
 import { GlowFilter, ColorOverlayFilter, ColorGradientFilter } from 'pixi-filters'
 
@@ -38,6 +38,25 @@ self.onmessage = async (e) => {
     const res = await app?.renderer.plugins.extract.base64(sprite)
     const data = {res, id}
     postMessage(data)
+  }
+  else if (type === 'mask') {
+    const { id, width, height, mask } = e.data
+    app?.renderer.clear()
+    app?.renderer.resize(width, height)
+    // const rectElement = JSON.parse(mask)
+    const maskData = JSON.parse(mask)
+    const texture = await Texture.fromURL(maskData.src)
+    const sprite = new Sprite(texture)
+    const graph = new Graphics();
+    graph.beginFill(0xff0044);
+    graph.drawRect(0, 0, width, height);
+    graph.endFill()
+    // graph.mask = sprite
+    app?.stage.addChild(graph)
+    const res = await app?.renderer.plugins.extract.base64(sprite)
+    const data = {res, id}
+    console.log(`<img src="${res}">`)
+    // postMessage(data)
   }
 }
 

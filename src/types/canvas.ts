@@ -102,7 +102,7 @@ export interface PathElement extends Path, CommenElement {
 
 export interface RectElement extends Rect, CommenElement {
   type: string
-
+  mask: PathElement | ImageElement
 }
 
 export interface LineElement extends Line, CommenElement {

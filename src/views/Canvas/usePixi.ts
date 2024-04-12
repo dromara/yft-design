@@ -1,4 +1,4 @@
-import pixiWorker from "@/worker/filter?worker"
+import pixiWorker from "@/worker/pixi?worker"
 import useCanvas from "./useCanvas"
 import useHandleElement from "@/hooks/useHandleElement"
 import { Image } from "fabric"
