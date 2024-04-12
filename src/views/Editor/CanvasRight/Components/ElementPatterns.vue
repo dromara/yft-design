@@ -1,22 +1,22 @@
 <template>
   <div class="element-shadow">
     <div class="row">
-      <div style="flex: 2; "><b>启用底纹：</b></div>
+      <div style="flex: 2; "><b>{{$t('style.enableShading')}}：</b></div>
       <div class="switch-wrapper" style="flex: 3;">
-        <el-switch v-model="props.hasPatterns" @change="togglePatterns()"></el-switch>
+        <el-switch v-model="openPattern" @change="togglePatterns()"></el-switch>
       </div>
     </div>
     <template v-if="props.hasPatterns">
       <div class="row">
-        <div style="flex: 2;">底纹模式：</div>
+        <div style="flex: 2;">{{$t('style.shadingMode')}}：</div>
         <el-select class="select" v-model="repeatPattern" @change="updatePatternElement">
-          <el-option value="repeat" label="拼贴"></el-option>
-          <el-option value="repeat-x" label="水平"></el-option>
-          <el-option value="repeat-y" label="垂直"></el-option>
+          <el-option value="repeat" :label="$t('style.collage')"></el-option>
+          <el-option value="repeat-x" :label="$t('style.horizontal')"></el-option>
+          <el-option value="repeat-y" :label="$t('style.vertical')"></el-option>
         </el-select>
       </div>
       <div class="row">
-        <div style="flex: 2;">底纹图片：</div>
+        <div style="flex: 2;">{{$t('style.shadingImage')}}：</div>
         <el-select class="select" v-model="sourcePattern" @change="updatePatternElement">
           <el-option v-for="item in PatternImages" :key="item.name" :value="item.name" :label="item.name"></el-option>
         </el-select>

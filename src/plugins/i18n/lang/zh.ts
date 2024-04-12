@@ -148,7 +148,10 @@ export default {
     module: '组件',
   },
   default: {
-    textValue: '双击修改文字'
+    textValue: '双击修改文字',
+    cancel: '取消',
+    ok: '确定',
+    direction: '方向'
   },
   style: {
     canvas: '画布',
@@ -158,6 +161,8 @@ export default {
     height: '高',
     w: '宽',
     h: '高',
+    horizontal: '水平',
+    vertical: '垂直',
     bleedingLine: '出血线',
     rightAngle: '直角',
     fillet: '圆角',
@@ -267,5 +272,21 @@ export default {
     noise: '噪音',
     pixel: '像素',
     vague: '模糊',
+
+    axis: '轴',
+    position: '位置',
+
+    enableStroke: '启用描边',
+    strokeWidth: '描边厚度',
+    cornerStyle: '角落风格',
+    bevel: '斜面',
+    round: '圆形',
+    miter: '斜接',
+    strokeColor: '描边颜色',
+
+    enableShading: '启用底纹',
+    shadingMode: '底纹模式',
+    shadingImage: '底纹图片',
+    collage: '拼贴',
   }
 };

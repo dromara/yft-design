@@ -145,7 +145,10 @@ export default {
     module: 'Module',
   },
   default: {
-    textValue: 'Double Click Edit Text'
+    textValue: 'Double Click Edit Text',
+    cancel: 'Cancel',
+    ok: 'OK',
+    direction: 'Direction'
   },
   style: {
     canvas: 'Canvas',
@@ -155,6 +158,8 @@ export default {
     height: 'Height',
     w: 'W',
     h: 'H',
+    horizontal: 'Horizontal',
+    vertical: 'Vertical',
     bleedingLine: 'Bleeding Line',
     rightAngle: 'right Angle',
     fillet: 'Fillet',
@@ -263,5 +268,21 @@ export default {
     noise: 'Noise',
     pixel: 'Pixel',
     vague: 'Vague',
+
+    axis: 'Axis',
+    position: 'Position',
+
+    enableStroke: 'Enable Stroke',
+    strokeWidth: 'Stroke Width',
+    cornerStyle: 'Corner Style',
+    bevel: 'Bevel',
+    round: 'Round',
+    miter: 'Miter',
+    strokeColor: 'Stroke Color',
+
+    enableShading: 'Enable Shading',
+    shadingMode: 'Shading Mode',
+    shadingImage: 'Shading Image',
+    collage: 'Collage',
   }
 };

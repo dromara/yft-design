@@ -1,17 +1,17 @@
 <template>
   <div>
-    <el-popover placement="right" trigger="click" :popper-style="{padding: 0}" width="200" @before-enter="setReference(true)" @hide="setReference(false)" :ref="props.referencePopoverRef" :virtual-ref="props.referenceRef" virtual-triggering>
+    <el-popover placement="right" trigger="click" :popper-style="{padding: 0}" width="240" @before-enter="setReference(true)" @hide="setReference(false)" :ref="props.referencePopoverRef" :virtual-ref="props.referenceRef" virtual-triggering>
       <el-row class="reference-pop-row">
-        <el-col :span="6" class="reference-pop-text">方向：</el-col>
-        <el-col :span="18" class="reference-pop-direction">
+        <el-col :span="8" class="reference-pop-text">{{$t('default.direction')}}：</el-col>
+        <el-col :span="16" class="reference-pop-direction">
           <el-radio-group v-model="direction">
-            <el-radio value="vertical" size="small">X 轴</el-radio>
-            <el-radio value="horizontal" size="small">Y 轴</el-radio>
+            <el-radio value="vertical" size="small">X {{$t('style.axis')}}</el-radio>
+            <el-radio value="horizontal" size="small">Y {{$t('style.axis')}}</el-radio>
           </el-radio-group>
         </el-col>
       </el-row>
       <el-row class="reference-pop-row">
-        <el-col :span="6" class="reference-pop-text">位置：</el-col>
+        <el-col :span="6" class="reference-pop-text">{{$t('style.position')}}：</el-col>
         <el-col :span="18">
           <el-row class="reference-flex-end">
             <el-col :span="10">
@@ -22,8 +22,8 @@
         </el-col>
       </el-row>
       <el-row class="reference-pop-btn">
-        <el-button size="small" @click="setReference(false)">取消</el-button>
-        <el-button size="small" type="primary" @click="addReference">确认</el-button>
+        <el-button size="small" @click="setReference(false)">{{$t('default.cancel')}}</el-button>
+        <el-button size="small" type="primary" @click="addReference">{{$t('default.ok')}}</el-button>
       </el-row>
     </el-popover>
   </div>
@@ -87,6 +87,7 @@ const addReference = () => {
 .reference-pop-row {
   font-size: 13px;
   padding: 8px 15px ;
+  display: flex;
   .reference-pop-direction {
     display: flex;
     justify-content: flex-end;
@@ -103,5 +104,8 @@ const addReference = () => {
   font-size: 13px;
   padding: 8px 15px ;
   justify-content: flex-end;
+}
+:deep(.el-radio-group){
+  flex-wrap: nowrap; 
 }
 </style>

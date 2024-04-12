@@ -1,14 +1,14 @@
 <template>
   <div class="element-shadow">
     <div class="row">
-      <div class="stroke-name"><b>启用描边：</b></div>
+      <div class="stroke-name"><b>{{$t('style.enableStroke')}}：</b></div>
       <div class="stroke-option switch-wrapper">
         <el-switch v-model="openStroke" @change="toggleStroke()"></el-switch>
       </div>
     </div>
     <template v-if="openStroke">
       <div class="row">
-        <div class="stroke-name">描边厚度：</div>
+        <div class="stroke-name">{{$t('style.strokeWidth')}}：</div>
         <el-slider class="slider" v-model="handleElement.strokeWidth" @change="updateStrokeWidth"></el-slider>
       </div>
       <!-- <div class="row">
@@ -20,15 +20,15 @@
         </el-select>
       </div> -->
       <div class="row">
-        <div class="stroke-name">角落风格：</div>
+        <div class="stroke-name">{{$t('style.cornerStyle')}}：</div>
         <el-select class="stroke-option" v-model="handleElement.strokeLineJoin" @change="updateStrokeLineJoin">
-          <el-option value="bevel" label="斜面"></el-option>
-          <el-option value="round" label="圆形"></el-option>
-          <el-option value="miter" label="斜接"></el-option>
+          <el-option value="bevel" :label="$t('style.bevel')"></el-option>
+          <el-option value="round" :label="$t('style.round')"></el-option>
+          <el-option value="miter" :label="$t('style.miter')"></el-option>
         </el-select>
       </div>
       <div class="row">
-        <div class="stroke-name">描边颜色：</div>
+        <div class="stroke-name">{{$t('style.strokeColor')}}：</div>
         <el-popover trigger="click" width="265">
           <template #reference>
             <ColorButton :color="handleElement.stroke" class="stroke-option" />
