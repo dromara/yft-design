@@ -9,7 +9,7 @@ import useCanvasScale from '@/hooks/useCanvasScale'
 import useCanvas from '@/views/Canvas/useCanvas'
 import useHistorySnapshot from '@/hooks/useHistorySnapshot'
 import useCommon from '@/views/Canvas/useCommon'
-import useFilter from '@/views/Canvas/useFilter'
+import usePixi from '@/views/Canvas/usePixi'
 
 
 interface UpdateElementData {
@@ -129,8 +129,8 @@ export const useTemplatesStore = defineStore('Templates', {
 
     setImageFilter(image: ImageElement) {
       if (!image.pixiFilters) return
-      const [ filter ] = useFilter()
-      filter.postMessage({
+      const [ pixi ] = usePixi()
+      pixi.postMessage({
         id: image.id,
         type: "filter", 
         src: image.src, 

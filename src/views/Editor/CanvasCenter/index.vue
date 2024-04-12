@@ -16,7 +16,7 @@ import { useFabricStore, useMainStore } from '@/store'
 
 import { contextMenus } from '@/configs/contextMenu'
 import { initEditor } from '@/views/Canvas/useCanvas'
-import { initFilter } from '@/views/Canvas/useFilter'
+import { initPixi } from '@/views/Canvas/usePixi'
 import useCanvasHotkey from '@/hooks/useCanvasHotkey'
 const fabricStore = useFabricStore()
 const mainStore = useMainStore()
@@ -26,7 +26,7 @@ const { keydownListener, keyupListener, pasteListener } = useCanvasHotkey()
 
 onMounted(() => {
   initEditor()
-  initFilter()
+  initPixi()
   document.addEventListener('keydown', keydownListener)
   document.addEventListener('keyup', keyupListener)
   window.addEventListener('blur', keyupListener)
@@ -66,4 +66,4 @@ const remDrawAreaFocus = () => {
   background-position: var(--offsetX) var(--offsetY), calc(var(--size) + var(--offsetX)) calc(var(--size) + var(--offsetY));
   background-size: calc(var(--size) * 2) calc(var(--size) * 2);
 }
-</style>
+</style>@/views/Canvas/usePixi

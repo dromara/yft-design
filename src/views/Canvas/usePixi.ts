@@ -1,4 +1,4 @@
-import filterWorker from "@/worker/filter?worker"
+import pixiWorker from "@/worker/filter?worker"
 import useCanvas from "./useCanvas"
 import useHandleElement from "@/hooks/useHandleElement"
 import { Image } from "fabric"
@@ -7,19 +7,19 @@ import { storeToRefs } from "pinia"
 import { CanvasElement, GroupElement, ImageElement } from "@/types/canvas"
 import { ElementNames } from "@/types/elements"
 
-let filter: Worker | undefined = undefined
+let pixi: Worker | undefined = undefined
 
-export const initFilter = () => {
+export const initPixi = () => {
   const width = 800, height = 600
   const resolution = window.devicePixelRatio
   const canvas = document.createElement('canvas')
   canvas.style.width = `${ width }px`
   canvas.style.height = `${ height }px`
   document.body.appendChild(canvas)
-  filter = new filterWorker()
+  pixi = new pixiWorker()
   const view = canvas.transferControlToOffscreen();
-  filter.postMessage({ width, height, resolution, view }, [view])
-  handleFilter(filter)
+  pixi.postMessage({ width, height, resolution, view }, [view])
+  handleFilter(pixi)
   document.body.removeChild(canvas)
 }
 
@@ -52,4 +52,4 @@ export const handleFilter = (filter: Worker) => {
   });
 }
 
-export default (): [Worker] => [filter as Worker]
+export default (): [Worker] => [pixi as Worker]

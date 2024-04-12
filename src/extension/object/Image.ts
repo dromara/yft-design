@@ -225,9 +225,9 @@ export class Image extends OriginImage {
   }
 
   static fromObject({ filters: f, resizeFilter: rf, src, crossOrigin, ...object }: any, options: { signal: AbortSignal }): Promise<Image> {
-    if (object.originSrc) src = object.originSrc
-    if (object.originWidth) object.width = object.originWidth
-    if (object.originHeight) object.height = object.originHeight
+    if (object.originSrc && object.strokes) src = object.originSrc
+    if (object.originWidth && object.strokes) object.width = object.originWidth
+    if (object.originHeight && object.strokes) object.height = object.originHeight
     return Promise.all([
       util.loadImage(src, { ...options, crossOrigin }),
       f && util.enlivenObjects(f, options),
