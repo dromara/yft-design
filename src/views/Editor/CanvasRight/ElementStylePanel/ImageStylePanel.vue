@@ -62,6 +62,9 @@
     <ElementShadow :hasShadow="hasShadow" />
     <el-divider />
 
+    <ImageStroke />
+    <el-divider />
+
     <el-row>
       <FileInput class="full-width-btn" @change="(files: FileList) => replaceImage(files)">
         <el-button class="full-btn">
@@ -100,6 +103,7 @@ import ElementFlip from "../Components/ElementFlip.vue";
 import ElementFilter from "../Components/ElementFilter.vue";
 import ElementMask from "../Components/ElementMask.vue";
 import ElementBlend from "../Components/ElementBlend.vue";
+import ImageStroke from "../Components/ImageStroke.vue";
 import useCanvas from "@/views/Canvas/useCanvas";
 
 const mainStore = useMainStore();

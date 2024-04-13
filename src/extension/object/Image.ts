@@ -13,11 +13,12 @@ export class Image extends OriginImage {
   public originWidth?: number
   public originHeight?: number
   public strokes?: StrokeItem[]
-  
   constructor(element: ImageSource, options?: any) {
     super(element, { filters: [], ...options });
     this.strokes = options.strokes
-    this.renderStroke()
+    this.originWidth = this.width
+    this.originHeight = this.height
+    this.originSrc = this.src
     this.on('mousedblclick', this.doubleClickHandler.bind(this))
   }
 
@@ -183,16 +184,11 @@ export class Image extends OriginImage {
     super.drawBorders(ctx, options, styleOverride);
   }
 
-  async renderStroke() {
-    
+  async renderStroke(type?: string) {
     if (this.strokes) {
-      this.originSrc = this.src
-      this.originWidth = this.width
-      this.originHeight = this.height
-      const canvas = document.createElement('canvas');
       for (let i = this.strokes.length - 1; i >= 0; i--) {
         const item = this.strokes[i]
-        await strokeImage(item.stroke, item.strokeWidth, this, canvas)
+        await strokeImage(item.stroke, item.strokeWidth, this, type)
       }
     }
   }
