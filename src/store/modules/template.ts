@@ -120,10 +120,7 @@ export const useTemplatesStore = defineStore('Templates', {
       objects.forEach(ele => {
         if (ele.type.toLowerCase() === ElementNames.IMAGE) {
           this.setImageFilter(ele as ImageElement)
-        }
-        if (ele.type.toLowerCase() === ElementNames.RECT) {
-          console.log('ele:', ele)
-          this.setRectMask(ele as RectElement)
+          this.setImageMask(ele as ImageElement)
         }
         if (ele.type.toLowerCase() === ElementNames.GROUP) {
           this.setObjectFilter(((ele as GroupElement).objects) as CanvasElement[])
@@ -144,15 +141,16 @@ export const useTemplatesStore = defineStore('Templates', {
       });
     },
 
-    setRectMask(rect: RectElement) {
-      if (!rect.mask) return
+    setImageMask(image: ImageElement) {
+      if (!image.mask) return
       const [ pixi ] = usePixi()
       pixi.postMessage({
-        id: rect.id,
+        id: image.id,
         type: "mask", 
-        mask: JSON.stringify(rect.mask), 
-        width: rect.width, 
-        height: rect.height
+        src: image.src,
+        mask: JSON.stringify(image.mask), 
+        width: image.width, 
+        height: image.height
       });
     },
 

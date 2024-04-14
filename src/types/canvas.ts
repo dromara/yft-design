@@ -147,7 +147,8 @@ export interface ReferenceLineProps extends Line {
 
 export interface ImageElement extends SerializedImageProps, CommenElement {
   type: string
-  pixiFilters: []
+  pixiFilters?: any[]
+  mask?: FabricObject
   originSrc?: string 
   isCropping?: boolean
   originId?: string

@@ -67,6 +67,7 @@ export const propertiesToInclude = [
   'editable',
   'color', 
   'axis',
+  'mask',
   'padding',
   'cropKey', 
   'cropPath', 
