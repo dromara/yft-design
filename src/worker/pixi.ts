@@ -40,23 +40,22 @@ self.onmessage = async (e) => {
     postMessage(data)
   }
   else if (type === 'mask') {
-    const { id, width, height, mask } = e.data
+    const { id, width, height, mask, src } = e.data
     app?.renderer.clear()
     app?.renderer.resize(width, height)
-    // const rectElement = JSON.parse(mask)
+    const textureLayer = await Texture.fromURL(src)
+    const spriteLayer = new Sprite(textureLayer)
+
     const maskData = JSON.parse(mask)
-    const texture = await Texture.fromURL(maskData.src)
-    const sprite = new Sprite(texture)
-    const graph = new Graphics();
-    graph.beginFill(0xff0044);
-    graph.drawRect(0, 0, width, height);
-    graph.endFill()
-    // graph.mask = sprite
-    app?.stage.addChild(graph)
-    const res = await app?.renderer.plugins.extract.base64(sprite)
+    const textureMask = await Texture.fromURL(maskData.src)
+    const spriteMask = new Sprite(textureMask)
+    app?.stage.addChild(spriteMask)
+    spriteLayer.mask = spriteMask
+    app?.stage.addChild(spriteLayer)
+    const res = await app?.renderer.plugins.extract.base64(spriteLayer)
     const data = {res, id}
     console.log(`<img src="${res}">`)
-    // postMessage(data)
+    postMessage(data)
   }
 }
 

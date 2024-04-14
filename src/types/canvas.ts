@@ -140,10 +140,6 @@ export interface QRCodeProps extends ImageProps {
   codeOption: QRCodeOption
 }
 
-export interface RecrProps extends Rect, CommenElement {
-  type: string
-}
-
 export interface ReferenceLineProps extends Line {
   type: string
   axis: 'horizontal' | 'vertical' | ''
@@ -151,7 +147,8 @@ export interface ReferenceLineProps extends Line {
 
 export interface ImageElement extends SerializedImageProps, CommenElement {
   type: string
-  pixiFilters: []
+  pixiFilters?: any[]
+  mask?: FabricObject
   originSrc?: string 
   isCropping?: boolean
   originId?: string
