@@ -31,7 +31,8 @@ const findElement = (eid: string, elements: CanvasElement[] | undefined): Canvas
       return item
     }
     if (item.type.toLowerCase() === ElementNames.GROUP) {
-      return findElement(eid, ((item as GroupElement).objects) as CanvasElement[])
+      const element = findElement(eid, ((item as GroupElement).objects) as CanvasElement[])
+      if (element) return element
     }
   }
   return

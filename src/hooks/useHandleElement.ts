@@ -247,7 +247,8 @@ export default () => {
         return item
       }
       if (item.type === ElementNames.GROUP) {
-        return findElement(eid, (item as GroupElement)._objects)
+        const element = findElement(eid, (item as GroupElement)._objects)
+        if (element) return element
       }
     }
     return
@@ -276,7 +277,7 @@ export default () => {
   }
 
   const queryOption = (eid: string): FabricObject | undefined => {
-    const options = currentTemplate.value.objects
+    const options = currentTemplate.value.objects as FabricObject[]
     let option = options.filter(obj => obj.id === eid)[0] as FabricObject
     if (option) return option
     return findOption(eid, options)
