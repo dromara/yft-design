@@ -3,7 +3,7 @@
  * @Description: 
  * @Date: 2024-04-12 21:10:10
  * @LastEditors: June
- * @LastEditTime: 2024-04-13 11:25:55
+ * @LastEditTime: 2024-04-14 09:46:14
  */
 import { Image as FabricImage, StaticCanvas } from 'fabric'
 

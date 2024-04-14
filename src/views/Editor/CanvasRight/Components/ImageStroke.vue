@@ -3,12 +3,23 @@
  * @Description: 图片描边
  * @Date: 2024-04-12 21:12:06
  * @LastEditors: June
- * @LastEditTime: 2024-04-13 11:22:03
+ * @LastEditTime: 2024-04-14 09:54:36
 -->
 <template>
    <div class="element-shadow">
     <div class="row">
-      <div class="stroke-name"><b>启用图片描边：</b></div>
+      <div class="stroke-name">
+        <b>启用图片描边
+        <el-tooltip
+          class="box-item"
+          effect="dark"
+          content="只支持透明图层"
+          placement="top"
+        >
+          <el-icon><QuestionFilled /></el-icon>
+          </el-tooltip>：
+        </b>
+      </div>
       <div class="stroke-option switch-wrapper">
         <el-switch v-model="openImgStroke" @change="toggleStroke"></el-switch>
       </div>
@@ -27,6 +38,7 @@
 </template>
 
 <script name="ImageStroke" lang="ts" setup>
+import { QuestionFilled } from '@element-plus/icons-vue';
 import { ref, computed , unref } from "vue";
 import { storeToRefs } from 'pinia'
 import { useMainStore } from '@/store'
@@ -53,6 +65,7 @@ const updateImgStroke = () => {
 }
 
 const toggleStroke = (val: boolean) => {
+  console.log(handleElement.value)
   if (!handleElement.value || handleElement.value?.type !== 'image') return
   console.log(handleElement.value)
   if(val) {
@@ -72,10 +85,13 @@ const toggleStroke = (val: boolean) => {
   margin-bottom: 10px;
 }
 .stroke-name {
-  flex: 2;
+  flex: 1;
+  display: flex;
+  justify-content: flex-start;
+  align-self: center;
 }
 .stroke-option {
-  flex: 3;
+  flex: 1;
 }
 .switch-wrapper {
   text-align: right;
