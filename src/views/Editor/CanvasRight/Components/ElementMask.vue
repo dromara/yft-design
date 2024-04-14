@@ -46,6 +46,20 @@
         </el-col>
         <el-col :span="4" class="slider-num">{{ maskAlpha }}</el-col>
       </el-row>
+      <el-row>
+        <el-select v-model="maskMode" @change="changeImageFilter">
+          <el-option value="add" label="add"></el-option>
+          <el-option value="difference" label="difference"></el-option>
+          <el-option value="subtract" label="subtract"></el-option>
+          <el-option value="multiply" label="multiply"></el-option>
+          <el-option value="screen" label="screen"></el-option>
+          <el-option value="lighten" label="lighten"></el-option>
+          <el-option value="darken" label="darken"></el-option>
+          <el-option value="overlay" label="overlay"></el-option>
+          <el-option value="exclusion" label="exclusion"></el-option>
+          <el-option value="tint" label="tint"></el-option>
+        </el-select>
+      </el-row>
     </template>
   </div>
 </template>
@@ -61,20 +75,19 @@ import useCanvas from "@/views/Canvas/useCanvas";
 
 const BlendColorFilter = "BlendColor";
 const maskColor = ref("");
+const maskMode = ref('add')
 const maskAlpha = ref(0.3);
 const [canvas] = useCanvas();
 const { canvasObject } = storeToRefs(useMainStore());
 
 const handleElement = computed(() => canvasObject.value as Image);
 const hasColorMask = computed(() => {
-  if (!handleElement.value || handleElement.value.type !== ElementNames.IMAGE)
-    return false;
-  const blendColorFilter = handleElement.value.filters.filter(
-    (obj) => obj.type === BlendColorFilter
-  )[0] as filters.BlendColor;
+  if (!handleElement.value || handleElement.value.type !== ElementNames.IMAGE) return false;
+  const blendColorFilter = handleElement.value.filters.filter((obj) => obj.type === BlendColorFilter)[0] as filters.BlendColor;
   if (blendColorFilter) {
     maskColor.value = blendColorFilter.color;
     maskAlpha.value = blendColorFilter.alpha;
+    maskMode.value = blendColorFilter.mode;
     return true;
   }
   return false;
@@ -93,12 +106,10 @@ const updateMaskAlpha = () => {
 const changeImageFilter = () => {
   const blendFilter = new filters.BlendColor({
     color: maskColor.value,
-    mode: "add",
+    mode: maskMode.value,
     alpha: maskAlpha.value,
   });
-  handleElement.value.filters = handleElement.value.filters.filter(
-    (obj) => obj.type !== BlendColorFilter
-  );
+  handleElement.value.filters = handleElement.value.filters.filter((obj) => obj.type !== BlendColorFilter);
   handleElement.value.filters.push(blendFilter as filters.BaseFilter);
   handleElement.value.applyFilters();
   canvas.renderAll();
