@@ -3,7 +3,7 @@
  * @Description: 
  * @Date: 2024-04-12 21:10:10
  * @LastEditors: June
- * @LastEditTime: 2024-04-14 10:29:02
+ * @LastEditTime: 2024-04-14 10:31:32
  */
 import { Image as FabricImage, StaticCanvas } from 'fabric'
 
@@ -15,7 +15,6 @@ export const strokeImage = async (stroke: string, strokeWidth: number, fabricIma
   const ctx = canvas!.getContext('2d')
   if (!ctx) return
   // 描边等于0 说明关闭了开关或者不需要描边  直接从原图绘制
-  console.log(strokeWidth)
   if(strokeWidth === 0) {
     await fabricImage.setSrc(src)
     fabricImage.canvas?.renderAll()
