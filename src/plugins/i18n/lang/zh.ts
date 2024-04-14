@@ -288,5 +288,6 @@ export default {
     shadingMode: '底纹模式',
     shadingImage: '底纹图片',
     collage: '拼贴',
+    enableGradient: '启用渐变',
   }
 };

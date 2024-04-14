@@ -284,5 +284,6 @@ export default {
     shadingMode: 'Shading Mode',
     shadingImage: 'Shading Image',
     collage: 'Collage',
+    enableGradient: 'Enable Gradient',
   }
 };

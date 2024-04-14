@@ -1,14 +1,14 @@
 <template>
   <div class="element-color-mask">
     <div class="row">
-      <div style="flex: 1;"><b>启用渐变：</b></div>
+      <div style="flex: 1;"><b>{{$t('style.enableGradient')}}：</b></div>
       <div class="switch-wrapper" style="flex: 1;">
         <el-switch v-model="hasGradient" @change="toggleColorMask(hasGradient)"></el-switch>
       </div>
     </div>
     <template v-if="hasGradient">
       <div class="row" style="margin-top: 15px;">
-        <div style="flex: 2;">蒙版颜色：</div>
+        <div style="flex: 2;">{{$t('style.maskColor')}}：</div>
         <el-popover trigger="click" width="265">
           <template #reference>
             <ColorButton :color="maskColor" style="flex: 3;" />
@@ -17,7 +17,7 @@
         </el-popover>
       </div>
       <div class="row">
-        <div style="flex: 2;">不透明度：</div>
+        <div style="flex: 2;">{{$t('style.opacity')}}：</div>
         <el-slider class="opacity-slider" :min="0" :step="0.01" :max="1" v-model="maskAlpha" @change="updateMaskAlpha"></el-slider>
       </div>
     </template>

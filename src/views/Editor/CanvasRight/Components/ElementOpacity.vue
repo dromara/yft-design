@@ -1,7 +1,7 @@
 <template>
   <div class="element-opacity">
     <el-row>
-      <el-col :span="7" class="slider-name"><b>不透明度：</b></el-col>
+      <el-col :span="7" class="slider-name"><b>{{$t('style.opacity')}}：</b></el-col>
       <el-col :span="13">
         <el-slider class="slider" v-model="opacity" :min="0" :max="1" :step="0.01" @change="updateOpacity"></el-slider>
       </el-col>
