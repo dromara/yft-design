@@ -3,7 +3,7 @@
  * @Description: 图片描边
  * @Date: 2024-04-12 21:12:06
  * @LastEditors: June
- * @LastEditTime: 2024-04-14 09:54:36
+ * @LastEditTime: 2024-04-14 10:25:55
 -->
 <template>
    <div class="element-shadow">
@@ -26,12 +26,12 @@
     </div>
     <template v-if="openImgStroke">
       <div class="row">
-        <div class="stroke-name">描边厚度：</div>
+        <div class="stroke-width">描边厚度：</div>
         <el-slider class="slider" v-model="strokeWidth" :min="10" @change="updateImgStroke"></el-slider>
       </div>
       <div class="row">
         <div class="stroke-name">只显示轮廓：</div>
-        <el-switch v-model="isStroke" @change="toggleStroke"></el-switch>
+        <el-switch v-model="isStroke" @change="updateImgStroke"></el-switch>
       </div>
     </template>
   </div>
@@ -65,9 +65,7 @@ const updateImgStroke = () => {
 }
 
 const toggleStroke = (val: boolean) => {
-  console.log(handleElement.value)
   if (!handleElement.value || handleElement.value?.type !== 'image') return
-  console.log(handleElement.value)
   if(val) {
     strokeWidth.value = 10
   } else {
@@ -86,6 +84,12 @@ const toggleStroke = (val: boolean) => {
 }
 .stroke-name {
   flex: 1;
+  display: flex;
+  justify-content: flex-start;
+  align-self: center;
+}
+.stroke-width {
+  flex: 2;
   display: flex;
   justify-content: flex-start;
   align-self: center;

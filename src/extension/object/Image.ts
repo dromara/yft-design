@@ -16,9 +16,7 @@ export class Image extends OriginImage {
   constructor(element: ImageSource, options?: any) {
     super(element, { filters: [], ...options });
     this.strokes = options.strokes
-    this.originWidth = this.width
-    this.originHeight = this.height
-    this.originSrc = this.src
+    this.init()
     this.on('mousedblclick', this.doubleClickHandler.bind(this))
   }
 
@@ -82,6 +80,14 @@ export class Image extends OriginImage {
     }
     this.cropKey = key
     this.setCropCoords(this.cropSize, this.cropSize)
+  }
+
+  // 初始化
+  init () {
+    // 缓存原字段 用于恢复以及从原图绘制新图
+    this.originWidth = this.width
+    this.originHeight = this.height
+    this.originSrc = this.getSrc()
   }
 
   setCropCoords(width: number, height: number) {
