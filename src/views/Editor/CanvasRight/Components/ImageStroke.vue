@@ -26,6 +26,18 @@
     </div>
     <template v-if="openImgStroke">
       <div class="row">
+        <div class="stroke-color">描边颜色：</div>
+        <el-popover trigger="click" width="265">
+          <template #reference>
+            <ColorButton :color="strokeStyle" style="flex: 3" />
+          </template>
+          <ColorPicker
+            :modelValue="strokeStyle"
+            @update:modelValue="(color: string) => updateStrokeColor(color)"
+          />
+        </el-popover>
+      </div>
+      <div class="row">
         <div class="stroke-width">描边厚度：</div>
         <el-slider class="slider" v-model="strokeWidth" :min="10" @change="updateImgStroke"></el-slider>
       </div>
@@ -55,7 +67,7 @@ const strokeWidth = ref(0)
 const updateImgStroke = () => {
   if (!handleElement.value) return
   handleElement.value.set({
-    strokes: [{
+    strokes: [{ 
       stroke: unref(strokeStyle), strokeWidth: unref(strokeWidth)
     }]
   })
@@ -66,13 +78,21 @@ const updateImgStroke = () => {
 
 const toggleStroke = (val: boolean) => {
   if (!handleElement.value || handleElement.value?.type !== 'image') return
-  if(val) {
+  if (val) {
+    strokeStyle.value = '#f34250';
     strokeWidth.value = 10
+    updateImgStroke()
   } else {
+    strokeStyle.value = '';
     strokeWidth.value = 0
+    updateImgStroke()
   }
-  updateImgStroke()
 }
+//图片描边颜色更改事件
+const updateStrokeColor = (color: string) => {
+  strokeStyle.value = color;
+  updateImgStroke()
+};
 </script>
 
 <style lang="scss" scoped>
