@@ -9,11 +9,11 @@
    <div class="element-shadow">
     <div class="row">
       <div class="stroke-name">
-        <b>启用图片描边
+        <b>{{ $t('style.enableImgStroke') }}
         <el-tooltip
           class="box-item"
           effect="dark"
-          content="只支持透明图层"
+          :content="$t('style.onlyTransparentLayer')"
           placement="top"
         >
           <el-icon><QuestionFilled /></el-icon>
@@ -26,7 +26,7 @@
     </div>
     <template v-if="openImgStroke">
       <div class="row">
-        <div class="stroke-color">描边颜色：</div>
+        <div class="stroke-color">{{$t('style.strokeColor')}}：</div>
         <el-popover trigger="click" width="265">
           <template #reference>
             <ColorButton :color="strokeStyle" style="flex: 3" />
@@ -38,11 +38,11 @@
         </el-popover>
       </div>
       <div class="row">
-        <div class="stroke-width">描边厚度：</div>
+        <div class="stroke-width">{{ $t('style.strokeWidth') }}：</div>
         <el-slider class="slider" v-model="strokeWidth" :min="10" @change="updateImgStroke"></el-slider>
       </div>
       <div class="row">
-        <div class="stroke-name">只显示轮廓：</div>
+        <div class="stroke-name">{{ $t('style.onlyShowContours') }}：</div>
         <el-switch v-model="isStroke" @change="updateImgStroke"></el-switch>
       </div>
     </template>

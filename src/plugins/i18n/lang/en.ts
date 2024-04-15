@@ -273,6 +273,9 @@ export default {
     position: 'Position',
 
     enableStroke: 'Enable Stroke',
+    enableImgStroke: 'Enable Images Stroke',
+    onlyShowContours: 'Only Show Contours',
+    onlyTransparentLayer: 'Only Supports Transparent Layers',
     strokeWidth: 'Stroke Width',
     cornerStyle: 'Corner Style',
     bevel: 'Bevel',

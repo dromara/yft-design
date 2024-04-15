@@ -275,7 +275,9 @@ export default {
 
     axis: '轴',
     position: '位置',
-
+    enableImgStroke: '启用图片描边',
+    onlyShowContours: '只显示轮廓',
+    onlyTransparentLayer: '只支持透明图层',
     enableStroke: '启用描边',
     strokeWidth: '描边厚度',
     cornerStyle: '角落风格',
