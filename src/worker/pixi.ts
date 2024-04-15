@@ -54,7 +54,6 @@ self.onmessage = async (e) => {
     app?.stage.addChild(spriteLayer)
     const res = await app?.renderer.plugins.extract.base64(spriteLayer)
     const data = {res, id}
-    console.log(`<img src="${res}">`)
     postMessage(data)
   }
 }
