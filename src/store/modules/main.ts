@@ -47,7 +47,7 @@ export const useMainStore = defineStore('main', {
     hoveredObject: undefined,
     leavedObject: undefined,
     currentPoint: null,
-    rightState: RightStates.ELEMENT_WORKER,
+    rightState: RightStates.ELEMENT_CANVAS,
     imageCategoryType: [],
     imageCategoryData: ImageCategoryInfo,
     illustrationCategoryType: [],

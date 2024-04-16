@@ -17,15 +17,14 @@
         </el-button>
       </el-col>
     </el-row>
-    <template v-if="openImgStroke">
+    <!-- <template v-if="openImgStroke">
       <div class="row">
         <div class="stroke-color">{{$t('style.strokeColor')}}：</div>
         <el-popover trigger="click" width="265">
           <template #reference>
             <ColorButton :color="strokeStyle" style="flex: 3" />
           </template>
-          <ColorPicker :modelValue="strokeStyle" @update:modelValue="(color: string) => updateStrokeColor(color)"
-          />
+          <ColorPicker :modelValue="strokeStyle" @update:modelValue="(color: string) => updateStrokeColor(color)"/>
         </el-popover>
       </div>
       <div class="row">
@@ -36,7 +35,7 @@
         <div class="stroke-name">{{ $t('style.onlyShowContours') }}：</div>
         <el-switch v-model="isStroke" @change="updateImgStroke"></el-switch>
       </div>
-    </template>
+    </template> -->
   </div>
 </template>
 

@@ -142,13 +142,14 @@ export interface PointElement {
 }
 
 export const enum RightStates {
-  ELEMENT_WORKER = 'design',
+  ELEMENT_CANVAS = 'design',
   ELEMENT_TEXT = 'text',
   ELEMENT_SVG = 'path',
   ELEMENT_IMAGE = 'image',
   ELEMENT_CODE = 'code',
   ELEMENT_STYLE = 'style',
   ELEMENT_POSITION = 'position',
+  ELEMENT_EFFECT = 'effect',
 }
 
 // 底纹背景元素
