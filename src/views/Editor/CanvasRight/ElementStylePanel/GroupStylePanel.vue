@@ -222,7 +222,8 @@ const updateFillColor = (color: string) => {
     groupElement._objects.forEach(obj => {
       const canvasElement = obj as CanvasElement
       if (canvasElement.type === ElementNames.GROUP) {
-        setFill(canvasElement.group)
+        setFill(canvasElement)
+        return
       }
       canvasElement.fill = color
     })
