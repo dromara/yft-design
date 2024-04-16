@@ -1,185 +1,30 @@
 <template>
   <div class="slide-design-panel">
     <div class="mb-10">
-      <b>{{ t("style.canvasSize") }}</b>
-    </div>
-    <div class="mb-10">
-      <el-row class="size-row">
-        <el-col :span="11">
-          <el-input
-            v-model="canvasWidth"
-            :value="Math.round(canvasWidth * 100) / 100"
-            @change="changeTemplateWidth"
-            oninput="value=value.replace(/[^\d.]/g,'')"
-          >
-            <template #prepend>{{ t("style.w") }}</template>
-          </el-input>
-        </el-col>
-        <el-col :span="2" class="fixed-ratio">
-          <el-tooltip
-            effect="dark"
-            placement="top"
-            :content="t('style.unlockAspectRatio')"
-            v-if="isFixed"
-          >
-            <IconLock class="icon-btn" @click="changeFixedRatio(false)" />
-          </el-tooltip>
-          <el-tooltip
-            effect="dark"
-            placement="top"
-            :content="t('style.lockAspectRatio')"
-            v-else
-          >
-            <IconUnlock class="icon-btn" @click="changeFixedRatio(true)" />
-          </el-tooltip>
-        </el-col>
-        <el-col :span="11">
-          <el-input
-            v-model="canvasHeight"
-            :value="Math.round(canvasHeight * 100) / 100"
-            @change="changeTemplateHeight"
-            oninput="value=value.replace(/[^\d.]/g,'')"
-          >
-            <template #prepend>{{ t("style.h") }}</template>
-          </el-input>
-        </el-col>
-      </el-row>
-    </div>
-    <div class="mb-10">
-      <el-row>
-        <el-col :span="11">
-          <el-input
-            v-model="clip"
-            @change="changeTemplateClip"
-            oninput="value=value.replace(/[^\d]/g,'')"
-            :disabled="unitMode === 1"
-          >
-            <template #prepend>
-              <el-tooltip
-                placement="top"
-                :hide-after="0"
-                :content="t('style.bleedingLine')"
-              >
-                <IconCuttingOne />
-              </el-tooltip>
-            </template>
-          </el-input>
-        </el-col>
-        <el-col :span="2" class="fixed-ratio">
-          <el-tooltip
-            effect="dark"
-            placement="top"
-            :content="t('style.fillet')"
-            v-if="isRound"
-          >
-            <IconRound class="icon-btn" @click="changeWorkRound(false)" />
-          </el-tooltip>
-          <el-tooltip
-            effect="dark"
-            placement="top"
-            :content="t('style.rightAngle')"
-            v-else
-          >
-            <IconRightAngle class="icon-btn" @click="changeWorkRound(true)" />
-          </el-tooltip>
-        </el-col>
-        <el-col :span="11">
-          <el-input
-            v-model="safe"
-            @change="changeTemplateSafe"
-            oninput="value=value.replace(/[^\d]/g,'')"
-            :disabled="unitMode === 1"
-          >
-            <template #prepend>
-              <el-tooltip
-                placement="top"
-                :hide-after="0"
-                :content="t('style.safetyLine')"
-              >
-                <IconShield />
-              </el-tooltip>
-            </template>
-          </el-input>
-        </el-col>
-      </el-row>
-    </div>
-    <div class="mt-10">
-      <el-row>
-        <el-col :span="11">
-          <el-select v-model="unitMode" @change="changeUnitMode">
-            <template #prefix>
-              <el-tooltip
-                placement="top"
-                :hide-after="0"
-                :content="t('style.unit')"
-              >
-                <IconRuler />
-              </el-tooltip>
-            </template>
-            <el-option
-              v-for="item in DesignUnitMode"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            ></el-option>
-          </el-select>
-        </el-col>
-        <el-col :span="2"></el-col>
-        <el-col :span="11">
-          <el-select v-model="sizeMode">
-            <template #prefix>
-              <el-tooltip
-                placement="top"
-                :hide-after="0"
-                :content="t('style.template')"
-              >
-                <IconIdCard />
-              </el-tooltip>
-            </template>
-            <el-option
-              v-for="item in DesignSizeMode"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-              :disabled="item.disabled"
-            ></el-option>
-          </el-select>
-        </el-col>
-      </el-row>
-    </div>
-
-    <el-divider />
-
-    <div class="title">
-      <b>{{ t("style.canvasFill") }}</b>
-    </div>
-    <div class="row">
-      <el-button class="full-row" @click="changeAllBackgroud">{{
-        t("style.applyCanvasToAll")
-      }}</el-button>
-    </div>
-    <Backgrounds />
-
-    <el-divider />
-
-    <div class="title">
-      <b>{{ t("style.canvasMask") }}</b>
+      <el-button><b><IconLeft/>返回</b></el-button>
     </div>
     <el-row>
-      <el-col :span="7" class="slider-name">{{ t("style.opacity") }}：</el-col>
-      <el-col :span="13">
-        <el-slider
-          :min="0.1"
-          :max="1"
-          :step="0.01"
-          v-model="opacity"
-          @change="changeMaskOpacity"
-        ></el-slider>
+
+    </el-row>
+    <el-row class="row-info">
+      <el-col :span="6"><b>填充·描边</b></el-col>
+      <el-col :span="5">
+        <IconPlus class="handler-item"/>
       </el-col>
-      <el-col :span="4" class="slider-num">{{ opacity }}</el-col>
+    </el-row>
+    <el-row class="row-effect" v-for="(item, index) in elementEffects">
+      <el-col :span="4">层{{ index }}</el-col>
+      <el-col :span="20">
+        <el-row class="effect-content">
+          <el-col :span="4">层{{ index }}</el-col>
+          <el-col :span="4">层{{ index }}</el-col>
+          <el-col :span="5">
+            <IconPlus class="handler-item"/>
+          </el-col>
+        </el-row>
+      </el-col>
     </el-row>
 
-    <!-- <GridFill v-model:visible="gridColorDialog" @close="hideGridColorSelf" @save="saveGridColorSelf"></GridFill> -->
   </div>
 </template>
 
@@ -232,6 +77,7 @@ const templateHeight = computed(() => {
   return unitMode.value === 0 ? px2mm(workHeight) : workHeight;
 });
 
+const elementEffects = ref([{}, {}])
 // const canvasWidth = ref<number>(px2mm(currentTemplate.value.width / currentTemplate.value.zoom))
 const canvasWidth = ref<number>(templateWidth.value);
 const canvasHeight = ref<number>(templateHeight.value);
@@ -413,159 +259,39 @@ const changeMaskOpacity = () => {
 </script>
 
 <style lang="scss" scoped>
-.icon-btn {
-  cursor: pointer;
-}
-.slide-design-panel {
-  user-select: none;
-}
-.row {
-  width: 100%;
+.row-info {
+  margin-top: 10px;
   display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-}
-.title {
-  margin-bottom: 10px;
+  justify-content: space-between;
+  .el-col {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
-.fixed-ratio {
+.row-end {
+  justify-content: flex-end;
+}
+
+.handler-item {
+  width: 32px;
+  height: 32px;
   display: flex;
-  flex-direction: column;
   justify-content: center;
-}
-.slider-name {
-  display: flex;
   align-items: center;
-}
-
-.mb-10 {
-  margin-bottom: 10px;
-}
-.full-row {
-  flex: 1;
-  width: 100%;
-}
-
-.full-group {
-  display: flex;
-  flex: 1;
-  .el-button {
-    width: 50%;
-  }
-}
-
-.full-ratio {
-  display: flex;
-  flex: 1;
-  .el-radio-button {
-    width: 50%;
-  }
-  .el-radio-button__inner {
-    width: 100%;
-  }
-}
-
-.background-image {
-  height: 0;
-  padding-bottom: 56.25%;
-  border: 1px dashed var(--el-border-color);
+  margin: 0 2px;
   border-radius: $borderRadius;
-  position: relative;
-  transition: all $transitionDelay;
+  font-size: 16px;
+  overflow: hidden;
+  cursor: pointer;
 
   &:hover {
-    border-color: var(--el-color-primary);
-    color: var(--el-color-primary);
-  }
-
-  .content {
-    @include absolute-0();
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-position: center;
-    background-size: contain;
-    background-repeat: no-repeat;
-    cursor: pointer;
-  }
-}
-
-.theme-list {
-  @include flex-grid-layout();
-}
-.theme-item {
-  @include flex-grid-layout-children(2, 48%);
-
-  padding-bottom: 30%;
-  border-radius: $borderRadius;
-  position: relative;
-  cursor: pointer;
-
-  .theme-item-content {
-    @include absolute-0();
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 8px;
-    border: 1px solid $borderColor;
-  }
-
-  .text {
-    font-size: 16px;
-  }
-  .colors {
-    display: flex;
-  }
-  .color-block {
-    margin-top: 8px;
-    width: 12px;
-    height: 12px;
-    margin-right: 2px;
-  }
-
-  &:hover .btns {
-    display: flex;
-  }
-
-  .btns {
-    @include absolute-0();
-
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    display: none;
-    background-color: rgba($color: #000, $alpha: 0.25);
-  }
-  .btn {
-    width: 72px;
-    padding: 5px 0;
-    text-align: center;
-    background-color: $themeColor;
-    color: #fff;
-    font-size: 12px;
-    border-radius: $borderRadius;
-
-    &:hover {
-      background-color: #c42f19;
-    }
-
-    & + .btn {
-      margin-top: 5px;
+    background: #f1f1f1;
+    .icon-down {
+      margin-top: 3px;
     }
   }
-}
-
-.mt-10 {
-  margin-top: 10px;
-}
-
-.slider-num {
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 </style>
 
