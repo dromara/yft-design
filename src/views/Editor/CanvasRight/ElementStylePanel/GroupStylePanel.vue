@@ -218,10 +218,16 @@ const handleElementFontsize = (mode: string) => {
 // 修改填充演示
 const updateFillColor = (color: string) => {
   fillColor.value = color
-  handleGroupElement.value._objects.forEach(obj => {
-    const canvasElement = obj as CanvasElement
-    canvasElement.fill = color
-  })
+  const setFill = (groupElement: GroupElement) => {
+    groupElement._objects.forEach(obj => {
+      const canvasElement = obj as CanvasElement
+      if (canvasElement.type === ElementNames.GROUP) {
+        setFill(canvasElement.group)
+      }
+      canvasElement.fill = color
+    })
+  }
+  setFill(handleGroupElement.value)
   canvas.renderAll()
 }
 
