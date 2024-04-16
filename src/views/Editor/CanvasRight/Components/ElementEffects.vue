@@ -7,23 +7,16 @@
 -->
 <template>
    <div class="element-shadow">
-    <div class="row">
-      <div class="stroke-name">
-        <b>{{ $t('style.enableImgStroke') }}
-        <el-tooltip
-          class="box-item"
-          effect="dark"
-          :content="$t('style.onlyTransparentLayer')"
-          placement="top"
-        >
-          <el-icon><QuestionFilled /></el-icon>
-          </el-tooltip>：
-        </b>
-      </div>
-      <div class="stroke-option switch-wrapper">
-        <el-switch v-model="openImgStroke" @change="toggleStroke"></el-switch>
-      </div>
-    </div>
+    <el-row>
+      <el-col :span="18">
+        <el-button size="large" class="full-btn">特效</el-button>
+      </el-col>
+      <el-col :span="6">
+        <el-button size="large" class="full-btn btn-right">
+          <IconTransferData />
+        </el-button>
+      </el-col>
+    </el-row>
     <template v-if="openImgStroke">
       <div class="row">
         <div class="stroke-color">{{$t('style.strokeColor')}}：</div>
@@ -31,9 +24,7 @@
           <template #reference>
             <ColorButton :color="strokeStyle" style="flex: 3" />
           </template>
-          <ColorPicker
-            :modelValue="strokeStyle"
-            @update:modelValue="(color: string) => updateStrokeColor(color)"
+          <ColorPicker :modelValue="strokeStyle" @update:modelValue="(color: string) => updateStrokeColor(color)"
           />
         </el-popover>
       </div>
@@ -123,5 +114,12 @@ const updateStrokeColor = (color: string) => {
 .slider {
   flex: 3;
   width: 80%;
+}
+.full-btn {
+  width: 98%;
+  .btn-right {
+    display: flex;
+    justify-content: flex-end;
+  }
 }
 </style>

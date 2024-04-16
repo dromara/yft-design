@@ -272,8 +272,8 @@ export default {
     axis: 'Axis',
     position: 'Position',
 
-    enableStroke: 'Enable Stroke',
-    enableImgStroke: 'Enable Images Stroke',
+    enableStroke: 'Stroke',
+    enableEffects: 'Effects',
     onlyShowContours: 'Only Show Contours',
     onlyTransparentLayer: 'Only Supports Transparent Layers',
     strokeWidth: 'Stroke Width',
@@ -283,10 +283,10 @@ export default {
     miter: 'Miter',
     strokeColor: 'Stroke Color',
 
-    enableShading: 'Enable Shading',
-    shadingMode: 'Shading Mode',
-    shadingImage: 'Shading Image',
+    enableShading: 'Shading',
+    shadingMode: 'Mode',
+    shadingImage: 'Image',
     collage: 'Collage',
-    enableGradient: 'Enable Gradient',
+    enableGradient: 'Gradient',
   }
 };

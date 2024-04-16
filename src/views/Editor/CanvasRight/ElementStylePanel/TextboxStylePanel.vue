@@ -203,6 +203,8 @@
     </div>
 
     <el-divider />
+    <ElementEffects />
+    <el-divider />
     <ElementStroke :hasStroke="hasStroke" />
     <el-divider />
     <ElementShadow :hasShadow="hasShadow" />
@@ -235,6 +237,7 @@ import ElementStroke from '../Components/ElementStroke.vue'
 import ElementShadow from '../Components/ElementShadow.vue'
 import ElementOpacity from '../Components/ElementOpacity.vue'
 import ElementPatterns from '../Components/ElementPatterns.vue'
+import ElementEffects from '../Components/ElementEffects.vue'
 import ElementFill from '../Backgrounds/ElementFill.vue'
 import useHandleCreate from "@/hooks/useHandleCreate"
 import useCanvas from '@/views/Canvas/useCanvas'

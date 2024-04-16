@@ -53,6 +53,8 @@
 
     <ElementBlend />
     <el-divider />
+    <ElementEffects />
+    <el-divider />
     <ElementMask />
     <el-divider />
     <ElementFilter />
@@ -62,7 +64,6 @@
     <ElementShadow :hasShadow="hasShadow" />
     <el-divider />
 
-    <ImageStroke />
     <el-divider />
 
     <el-row>
@@ -103,7 +104,7 @@ import ElementFlip from "../Components/ElementFlip.vue";
 import ElementFilter from "../Components/ElementFilter.vue";
 import ElementMask from "../Components/ElementMask.vue";
 import ElementBlend from "../Components/ElementBlend.vue";
-import ImageStroke from "../Components/ImageStroke.vue";
+import ElementEffects from "../Components/ElementEffects.vue";
 import useCanvas from "@/views/Canvas/useCanvas";
 
 const mainStore = useMainStore();
