@@ -17,21 +17,38 @@
       </el-col>
     </el-row>
     <el-row class="row-effect" v-for="(item, index) in elementEffects">
-      <el-col :span="8">层{{ index }}</el-col>
-      <el-col :span="16">
-        <el-row class="effect-handler">
-          <el-col :span="4" class="handler-item">
-            <IconCopy />
-          </el-col>
-          <el-col :span="4" class="handler-item">
-            <IconPreviewOpen v-if="item.visible"/>
-            <IconPreviewClose v-else/>
-          </el-col>
-          <el-col :span="4" class="handler-item">
-            <IconPlus/>
-          </el-col>
-        </el-row>
-      </el-col>
+      <el-row>
+        <el-col :span="8" class="effect-layer">层{{ index }}</el-col>
+        <el-col :span="16">
+          <el-row class="effect-handler">
+            <el-col :span="4" class="handler-item">
+              <IconCopy />
+            </el-col>
+            <el-col :span="4" class="handler-item">
+              <IconPreviewOpen v-if="item.visible"/>
+              <IconPreviewClose v-else/>
+            </el-col>
+            <el-col :span="4" class="handler-item">
+              <IconPlus/>
+            </el-col>
+          </el-row>
+        </el-col>
+      </el-row>
+      <el-row class="effect-fill">
+        <el-col :span="4">
+          <el-checkbox v-model="checked2">填充</el-checkbox>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="4">
+          <el-checkbox v-model="checked2">描边</el-checkbox>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="4">
+          <el-checkbox v-model="checked2">偏移</el-checkbox>
+        </el-col>
+      </el-row>
     </el-row>
 
   </div>
@@ -290,6 +307,10 @@ const changeMaskOpacity = () => {
       justify-content: center;
       align-items: center;
     }
+  }
+  .effect-layer {
+    display: flex;
+    align-items: center;
   }
 }
 
