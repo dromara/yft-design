@@ -39,7 +39,6 @@
 import { useMainStore } from "@/store";
 import { PoolType } from "@/types/common";
 import { storeToRefs } from "pinia";
-import { ref } from "vue";
 import HotkeyDrawer from "./components/HotkeyDrawer.vue";
 import HelpPopover from "./components/HelpPopover.vue";
 import HomePopover from "./components/HomePopover.vue";

@@ -45,6 +45,11 @@ export default ({ command }: ConfigEnv): UserConfigExport => {
         ext: '.gz',
       }),
       AutoImport({
+        imports: ['vue'],
+        dts: './src/types/auto-imports.d.ts',
+        eslintrc: {
+          enabled: true
+        },
         resolvers: [ElementPlusResolver()],
       }),
       Components({
