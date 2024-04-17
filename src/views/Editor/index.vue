@@ -1,6 +1,6 @@
 <template>
-  <div class="yft-design" v-drop-image="{ url: 'YourUploadUrl', highlightStyle: { backgroundColor: 'lightblue' } }">
-    <div class="layout-content">
+  <div class="w-full" v-drop-image="{ url: 'YourUploadUrl', highlightStyle: { backgroundColor: 'lightblue' } }">
+    <div class="layout-content flex">
       <CanvasLeft class="layout-content-left" />
       <CanvasMenu class="layout-content-menu" />
       <CanvasThumb class="layout-content-thumb" />
@@ -31,15 +31,8 @@ import CanvasTour from "./CanvasTour/index.vue";
 </script>
 
 <style lang="scss" scoped>
-.yft-design {
-  height: 100%;
-}
-.layout-header {
-  height: 40px;
-}
 .layout-content {
   height: calc(100% - 40px);
-  display: flex;
 }
 .layout-content-left {
   width: 50px;

@@ -10,6 +10,8 @@ import autoprefixer from 'autoprefixer';
 import AutoImport from 'unplugin-auto-import/vite';
 import Components from 'unplugin-vue-components/vite';
 import viteCompression from 'vite-plugin-compression';
+import tailwindcss from  'tailwindcss'
+
 
 export default ({ command }: ConfigEnv): UserConfigExport => {
   return {
@@ -36,6 +38,7 @@ export default ({ command }: ConfigEnv): UserConfigExport => {
     },
     plugins: [                                                                                                                                                                                                                            
       vue(),
+
       visualizer({ open: true }),
       viteCompression({
         verbose: true,
@@ -134,7 +137,23 @@ export default ({ command }: ConfigEnv): UserConfigExport => {
     css: {
       postcss: {
         plugins: [
-          autoprefixer()
+          tailwindcss,
+          autoprefixer({
+            // 自动添加前缀
+            overrideBrowserslist: [
+                'Android 4.1',
+                'iOS 7.1',
+                'Chrome > 31',
+                'ff > 31',
+                'ie >= 8',
+                '> 1%',
+                'last 2 versions',
+                'not dead',
+                'not ie 11',
+                //'last 2 versions', // 所有主流浏览器最近2个版本
+            ],
+            grid: true,
+          }),
         ]
       },
       preprocessorOptions: {

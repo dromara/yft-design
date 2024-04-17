@@ -9,8 +9,8 @@
     <div class="left-bottom-tabs">
       <div class="center-tabs">
         <div class="center-tab" :class="{ 'left-active': tab.key === poolType }" v-for="tab in topTabs" :key="tab.key" @click="setPoolType(tab.key)">
-          <div :id="`left-tabs-${tab.key}`">
-            <div><SvgIcon :icon-class="tab.icon" className="svg-size" /></div>
+          <div class="flex justify-center items-center flex-col" :id="`left-tabs-${tab.key}`">
+            <SvgIcon :icon-class="tab.icon" className="svg-size" />
             <div class="left-name">{{ $t(tab.label) }}</div>
           </div>
         </div>
