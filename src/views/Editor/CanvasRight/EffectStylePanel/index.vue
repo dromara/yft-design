@@ -7,18 +7,18 @@
 
     </el-row>
     <el-row class="row-info">
-      <el-col :span="6"><b>填充·描边</b></el-col>
-      <el-col :span="5">
+      <el-col :span="8"><b>填充·描边</b></el-col>
+      <el-col :span="4">
         <IconPlus class="handler-item"/>
       </el-col>
     </el-row>
     <el-row class="row-effect" v-for="(item, index) in elementEffects">
-      <el-col :span="4">层{{ index }}</el-col>
-      <el-col :span="20">
-        <el-row class="effect-content">
+      <el-col :span="8">层{{ index }}</el-col>
+      <el-col :span="16">
+        <el-row class="effect-handler">
           <el-col :span="4">层{{ index }}</el-col>
           <el-col :span="4">层{{ index }}</el-col>
-          <el-col :span="5">
+          <el-col :span="4">
             <IconPlus class="handler-item"/>
           </el-col>
         </el-row>
@@ -272,6 +272,14 @@ const changeMaskOpacity = () => {
 
 .row-end {
   justify-content: flex-end;
+}
+
+.row-effect {
+  align-items: center;
+  justify-content: space-between;
+  .effect-handler {
+
+  }
 }
 
 .handler-item {

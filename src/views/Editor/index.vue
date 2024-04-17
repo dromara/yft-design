@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full" v-drop-image="{ url: 'YourUploadUrl', highlightStyle: { backgroundColor: 'lightblue' } }">
+  <div class="h-full" v-drop-image="{ url: 'YourUploadUrl', highlightStyle: { backgroundColor: 'lightblue' } }">
     <div class="layout-content flex">
       <CanvasLeft class="layout-content-left" />
       <CanvasMenu class="layout-content-menu" />
