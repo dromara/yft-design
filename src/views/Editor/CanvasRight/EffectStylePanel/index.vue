@@ -9,10 +9,10 @@
 
     </el-row>
     <el-row class="row-info">
-      <el-col :span="8"><b>填充·描边</b></el-col>
-      <el-col :span="16">
+      <el-col :span="12"><b>填充·描边</b></el-col>
+      <el-col :span="12">
         <el-row class="info-handler">
-          <el-col :span="4" class="handler-item">
+          <el-col :span="6" class="handler-item">
             <IconPlus/>
           </el-col>
         </el-row>
@@ -20,17 +20,20 @@
     </el-row>
     <el-row class="row-effect" v-for="(item, index) in elementEffects">
       <el-row>
-        <el-col :span="8" class="effect-layer">层{{ index }}</el-col>
-        <el-col :span="16">
+        <el-col :span="12" class="effect-layer">
+          <IconHamburgerButton class="layer-icon"/>
+          层{{ index }}
+        </el-col>
+        <el-col :span="12">
           <el-row class="effect-handler">
-            <el-col :span="4" class="handler-item">
+            <el-col :span="6" class="handler-item">
               <IconCopy />
             </el-col>
-            <el-col :span="4" class="handler-item">
+            <el-col :span="6" class="handler-item">
               <IconPreviewOpen v-if="item.visible"/>
               <IconPreviewClose v-else/>
             </el-col>
-            <el-col :span="4" class="handler-item">
+            <el-col :span="6" class="handler-item">
               <IconMinus/>
             </el-col>
           </el-row>
@@ -85,6 +88,45 @@
             </el-col>
             <el-col :span="8">
               <el-input></el-input>
+            </el-col>
+          </el-row>
+        </el-col>
+      </el-row>
+    </el-row>
+    <el-row class="row-info">
+      <el-col :span="12"><b>投影</b></el-col>
+      <el-col :span="12">
+        <el-row class="info-handler">
+          <el-col :span="6" class="handler-item">
+            <IconPlus/>
+          </el-col>
+        </el-row>
+      </el-col>
+    </el-row>
+    <el-row class="row-effect" v-for="(item, index) in elementEffects">
+      <el-row>
+        <el-col :span="12" class="effect-layer">
+          <el-row>
+            <el-col :span="4">
+              <IconHamburgerButton class="layer-icon" />
+            </el-col>
+            <el-col :span="4">
+              <IconContrastViewCircle class="layer-icon icon-size" />
+            </el-col>
+            <el-col :span="16">基础投影</el-col>
+          </el-row>
+        </el-col>
+        <el-col :span="12">
+          <el-row class="effect-handler">
+            <el-col :span="6" class="handler-item">
+              <IconCopy />
+            </el-col>
+            <el-col :span="6" class="handler-item">
+              <IconPreviewOpen v-if="item.visible"/>
+              <IconPreviewClose v-else/>
+            </el-col>
+            <el-col :span="6" class="handler-item">
+              <IconMinus/>
             </el-col>
           </el-row>
         </el-col>
@@ -157,6 +199,12 @@ const handleReturn = () => {
   .effect-layer {
     display: flex;
     align-items: center;
+    .layer-icon {
+      font-size: 12px;
+    }
+    .icon-size {
+      font-size: 14px;
+    }
   }
   .effect-style {
     margin-top: 10px;

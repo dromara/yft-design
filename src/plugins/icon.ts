@@ -166,7 +166,9 @@ import {
   MagicWand,
   H1,
   H3,
-  TransferData
+  TransferData,
+  HamburgerButton,
+  ContrastViewCircle
 } from '@icon-park/vue-next'
 
 export const icons = {
@@ -334,6 +336,8 @@ export const icons = {
   IconH1: H1,
   IconH3: H3,
   IconTransferData: TransferData,
+  IconHamburgerButton: HamburgerButton,
+  IconContrastViewCircle: ContrastViewCircle,
 }
 
 export default {
