@@ -1,17 +1,25 @@
+<!--
+ * @Author: June 1601745371@qq.com
+ * @Date: 2024-04-12 11:31:10
+ * @LastEditors: June 1601745371@qq.com
+ * @LastEditTime: 2024-04-18 17:18:42
+ * @FilePath: \yft-design\src\views\Editor\index.vue
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
 <template>
   <div class="h-full" v-drop-image="{ url: 'YourUploadUrl', highlightStyle: { backgroundColor: 'lightblue' } }">
     <div class="layout-content flex">
-      <CanvasLeft class="layout-content-left" />
+      <CanvasLeft class="layout-content-left w-[50px] h-[100vh] z-10 bg-[#fff]" />
       <CanvasMenu class="layout-content-menu" />
-      <CanvasThumb class="layout-content-thumb" />
+      <CanvasThumb class="w-[160px] h-full flex flex-shrink-0 bg-[#fff] flex-col select-none" />
       <div class="layout-content-center">
-        <CanvasHeader class="center-header" />
+        <CanvasHeader class="center-header relative flex justify-between py-[10px] text-[14px] select-none h-[40px]" />
         <CanvasCenter class="center-body" />
-        <CanvasFooter class="center-footer" />
-        <CanvasAffix class="center-affix" />
+        <CanvasFooter class="center-footer h-[40px] relative leading-1.5 flex justify-between" />
+        <CanvasAffix />
       </div>
-      <CanvasRight class="layout-content-right" />
-      <CanvasDom class="layout-content-dom" />
+      <CanvasRight class="layout-content-right h-full w-[260px] bg-[#fff] flex flex-col" />
+      <CanvasDom class="absolute -z-200" />
     </div>
     <CanvasTour />
   </div>
@@ -35,10 +43,6 @@ import CanvasTour from "./CanvasTour/index.vue";
   height: calc(100% - 40px);
 }
 .layout-content-left {
-  width: 50px;
-  height: 100vh;
-  z-index: 10;
-  background: #fff;
   border-right: solid 1px $borderColor;
 }
 .layout-content-thumb {
@@ -54,43 +58,18 @@ import CanvasTour from "./CanvasTour/index.vue";
   width: calc(100% - 50px - 160px - 260px);
 
   .center-header {
-    position: relative;
     border-left: 1px solid $borderColor;
-    background-color: #fff;
-    display: flex;
-    justify-content: space-between;
-    padding: 0 10px;
-    font-size: 13px;
-    user-select: none;
-    height: 40px;
   }
   .center-body {
     height: calc(100% - 40px);
     // margin: 100px;
   }
   .center-footer {
-    height: 40px;
-    position: relative;
     border-top: 1px solid $borderColor;
     background-color: $lightGray;
-    line-height: 1.5;
-    display: flex;
-    justify-content: space-between;
   }
 }
 .layout-content-right {
-  width: 260px;
-  height: 100%;
   border-left: solid 1px $borderColor;
-  background-color: #fff;
-  display: flex;
-  flex-direction: column;
-}
-.layout-content-dom {
-  // background: pink;
-  position: absolute;
-  z-index: -200;
-  // height: 100%;
-  // top: -200px;
 }
 </style>
