@@ -153,6 +153,7 @@ export declare module 'fabric' {
     id: string
     name: string
     layer?: string
+    effects?: EffectItem[]
     ref: ObjectRef
     getParent<T extends boolean = false>(strict?: T): T extends true ? Group | undefined : Group | Canvas | StaticCanvas
     noEventObjectAdded: boolean /** 不发送 object:added 事件 */

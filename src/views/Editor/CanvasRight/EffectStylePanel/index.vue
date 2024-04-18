@@ -12,13 +12,13 @@
       <el-col :span="12"><b>填充·描边</b></el-col>
       <el-col :span="12">
         <el-row class="info-handler">
-          <el-col :span="6" class="handler-item">
+          <el-col :span="6" class="handler-item" @click="addStroke">
             <IconPlus/>
           </el-col>
         </el-row>
       </el-col>
     </el-row>
-    <el-row class="row-effect" v-for="(item, index) in elementEffects">
+    <el-row class="row-effect" v-for="(item, index) in handleElement.effects?.filter(ele => ele.type === 0)">
       <el-row>
         <el-col :span="12" class="effect-layer">
           <IconHamburgerButton class="layer-icon"/>
@@ -33,33 +33,33 @@
               <IconPreviewOpen v-if="item.visible"/>
               <IconPreviewClose v-else/>
             </el-col>
-            <el-col :span="6" class="handler-item">
-              <IconMinus/>
+            <el-col :span="6" class="handler-item" @click.stop="subEffect(item.key)">
+              <IconMinus />
             </el-col>
           </el-row>
         </el-col>
       </el-row>
       <el-row class="effect-style">
         <el-col :span="6">
-          <el-checkbox v-model="checked2">填充</el-checkbox>
+          <el-checkbox v-model="item.isFill">填充</el-checkbox>
         </el-col>
         <el-col :span="6">
           <el-popover trigger="click" placement="bottom" :width="265">
             <template #reference>
-              <ColorButton :color="fill || '#fff'" />
+              <ColorButton :color="handleElement.fill || '#fff'" />
             </template>
-            <ColorPicker :modelValue="fill" @update:modelValue="(color: string) => updateBackground({color: color, fill: color})" />
+            <ColorPicker :modelValue="handleElement.fill" @update:modelValue="(color: string) => updateFill(color)" />
           </el-popover>
         </el-col>
       </el-row>
       <el-row class="effect-style">
         <el-col :span="6">
-          <el-checkbox v-model="checked2">描边</el-checkbox>
+          <el-checkbox v-model="item.isStroke">描边</el-checkbox>
         </el-col>
         <el-col :span="18">
           <el-row class="style-row">
             <el-col :span="8">
-              <el-input></el-input>
+              <el-input v-model="item.strokeWidth" @change="updateStrokeWidth"></el-input>
             </el-col>
             <el-col :span="8">
               <el-select>
@@ -69,9 +69,9 @@
             <el-col :span="8">
               <el-popover trigger="click" placement="bottom" :width="265">
                 <template #reference>
-                  <ColorButton :color="fill || '#fff'" />
+                  <ColorButton :color="item.stroke || '#fff'" />
                 </template>
-                <ColorPicker :modelValue="fill" @update:modelValue="(color: string) => updateBackground({color: color, fill: color})" />
+                <ColorPicker :modelValue="item.stroke" @update:modelValue="(color: string) => updateStroke(color, item.key)" />
               </el-popover>
             </el-col>
           </el-row>
@@ -79,7 +79,7 @@
       </el-row>
       <el-row class="effect-style">
         <el-col :span="6">
-          <el-checkbox v-model="checked2">偏移</el-checkbox>
+          <el-checkbox v-model="item.isSkew">偏移</el-checkbox>
         </el-col>
         <el-col :span="18">
           <el-row class="style-row">
@@ -97,13 +97,13 @@
       <el-col :span="12"><b>投影</b></el-col>
       <el-col :span="12">
         <el-row class="info-handler">
-          <el-col :span="6" class="handler-item">
+          <el-col :span="6" class="handler-item" @click="addShadow">
             <IconPlus/>
           </el-col>
         </el-row>
       </el-col>
     </el-row>
-    <el-row class="row-effect" v-for="(item, index) in elementEffects">
+    <el-row class="row-effect" v-for="(item, index) in handleElement.effects?.filter(ele => ele.type === 1)">
       <el-row>
         <el-col :span="12" class="effect-layer">
           <el-row>
@@ -125,8 +125,8 @@
               <IconPreviewOpen v-if="item.visible"/>
               <IconPreviewClose v-else/>
             </el-col>
-            <el-col :span="6" class="handler-item">
-              <IconMinus/>
+            <el-col :span="6" class="handler-item" @click.stop="subEffect(item.key)">
+              <IconMinus />
             </el-col>
           </el-row>
         </el-col>
@@ -136,19 +136,21 @@
 </template>
 
 <script lang="ts" setup>
-import { Rect } from "fabric";
+import { Image, Rect, Textbox, IText, Object as FabricObject } from "fabric";
 import { storeToRefs } from "pinia";
 import { ElMessage } from "element-plus";
 import { ref, watch, onMounted, computed } from "vue";
 import { mm2px, px2mm } from "@/utils/image";
 import { RightStates } from '@/types/elements'
-import useI18n from "@/hooks/useI18n";
-import { useFabricStore, useMainStore, useTemplatesStore } from "@/store";
 
+import { useFabricStore, useMainStore, useTemplatesStore } from "@/store";
+import useI18n from "@/hooks/useI18n";
 import useCanvas from "@/views/Canvas/useCanvas";
 import Backgrounds from "../Backgrounds/index.vue";
 import useHistorySnapshot from "@/hooks/useHistorySnapshot";
 import useCanvasScale from '@/hooks/useCanvasScale'
+import { EffectItem } from "@/types/common";
+import { nanoid } from "nanoid";
 
 const { t } = useI18n();
 
@@ -156,18 +158,73 @@ const mainStore = useMainStore();
 const templatesStore = useTemplatesStore();
 const fabricStore = useFabricStore();
 const { addHistorySnapshot } = useHistorySnapshot();
-const { sizeMode, unitMode, rightState } = storeToRefs(mainStore);
+const { canvasObject, rightState } = storeToRefs(mainStore);
 const { currentTemplate } = storeToRefs(templatesStore);
 const { clip, safe, zoom, opacity } = storeToRefs(fabricStore);
-const { setCanvasSize, resetCanvas } = useCanvasScale()
-
-
-const elementEffects = ref([{}, {}])
+const { setCanvasSize, resetCanvas } = useCanvasScale();
+const handleElement = computed(() => canvasObject.value as FabricObject);
 
 const handleReturn = () => {
   rightState.value = RightStates.ELEMENT_STYLE
 }
 
+const addStroke = () => {
+  const strokeItem = {
+    type: 0,
+    key: nanoid(8),
+    isFill: false,
+    isStroke: false,
+    isSkew: false,
+    stroke: '#fff',
+    strokeWidth: 1,
+  }
+  if (!handleElement.value.effects) {
+    handleElement.value.effects = [strokeItem]
+  }
+  else {
+    handleElement.value.effects?.push(strokeItem)
+  }
+}
+
+const subEffect = (key: string) => {
+  handleElement.value.effects = handleElement.value.effects?.filter(item => item.key !== key)
+}
+
+const addShadow = () => {
+  const strokeItem = {
+    type: 1,
+    key: nanoid(8),
+    isFill: false,
+    isStroke: false,
+    isSkew: false,
+    stroke: '#fff',
+    strokeWidth: 1,
+  }
+  if (!handleElement.value.effects) {
+    handleElement.value.effects = [strokeItem]
+  }
+  else {
+    handleElement.value.effects?.push(strokeItem)
+  }
+}
+
+const updateFill = (color: string) => {
+  handleElement.value.fill = color
+}
+
+const updateStroke = (color: string, key: string) => {
+  handleElement.value.effects?.filter(item => item.key === key).map(ele => ele.stroke = color)
+  updateElement()
+}
+
+const updateStrokeWidth = () => {
+  updateElement()
+}
+
+const updateElement = () => {
+  const [ canvas ] = useCanvas()
+  canvas.renderAll()
+}
 
 </script>
 

@@ -11,6 +11,12 @@ export interface PathPoint {
 }
 
 export interface EffectItem {
+  key: string
+  type: number
+  isFill: boolean
+  isStroke: boolean
+  isSkew: boolean
+  visible?: boolean
   stroke: string
   strokeWidth: number
 }

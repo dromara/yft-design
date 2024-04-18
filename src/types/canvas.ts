@@ -1,6 +1,7 @@
 import { Gradient, Pattern, Textbox, SerializedImageProps, Path, Rect, Image, Point, Polygon, Group, Line, Object as FabricObject, ImageProps, IText } from "fabric"
 import { ColorStop } from "./elements"
 import JsBarcode from "jsbarcode"
+import { EffectItem } from "./common"
 export type LineOption = [number, number, number, number]
 export type TPatternRepeat = 'repeat' | 'repeat-x' | 'repeat-y' | 'no-repeat'
 export type ImageSource = HTMLImageElement | HTMLVideoElement | HTMLCanvasElement
@@ -147,6 +148,7 @@ export interface ReferenceLineProps extends Line {
 
 export interface ImageElement extends SerializedImageProps, CommenElement {
   type: string
+  effects?: EffectItem[]
   pixiFilters?: any[]
   mask?: FabricObject
   originSrc?: string 
