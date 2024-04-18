@@ -1,9 +1,9 @@
 import { ClipPathType } from '@/configs/images'
-import { strokeImage } from '@/extension/strokes/image.stroke'
+import { strokeImage } from '@/extension/effects/image.stroke'
 import { addCropImageInteractions, isolateObjectForEdit } from '@/extension/mixins/cropping.mixin'
 import { croppingControlSet, flipXCropControls, flipXYCropControls, flipYCropControls } from '@/extension/controls/cropping/cropping.controls'
 import { Image as OriginImage, Point, Object as FabricObject, util, classRegistry, TPointerEventInfo, TPointerEvent, ImageProps, TClassProperties, ImageSource, StaticCanvas } from 'fabric'
-import { StrokeItem } from '@/types/common'
+import { EffectItem } from '@/types/common'
 
 export class Image extends OriginImage {
   public isCropping?: false
@@ -12,10 +12,10 @@ export class Image extends OriginImage {
   public cropSize?: number
   public originWidth?: number
   public originHeight?: number
-  public strokes?: StrokeItem[]
+  public effects?: EffectItem[]
   constructor(element: ImageSource, options?: any) {
     super(element, { filters: [], ...options });
-    this.strokes = options.strokes
+    this.effects = options.effects
     this.init()
     this.on('mousedblclick', this.doubleClickHandler.bind(this))
   }
@@ -190,10 +190,10 @@ export class Image extends OriginImage {
     super.drawBorders(ctx, options, styleOverride);
   }
 
-  async renderStroke(type?: string) {
-    if (this.strokes) {
-      for (let i = this.strokes.length - 1; i >= 0; i--) {
-        const item = this.strokes[i]
+  async renderEffects(type?: string) {
+    if (this.effects) {
+      for (let i = this.effects.length - 1; i >= 0; i--) {
+        const item = this.effects[i]
         await strokeImage(item.stroke, item.strokeWidth, this, type)
       }
     }
@@ -227,9 +227,9 @@ export class Image extends OriginImage {
   }
 
   static fromObject({ filters: f, resizeFilter: rf, src, crossOrigin, ...object }: any, options: { signal: AbortSignal }): Promise<Image> {
-    if (object.originSrc && object.strokes) src = object.originSrc
-    if (object.originWidth && object.strokes) object.width = object.originWidth
-    if (object.originHeight && object.strokes) object.height = object.originHeight
+    if (object.originSrc && object.effects) src = object.originSrc
+    if (object.originWidth && object.effects) object.width = object.originWidth
+    if (object.originHeight && object.effects) object.height = object.originHeight
     return Promise.all([
       util.loadImage(src, { ...options, crossOrigin }),
       f && util.enlivenObjects(f, options),

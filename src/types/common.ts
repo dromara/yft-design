@@ -10,7 +10,7 @@ export interface PathPoint {
   Y: number
 }
 
-export interface StrokeItem {
+export interface EffectItem {
   stroke: string
   strokeWidth: number
 }

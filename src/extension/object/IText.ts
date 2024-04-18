@@ -1,18 +1,18 @@
 import { IText as OriginIText, classRegistry } from "fabric"
-import { StrokeItem } from "@/types/common"
+import { EffectItem } from "@/types/common"
 
 export class IText extends OriginIText {
-  public strokes?: StrokeItem[];
+  public effects?: EffectItem[];
 
   constructor(text: string, options?: any) {
     super(text, options);
-    this.strokes = options.strokes
+    this.effects = options.effects
   }
 
   _renderChar(method: "fillText" | "strokeText", ctx: CanvasRenderingContext2D, lineIndex: number, charIndex: number, _char: string, left: number, top: number): void {
-    if (this.strokes) {
-      for (let i = 0; i < this.strokes.length; i++) {
-        const item = this.strokes[i]
+    if (this.effects) {
+      for (let i = 0; i < this.effects.length; i++) {
+        const item = this.effects[i]
         ctx.save();
         ctx.strokeStyle = item.stroke;
         ctx.lineWidth = item.strokeWidth;
