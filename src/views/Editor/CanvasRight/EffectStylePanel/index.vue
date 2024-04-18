@@ -59,7 +59,7 @@
         <el-col :span="18">
           <el-row class="style-row">
             <el-col :span="8">
-              <el-input v-model="item.strokeWidth" @change="updateStrokeWidth"></el-input>
+              <el-input-number v-model="item.strokeWidth" @change="updateStrokeWidth" controls-position="right" />
             </el-col>
             <el-col :span="8">
               <el-select>
@@ -301,12 +301,19 @@ const updateElement = () => {
 }
 </style>
 
-<style scoped>
+<style lang="scss" scoped>
 :deep(.effect-style .el-input .el-input__wrapper) {
   padding: 1px 5px;
   margin-right: 1px;
 }
 :deep(.effect-style .el-select .el-select__wrapper) {
   padding: 0 5px;
+}
+:deep(.style-row .el-input-number) {
+  width: 60px;
+}
+:deep(.style-row .el-input-number span) {
+  width: 12px;
+  border-right: 1px solid var(--el-border-color);
 }
 </style>
