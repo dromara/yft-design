@@ -291,5 +291,22 @@ export default {
     shadingImage: '底纹图片',
     collage: '拼贴',
     enableGradient: '启用渐变',
-  }
+  },
+  "waterMark": {
+    "text": "水印",
+    "modalTitle": "配置水印",
+    "setting": {
+      "name": "水印名称",
+      "size": "水印大小",
+      "angle": "水印角度",
+      "position": {
+        "label": "水印位置",
+        "lt": "左上角",
+        "rt": "右上角",
+        "lb": "左下角",
+        "rb": "右下角",
+        "full": "平铺"
+      }
+    }
+  },
 };

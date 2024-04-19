@@ -162,6 +162,8 @@
 
     <el-divider />
 
+    <!-- <Watermark /> -->
+
     <div class="title">
       <b>{{ t("style.canvasMask") }}</b>
     </div>
@@ -204,6 +206,7 @@ import {
 } from "@/configs/background";
 import useCanvas from "@/views/Canvas/useCanvas";
 import Backgrounds from "../Backgrounds/index.vue";
+import Watermark from "../Watermark/index.vue";
 import useHistorySnapshot from "@/hooks/useHistorySnapshot";
 import useCanvasScale from '@/hooks/useCanvasScale'
 

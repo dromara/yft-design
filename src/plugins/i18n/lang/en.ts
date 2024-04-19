@@ -288,5 +288,22 @@ export default {
     shadingImage: 'Image',
     collage: 'Collage',
     enableGradient: 'Gradient',
-  }
+  },
+  "waterMark": {
+    "text": "WaterMark",
+    "modalTitle": "WaterMark Setting",
+    "setting": {
+      "name": "Mark Name",
+      "size": "MarK Size",
+      "angle": "Mark Angle",
+      "position": {
+        "label": "Mark Position",
+        "lt": "Left Top",
+        "rt": "Right Top",
+        "lb": "Left Bottom",
+        "rb": "Right Bottom",
+        "full": "Full"
+      }
+    }
+  },
 };
