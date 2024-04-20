@@ -584,6 +584,6 @@ const changeMaskOpacity = () => {
   width: 100%;
 }
 :deep(.size-row .el-input-group__prepend) {
-  min-width: 14px;
+  min-width: 24px;
 }
 </style>

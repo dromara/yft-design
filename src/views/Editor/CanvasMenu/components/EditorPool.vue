@@ -372,6 +372,7 @@ const drawLine = (line: LinePoolItem) => {
 }
 .icon-font {
   font-size: 20px;
+  height: 20px;
 }
 :deep(.edit-upload .el-upload) {
   width: 100%;

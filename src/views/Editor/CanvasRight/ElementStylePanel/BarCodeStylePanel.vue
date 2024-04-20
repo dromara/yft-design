@@ -261,6 +261,6 @@ const generateBarCode = async () => {
   background-color: #d3dce6;
 }
 :deep(.size-row .el-input-group__prepend) {
-  min-width: 14px;
+  min-width: 24px;
 }
 </style>
