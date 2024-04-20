@@ -93,7 +93,7 @@ export const propertiesToInclude = [
   'reverse',
   'startStyle',
   'endStyle',
-  'strokes',
+  'effects',
   'originSrc',
   'originWidth',
   'originHeight',
