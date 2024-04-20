@@ -263,6 +263,7 @@ const changeRotate45 = (command: "+" | "-") => {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
 }
 .position-col {
   :deep(.el-input-number) {

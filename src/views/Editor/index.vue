@@ -16,10 +16,10 @@
         <CanvasHeader class="center-header relative flex justify-between py-[10px] text-[14px] select-none h-[40px]" />
         <CanvasCenter class="center-body" />
         <CanvasFooter class="center-footer h-[40px] relative leading-1.5 flex justify-between" />
-        <CanvasAffix />
+        <CanvasAffix  class="center-affix"/>
       </div>
       <CanvasRight class="layout-content-right h-full w-[260px] bg-[#fff] flex flex-col" />
-      <CanvasDom class="absolute -z-200" />
+      <CanvasDom class="absolute -z-[200] -left-[300px]" />
     </div>
     <CanvasTour />
   </div>
