@@ -43,10 +43,10 @@
             <span class="mr-10px">{{ $t('waterMark.setting.angle') }}</span>
 
             <div>
-              <RadioGroup v-model="waterMarkState.isRotate">
-                <Radio :label="0">横向</Radio>
-                <Radio :label="1">倾斜</Radio>
-              </RadioGroup>
+              <el-radio-group v-model="waterMarkState.isRotate">
+                <el-radio :label="0">横向</el-radio>
+                <el-radio :label="1">倾斜</el-radio>
+              </el-radio-group>
             </div>
           </div>
           <el-button type="primary" size="mini" @click="onModalOk">{{ $t('default.ok') }}</el-button>
@@ -63,6 +63,9 @@ import { debounce } from 'lodash-es';
 // import { useFont } from '@/hooks';
 import useCanvas from "@/views/Canvas/useCanvas";
 import { WorkSpaceThumbType, WorkSpaceDrawType } from "@/configs/canvas"
+import { ElementNames } from "@/types/elements";
+import { Image } from 'fabric'
+import { nanoid } from "nanoid";
 
 
 const activeNames = ref(['TextWatermark'])
@@ -198,12 +201,21 @@ const onModalOk = async () => {
   
   const { width, height, left, top } = workspace;
   drawWaterMark[waterMarkState.position](width, height, async (imgString: string) => {
-    canvas.overlayImage = null; // 清空覆盖层
-    const workSpacePattern = new Pattern({
-      source: imgString,
-      repeat: "repeat",
-    });
-    console.log('imgString',imgString);
+    canvas.overlayImage = await Image.fromURL(imgString, {
+      id: nanoid(10),
+      crossOrigin: 'anonymous',
+      left: left,
+      top: top,
+      angle: waterMarkState.isRotate === 1 ? 30 : 0,
+      hasControls: true,
+      hasBorders: true,
+      opacity: 1,
+      originX: "left",
+      originY: "top",
+      name: ElementNames.IMAGE,
+      crossOrigin: "anonymous",
+    }); // 清空覆盖层
+    canvas.renderAll()
   });
 };
 

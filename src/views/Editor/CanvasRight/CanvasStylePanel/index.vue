@@ -160,9 +160,9 @@
     </div>
     <Backgrounds />
 
-    <el-divider />
+    <!-- <el-divider /> -->
 
-    <!-- <Watermark /> -->
+    <Watermark />
 
     <div class="title">
       <b>{{ t("style.canvasMask") }}</b>
