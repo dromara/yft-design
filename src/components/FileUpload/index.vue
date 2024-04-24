@@ -23,7 +23,7 @@ import { getImageDataURL, getImageText } from '@/utils/image'
 import { ElMessage, genFileId, UploadInstance, UploadProps, UploadRawFile } from "element-plus"
 import { uploadFile } from '@/api/file'
 import { useTemplatesStore } from '@/store'
-import { loadSVGFromString } from '@/extension/parser/loadSVGFromString'
+import { loadSVGFromString } from 'fabric'
 import { ElementNames } from '@/types/elements'
 import { Image, Object as FabricObject } from 'fabric'
 import useCanvasScale from '@/hooks/useCanvasScale'
@@ -74,11 +74,11 @@ const uploadHandle = async (option: any) => {
     console.log('content:', content.objects)
     canvas.add(...content.objects as any)
     canvas.renderAll()
-    if (content.objects) {
-      content.objects.filter(item => item instanceof Image && (item as Image).mask).forEach(object => {
-        setImageMask(object as any)
-      })
-    }
+    // if (content.objects) {
+    //   content.objects.filter(item => item instanceof Image && (item as Image).mask).forEach(object => {
+    //     setImageMask(object as any)
+    //   })
+    // }
     emit('close')
   }
   if (fileSuffix === 'json') {
