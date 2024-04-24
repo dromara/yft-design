@@ -23,7 +23,7 @@ import { getImageDataURL, getImageText } from '@/utils/image'
 import { ElMessage, genFileId, UploadInstance, UploadProps, UploadRawFile } from "element-plus"
 import { uploadFile } from '@/api/file'
 import { useTemplatesStore } from '@/store'
-import { loadSVGFromString } from 'fabric'
+import { loadSVGFromString } from '@/extension/parser/loadSVGFromString'
 import useCanvasScale from '@/hooks/useCanvasScale'
 import useHandleCreate from '@/hooks/useHandleCreate'
 import useHandleTemplate from '@/hooks/useHandleTemplate'
@@ -68,7 +68,7 @@ const uploadHandle = async (option: any) => {
   if (fileSuffix === 'svg') {
     const dataText = await getImageText(option.file)
     const content = await loadSVGFromString(dataText)
-    canvas.add(...content.objects)
+    canvas.add(...content.objects as any)
     canvas.renderAll()
     emit('close')
   }

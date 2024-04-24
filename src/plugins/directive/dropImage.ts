@@ -5,7 +5,7 @@ import useHandleTemplate from "@/hooks/useHandleTemplate";
 import useHandleCreate from "@/hooks/useHandleCreate";
 import useCanvasScale from "@/hooks/useCanvasScale";
 import { useTemplatesStore } from "@/store";
-import { loadSVGFromString } from "fabric";
+import { loadSVGFromString } from '@/extension/parser/loadSVGFromString'
 import { uploadFile } from "@/api/file";
 // import axios from 'axios'; // 确保你已经安装并导入了axios
 
@@ -57,7 +57,7 @@ const defaultUpload = async (files: FileList, uploadUrl: string): Promise<void> 
     if (curFileSuffix === "svg") {
       const dataText = await getImageText(file);
       const content = await loadSVGFromString(dataText);
-      canvas.add(...content.objects);
+      canvas.add(...content.objects as any);
       canvas.renderAll();
     }
     if (curFileSuffix === "json") {
