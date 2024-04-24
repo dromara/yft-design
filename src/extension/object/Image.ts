@@ -17,8 +17,8 @@ export class Image extends OriginImage {
   public effects?: EffectItem[]
   constructor(element: ImageSource, options?: any) {
     super(element, { filters: [], ...options });
-    this.effects = options.effects
-    this.init()
+    this.effects = options?.effects
+    // this.init()
     this.on('mousedblclick', this.doubleClickHandler.bind(this))
   }
 
