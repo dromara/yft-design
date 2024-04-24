@@ -1,15 +1,9 @@
-// import { Gradient } from 'fabric/src/gradient/Gradient';
-// import { Group } from 'fabric/src/shapes/Group';
-// import { Image } from 'fabric/src/shapes/Image';
-// import { classRegistry } from 'fabric/src/ClassRegistry';
 import {
   invertTransform,
   multiplyTransformMatrices,
   qrDecompose,
 } from '../util/misc/matrix';
 import { removeTransformMatrixForSvgParsing } from '../util/transform_matrix_removal';
-// import type { FabricObject } from 'fabric/src/shapes/Object/FabricObject';
-// import { Point } from 'fabric/dist/Point';
 import { CENTER } from '../constants';
 import { getGradientDefs } from './getGradientDefs';
 import { getCSSRules } from './getCSSRules';
@@ -19,7 +13,7 @@ import type { SVGOptions, Object as FabricObject } from 'fabric';
 import type { LoadImageOptions } from 'fabric/src/util/misc/objectEnlive';
 import { Gradient, Group, Image, classRegistry, Point } from 'fabric';
 import { Image as CropImage } from '../object/Image';
-import usePixi from '@/views/Canvas/usePixi';
+import { nanoid } from 'nanoid';
 
 const findTag = (el: Element) => {
   const tag = el.tagName.toLowerCase().replace('svg:', '')
@@ -86,6 +80,7 @@ export class ElementsParser {
         this.options,
         this.cssRules
       );
+      obj.set({id: nanoid(10)})
       this.resolveGradient(obj, el, 'fill');
       this.resolveGradient(obj, el, 'stroke');
       if (obj instanceof Image && obj._originalElement) {
@@ -215,20 +210,21 @@ export class ElementsParser {
     if (maskElements) {
       const maskElement = maskElements[0] as HTMLElement
       const maskImage = await Image.fromElement(maskElement)
-      console.log('maskImage:', maskImage, 'obj:', obj)
-      if (obj instanceof Image && obj._originalElement) {
-        const [ pixi ] = usePixi()
-        pixi.postMessage({
-          id: obj.id,
-          type: "mask", 
-          src: obj.getSrc(),
-          mask: JSON.stringify({
-            src: maskImage?.getSrc()
-          }), 
-          width: obj.width, 
-          height: obj.height
-        });
-      }
+      obj.set({mask: {src: maskImage?.getSrc()}})
+      // if (obj instanceof Image && obj._originalElement) {
+      //   console.log('maskImage:', maskImage, 'obj:', obj.id)
+      //   const [ pixi ] = usePixi()
+      //   pixi.postMessage({
+      //     id: obj.id,
+      //     type: "mask", 
+      //     src: obj.getSrc(),
+      //     mask: JSON.stringify({
+      //       src: maskImage?.getSrc()
+      //     }), 
+      //     width: obj.width, 
+      //     height: obj.height
+      //   });
+      // }
     }
   }
 }

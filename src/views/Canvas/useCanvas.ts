@@ -9,13 +9,14 @@ import { FabricGuide } from '@/app/fabricGuide'
 import { HoverBorders } from '@/app/hoverBorders'
 import { WheelScroll } from '@/app/wheelScroll'
 import { FabricRuler } from '@/app/fabricRuler'
-
+import { isMobile } from '@/utils/common'
 import { FabricCanvas } from '@/app/fabricCanvas'
 import { Keybinding } from '@/app/keybinding'
 import { defaultControls, textboxControls } from '@/app/fabricControls'
 import { useTemplatesStore } from '@/store'
 import useCommon from './useCommon'
 import useHammer from './useHammer'
+
 
 
 
@@ -126,8 +127,10 @@ const initTemplate = async () => {
   await canvas.loadFromJSON(currentTemplate.value)
   setCanvasTransform()
   initCommon()
-  // initHammer()
   initEvent()
+  if (isMobile()) {
+    initHammer()
+  }
 }
 
 export const initEditor = async () => {

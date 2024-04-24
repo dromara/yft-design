@@ -24,10 +24,13 @@ import { ElMessage, genFileId, UploadInstance, UploadProps, UploadRawFile } from
 import { uploadFile } from '@/api/file'
 import { useTemplatesStore } from '@/store'
 import { loadSVGFromString } from '@/extension/parser/loadSVGFromString'
+import { ElementNames } from '@/types/elements'
+import { Image, Object as FabricObject } from 'fabric'
 import useCanvasScale from '@/hooks/useCanvasScale'
 import useHandleCreate from '@/hooks/useHandleCreate'
 import useHandleTemplate from '@/hooks/useHandleTemplate'
 import useCanvas from '@/views/Canvas/useCanvas'
+import usePixi from '@/views/Canvas/usePixi';
 
 
 const templatesStore = useTemplatesStore()
@@ -68,8 +71,14 @@ const uploadHandle = async (option: any) => {
   if (fileSuffix === 'svg') {
     const dataText = await getImageText(option.file)
     const content = await loadSVGFromString(dataText)
+    console.log('content:', content.objects)
     canvas.add(...content.objects as any)
     canvas.renderAll()
+    if (content.objects) {
+      content.objects.filter(item => item instanceof Image && (item as Image).mask).forEach(object => {
+        setImageMask(object as any)
+      })
+    }
     emit('close')
   }
   if (fileSuffix === 'json') {
@@ -98,6 +107,19 @@ const uploadHandle = async (option: any) => {
     setCanvasTransform()
     emit('close')
   }
+}
+
+const setImageMask = (image: Image) => {
+  if (!image.mask) return
+  const [ pixi ] = usePixi()
+  pixi.postMessage({
+    id: image.id,
+    type: "mask", 
+    src: image.getSrc(),
+    mask: JSON.stringify(image.mask), 
+    width: image.width, 
+    height: image.height
+  });
 }
 
 const handleExceed: UploadProps['onExceed'] = (files: File[]) => {

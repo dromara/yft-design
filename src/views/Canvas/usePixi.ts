@@ -1,6 +1,5 @@
 import { useTemplatesStore } from "@/store"
-import { storeToRefs } from "pinia"
-import { CanvasElement, GroupElement, ImageElement } from "@/types/canvas"
+import { CanvasElement, GroupElement } from "@/types/canvas"
 import { ElementNames } from "@/types/elements"
 import { Image } from "fabric"
 import useCanvas from "./useCanvas"
@@ -39,15 +38,14 @@ const findElement = (eid: string, elements: CanvasElement[] | undefined): Canvas
 
 export const handleFilter = (worker: Worker) => {
   const templatesStore = useTemplatesStore()
-  const { currentTemplate } = storeToRefs(templatesStore)
   const [ canvas ] = useCanvas()
   worker.addEventListener('message', async (event) => {
+    
     const data = event.data
     const objects = canvas.getObjects()
     const element = findElement(data.id, objects as CanvasElement[]) as Image
-    console.log('element:', element)
-    if (!element) return
     if (element instanceof Image) {
+      console.log('element:', element)
       element.originSrc = element.getSrc()
       await element.setSrc(data.res)
       canvas.renderAll()

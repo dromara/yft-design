@@ -2,7 +2,7 @@ import { Object as FabricObject, Control as FabricControl } from "fabric"
 import type { FabricObject, Point, TPointerEventInfo, TPointerEvent, Rect } from '@fabric'
 import type { FabricObjectProps as FabricObjectPropsOrigin } from 'fabric/src/shapes/Object/types/FabricObjectProps'
 import type { GroupOwnProps } from 'fabric/src/shapes/Group'
-import { LinePoint } from "./types/elements"
+import { LinePoint, Mask } from "./types/elements"
 import { EffectItem } from "./types/common"
 
 export declare module 'fabric' {
@@ -180,6 +180,7 @@ export declare module 'fabric' {
   export declare class Image {
     originSrc?: string 
     effects?: EffectItem[]
+    mask?: Mask
     lastEventTop: number
     lastEventLeft: number
     setupDragMatrix(): void

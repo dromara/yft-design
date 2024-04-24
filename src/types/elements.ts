@@ -51,6 +51,10 @@ export interface ColorStop {
 
 export type LinePoint = '' | 'arrow' | 'dot' 
 
+export interface Mask {
+  src: string
+}
+
 export interface LinePoolItem {
   path: string
   style: 'solid' | 'dashed'
