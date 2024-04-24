@@ -1,4 +1,4 @@
-import { parseUnit } from 'fabric/src/util/misc/svgParsing';
+import { parseUnit } from '../util/misc/svgParsing';
 import { reFontDeclaration } from './constants';
 
 /**

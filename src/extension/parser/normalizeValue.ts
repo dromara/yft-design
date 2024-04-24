@@ -1,7 +1,7 @@
-import { multiplyTransformMatrices } from 'fabric/src/util/misc/matrix';
-import { parseUnit } from 'fabric/src/util/misc/svgParsing';
+import { multiplyTransformMatrices } from '../util/misc/matrix';
+import { parseUnit } from '../util/misc/svgParsing';
 import { parseTransformAttribute } from './parseTransformAttribute';
-import { CENTER, LEFT, RIGHT, NONE } from 'fabric/src/constants';
+import { CENTER, LEFT, RIGHT, NONE } from '../constants';
 
 export function normalizeValue(
   attr: string,

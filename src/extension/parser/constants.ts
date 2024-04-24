@@ -37,7 +37,7 @@ export const svgValidTagNames = [
     'mask',
     'desc',
   ],
-  svgValidParents = ['symbol', 'g', 'a', 'svg', 'clipPath', 'defs'],
+  svgValidParents = ['symbol', 'g', 'a', 'svg', 'clipPath', 'defs', 'mask'],
   attributesMap = {
     cx: LEFT,
     x: LEFT,
@@ -71,7 +71,8 @@ export const svgValidTagNames = [
     'image-rendering': 'imageSmoothing',
   },
   fSize = 'font-size',
-  cPath = 'clip-path';
+  cPath = 'clip-path',
+  mask = 'mask';
 
 export const svgValidTagNamesRegEx = getSvgRegex(svgValidTagNames);
 

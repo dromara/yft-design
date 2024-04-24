@@ -18,20 +18,27 @@ import type { ParsedViewboxTransform } from './applyViewboxTransform';
 import type { SVGOptions, Object as FabricObject } from 'fabric';
 import type { LoadImageOptions } from 'fabric/src/util/misc/objectEnlive';
 import { Gradient, Group, Image, classRegistry, Point } from 'fabric';
+import { Image as CropImage } from '../object/Image';
+import usePixi from '@/views/Canvas/usePixi';
 
-const findTag = (el: Element) =>
-  classRegistry.getSVGClass(el.tagName.toLowerCase().replace('svg:', ''));
+const findTag = (el: Element) => {
+  const tag = el.tagName.toLowerCase().replace('svg:', '')
+  if (tag === 'image') return CropImage
+  return classRegistry.getSVGClass(el.tagName.toLowerCase().replace('svg:', ''));
+}
 
 type StorageType = {
   fill: SVGGradientElement;
   stroke: SVGGradientElement;
   clipPath: Element[];
+  mask: Element[];
 };
 
 type NotParsedFabricObject = FabricObject & {
   fill: string;
   stroke: string;
   clipPath?: string;
+  mask?: string;
   clipRule?: CanvasFillRule;
 };
 
@@ -42,6 +49,7 @@ export class ElementsParser {
   declare regexUrl: RegExp;
   declare doc: Document;
   declare clipPaths: Record<string, Element[]>;
+  declare masks: Record<string, Element[]>;
   declare gradientDefs: Record<string, SVGGradientElement>;
   declare cssRules: CSSRules;
 
@@ -50,7 +58,8 @@ export class ElementsParser {
     options: LoadImageOptions & ParsedViewboxTransform,
     reviver: TSvgReviverCallback | undefined,
     doc: Document,
-    clipPaths: Record<string, Element[]>
+    clipPaths: Record<string, Element[]>,
+    masks: Record<string, Element[]>
   ) {
     this.elements = elements;
     this.options = options;
@@ -58,6 +67,7 @@ export class ElementsParser {
     this.regexUrl = /^url\(['"]?#([^'"]+)['"]?\)/g;
     this.doc = doc;
     this.clipPaths = clipPaths;
+    this.masks = masks;
     this.gradientDefs = getGradientDefs(doc);
     this.cssRules = getCSSRules(doc);
   }
@@ -87,6 +97,7 @@ export class ElementsParser {
         removeTransformMatrixForSvgParsing(obj);
       }
       await this.resolveClipPath(obj, el);
+      await this.resolveMask(obj, el);
       this.reviver && this.reviver(el, obj as any);
       return obj;
     }
@@ -95,7 +106,7 @@ export class ElementsParser {
 
   extractPropertyDefinition(
     obj: NotParsedFabricObject,
-    property: 'fill' | 'stroke' | 'clipPath',
+    property: 'fill' | 'stroke' | 'clipPath' | 'mask',
     storage: Record<string, StorageType[typeof property]>
   ): StorageType[typeof property] | undefined {
     const value = obj[property]!,
@@ -162,8 +173,7 @@ export class ElementsParser {
             });
         })
       );
-      const clipPath =
-        container.length === 1 ? container[0] : new Group(container);
+      const clipPath = container.length === 1 ? container[0] : new Group(container);
       const gTransform = multiplyTransformMatrices(
         objTransformInv,
         clipPath.calcTransformMatrix()
@@ -171,8 +181,7 @@ export class ElementsParser {
       if (clipPath.clipPath) {
         await this.resolveClipPath(clipPath, clipPathOwner);
       }
-      const { scaleX, scaleY, angle, skewX, translateX, translateY } =
-        qrDecompose(gTransform);
+      const { scaleX, scaleY, angle, skewX, translateX, translateY } = qrDecompose(gTransform);
       clipPath.set({
         flipX: false,
         flipY: false,
@@ -194,6 +203,32 @@ export class ElementsParser {
       // if clip-path does not resolve to any element, delete the property.
       delete obj.clipPath;
       return;
+    }
+  }
+
+  async resolveMask(obj: NotParsedFabricObject, usingElement: Element) {
+    const maskElements = this.extractPropertyDefinition(
+      obj,
+      'mask',
+      this.masks
+    ) as Element[];
+    if (maskElements) {
+      const maskElement = maskElements[0] as HTMLElement
+      const maskImage = await Image.fromElement(maskElement)
+      console.log('maskImage:', maskImage, 'obj:', obj)
+      if (obj instanceof Image && obj._originalElement) {
+        const [ pixi ] = usePixi()
+        pixi.postMessage({
+          id: obj.id,
+          type: "mask", 
+          src: obj.getSrc(),
+          mask: JSON.stringify({
+            src: maskImage?.getSrc()
+          }), 
+          width: obj.width, 
+          height: obj.height
+        });
+      }
     }
   }
 }

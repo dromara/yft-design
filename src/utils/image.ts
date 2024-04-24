@@ -57,7 +57,7 @@ export const getImageText = (file: File): Promise<string> => {
   return new Promise(resolve => {
     const reader = new FileReader()
     reader.addEventListener('load', () => {
-      console.log(reader.result)
+      // console.log(reader.result)
       resolve(reader.result as string)
     })
     reader.readAsText(file)

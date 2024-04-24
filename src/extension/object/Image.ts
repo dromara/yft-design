@@ -2,8 +2,12 @@ import { ClipPathType } from '@/configs/images'
 import { strokeImage } from '@/extension/effects/image.stroke'
 import { addCropImageInteractions, isolateObjectForEdit } from '@/extension/mixins/cropping.mixin'
 import { croppingControlSet, flipXCropControls, flipXYCropControls, flipYCropControls } from '@/extension/controls/cropping/cropping.controls'
-import { Image as OriginImage, Point, Object as FabricObject, util, classRegistry, TPointerEventInfo, TPointerEvent, ImageProps, TClassProperties, ImageSource, StaticCanvas } from 'fabric'
+import { Image as OriginImage, Point, Object as FabricObject, util, classRegistry, 
+  TPointerEventInfo, TPointerEvent, ImageProps, TClassProperties, ImageSource, TOptions } from 'fabric'
 import { EffectItem } from '@/types/common'
+import { parseAttributes } from '@/extension/parser/parseAttributes'
+import type { CSSRules } from '@/extension/parser/typedefs'
+import type { Abortable } from 'fabric/src/typedefs'
 
 export class Image extends OriginImage {
   public isCropping?: false
@@ -222,11 +226,14 @@ export class Image extends OriginImage {
     }
   }
   
-  static fromURL(url: string, options: any = {}): Promise<Image> {
-    return util.loadImage(url, options).then((img) => new this(img, options));
+  static async fromURL<T extends TOptions<ImageProps>>(url: string, { crossOrigin, signal }: any | undefined, imageOptions: T): Promise<Image> {
+    // return util.loadImage(url, options).then((img) => new this(img, options));
+    return util.loadImage(url, { crossOrigin, signal }).then(
+      (img) => new this(img, imageOptions)
+    );
   }
 
-  static fromObject({ filters: f, resizeFilter: rf, src, crossOrigin, ...object }: any, options: { signal: AbortSignal }): Promise<Image> {
+  static async fromObject({ filters: f, resizeFilter: rf, src, crossOrigin, ...object }: any, options: { signal: AbortSignal }): Promise<Image> {
     if (object.originSrc && object.effects) src = object.originSrc
     if (object.originWidth && object.effects) object.width = object.originWidth
     if (object.originHeight && object.effects) object.height = object.originHeight
@@ -244,6 +251,27 @@ export class Image extends OriginImage {
         resizeFilter,
         ...hydratedProps,
       });
+    });
+  }
+
+  static async fromElement(
+    element: HTMLElement,
+    options: Abortable = {},
+    cssRules?: CSSRules
+  ) {
+    const attributeNames = this.ATTRIBUTE_NAMES.concat(['mask'])
+    const parsedAttributes = parseAttributes(
+      element,
+      attributeNames,
+      cssRules
+    );
+    return this.fromURL(
+      parsedAttributes['xlink:href'],
+      options,
+      parsedAttributes
+    ).catch((err) => {
+      console.log(err);
+      return null;
     });
   }
 }
@@ -264,6 +292,7 @@ Object.assign(Image.prototype, {
   ...addCropImageInteractions()
 })
 
-classRegistry.setClass(Image)
+classRegistry.setClass(Image, 'Image')
+classRegistry.setSVGClass(Image, 'Image')
 
 

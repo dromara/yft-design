@@ -1,7 +1,7 @@
-import { iMatrix } from 'fabric/src/constants';
+import { iMatrix } from '../constants';
 import { reNum } from './constants';
-import type { TMat2D } from 'fabric/src/typedefs';
-import { cleanupSvgAttribute } from 'fabric/src/util/internals/cleanupSvgAttribute';
+import type { TMat2D } from 'fabric';
+import { cleanupSvgAttribute } from '../util/internals/cleanupSvgAttribute';
 import {
   createRotateMatrix,
   createScaleMatrix,
@@ -9,7 +9,7 @@ import {
   createSkewYMatrix,
   createTranslateMatrix,
   multiplyTransformMatrixArray,
-} from 'fabric/src/util/misc/matrix';
+} from '../util/misc/matrix';
 
 // == begin transform regexp
 const p = `(${reNum})`;

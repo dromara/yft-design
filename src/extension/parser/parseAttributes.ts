@@ -1,6 +1,6 @@
-import { DEFAULT_SVG_FONT_SIZE } from 'fabric/src/constants';
-import { parseUnit } from 'fabric/src/util/misc/svgParsing';
-import { cPath, fSize, svgValidParentsRegEx } from './constants';
+import { DEFAULT_SVG_FONT_SIZE } from '../constants';
+import { parseUnit } from '../util/misc/svgParsing';
+import { cPath, fSize, mask, svgValidParentsRegEx } from './constants';
 import { getGlobalStylesForElement } from './getGlobalStylesForElement';
 import { normalizeAttr } from './normalizeAttr';
 import { normalizeValue } from './normalizeValue';
@@ -30,15 +30,8 @@ export function parseAttributes(
     parentFontSize = DEFAULT_SVG_FONT_SIZE;
 
   // if there's a parent container (`g` or `a` or `symbol` node), parse its attributes recursively upwards
-  if (
-    element.parentNode &&
-    svgValidParentsRegEx.test(element.parentNode.nodeName)
-  ) {
-    parentAttributes = parseAttributes(
-      element.parentElement,
-      attributes,
-      cssRules
-    );
+  if (element.parentNode && svgValidParentsRegEx.test(element.parentNode.nodeName)) {
+    parentAttributes = parseAttributes(element.parentElement, attributes, cssRules);
     if (parentAttributes.fontSize) {
       fontSize = parentFontSize = parseUnit(parentAttributes.fontSize);
     }
@@ -57,6 +50,10 @@ export function parseAttributes(
     ...getGlobalStylesForElement(element, cssRules),
     ...parseStyleAttribute(element),
   };
+
+  if (ownAttributes[mask]) {
+    element.setAttribute(mask, ownAttributes[mask]);
+  }
 
   if (ownAttributes[cPath]) {
     element.setAttribute(cPath, ownAttributes[cPath]);

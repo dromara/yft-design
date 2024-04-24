@@ -1,6 +1,5 @@
-import { Color } from 'fabric/src/color/Color';
-import { toFixed } from 'fabric/src/util/misc/toFixed';
-import { FabricObject } from 'fabric/src/shapes/Object/FabricObject';
+import { Color, Object as FabricObject } from 'fabric';
+import { toFixed } from '../util/misc/toFixed';
 
 const colorAttributesMap = {
   stroke: 'strokeOpacity',

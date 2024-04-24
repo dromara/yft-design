@@ -65,6 +65,7 @@ export async function parseSVGDocument(
     };
   }
   const localClipPaths: Record<string, Element[]> = {};
+  const loaclMasks: Record<string, Element[]> = {}
   descendants
     .filter((el) => el.nodeName.replace('svg:', '') === 'clipPath')
     .forEach((el) => {
@@ -73,20 +74,28 @@ export async function parseSVGDocument(
         (el) => isValidSvgTag(el)
       );
     });
-
+  descendants
+    .filter((el) => el.nodeName.replace('svg:', '') === 'mask')
+    .forEach((el) => {
+      const id = el.getAttribute('id')!;
+      loaclMasks[id] = Array.from(el.getElementsByTagName('*')).filter(
+        (el) => isValidSvgTag(el)
+      );
+    });
   // Precedence of rules:   style > class > attribute
   const elementParser = new ElementsParser(
     elements,
     options,
     reviver,
     doc,
-    localClipPaths
+    localClipPaths,
+    loaclMasks
   );
 
   const instances = await elementParser.parse();
 
   return {
-    objects: instances,
+    objects: instances as any[],
     elements,
     options,
     allElements: descendants,

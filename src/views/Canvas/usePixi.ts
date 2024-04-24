@@ -47,11 +47,12 @@ export const handleFilter = (worker: Worker) => {
     const element = findElement(data.id, objects as CanvasElement[]) as Image
     console.log('element:', element)
     if (!element) return
-    element.originSrc = element.getSrc()
-    await element.setSrc(data.res)
-    canvas.renderAll()
-    // await templatesStore.renderElement()
-    templatesStore.modifedElement()
+    if (element instanceof Image) {
+      element.originSrc = element.getSrc()
+      await element.setSrc(data.res)
+      canvas.renderAll()
+      templatesStore.modifedElement()
+    }
   });
 }
 
