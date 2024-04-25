@@ -66,6 +66,33 @@ const closeUpload = () => {
   emit('close')
 }
 
+const generateSVGTemplate = async (dataText: string) => {
+  const content = await loadSVGFromString(dataText)
+  const options = content.options
+  const svgData: any[] = []
+  content.objects.forEach(ele => svgData.push(ele.toObject(propertiesToInclude)))
+  WorkSpaceDrawData.width = options.width
+  WorkSpaceDrawData.height = options.height
+  const emptyTemplate: Template = {
+    id: nanoid(10),
+    version: '6.12',
+    zoom: 1,
+    width: options.width,
+    height: options.height,
+    clip: 2,
+    objects: [WorkSpaceDrawData, ...svgData],
+    workSpace: {
+      fillType: 0,
+      left: 0,
+      top: 0,
+      angle: 0,
+      scaleX: 1,
+      scaleY: 1,
+    }
+  }
+  return emptyTemplate
+}
+
 const uploadHandle = async (option: any) => {
   const [ canvas ] = useCanvas()
   const filename = option.file.name
@@ -73,36 +100,10 @@ const uploadHandle = async (option: any) => {
   if (!fileAccept.value.split(',').includes(`.${fileSuffix}`)) return
   if (fileSuffix === 'svg') {
     const dataText = await getImageText(option.file)
-    const content = await loadSVGFromString(dataText)
-    console.log('content:', content.objects)
-    const options = content.options
-    // canvas.add(...content.objects as any)
-    // canvas.renderAll()
-    const svgData: any[] = []
-    content.objects.forEach(ele => svgData.push(ele.toObject(propertiesToInclude)))
-    WorkSpaceDrawData.width = options.width
-    WorkSpaceDrawData.height = options.height
-    const emptyTemplate: Template = {
-      id: nanoid(10),
-      version: '6.12',
-      zoom: 1,
-      width: options.width,
-      height: options.height,
-      clip: 2,
-      objects: [WorkSpaceDrawData, ...svgData],
-      workSpace: {
-        fillType: 0,
-        left: 0,
-        top: 0,
-        angle: 0,
-        scaleX: 1,
-        scaleY: 1,
-      }
-    }
+    const emptyTemplate = await generateSVGTemplate(dataText)
     await templatesStore.addTemplate(emptyTemplate)
-    await templatesStore.renderTemplate()
-    // canvas.add(...content.objects as any)
-    // canvas.renderAll()
+    // await templatesStore.renderTemplate()
+    setCanvasTransform()
     emit('close')
   }
   if (fileSuffix === 'json') {
@@ -127,6 +128,20 @@ const uploadHandle = async (option: any) => {
   if (res && res.data.code === 200) {
     const template = res.data.data
     if (!template) return
+    if (['pdf'].includes(fileSuffix)) {
+      const parseTemplate: Template[] = []
+      const pdfTemplate = template as any[]
+      for (let i = 0; i < pdfTemplate.length; i++) {
+        const dataText = pdfTemplate[i]
+        const emptyTemplate = await generateSVGTemplate(dataText)
+        parseTemplate.push(emptyTemplate)
+      }
+      
+      await templatesStore.addTemplate(parseTemplate)
+      setCanvasTransform()
+      emit('close')
+      return
+    }
     await templatesStore.addTemplate(template)
     setCanvasTransform()
     emit('close')
