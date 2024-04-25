@@ -6,6 +6,7 @@
 </template>
 
 <script lang="ts" setup>
+import { isMobile } from '@/utils/common'
 import Editor from '@/views/Editor/pc.vue'
 import Mobile from '@/views/Editor/mobile.vue'
 
