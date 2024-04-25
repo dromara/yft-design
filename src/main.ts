@@ -2,6 +2,7 @@ import { createApp } from "vue"
 import { createPinia } from "pinia"
 import App from "./App.vue"
 import { setupI18n } from '@/plugins/i18n'
+import 'element-plus/dist/index.css'
 
 import "@/extension/index"
 
