@@ -8,8 +8,7 @@
 -->
 <template>
   <el-config-provider :locale="elLocale.el">
-    <Editor v-if="!isMobile()"/>
-    <Mobile v-else />
+    <router-view />
   </el-config-provider>
 </template>
 
@@ -20,8 +19,6 @@ import { useMainStore, useSnapshotStore } from '@/store'
 import { storeToRefs } from 'pinia'
 import { isMobile } from '@/utils/common'
 import { LocalStorageDiscardedKey } from '@/configs/canvas'
-import Editor from '@/views/Editor/index.vue'
-import Mobile from './views/Editor/mobile.vue'
 import useI18n from '@/hooks/useI18n'
 
 const { messages }= useI18n()

@@ -1,6 +1,7 @@
 import { createApp } from "vue"
 import { createPinia } from "pinia"
 import App from "./App.vue"
+import router from './router'; 
 import { setupI18n } from '@/plugins/i18n'
 import 'element-plus/dist/index.css'
 
@@ -24,6 +25,7 @@ useRegisterSW()
 async function start() {
     const app = createApp(App);
     await setupI18n(app)
+    app.use(router);
     app.use(createPinia());
     app.use(Icon);
     app.use(SvgIcon);
