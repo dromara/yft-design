@@ -151,6 +151,7 @@ export default {
     textValue: '双击修改文字',
     cancel: '取消',
     ok: '确定',
+    cleanUp: '清除',
     direction: '方向'
   },
   style: {
@@ -292,20 +293,20 @@ export default {
     collage: '拼贴',
     enableGradient: '启用渐变',
   },
-  "waterMark": {
-    "text": "水印",
-    "modalTitle": "配置水印",
-    "setting": {
-      "name": "水印名称",
-      "size": "水印大小",
-      "angle": "水印角度",
-      "position": {
-        "label": "水印位置",
-        "lt": "左上角",
-        "rt": "右上角",
-        "lb": "左下角",
-        "rb": "右下角",
-        "full": "平铺"
+  waterMark: {
+    text: "水印",
+    modalTitle: "配置水印",
+    setting: {
+      name: "水印名称",
+      size: "水印大小",
+      angle: "水印角度",
+      position: {
+        label: "水印位置",
+        lt: "左上角",
+        rt: "右上角",
+        lb: "左下角",
+        rb: "右下角",
+        full: "平铺"
       }
     }
   },

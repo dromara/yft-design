@@ -49,7 +49,8 @@
               </el-radio-group>
             </div>
           </div>
-          <el-button type="primary" size="mini" @click="onModalOk">{{ $t('default.ok') }}</el-button>
+          <el-button size="mini" @click="removeWaterMark">{{ $t('default.cleanUp')}}{{$t('waterMark.text') }}</el-button>
+          <el-button type="primary" size="mini" @click="addWaterMark">{{ $t('default.ok') }}</el-button>
         </div>
       </el-collapse-item>
 </el-collapse>
@@ -66,6 +67,7 @@ import { WorkSpaceThumbType, WorkSpaceDrawType } from "@/configs/canvas"
 import { ElementNames } from "@/types/elements";
 import { Image } from 'fabric'
 import { nanoid } from "nanoid";
+import { ElMessage } from 'element-plus'
 
 
 const activeNames = ref(['TextWatermark'])
@@ -191,14 +193,14 @@ const drawWaterMark: Record<string, any> = {
   },
 };
 
-const onModalOk = async () => {
-  // if (!waterMarkState.text) return Message.warning('水印名字不能为空');
-  if (!waterMarkState.text) return
+// 添加水印
+const addWaterMark = async () => {
+  if (!waterMarkState.text) return ElMessage({
+    type: 'warning',
+    message: '水印名称不能为空'
+  })
   const [ canvas ] = useCanvas()
   const workspace = canvas.getObjects().find((item: any) => item.id === WorkSpaceDrawType);
-  console.log('workspace', workspace);
-  console.log('canvas', canvas);
-  
   const { width, height, left, top } = workspace;
   drawWaterMark[waterMarkState.position](width, height, async (imgString: string) => {
     canvas.overlayImage = await Image.fromURL(imgString, {
@@ -207,17 +209,17 @@ const onModalOk = async () => {
       left: left,
       top: top,
       angle: waterMarkState.isRotate === 1 ? 30 : 0,
-      hasControls: true,
-      hasBorders: true,
-      opacity: 1,
-      originX: "left",
-      originY: "top",
-      name: ElementNames.IMAGE,
-      crossOrigin: "anonymous",
     }); // 清空覆盖层
     canvas.renderAll()
   });
 };
+
+// 清除水印
+const removeWaterMark = () => {
+  const [ canvas ] = useCanvas()
+  canvas.overlayImage = null;
+  canvas.renderAll()
+}
 
 const changeFontFamily = (fontName: string) => {
   if (!fontName) return;

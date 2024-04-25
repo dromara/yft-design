@@ -148,6 +148,7 @@ export default {
     textValue: 'Double Click Edit Text',
     cancel: 'Cancel',
     ok: 'OK',
+    cleanUp: 'Clean Up',
     direction: 'Direction'
   },
   style: {
@@ -289,20 +290,20 @@ export default {
     collage: 'Collage',
     enableGradient: 'Gradient',
   },
-  "waterMark": {
-    "text": "WaterMark",
-    "modalTitle": "WaterMark Setting",
-    "setting": {
-      "name": "Mark Name",
-      "size": "MarK Size",
-      "angle": "Mark Angle",
-      "position": {
-        "label": "Mark Position",
-        "lt": "Left Top",
-        "rt": "Right Top",
-        "lb": "Left Bottom",
-        "rb": "Right Bottom",
-        "full": "Full"
+  waterMark: {
+    text: "WaterMark",
+    modalTitle: "WaterMark Setting",
+    setting: {
+      name: "Mark Name",
+      size: "MarK Size",
+      angle: "Mark Angle",
+      position: {
+        label: "Mark Position",
+        lt: "Left Top",
+        rt: "Right Top",
+        lb: "Left Bottom",
+        rb: "Right Bottom",
+        full: "Full"
       }
     }
   },
