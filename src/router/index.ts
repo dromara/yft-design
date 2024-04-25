@@ -5,13 +5,13 @@ import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
 export const constantRoutes: RouteRecordRaw[] = [
   {
     path: "/home",
-    component: () => import("@/views/HomeBak/index.vue"),
+    component: () => import("@/views/Home/index.vue"),
     meta: { hidden: true },
   },
   {
     path: "/",
     name: "/",
-    component: () => import("@/views/Editor/pc.vue"),
+    component: () => import("@/views/Editor/computer.vue"),
   },
   {
     path: "/401",
