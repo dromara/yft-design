@@ -1,4 +1,4 @@
-import type { FabricObject } from 'fabric';
+import type { Object as FabricObject } from 'fabric';
 
 export type SVGParsingOutput = {
   objects: (FabricObject | null)[];

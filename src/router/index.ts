@@ -3,37 +3,24 @@ import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
 
 // 静态路由
 export const constantRoutes: RouteRecordRaw[] = [
-  // {
-  //   path: "/redirect",
-  //   meta: { hidden: true },
-  //   children: [
-  //     {
-  //       path: "/redirect/:path(.*)",
-  //       component: () => import("@/views/redirect/index.vue"),
-  //     },
-  //   ],
-  // },
-
   {
     path: "/home",
-    component: () => import("@/views/home/index.vue"),
+    component: () => import("@/views/HomeBak/index.vue"),
     meta: { hidden: true },
   },
-
   {
     path: "/",
     name: "/",
-    // component: Layout,
     component: () => import("@/views/Editor/pc.vue"),
   },
   {
     path: "/401",
-    component: () => import("@/views/error-page/401.vue"),
+    component: () => import("@/views/Error/401.vue"),
     meta: { hidden: true },
   },
   {
     path: "/404",
-    component: () => import("@/views/error-page/404.vue"),
+    component: () => import("@/views/Error/404.vue"),
     meta: { hidden: true },
   },
 ];

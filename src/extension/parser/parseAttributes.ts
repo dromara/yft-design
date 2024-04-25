@@ -26,6 +26,7 @@ export function parseAttributes(
   }
 
   let parentAttributes: Record<string, string> = {},
+    tspanAttributes: Record<string, string> = {},
     fontSize: number,
     parentFontSize = DEFAULT_SVG_FONT_SIZE;
 
@@ -39,9 +40,8 @@ export function parseAttributes(
 
   if (element.tagName.toLowerCase().replace('svg:', '') === 'text' && element.childNodes) {
     element.childNodes.forEach(sonElement => {
-
+      parentAttributes = parseAttributes(sonElement as any, attributes, cssRules);
     })
-    // console.log('ele:', element)
   }
 
   const ownAttributes: Record<string, string> = {
@@ -57,6 +57,10 @@ export function parseAttributes(
     ...getGlobalStylesForElement(element, cssRules),
     ...parseStyleAttribute(element),
   };
+
+  if (element.tagName.toLowerCase().replace('svg:', '') === 'text') {
+    console.log('element:', element, 'parentAttributes:', parentAttributes, 'ownAttributes:', ownAttributes)
+  }
 
   if (ownAttributes[mask]) {
     element.setAttribute(mask, ownAttributes[mask]);
@@ -93,4 +97,31 @@ export function parseAttributes(
   return svgValidParentsRegEx.test(element.nodeName)
     ? mergedAttrs
     : setStrokeFillOpacity(mergedAttrs);
+}
+
+
+const parseTspanAttributes = (element: HTMLElement | null, attributes: string[], cssRules?: CSSRules) => {
+  if (!element) return {}
+  const ownAttributes: Record<string, string> = {
+    ...attributes.reduce<Record<string, string>>((memo, attr) => {
+      const value = element.getAttribute(attr);
+      if (value) {
+        memo[attr] = value;
+      }
+      return memo;
+    }, {}),
+    // add values parsed from style, which take precedence over attributes
+    // (see: http://www.w3.org/TR/SVG/styling.html#UsingPresentationAttributes)
+    ...getGlobalStylesForElement(element, cssRules),
+    ...parseStyleAttribute(element),
+  };
+  if (ownAttributes['x']) {
+    ownAttributes['dx'] = ownAttributes['x']
+    delete ownAttributes['x']
+  }
+  if (ownAttributes['y']) {
+    ownAttributes['dy'] = ownAttributes['y']
+    delete ownAttributes['y']
+  }
+  return ownAttributes
 }
