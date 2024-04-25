@@ -11,13 +11,15 @@ import type { CSSRules, TSvgReviverCallback } from './typedefs';
 import type { ParsedViewboxTransform } from './applyViewboxTransform';
 import type { SVGOptions, Object as FabricObject } from 'fabric';
 import type { LoadImageOptions } from '../util/misc/objectEnlive';
-import { Gradient, Group, Image, classRegistry, Point } from 'fabric';
-import { Image as CropImage } from '../object/Image';
+import { Gradient, Group, classRegistry, Point } from 'fabric';
+import { Image } from '../object/Image';
+import { IText } from '../object/IText';
 import { nanoid } from 'nanoid';
 
 const findTag = (el: Element) => {
   const tag = el.tagName.toLowerCase().replace('svg:', '')
-  if (tag === 'image') return CropImage
+  if (tag === 'image') return Image
+  if (tag === 'text') return IText
   return classRegistry.getSVGClass(el.tagName.toLowerCase().replace('svg:', ''));
 }
 

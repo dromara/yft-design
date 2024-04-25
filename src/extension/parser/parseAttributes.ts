@@ -37,6 +37,13 @@ export function parseAttributes(
     }
   }
 
+  if (element.tagName.toLowerCase().replace('svg:', '') === 'text' && element.childNodes) {
+    element.childNodes.forEach(sonElement => {
+
+    })
+    // console.log('ele:', element)
+  }
+
   const ownAttributes: Record<string, string> = {
     ...attributes.reduce<Record<string, string>>((memo, attr) => {
       const value = element.getAttribute(attr);
