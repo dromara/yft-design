@@ -384,7 +384,7 @@ const changeAllBackgroud = () => {
     )[0];
     item.objects = item.objects.map((ele) =>
       ele.id === WorkSpaceDrawType ? currentWorkSpace : ele
-    );
+    ) as any;
   });
 };
 

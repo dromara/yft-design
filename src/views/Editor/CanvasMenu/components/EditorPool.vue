@@ -126,7 +126,8 @@ import { PathPoolItem } from '@/types/elements'
 import { QRCodeType, Template } from "@/types/canvas";
 import { getImageDataURL, getImageText } from "@/utils/image";
 import { LinePoolItems, LinePoolItem } from "@/configs/lines";
-import { Object as FabricObject, loadSVGFromString } from 'fabric'
+import { Object as FabricObject } from 'fabric'
+import { loadSVGFromString } from '@/extension/parser/loadSVGFromString'
 import { uploadFile } from '@/api/file'
 import useCanvasScale from '@/hooks/useCanvasScale'
 import useHandleCreate from '@/hooks/useHandleCreate'

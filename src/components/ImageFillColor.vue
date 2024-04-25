@@ -48,7 +48,6 @@ import { getImageDataURL, getImageText } from '@/utils/image'
 import { ElMessage, genFileId, UploadInstance, UploadProps, UploadRawFile } from "element-plus"
 import { uploadFile } from '@/api/file'
 import { useTemplatesStore } from '@/store'
-import { loadSVGFromString } from 'fabric'
 import useCanvasScale from '@/hooks/useCanvasScale'
 import useHandleCreate from '@/hooks/useHandleCreate'
 import useHandleTemplate from '@/hooks/useHandleTemplate'

@@ -23,9 +23,12 @@ import { getImageDataURL, getImageText } from '@/utils/image'
 import { ElMessage, genFileId, UploadInstance, UploadProps, UploadRawFile } from "element-plus"
 import { uploadFile } from '@/api/file'
 import { useTemplatesStore } from '@/store'
-import { loadSVGFromString } from 'fabric'
+import { loadSVGFromString } from '@/extension/parser/loadSVGFromString'
 import { ElementNames } from '@/types/elements'
+import { WorkSpaceDrawData, propertiesToInclude } from '@/configs/canvas'
 import { Image, Object as FabricObject } from 'fabric'
+import { Template } from "@/types/canvas"
+import { nanoid } from 'nanoid'
 import useCanvasScale from '@/hooks/useCanvasScale'
 import useHandleCreate from '@/hooks/useHandleCreate'
 import useHandleTemplate from '@/hooks/useHandleTemplate'
@@ -72,13 +75,34 @@ const uploadHandle = async (option: any) => {
     const dataText = await getImageText(option.file)
     const content = await loadSVGFromString(dataText)
     console.log('content:', content.objects)
-    canvas.add(...content.objects as any)
-    canvas.renderAll()
-    // if (content.objects) {
-    //   content.objects.filter(item => item instanceof Image && (item as Image).mask).forEach(object => {
-    //     setImageMask(object as any)
-    //   })
-    // }
+    const options = content.options
+    // canvas.add(...content.objects as any)
+    // canvas.renderAll()
+    const svgData: any[] = []
+    content.objects.forEach(ele => svgData.push(ele.toObject(propertiesToInclude)))
+    WorkSpaceDrawData.width = options.width
+    WorkSpaceDrawData.height = options.height
+    const emptyTemplate: Template = {
+      id: nanoid(10),
+      version: '6.12',
+      zoom: 1,
+      width: options.width,
+      height: options.height,
+      clip: 2,
+      objects: [WorkSpaceDrawData, ...svgData],
+      workSpace: {
+        fillType: 0,
+        left: 0,
+        top: 0,
+        angle: 0,
+        scaleX: 1,
+        scaleY: 1,
+      }
+    }
+    await templatesStore.addTemplate(emptyTemplate)
+    await templatesStore.renderTemplate()
+    // canvas.add(...content.objects as any)
+    // canvas.renderAll()
     emit('close')
   }
   if (fileSuffix === 'json') {

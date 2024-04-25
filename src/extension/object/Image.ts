@@ -1,11 +1,28 @@
 import { ClipPathType } from '@/configs/images'
 import { strokeImage } from '@/extension/effects/image.stroke'
 import { addCropImageInteractions, isolateObjectForEdit } from '@/extension/mixins/cropping.mixin'
-import { croppingControlSet, flipXCropControls, flipXYCropControls, flipYCropControls } from '@/extension/controls/cropping/cropping.controls'
-import { Image as OriginImage, Point, Object as FabricObject, util, classRegistry, parseAttributes,
-  TPointerEventInfo, TPointerEvent, ImageProps, TClassProperties, ImageSource, TOptions } from 'fabric'
+import { 
+  croppingControlSet, 
+  flipXCropControls, 
+  flipXYCropControls, 
+  flipYCropControls 
+} from '@/extension/controls/cropping/cropping.controls'
+import { 
+  Image as OriginImage, 
+  Point, 
+  Object as FabricObject, 
+  util, 
+  classRegistry,
+  TPointerEventInfo, 
+  TPointerEvent, 
+  ImageProps, 
+  TClassProperties, 
+  ImageSource, 
+  TOptions 
+} from 'fabric'
 import { EffectItem } from '@/types/common'
-import type { Abortable } from 'fabric/src/typedefs'
+import type { Abortable } from 'fabric'
+import { parseAttributes } from '../parser/parseAttributes'
 
 export class Image extends OriginImage {
   public isCropping?: false
@@ -257,9 +274,10 @@ export class Image extends OriginImage {
     options: Abortable = {},
     cssRules?: any
   ) {
+    const attributeNames = this.ATTRIBUTE_NAMES.concat(['mask'])
     const parsedAttributes = parseAttributes(
       element,
-      this.ATTRIBUTE_NAMES,
+      attributeNames,
       cssRules
     );
     return this.fromURL(
