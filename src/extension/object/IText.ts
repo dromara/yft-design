@@ -36,7 +36,6 @@ export class IText extends OriginIText {
       Text.ATTRIBUTE_NAMES,
       cssRules
     );
-    // console.log('parsedAttributes:', parsedAttributes)
     const {
       textAnchor = LEFT as typeof LEFT | typeof CENTER | typeof RIGHT,
       textDecoration = '',

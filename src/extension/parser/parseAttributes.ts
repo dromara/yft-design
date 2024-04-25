@@ -40,7 +40,7 @@ export function parseAttributes(
 
   if (element.tagName.toLowerCase().replace('svg:', '') === 'text' && element.childNodes) {
     element.childNodes.forEach(sonElement => {
-      parentAttributes = parseAttributes(sonElement as any, attributes, cssRules);
+      tspanAttributes = parseTspanAttributes(sonElement as any, attributes, cssRules);
     })
   }
 
@@ -57,10 +57,6 @@ export function parseAttributes(
     ...getGlobalStylesForElement(element, cssRules),
     ...parseStyleAttribute(element),
   };
-
-  if (element.tagName.toLowerCase().replace('svg:', '') === 'text') {
-    console.log('element:', element, 'parentAttributes:', parentAttributes, 'ownAttributes:', ownAttributes)
-  }
 
   if (ownAttributes[mask]) {
     element.setAttribute(mask, ownAttributes[mask]);
@@ -93,7 +89,8 @@ export function parseAttributes(
   if (normalizedStyle && normalizedStyle.font) {
     parseFontDeclaration(normalizedStyle.font as string, normalizedStyle);
   }
-  const mergedAttrs = { ...parentAttributes, ...normalizedStyle };
+  const mergedAttrs = { ...parentAttributes, ...normalizedStyle, ...tspanAttributes };
+
   return svgValidParentsRegEx.test(element.nodeName)
     ? mergedAttrs
     : setStrokeFillOpacity(mergedAttrs);
@@ -116,11 +113,13 @@ const parseTspanAttributes = (element: HTMLElement | null, attributes: string[],
     ...parseStyleAttribute(element),
   };
   if (ownAttributes['x']) {
-    ownAttributes['dx'] = ownAttributes['x']
+    const leftValue = normalizeValue('left', ownAttributes['x'], {}, undefined!);
+    ownAttributes['dx'] = leftValue as any
     delete ownAttributes['x']
   }
   if (ownAttributes['y']) {
-    ownAttributes['dy'] = ownAttributes['y']
+    const topValue = normalizeValue('top', ownAttributes['y'], {}, undefined!);
+    ownAttributes['dy'] = topValue as any
     delete ownAttributes['y']
   }
   return ownAttributes
