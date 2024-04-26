@@ -295,7 +295,7 @@ export default {
     modalTitle: "WaterMark Setting",
     setting: {
       name: "Mark Name",
-      size: "MarK Size",
+      size: "Mark Size",
       angle: "Mark Angle",
       position: {
         label: "Mark Position",

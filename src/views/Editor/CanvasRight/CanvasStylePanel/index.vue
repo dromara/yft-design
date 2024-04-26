@@ -154,15 +154,15 @@
       <b>{{ t("style.canvasFill") }}</b>
     </div>
     <div class="row">
-      <el-button class="full-row" @click="changeAllBackgroud">{{
-        t("style.applyCanvasToAll")
-      }}</el-button>
+      <el-button class="full-row" @click="changeAllBackgroud">{{ t("style.applyCanvasToAll") }}</el-button>
     </div>
     <Backgrounds />
 
-    <!-- <el-divider /> -->
+    <el-divider />
 
     <Watermark />
+
+    <el-divider />
 
     <div class="title">
       <b>{{ t("style.canvasMask") }}</b>
@@ -170,18 +170,10 @@
     <el-row>
       <el-col :span="7" class="slider-name">{{ t("style.opacity") }}：</el-col>
       <el-col :span="13">
-        <el-slider
-          :min="0.1"
-          :max="1"
-          :step="0.01"
-          v-model="opacity"
-          @change="changeMaskOpacity"
-        ></el-slider>
+        <el-slider :min="0.1" :max="1" :step="0.01" v-model="opacity" @change="changeMaskOpacity"></el-slider>
       </el-col>
       <el-col :span="4" class="slider-num">{{ opacity }}</el-col>
     </el-row>
-
-    <!-- <GridFill v-model:visible="gridColorDialog" @close="hideGridColorSelf" @save="saveGridColorSelf"></GridFill> -->
   </div>
 </template>
 

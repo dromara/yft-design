@@ -1,59 +1,64 @@
 <template>
-<el-collapse v-model="activeNames" @change="handleChange">
-      <el-collapse-item title="文字水印" name="TextWatermark">
-        <div>
-          <div class="setting-item">
-            <span class="mr-10px">{{ $t('waterMark.setting.name') }}</span>
-            <el-input
-              class="w-320"
-              v-model="waterMarkState.text"
-              maxlength="15"
-              show-word-limit
-            />
-          </div>
-          <!-- <div class="setting-item font-selector">
-            <span class="mr-10px">选择字体</span>
-            <Select class="w-320" v-model="waterMarkState.fontFamily" @on-change="changeFontFamily">
-              <Option v-for="item in fontsList" :value="item.name" :key="`font-${item.name}`">
-                <div class="font-item" v-if="!item.preview">{{ item.name }}</div>
-                <div class="font-item" v-else :style="`background-image:url('${item.preview}');`">
-                  {{ !item.preview ? item : '' }}
-                  <span style="display: none">{{ item.name }}</span>
-                </div>
-              </Option>
-            </Select>
-          </div> -->
-          <div class="setting-item">
-            <span class="mr-10px">{{ $t('waterMark.setting.size') }}</span>
-
-            <el-slider class="w-320" v-model="waterMarkState.size" :min="18" :max="48"></el-slider>
-          </div>
-          <div class="setting-item">
-            <span class="mr-10px">{{ $t('waterMark.setting.position.label') }}</span>
-
-            <el-radio-group v-model="waterMarkState.position">
-              <el-radio label="lt">{{ $t('waterMark.setting.position.lt') }}</el-radio>
-              <el-radio label="rt">{{ $t('waterMark.setting.position.rt') }}</el-radio>
-              <el-radio label="lb">{{ $t('waterMark.setting.position.lb') }}</el-radio>
-              <el-radio label="rb">{{ $t('waterMark.setting.position.rb') }}</el-radio>
-              <el-radio label="full">{{ $t('waterMark.setting.position.full') }}</el-radio>
-            </el-radio-group>
-          </div>
-          <div class="setting-item" v-show="waterMarkState.position === 'full'">
-            <span class="mr-10px">{{ $t('waterMark.setting.angle') }}</span>
-
-            <div>
-              <el-radio-group v-model="waterMarkState.isRotate">
-                <el-radio :label="0">横向</el-radio>
-                <el-radio :label="1">倾斜</el-radio>
-              </el-radio-group>
+  <el-row>
+    <div>
+      <div class="mt-10px">
+        <span class="mr-10px">{{ $t('waterMark.setting.name') }}</span>
+        <el-input class="w-320" v-model="waterMarkState.text" maxlength="15" show-word-limit/>
+      </div>
+      <!-- <div class="setting-item font-selector">
+        <span class="mr-10px">选择字体</span>
+        <Select class="w-320" v-model="waterMarkState.fontFamily" @on-change="changeFontFamily">
+          <Option v-for="item in fontsList" :value="item.name" :key="`font-${item.name}`">
+            <div class="font-item" v-if="!item.preview">{{ item.name }}</div>
+            <div class="font-item" v-else :style="`background-image:url('${item.preview}');`">
+              {{ !item.preview ? item : '' }}
+              <span style="display: none">{{ item.name }}</span>
             </div>
-          </div>
-          <el-button size="mini" @click="removeWaterMark">{{ $t('default.cleanUp')}}{{$t('waterMark.text') }}</el-button>
-          <el-button type="primary" size="mini" @click="addWaterMark">{{ $t('default.ok') }}</el-button>
+          </Option>
+        </Select>
+      </div> -->
+      <div class="mt-10px">
+        <span class="mr-10px">{{ $t('waterMark.setting.size') }}</span>
+        <el-slider class="w-320" v-model="waterMarkState.size" :min="18" :max="48"></el-slider>
+      </div>
+      <div class="setting-item">
+        <span class="mr-10px">{{ $t('waterMark.setting.position.label') }}</span>
+        <el-radio-group v-model="waterMarkState.position">
+          <el-radio-button value="lt">
+            <IconLeftSmallUp />
+            <!-- {{ $t('waterMark.setting.position.lt') }} -->
+          </el-radio-button>
+          <el-radio-button value="rt">
+            <IconRightSmallUp />
+            <!-- {{ $t('waterMark.setting.position.rt') }} -->
+          </el-radio-button>
+          <el-radio-button value="lb">
+            <IconLeftSmallDown />
+            <!-- {{ $t('waterMark.setting.position.lb') }} -->
+          </el-radio-button>
+          <el-radio-button value="rb">
+            <IconRightSmallDown />
+            <!-- {{ $t('waterMark.setting.position.rb') }} -->
+          </el-radio-button>
+          <el-radio-button value="full">
+            <IconFullScreen />
+            <!-- {{ $t('waterMark.setting.position.full') }} -->
+          </el-radio-button>
+        </el-radio-group>
+      </div>
+      <div class="setting-item" v-show="waterMarkState.position === 'full'">
+        <span class="mr-10px">{{ $t('waterMark.setting.angle') }}</span>
+        <div>
+          <el-radio-group v-model="waterMarkState.isRotate">
+            <el-radio :label="0">横向</el-radio>
+            <el-radio :label="1">倾斜</el-radio>
+          </el-radio-group>
         </div>
-      </el-collapse-item>
-</el-collapse>
+      </div>
+      <el-button size="mini" @click="removeWaterMark">{{ $t('default.cleanUp')}}{{$t('waterMark.text') }}</el-button>
+      <el-button type="primary" size="mini" @click="addWaterMark">{{ $t('default.ok') }}</el-button>
+    </div>
+  </el-row>
 </template>
 
 <script lang="ts" setup>
@@ -85,16 +90,6 @@ const waterMarkState = reactive({
   color: '#ccc', // 可考虑自定义颜色
   position: 'lt', // lt 左上 lr 右上 lb 左下  rb 右下 full 平铺
 });
-
-// const showWaterMadal = ref(false);
-// const onMadalCancel = () => {
-//   waterMarkState.text = '';
-//   waterMarkState.size = 24;
-//   waterMarkState.fontFamily = 'serif';
-//   waterMarkState.color = '#ccc';
-//   waterMarkState.position = 'lt';
-//   waterMarkState.isRotate = 0;
-// };
 
 const createCanvas = (width: number, height: number) => {
   const waterCanvas = document.createElement('canvas');
@@ -203,7 +198,7 @@ const addWaterMark = async () => {
   const workspace = canvas.getObjects().find((item: any) => item.id === WorkSpaceDrawType);
   const { width, height, left, top } = workspace;
   drawWaterMark[waterMarkState.position](width, height, async (imgString: string) => {
-    canvas.overlayImage = await Image.fromURL(imgString, {
+    canvas.overlayImage = await Image.fromURL(imgString, {}, {
       id: nanoid(10),
       crossOrigin: 'anonymous',
       left: left,
@@ -217,18 +212,9 @@ const addWaterMark = async () => {
 // 清除水印
 const removeWaterMark = () => {
   const [ canvas ] = useCanvas()
-  canvas.overlayImage = null;
+  canvas.set({overlayImage: null})
   canvas.renderAll()
 }
-
-const changeFontFamily = (fontName: string) => {
-  if (!fontName) return;
-  // loadFont(fontName);
-};
-
-// const addWaterMark = debounce(function () {
-//   showWaterMadal.value = true;
-// }, 250);
 
 
 </script>

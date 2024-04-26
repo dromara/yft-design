@@ -168,7 +168,11 @@ import {
   H3,
   TransferData,
   HamburgerButton,
-  ContrastViewCircle
+  ContrastViewCircle,
+  LeftSmallUp,
+  LeftSmallDown,
+  RightSmallUp,
+  RightSmallDown
 } from '@icon-park/vue-next'
 
 export const icons = {
@@ -338,6 +342,10 @@ export const icons = {
   IconTransferData: TransferData,
   IconHamburgerButton: HamburgerButton,
   IconContrastViewCircle: ContrastViewCircle,
+  IconLeftSmallUp: LeftSmallUp,
+  IconLeftSmallDown: LeftSmallDown,
+  IconRightSmallUp: RightSmallUp,
+  IconRightSmallDown: RightSmallDown,
 }
 
 export default {
