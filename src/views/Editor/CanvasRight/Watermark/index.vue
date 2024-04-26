@@ -50,14 +50,14 @@
         <span class="mr-10px">{{ $t('waterMark.setting.angle') }}</span>
         <div>
           <el-radio-group v-model="waterMarkState.isRotate">
-            <el-radio :label="0">横向</el-radio>
-            <el-radio :label="1">倾斜</el-radio>
+            <el-radio :value="0">横向</el-radio>
+            <el-radio :value="1">倾斜</el-radio>
           </el-radio-group>
         </div>
       </div>
       <div class="mt-[10px]">
-        <el-button size="mini" @click="removeWaterMark">{{ $t('default.cleanUp')}}{{$t('waterMark.text') }}</el-button>
-        <el-button type="primary" size="mini" @click="addWaterMark">{{ $t('default.ok') }}</el-button>
+        <el-button @click="removeWaterMark">{{ $t('default.cleanUp')}}{{$t('waterMark.text') }}</el-button>
+        <el-button @click="addWaterMark" type="primary" >{{ $t('default.ok') }}</el-button>
       </div>
     </div>
   </el-row>
