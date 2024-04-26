@@ -1,7 +1,7 @@
 <template>
   <el-row>
     <div>
-      <div class="mt-10px">
+      <div>
         <span class="mr-10px">{{ $t('waterMark.setting.name') }}</span>
         <el-input class="w-320" v-model="waterMarkState.text" maxlength="15" show-word-limit/>
       </div>
@@ -17,11 +17,11 @@
           </Option>
         </Select>
       </div> -->
-      <div class="mt-10px">
+      <div class="mt-[10px]">
         <span class="mr-10px">{{ $t('waterMark.setting.size') }}</span>
         <el-slider class="w-320" v-model="waterMarkState.size" :min="18" :max="48"></el-slider>
       </div>
-      <div class="setting-item">
+      <div class="mt-[10px]">
         <span class="mr-10px">{{ $t('waterMark.setting.position.label') }}</span>
         <el-radio-group v-model="waterMarkState.position">
           <el-radio-button value="lt">
@@ -46,7 +46,7 @@
           </el-radio-button>
         </el-radio-group>
       </div>
-      <div class="setting-item" v-show="waterMarkState.position === 'full'">
+      <div class="mt-[10px]" v-show="waterMarkState.position === 'full'">
         <span class="mr-10px">{{ $t('waterMark.setting.angle') }}</span>
         <div>
           <el-radio-group v-model="waterMarkState.isRotate">
@@ -55,8 +55,10 @@
           </el-radio-group>
         </div>
       </div>
-      <el-button size="mini" @click="removeWaterMark">{{ $t('default.cleanUp')}}{{$t('waterMark.text') }}</el-button>
-      <el-button type="primary" size="mini" @click="addWaterMark">{{ $t('default.ok') }}</el-button>
+      <div class="mt-[10px]">
+        <el-button size="mini" @click="removeWaterMark">{{ $t('default.cleanUp')}}{{$t('waterMark.text') }}</el-button>
+        <el-button type="primary" size="mini" @click="addWaterMark">{{ $t('default.ok') }}</el-button>
+      </div>
     </div>
   </el-row>
 </template>
