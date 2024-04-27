@@ -33,7 +33,7 @@
               <IconPreviewOpen v-if="item.visible"/>
               <IconPreviewClose v-else/>
             </el-col>
-            <el-col :span="6" class="handler-item" @click.stop="subEffect(item.key)">
+            <el-col :span="6" class="handler-item" @click.stop="subEffect(item.id)">
               <IconMinus />
             </el-col>
           </el-row>
@@ -62,8 +62,10 @@
               <el-input-number v-model="item.strokeWidth" @change="updateStrokeWidth" controls-position="right" />
             </el-col>
             <el-col :span="8">
-              <el-select>
-                <el-option></el-option>
+              <el-select v-model="item.strokeLineJoin" @change="updateElement">
+                <el-option value="bevel" :label="$t('style.bevel')"></el-option>
+                <el-option value="round" :label="$t('style.round')"></el-option>
+                <el-option value="miter" :label="$t('style.miter')"></el-option>
               </el-select>
             </el-col>
             <el-col :span="8">
@@ -71,7 +73,7 @@
                 <template #reference>
                   <ColorButton :color="item.stroke || '#fff'" />
                 </template>
-                <ColorPicker :modelValue="item.stroke" @update:modelValue="(color: string) => updateStroke(color, item.key)" />
+                <ColorPicker :modelValue="item.stroke" @update:modelValue="(color: string) => updateStroke(color, item.id)" />
               </el-popover>
             </el-col>
           </el-row>
@@ -125,7 +127,7 @@
               <IconPreviewOpen v-if="item.visible"/>
               <IconPreviewClose v-else/>
             </el-col>
-            <el-col :span="6" class="handler-item" @click.stop="subEffect(item.key)">
+            <el-col :span="6" class="handler-item" @click.stop="subEffect(item.id)">
               <IconMinus />
             </el-col>
           </el-row>
@@ -171,12 +173,13 @@ const handleReturn = () => {
 const addStroke = () => {
   const strokeItem = {
     type: 0,
-    key: nanoid(8),
+    id: nanoid(8),
     isFill: false,
     isStroke: false,
     isSkew: false,
     stroke: '#fff',
     strokeWidth: 1,
+    strokeLineJoin: 'round'
   }
   if (!handleElement.value.effects) {
     handleElement.value.effects = [strokeItem]
@@ -187,18 +190,20 @@ const addStroke = () => {
 }
 
 const subEffect = (key: string) => {
-  handleElement.value.effects = handleElement.value.effects?.filter(item => item.key !== key)
+  handleElement.value.effects = handleElement.value.effects?.filter(item => item.id !== key)
+  updateElement()
 }
 
 const addShadow = () => {
   const strokeItem = {
     type: 1,
-    key: nanoid(8),
+    id: nanoid(8),
     isFill: false,
     isStroke: false,
     isSkew: false,
     stroke: '#fff',
     strokeWidth: 1,
+    strokeLineJoin: 'round'
   }
   if (!handleElement.value.effects) {
     handleElement.value.effects = [strokeItem]
@@ -213,7 +218,7 @@ const updateFill = (color: string) => {
 }
 
 const updateStroke = (color: string, key: string) => {
-  handleElement.value.effects?.filter(item => item.key === key).map(ele => ele.stroke = color)
+  handleElement.value.effects?.filter(item => item.id === key).map(ele => ele.stroke = color)
   updateElement()
 }
 
@@ -222,9 +227,7 @@ const updateStrokeWidth = () => {
 }
 
 const updateElement = () => {
-  console.log('handleElement.value.effects:', handleElement.value.effects)
   if (!handleElement.value.effects) return
-  console.log('handleElement.value:', handleElement.value)
   handleElement.value.renderEffects()
   // const [ canvas ] = useCanvas()
   // canvas.renderAll()
@@ -310,8 +313,14 @@ const updateElement = () => {
   padding: 1px 5px;
   margin-right: 1px;
 }
+:deep(.effect-style .el-input .el-input__inner) {
+  text-align: left;
+}
 :deep(.effect-style .el-select .el-select__wrapper) {
   padding: 0 5px;
+}
+:deep(.effect-style .el-select .el-select__placeholder) {
+  width: 200%;
 }
 :deep(.style-row .el-input-number) {
   width: 60px;

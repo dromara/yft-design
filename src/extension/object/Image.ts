@@ -213,8 +213,7 @@ export class Image extends OriginImage {
 
   async renderEffects(type?: string) {
     if (this.effects) {
-      for (let i = this.effects.length - 1; i >= 0; i--) {
-      // for (let i = 0; i < this.effects.length; i++) {
+      for (let i = 0; i < this.effects.length; i++) {
         const item = this.effects[i]
         await strokeImage(item.stroke, item.strokeWidth, this, type)
       }

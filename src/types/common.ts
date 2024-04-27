@@ -11,7 +11,7 @@ export interface PathPoint {
 }
 
 export interface EffectItem {
-  key: string
+  id: string
   type: number
   isFill: boolean
   isStroke: boolean
@@ -19,4 +19,5 @@ export interface EffectItem {
   visible?: boolean
   stroke: string
   strokeWidth: number
+  strokeLineJoin: string
 }
