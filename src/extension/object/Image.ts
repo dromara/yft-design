@@ -213,9 +213,10 @@ export class Image extends OriginImage {
 
   async renderEffects(type?: string) {
     if (this.effects) {
+      if (this.originSrc) await this.setSrc(this.originSrc)
       for (let i = 0; i < this.effects.length; i++) {
         const item = this.effects[i]
-        await strokeImage(item.stroke, item.strokeWidth, this, type)
+        await strokeImage(item.stroke, item.strokeWidth, item.strokeLineJoin, this, type)
       }
     }
   }

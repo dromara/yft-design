@@ -164,7 +164,7 @@ const { canvasObject, rightState } = storeToRefs(mainStore);
 const { currentTemplate } = storeToRefs(templatesStore);
 const { clip, safe, zoom, opacity } = storeToRefs(fabricStore);
 const { setCanvasSize, resetCanvas } = useCanvasScale();
-const handleElement = computed(() => canvasObject.value as Image);
+const handleElement = computed(() => canvasObject.value as Image | IText);
 
 const handleReturn = () => {
   rightState.value = RightStates.ELEMENT_STYLE
@@ -179,7 +179,7 @@ const addStroke = () => {
     isSkew: false,
     stroke: '#fff',
     strokeWidth: 1,
-    strokeLineJoin: 'round'
+    strokeLineJoin: 'round' as CanvasLineJoin
   }
   if (!handleElement.value.effects) {
     handleElement.value.effects = [strokeItem]
@@ -203,7 +203,7 @@ const addShadow = () => {
     isSkew: false,
     stroke: '#fff',
     strokeWidth: 1,
-    strokeLineJoin: 'round'
+    strokeLineJoin: 'round' as CanvasLineJoin
   }
   if (!handleElement.value.effects) {
     handleElement.value.effects = [strokeItem]

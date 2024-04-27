@@ -12,12 +12,18 @@ export class IText extends OriginIText {
     this.effects = options.effects
   }
 
+  renderEffects() {
+    this.canvas?.renderAll()
+  }
+
   _renderChar(method: "fillText" | "strokeText", ctx: CanvasRenderingContext2D, lineIndex: number, charIndex: number, _char: string, left: number, top: number): void {
     if (this.effects) {
-      for (let i = 0; i < this.effects.length; i++) {
+      // for (let i = 0; i < this.effects.length; i++) {
+      for (let i = this.effects.length - 1; i >= 0; i--) {
         const item = this.effects[i]
         ctx.save();
         ctx.strokeStyle = item.stroke;
+        ctx.lineJoin = item.strokeLineJoin;
         ctx.lineWidth = item.strokeWidth;
         ctx.strokeText(_char, left, top);
         ctx.restore()

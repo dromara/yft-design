@@ -19,5 +19,5 @@ export interface EffectItem {
   visible?: boolean
   stroke: string
   strokeWidth: number
-  strokeLineJoin: string
+  strokeLineJoin: "bevel" | "miter" | "round"
 }

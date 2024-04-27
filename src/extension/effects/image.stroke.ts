@@ -8,7 +8,7 @@
 import { Image as FabricImage, StaticCanvas } from 'fabric'
 
 // 恢复未处理
-export const strokeImage = async (stroke: string, strokeWidth: number, fabricImage: FabricImage, type = 'source-over') => {
+export const strokeImage = async (stroke: string, strokeWidth: number,  strokeLineJoin: CanvasLineJoin, fabricImage: FabricImage, type = 'source-over') => {
   
   const w =  fabricImage.width, h = fabricImage.height, src = fabricImage.getSrc()
   let canvas:  HTMLCanvasElement | null = document.createElement('canvas');
@@ -28,6 +28,7 @@ export const strokeImage = async (stroke: string, strokeWidth: number, fabricIma
   }
   ctx.globalCompositeOperation = "source-in";
   ctx.fillStyle = stroke;
+  ctx.lineJoin = strokeLineJoin;
   ctx.fillRect(0, 0, w + strokeWidth * 2, h + strokeWidth * 2);
   ctx.globalCompositeOperation = type as GlobalCompositeOperation
   ctx.drawImage(img, strokeWidth, strokeWidth, w, h);
