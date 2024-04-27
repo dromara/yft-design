@@ -1,10 +1,17 @@
 <template>
   <el-row>
     <div>
-      <div>
-        <span class="mr-10px">{{ $t('waterMark.setting.name') }}</span>
-        <el-input class="w-320" v-model="waterMarkState.text" maxlength="15" show-word-limit/>
+      <div class="title">
+        <b>{{ t("waterMark.text") }}</b>
       </div>
+      <el-row class="mt-[10px]">
+        <el-col :span="5" class="flex items-center">{{ t('waterMark.setting.name') }}</el-col>
+        <!-- <span class="mr-10px"></span> -->
+        <el-col :span="19">
+          <el-input class="w-320" v-model="waterMarkState.text" maxlength="15" show-word-limit type="textarea" autosize/>
+        </el-col>
+        
+      </el-row >
       <!-- <div class="setting-item font-selector">
         <span class="mr-10px">选择字体</span>
         <Select class="w-320" v-model="waterMarkState.fontFamily" @on-change="changeFontFamily">
@@ -17,37 +24,41 @@
           </Option>
         </Select>
       </div> -->
-      <div class="mt-[10px]">
-        <span class="mr-10px">{{ $t('waterMark.setting.size') }}</span>
-        <el-slider class="w-320" v-model="waterMarkState.size" :min="18" :max="48"></el-slider>
-      </div>
-      <div class="mt-[10px]">
-        <span class="mr-10px">{{ $t('waterMark.setting.position.label') }}</span>
-        <el-radio-group v-model="waterMarkState.position">
-          <el-radio-button value="lt">
-            <IconLeftSmallUp />
-            <!-- {{ $t('waterMark.setting.position.lt') }} -->
-          </el-radio-button>
-          <el-radio-button value="rt">
-            <IconRightSmallUp />
-            <!-- {{ $t('waterMark.setting.position.rt') }} -->
-          </el-radio-button>
-          <el-radio-button value="lb">
-            <IconLeftSmallDown />
-            <!-- {{ $t('waterMark.setting.position.lb') }} -->
-          </el-radio-button>
-          <el-radio-button value="rb">
-            <IconRightSmallDown />
-            <!-- {{ $t('waterMark.setting.position.rb') }} -->
-          </el-radio-button>
-          <el-radio-button value="full">
-            <IconFullScreen />
-            <!-- {{ $t('waterMark.setting.position.full') }} -->
-          </el-radio-button>
-        </el-radio-group>
-      </div>
+      <el-row class="mt-[10px]">
+        <el-col :span="5" class="flex items-center">{{ t('waterMark.setting.size') }}</el-col>
+        <el-col :span="19">
+          <el-slider class="w-11/12" v-model="waterMarkState.size" :min="18" :max="48"></el-slider>
+        </el-col>
+      </el-row>
+      <el-row class="mt-[10px]">
+        <el-col :span="5" class="flex items-center">{{ t('waterMark.setting.position.label') }}</el-col>
+        <el-col :span="19">
+          <el-radio-group v-model="waterMarkState.position" class="w-full">
+            <el-radio-button value="lt" class="w-1/5">
+              <IconLeftSmallUp />
+              <!-- {{ t('waterMark.setting.position.lt') }} -->
+            </el-radio-button>
+            <el-radio-button value="rt" class="w-1/5">
+              <IconRightSmallUp />
+              <!-- {{ t('waterMark.setting.position.rt') }} -->
+            </el-radio-button>
+            <el-radio-button value="lb" class="w-1/5">
+              <IconLeftSmallDown />
+              <!-- {{ t('waterMark.setting.position.lb') }} -->
+            </el-radio-button>
+            <el-radio-button value="rb" class="w-1/5">
+              <IconRightSmallDown />
+              <!-- {{ t('waterMark.setting.position.rb') }} -->
+            </el-radio-button>
+            <el-radio-button value="full" class="w-1/5">
+              <IconFullScreen />
+              <!-- {{ t('waterMark.setting.position.full') }} -->
+            </el-radio-button>
+          </el-radio-group>
+        </el-col>
+      </el-row>
       <div class="mt-[10px]" v-show="waterMarkState.position === 'full'">
-        <span class="mr-10px">{{ $t('waterMark.setting.angle') }}</span>
+        <span class="mr-10px">{{ t('waterMark.setting.angle') }}</span>
         <div>
           <el-radio-group v-model="waterMarkState.isRotate">
             <el-radio :value="0">横向</el-radio>
@@ -56,31 +67,29 @@
         </div>
       </div>
       <div class="mt-[10px]">
-        <el-button @click="removeWaterMark">{{ $t('default.cleanUp')}}{{$t('waterMark.text') }}</el-button>
-        <el-button @click="addWaterMark" type="primary" >{{ $t('default.ok') }}</el-button>
+        <el-button-group class="w-full">
+          <el-button @click="remWaterMark" class="w-1/2">{{ t('default.cleanUp')}}</el-button>
+          <el-button @click="addWaterMark" class="w-1/2">{{ t('default.ok') }}</el-button>
+        </el-button-group>
       </div>
     </div>
   </el-row>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
-
-import { debounce } from 'lodash-es';
-// import useSelect from '@/hooks/select';
-// import { useFont } from '@/hooks';
 import useCanvas from "@/views/Canvas/useCanvas";
+import useI18n from "@/hooks/useI18n";
+import { ref, reactive } from 'vue'
+import { debounce } from 'lodash-es';
 import { WorkSpaceThumbType, WorkSpaceDrawType } from "@/configs/canvas"
 import { ElementNames } from "@/types/elements";
 import { Image } from 'fabric'
 import { nanoid } from "nanoid";
 import { ElMessage } from 'element-plus'
 
-
+const { t } = useI18n();
 const activeNames = ref(['TextWatermark'])
-const handleChange = (val: string[]) => {
-  console.log(val)
-}
+
 
 // const { fontsList, loadFont } = useFont();
 // const { canvasEditor }: any = useSelect();
@@ -212,7 +221,7 @@ const addWaterMark = async () => {
 };
 
 // 清除水印
-const removeWaterMark = () => {
+const remWaterMark = () => {
   const [ canvas ] = useCanvas()
   canvas.set({overlayImage: null})
   canvas.renderAll()
@@ -223,4 +232,12 @@ const removeWaterMark = () => {
 
 <style lang="scss" scoped>
 
+</style>
+
+<style scoped>
+:deep(.w-full .el-radio-button__inner) {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
 </style>

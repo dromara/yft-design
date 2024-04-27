@@ -291,14 +291,14 @@ export default {
     enableGradient: 'Gradient',
   },
   waterMark: {
-    text: "WaterMark",
+    text: "Canvas Mark",
     modalTitle: "WaterMark Setting",
     setting: {
-      name: "Mark Name",
-      size: "Mark Size",
-      angle: "Mark Angle",
+      name: "Name",
+      size: "Size",
+      angle: "Angle",
       position: {
-        label: "Mark Position",
+        label: "Position",
         lt: "Left Top",
         rt: "Right Top",
         lb: "Left Bottom",
