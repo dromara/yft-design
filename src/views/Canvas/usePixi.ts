@@ -45,9 +45,9 @@ export const handleFilter = (worker: Worker) => {
     const objects = canvas.getObjects()
     const element = findElement(data.id, objects as CanvasElement[]) as Image
     if (element instanceof Image) {
-      // console.log('element:', element)
       element.originSrc = element.getSrc()
       await element.setSrc(data.res)
+      element.dirty = true
       canvas.renderAll()
       templatesStore.modifedElement()
     }
