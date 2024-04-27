@@ -35,7 +35,8 @@ export class Image extends OriginImage {
   constructor(element: ImageSource, options?: any) {
     super(element, { filters: [], ...options });
     this.effects = options?.effects
-    // this.init()
+    this.initEffects()
+    this.renderEffects()
     this.on('mousedblclick', this.doubleClickHandler.bind(this))
   }
 
@@ -102,8 +103,9 @@ export class Image extends OriginImage {
   }
 
   // 初始化
-  init () {
+  initEffects () {
     // 缓存原字段 用于恢复以及从原图绘制新图
+    if (!this.effects) return
     this.originWidth = this.width
     this.originHeight = this.height
     this.originSrc = this.getSrc()
@@ -212,6 +214,7 @@ export class Image extends OriginImage {
   async renderEffects(type?: string) {
     if (this.effects) {
       for (let i = this.effects.length - 1; i >= 0; i--) {
+      // for (let i = 0; i < this.effects.length; i++) {
         const item = this.effects[i]
         await strokeImage(item.stroke, item.strokeWidth, this, type)
       }
@@ -243,7 +246,7 @@ export class Image extends OriginImage {
   
   static async fromURL<T extends TOptions<ImageProps>>(url: string, { crossOrigin, signal }: any | undefined, imageOptions: T): Promise<Image> {
     // return util.loadImage(url, options).then((img) => new this(img, options));
-    return util.loadImage(url, { crossOrigin, signal }).then(
+    return util.loadImage(url, { crossOrigin, signal, ...imageOptions }).then(
       (img) => new this(img, imageOptions)
     );
   }
@@ -307,7 +310,7 @@ Object.assign(Image.prototype, {
   ...addCropImageInteractions()
 })
 
-classRegistry.setClass(Image, 'Image')
-classRegistry.setSVGClass(Image, 'Image')
+classRegistry.setClass(Image)
+classRegistry.setSVGClass(Image)
 
 

@@ -184,6 +184,7 @@ export declare module 'fabric' {
     lastEventTop: number
     lastEventLeft: number
     setupDragMatrix(): void
+    renderEffects(type?: string): void
     bindCropModeHandlers(): void
     _drawCroppingLines(ctx: CanvasRenderingContext2D): void
     _drawCroppingPath(ctx: CanvasRenderingContext2D): void

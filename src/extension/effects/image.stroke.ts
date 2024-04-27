@@ -9,17 +9,12 @@ import { Image as FabricImage, StaticCanvas } from 'fabric'
 
 // 恢复未处理
 export const strokeImage = async (stroke: string, strokeWidth: number, fabricImage: FabricImage, type = 'source-over') => {
-  // @ts-ignore
-  const w =  fabricImage.originWidth, h = fabricImage.originHeight, src = fabricImage?.originSrc || fabricImage.getSrc()
+  
+  const w =  fabricImage.width, h = fabricImage.height, src = fabricImage.getSrc()
   let canvas:  HTMLCanvasElement | null = document.createElement('canvas');
   const ctx = canvas!.getContext('2d')
   if (!ctx) return
-  // 描边等于0 说明关闭了开关或者不需要描边  直接从原图绘制
-  if(strokeWidth === 0) {
-    await fabricImage.setSrc(src)
-    fabricImage.canvas?.renderAll()
-    return
-  }
+  if(strokeWidth === 0) return
   ctx.save();
   ctx.clearRect(0, 0, canvas!.width, canvas!.height);
   ctx.restore();

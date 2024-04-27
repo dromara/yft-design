@@ -162,7 +162,7 @@ const { canvasObject, rightState } = storeToRefs(mainStore);
 const { currentTemplate } = storeToRefs(templatesStore);
 const { clip, safe, zoom, opacity } = storeToRefs(fabricStore);
 const { setCanvasSize, resetCanvas } = useCanvasScale();
-const handleElement = computed(() => canvasObject.value as FabricObject);
+const handleElement = computed(() => canvasObject.value as Image);
 
 const handleReturn = () => {
   rightState.value = RightStates.ELEMENT_STYLE
@@ -222,8 +222,12 @@ const updateStrokeWidth = () => {
 }
 
 const updateElement = () => {
-  const [ canvas ] = useCanvas()
-  canvas.renderAll()
+  console.log('handleElement.value.effects:', handleElement.value.effects)
+  if (!handleElement.value.effects) return
+  console.log('handleElement.value:', handleElement.value)
+  handleElement.value.renderEffects()
+  // const [ canvas ] = useCanvas()
+  // canvas.renderAll()
 }
 
 </script>

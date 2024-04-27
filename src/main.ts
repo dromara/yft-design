@@ -3,10 +3,9 @@ import { createPinia } from "pinia"
 import App from "./App.vue"
 import router from './router'; 
 import { setupI18n } from '@/plugins/i18n'
-import 'element-plus/dist/index.css'
 
 import "@/extension/index"
-
+import 'element-plus/dist/index.css'
 import "@icon-park/vue-next/styles/index.css"
 import "@/assets/style/global.scss"
 import "@/assets/style/font.scss"
