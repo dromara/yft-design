@@ -1,7 +1,7 @@
 <template>
   <div class="image-style-panel">
     <ElementPosition />
-    <el-divider />
+    <el-divider style="margin: 12px 0" />
     <div class="title">{{ $t("style.code") }}：</div>
     <el-select
       class="full-row mb-10"
@@ -74,11 +74,11 @@
         </div>
       </el-col>
     </el-row>
-    <el-divider />
+    <el-divider style="margin: 12px 0" />
     <ElementOutline />
-    <el-divider />
+    <el-divider style="margin: 12px 0" />
     <ElementShadow :hasShadow="hasShadow" />
-    <el-divider />
+    <el-divider style="margin: 12px 0" />
   </div>
 </template>
 

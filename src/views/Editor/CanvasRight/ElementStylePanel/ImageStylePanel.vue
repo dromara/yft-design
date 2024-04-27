@@ -1,7 +1,7 @@
 <template>
   <div class="image-style-panel">
     <ElementPosition />
-    <el-divider />
+    <el-divider style="margin: 12px 0" />
 
     <div
       class="origin-image"
@@ -52,19 +52,19 @@
     </el-row>
 
     <ElementBlend />
-    <el-divider />
+    <el-divider style="margin: 12px 0" />
     <ElementEffects />
-    <el-divider />
+    <el-divider style="margin: 12px 0" />
     <ElementMask />
-    <el-divider />
+    <el-divider style="margin: 12px 0" />
     <ElementFilter />
-    <el-divider />
+    <el-divider style="margin: 12px 0" />
     <ElementOutline />
-    <el-divider />
+    <el-divider style="margin: 12px 0" />
     <ElementShadow :hasShadow="hasShadow" />
-    <el-divider />
+    <el-divider style="margin: 12px 0" />
 
-    <el-divider />
+    <el-divider style="margin: 12px 0" />
 
     <el-row>
       <FileInput class="full-width-btn" @change="(files: FileList) => replaceImage(files)">

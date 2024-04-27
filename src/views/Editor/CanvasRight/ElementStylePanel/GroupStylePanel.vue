@@ -1,7 +1,7 @@
 <template>
   <div class="multi-style-panel">
     <ElementPosition/>
-    <el-divider />
+    <el-divider style="margin: 12px 0" />
 
     <div class="row">
       <div style="flex: 2;">填充颜色：</div>
@@ -13,7 +13,7 @@
       </el-popover>
     </div>
 
-    <el-divider />
+    <el-divider style="margin: 12px 0" />
 
     <div class="row">
       <div style="flex: 2;">边框样式：</div>
@@ -36,7 +36,7 @@
       <el-input-number style="flex: 3;" v-model="outlineWidth" @change="changeOutlineWidth"></el-input-number>
     </div>
 
-    <el-divider />
+    <el-divider style="margin: 12px 0" />
 
     <div v-if="hasTextbox && handleTextboxElement">
       <el-row>

@@ -1,17 +1,17 @@
 <template>
   <div class="shape-style-panel">
     <ElementPosition/>
-    <el-divider />
+    <el-divider style="margin: 12px 0" />
     <ElementFill />
-    <el-divider />
+    <el-divider style="margin: 12px 0" />
     <ElementFlip />
-    <!-- <el-divider />
+    <!-- <el-divider style="margin: 12px 0" />
     <ElementClip /> -->
-    <el-divider />
+    <el-divider style="margin: 12px 0" />
     <ElementOutline />
-    <el-divider />
+    <el-divider style="margin: 12px 0" />
     <ElementShadow :hasShadow="hasShadow" />
-    <el-divider />
+    <el-divider style="margin: 12px 0" />
     <ElementOpacity />
   </div>
 </template>

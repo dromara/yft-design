@@ -294,14 +294,14 @@ export default {
     enableGradient: '启用渐变',
   },
   waterMark: {
-    text: "水印",
+    text: "画布水印",
     modalTitle: "配置水印",
     setting: {
-      name: "水印名称",
-      size: "水印大小",
-      angle: "水印角度",
+      name: "名称",
+      size: "大小",
+      angle: "角度",
       position: {
-        label: "水印位置",
+        label: "位置",
         lt: "左上角",
         rt: "右上角",
         lb: "左下角",

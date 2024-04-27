@@ -55,3 +55,8 @@ window.addEventListener('unload', () => {
   height: 100%;
 }
 </style>
+<style scoped>
+:deep(#app .el-divider .el-divider--horizontal) {
+  margin: 12px 0;
+}
+</style>

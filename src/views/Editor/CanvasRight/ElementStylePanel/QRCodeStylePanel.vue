@@ -1,7 +1,7 @@
 <template>
   <div class="image-style-panel">
     <ElementPosition/>
-    <el-divider />
+    <el-divider style="margin: 12px 0" />
     <div class="title">码样式：</div>
     <el-carousel type="card" :height="QRSize + 'px'" :initial-index="initialIndex" :autoplay="false" trigger="click" indicator-position="none" ref="carousel">
       <el-carousel-item v-for="item in QRCodeStyleLibs" :key="item.index" :name="item.name">
@@ -14,7 +14,7 @@
     <div class="row">
       <el-input v-model="handleElement.codeContent" @change="updateCodeContent"></el-input>
     </div>
-    <el-divider />
+    <el-divider style="margin: 12px 0" />
     <div class="title">码边距：</div>
     <div class="row">
       <el-radio-group class="full-ratio" v-model="handleElement.codeOption.codeSpace" @change="updateCodeSpace">
@@ -31,11 +31,11 @@
         <el-radio-button label="3">30%</el-radio-button>
       </el-radio-group>
     </div>
-    <el-divider />
+    <el-divider style="margin: 12px 0" />
     <ElementOutline />
-    <el-divider />
+    <el-divider style="margin: 12px 0" />
     <ElementShadow :hasShadow="hasShadow" />
-    <el-divider />
+    <el-divider style="margin: 12px 0" />
   </div>
 </template>
 

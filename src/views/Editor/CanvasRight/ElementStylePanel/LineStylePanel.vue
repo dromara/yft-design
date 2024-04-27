@@ -1,7 +1,7 @@
 <template>
   <div class="line-style-panel">
     <ElementPosition/>
-    <el-divider />
+    <el-divider style="margin: 12px 0" />
     <div class="row">
       <div style="flex: 2;">线条样式：</div>
       <el-select style="flex: 3;" v-model="lineStyle" @change="changeLineStyle">
@@ -40,7 +40,7 @@
       </el-select>
     </div>
 
-    <el-divider />
+    <el-divider style="margin: 12px 0" />
     <ElementShadow :hasShadow="hasShadow"/>
   </div>
 </template>

@@ -1,5 +1,5 @@
 <template>
-  <div class="slide-design-panel">
+  <div class="canvas-design-panel">
     <div>
       <el-button @click="handleReturn">
         <b><IconLeft/>返回</b>

@@ -1,13 +1,13 @@
 <template>
   <div class="shape-style-panel">
     <ElementPosition/>
-    <el-divider />
+    <el-divider style="margin: 12px 0" />
     <ElementFill />
-    <el-divider />
+    <el-divider style="margin: 12px 0" />
     <ElementOutline />
-    <el-divider />
+    <el-divider style="margin: 12px 0" />
     <ElementShadow :hasShadow="false" />
-    <el-divider />
+    <el-divider style="margin: 12px 0" />
     <ElementOpacity />
   </div>
 </template>

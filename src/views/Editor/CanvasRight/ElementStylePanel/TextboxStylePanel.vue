@@ -1,7 +1,7 @@
 <template>
   <div class="text-style-panel">
     <ElementPosition/>
-    <el-divider />
+    <el-divider style="margin: 12px 0" />
     <el-row>
       <el-col :span="12">
         <el-select v-model="elementFontFamily" placement="left" @change="handleElementFontFamily">
@@ -186,9 +186,9 @@
       </el-col>
     </el-row>
 
-    <el-divider />
+    <el-divider style="margin: 12px 0" />
     <ElementFill />
-    <el-divider />
+    <el-divider style="margin: 12px 0" />
 
     <div class="row">
       <div style="flex: 2;">行距：</div>
@@ -202,15 +202,15 @@
       </el-select>
     </div>
 
-    <el-divider />
+    <el-divider style="margin: 12px 0" />
     <ElementEffects />
-    <el-divider />
+    <el-divider style="margin: 12px 0" />
     <ElementStroke :hasStroke="hasStroke" />
-    <el-divider />
+    <el-divider style="margin: 12px 0" />
     <ElementShadow :hasShadow="hasShadow" />
-    <el-divider />
+    <el-divider style="margin: 12px 0" />
     <ElementPatterns :hasPatterns="hasPatterns" />
-    <el-divider />
+    <el-divider style="margin: 12px 0" />
     <ElementOpacity />
   </div>
 </template>

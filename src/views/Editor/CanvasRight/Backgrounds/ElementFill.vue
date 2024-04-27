@@ -768,7 +768,7 @@ const generateShadingBackgroundRandom = () => {
 .icon-btn {
   cursor: pointer;
 }
-.slide-design-panel {
+.canvas-design-panel {
   user-select: none;
 }
 .row {

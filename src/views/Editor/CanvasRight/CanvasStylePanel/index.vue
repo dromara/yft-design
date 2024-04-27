@@ -1,5 +1,5 @@
 <template>
-  <div class="slide-design-panel">
+  <div class="canvas-design-panel">
     <div class="mb-10">
       <b>{{ t("style.canvasSize") }}</b>
     </div>
@@ -148,7 +148,7 @@
       </el-row>
     </div>
 
-    <el-divider />
+    <el-divider style="margin: 12px 0" />
 
     <div class="title">
       <b>{{ t("style.canvasFill") }}</b>
@@ -158,11 +158,11 @@
     </div>
     <Backgrounds />
 
-    <el-divider />
+    <el-divider style="margin: 12px 0" />
 
     <Watermark />
 
-    <el-divider />
+    <el-divider style="margin: 12px 0" />
 
     <div class="title">
       <b>{{ t("style.canvasMask") }}</b>
@@ -411,7 +411,7 @@ const changeMaskOpacity = () => {
 .icon-btn {
   cursor: pointer;
 }
-.slide-design-panel {
+.canvas-design-panel {
   user-select: none;
 }
 .row {
