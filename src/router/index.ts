@@ -1,6 +1,6 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
 
-
+type RouteRecordRaw = typeof RouteRecordRaw
 // 静态路由
 export const constantRoutes: RouteRecordRaw[] = [
   {
@@ -11,7 +11,7 @@ export const constantRoutes: RouteRecordRaw[] = [
   {
     path: "/",
     name: "/",
-    component: () => import("@/views/Editor/computer.vue"),
+    component: () => import("@/views/Editor/index.vue"),
   },
   {
     path: "/401",

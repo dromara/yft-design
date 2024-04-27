@@ -350,6 +350,6 @@ declare module 'clipper-lib' {
 }
 
 declare module 'changedpi';
-
+declare module 'vue-router';
 declare module 'element-plus/dist/locale/zh-cn.mjs';
 declare module 'element-plus/dist/locale/en.mjs'
