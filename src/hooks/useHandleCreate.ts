@@ -65,7 +65,7 @@ export default () => {
       splitByGrapheme: false,
       width: fontSize * textValue.length / 2
     });
-    textBoxElement.set({left: textBoxElement.left - textBoxElement.width / 2, top: textBoxElement.top - textBoxElement.height / 2})
+    textBoxElement.set({left: textBoxElement.left - textBoxElement.width / 2, top: textBoxElement.top - textBoxElement.height / 2, splitByGrapheme: true})
     if (textHollow) {
       textBoxElement.fill = "";
       textBoxElement.stroke = "black";
