@@ -1,5 +1,6 @@
 import { ClipPathType } from '@/configs/images'
 import { strokeImage } from '@/extension/effects/image.stroke'
+import { getMaskCanvas } from '@/extension/effects/image.mask'
 import { addCropImageInteractions, isolateObjectForEdit } from '@/extension/mixins/cropping.mixin'
 import { 
   croppingControlSet, 
@@ -37,6 +38,7 @@ export class Image extends OriginImage {
     this.effects = options?.effects
     this.initEffects()
     this.renderEffects()
+    this.renderMask()
     this.on('mousedblclick', this.doubleClickHandler.bind(this))
   }
 
@@ -218,6 +220,16 @@ export class Image extends OriginImage {
         const item = this.effects[i]
         await strokeImage(item.stroke, item.strokeWidth, item.strokeLineJoin, this, type)
       }
+    }
+  }
+
+  async renderMask() {
+    if (this.mask) {
+      const maskCanvas = getMaskCanvas(data, this.mask)
+      const img = new OriginImage(maskCanvas, {left: this.left, top: this.top})
+      // const maskImage = await OriginImage.fromURL(this.mask.src, {} as any, this.mask)
+      // this.set({clipPath: maskImage})
+      // this.canvas?.renderAll()
     }
   }
 

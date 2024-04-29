@@ -120,7 +120,7 @@ export const useTemplatesStore = defineStore('Templates', {
       objects.forEach(ele => {
         if (ele.type.toLowerCase() === ElementNames.IMAGE) {
           this.setImageFilter(ele as ImageElement)
-          this.setImageMask(ele as ImageElement)
+          // this.setImageMask(ele as ImageElement)
         }
         if (ele.type.toLowerCase() === ElementNames.GROUP) {
           this.setObjectFilter(((ele as GroupElement).objects) as CanvasElement[])
