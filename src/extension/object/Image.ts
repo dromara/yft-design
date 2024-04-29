@@ -225,11 +225,7 @@ export class Image extends OriginImage {
 
   async renderMask() {
     if (this.mask) {
-      const maskCanvas = getMaskCanvas(data, this.mask)
-      const img = new OriginImage(maskCanvas, {left: this.left, top: this.top})
-      // const maskImage = await OriginImage.fromURL(this.mask.src, {} as any, this.mask)
-      // this.set({clipPath: maskImage})
-      // this.canvas?.renderAll()
+      // await getMaskCanvas(this)
     }
   }
 

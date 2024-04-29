@@ -1,5 +1,6 @@
 import { ImageHit } from "@/api/image/types"
 import { XY } from "fabric"
+import { ImageElement } from "./canvas"
 
 export const enum ElementNames {
   TEXTBOX = 'textbox',
@@ -51,8 +52,9 @@ export interface ColorStop {
 
 export type LinePoint = '' | 'arrow' | 'dot' 
 
-export interface Mask {
+export interface Mask extends ImageElement {
   src: string
+  defaultColor: number
 }
 
 export interface LinePoolItem {
