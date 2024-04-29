@@ -29,7 +29,11 @@ export const getMaskCanvas = async (image: OriginImage) => {
     const mask = image.mask
     if (!mask) return
     const maskCanvas = document.createElement('canvas') as HTMLCanvasElement
+    maskCanvas.width = mask.width
+    maskCanvas.height = mask.height
     const canvas = document.createElement('canvas') as HTMLCanvasElement
+    canvas.width = image.width
+    canvas.height = image.height
     const maskCtx = maskCanvas.getContext('2d') as CanvasRenderingContext2D
     const ctx = canvas.getContext('2d') as CanvasRenderingContext2D
     const maskImage = await getImageBitmap(mask.src)
@@ -60,8 +64,9 @@ export const getMaskCanvas = async (image: OriginImage) => {
     ctx.globalCompositeOperation = 'source-in'
     ctx.drawImage(image._element, 0, 0)
     const src = canvas.toDataURL()
-    console.log('src:', src)
     await image.setSrc(src)
+    image.set({'dirty': true})
+    image.canvas?.renderAll()
   } 
   catch (error) {
     console.log(error)

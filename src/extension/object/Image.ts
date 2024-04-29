@@ -225,7 +225,7 @@ export class Image extends OriginImage {
 
   async renderMask() {
     if (this.mask) {
-      // await getMaskCanvas(this)
+      await getMaskCanvas(this)
     }
   }
 
