@@ -36,9 +36,7 @@ export class Image extends OriginImage {
   constructor(element: ImageSource, options?: any) {
     super(element, { filters: [], ...options });
     this.effects = options?.effects
-    this.initEffects()
     this.renderEffects()
-    this.renderMask()
     this.on('mousedblclick', this.doubleClickHandler.bind(this))
   }
 
@@ -215,6 +213,7 @@ export class Image extends OriginImage {
 
   async renderEffects(type?: string) {
     if (this.effects) {
+      this.initEffects()
       if (this.originSrc) await this.setSrc(this.originSrc)
       for (let i = 0; i < this.effects.length; i++) {
         const item = this.effects[i]
@@ -269,7 +268,7 @@ export class Image extends OriginImage {
       rf && util.enlivenObjects([rf], options),
       util.enlivenObjectEnlivables(object, options),
     ]).then(([el, filters = [], [resizeFilter] = [], hydratedProps = {}]) => {
-      return new this(el, {
+      const image = new this(el, {
         ...object,
         src,
         crossOrigin,
@@ -277,6 +276,8 @@ export class Image extends OriginImage {
         resizeFilter,
         ...hydratedProps,
       });
+      image.renderMask()
+      return image
     });
   }
 

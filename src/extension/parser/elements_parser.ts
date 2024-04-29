@@ -212,7 +212,13 @@ export class ElementsParser {
     if (maskElements) {
       const maskElement = maskElements[0] as HTMLElement
       const maskImage = await Image.fromElement(maskElement)
-      obj.set({mask: {src: maskImage?.getSrc()}})
+      obj.set({mask: {
+        src: maskImage?.getSrc(),
+        left: obj.left,
+        top: obj.top,
+        width: obj.width,
+        height: obj.height
+      }})
       // if (obj instanceof Image && obj._originalElement) {
       //   console.log('maskImage:', maskImage, 'obj:', obj.id)
       //   const [ pixi ] = usePixi()
