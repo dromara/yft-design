@@ -1,31 +1,40 @@
+import { Image as OriginImage } from "@/extension/object/Image"
+import { Mask } from "@/types/elements"
+
 const isBlack = (num: number) => {
   return num - 0 === 0
 }
 
-const drawRectByCanvas = (ctx: CanvasRenderingContext2D, data: any, mask: any) => {
-  if (mask.canvas.width >= data.canvas.width && mask.canvas.height >= data.cnavas.height) return
-  const top = mask.top - data.top
-  const left = mask.left - data.left
+const drawRectByCanvas = (ctx: CanvasRenderingContext2D, image: OriginImage, mask: Mask) => {
+  if (mask.width >= image.width && mask.height >= image.height) return
+  const top = mask.top - image.top
+  const left = mask.left - image.left
   ctx.fillStyle = '#000'
   if (top > 0) {
-    ctx.fillRect(0, 0, data.cnavas.width, top)
+    ctx.fillRect(0, 0, image.width, top)
   }
   if (left > 0) {
-    ctx.fillRect(0 , 0, left, data.canvas.height)
+    ctx.fillRect(0 , 0, left, image.height)
   }
-  if (top + mask.canvas.height < data.canvas.height) {
-    ctx.fillRect(0, top + mask.canvas.height, data.canvas.width, data.canvas.height - mask.canvas.height - top)
+  if (top + mask.height < image.height) {
+    ctx.fillRect(0, top + mask.height, image.width, image.height - mask.height - top)
   }
-  if (left + mask.canvas.width < data.canvas.width) {
-    ctx.fillRect(left + mask.canvas.width, 0, data.canvas.width - mask.canvas.width - left, data.canvas.height)
+  if (left + mask.width < image.width) {
+    ctx.fillRect(left + mask.width, 0, image.width - mask.width - left, image.height)
   }
 }
 
-export const getMaskCanvas = (data: any, mask: any) => {
+export const getMaskCanvas = async (image: OriginImage) => {
   try {
-    const maskCtx = mask.canvas.getContent('2d')
-    const canvas = document.createElement('canvas')
-    const maskData = maskCtx.getImageData(0, 0, mask.canvas.width, mask.canvas.height, mask.canvas.src)
+    const mask = image.mask
+    if (!mask) return
+    const maskCanvas = document.createElement('canvas') as HTMLCanvasElement
+    const canvas = document.createElement('canvas') as HTMLCanvasElement
+    const maskCtx = maskCanvas.getContext('2d') as CanvasRenderingContext2D
+    const ctx = canvas.getContext('2d') as CanvasRenderingContext2D
+    const maskImage = await getImageBitmap(mask.src)
+    maskCtx.drawImage(maskImage, 0, 0)
+    const maskData = maskCtx.getImageData(0, 0, mask.width, mask.height)
     const defaultColor = mask.defaultColor
     for (let i = 0; i < maskData.data.length; i += 4) {
       const r = maskData.data[i]
@@ -41,20 +50,31 @@ export const getMaskCanvas = (data: any, mask: any) => {
       }
     }
     maskCtx.putImageData(maskData, 0, 0)
-    canvas.width = data.canvas.width
-    canvas.height = data.canvas.height
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
-    ctx?.drawImage(mask.canvas, mask.left - data.left, mask.top - data.top)
+    canvas.width = image.width
+    canvas.height = image.height
+    
+    ctx.drawImage(maskCanvas, mask.left - image.left, mask.top - image.top)
     if (defaultColor === 255) {
-      drawRectByCanvas(ctx, data, mask)
+      drawRectByCanvas(ctx, image, mask)
     }
     ctx.globalCompositeOperation = 'source-in'
-    ctx.drawImage(data.canvas, 0, 0)
-    return canvas
+    ctx.drawImage(image._element, 0, 0)
+    const src = canvas.toDataURL()
+    console.log('src:', src)
+    await image.setSrc(src)
   } 
   catch (error) {
     console.log(error)
-    return data.canvas
+    return null
   }
+}
+
+export const getImageBitmap = async (src: string): Promise<ImageBitmap> => {
+  const img = new Image()
+  img.crossOrigin = 'anonymous'
+  img.src = src
+  await new Promise<void>((resolve) => {
+    img.onload = () => resolve()
+  })
+  return createImageBitmap(img)
 }
