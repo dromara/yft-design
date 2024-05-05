@@ -172,7 +172,8 @@ import {
   LeftSmallUp,
   LeftSmallDown,
   RightSmallUp,
-  RightSmallDown
+  RightSmallDown,
+  MapDraw,
 } from '@icon-park/vue-next'
 
 export const icons = {
@@ -346,6 +347,7 @@ export const icons = {
   IconLeftSmallDown: LeftSmallDown,
   IconRightSmallUp: RightSmallUp,
   IconRightSmallDown: RightSmallDown,
+  IconMapDraw: MapDraw,
 }
 
 export default {
