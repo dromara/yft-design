@@ -4,9 +4,23 @@
     v-click-outside="() => setThumbnailsFocus(false)"
     v-contextmenu="contextMenusThumbnails"  
   >
-    <div class="thumb-handle">
+    <el-row class="thumb-handle items-center">
+      <el-col :span="8">
+        <div class="flex justify-center text-[16px]">
+          <!-- <IconAllApplication class="handler-item" ref="menuRef" /> -->
+          
+          <el-button text ref="menuRef">文件</el-button>
+          <HomePopover :menu-ref="menuRef" :menu-popover-ref="menuPopoverRef" />
+        </div>
+      </el-col>
+      <el-col :span="16">
+        <el-button @click="createTemplate()" text> <IconPlus class="icon" />{{ t('message.addPage') }}</el-button>
+        <!-- <div class="btn" @click="createTemplate()"><IconPlus class="icon" /></div> -->
+      </el-col>
+    </el-row>
+    <!-- <div class="thumb-handle">
       <div class="btn" @click="createTemplate()"><IconPlus class="icon" />{{ t('message.addPage') }}</div>
-    </div>
+    </div> -->
     <Draggable
       class="thumb-content"
       :modelValue="templates"
@@ -47,7 +61,7 @@ import { contextMenusThumbnails } from '@/configs/contextMenu'
 import { useMainStore, useTemplatesStore, useKeyboardStore } from '@/store'
 import { ContextMenu } from '@/components/ContextMenu/types'
 import { storeToRefs } from 'pinia'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { fillDigit } from '@/utils/common/common'
 
 const mainStore = useMainStore()
@@ -61,7 +75,8 @@ const { ctrlKeyState, shiftKeyState } = storeToRefs(keyboardStore)
 const { createTemplate, deleteTemplate, sortTemplates, cutTemplate, pasteTemplate } = useHandleTemplate()
 
 const selectedTemplatesIndex = computed(() => [..._selectedTemplatesIndex.value, templateIndex.value])
-
+const menuRef = ref();
+const menuPopoverRef = ref();
 const contextmenusThumbnailItem = (): ContextMenu[] => {
   return [
     {
@@ -186,7 +201,7 @@ const changeSlideIndex = (index: number) => {
 
 <style lang="scss" scoped>
 .thumb-handle {
-  height: 40px;
+  height: $headerHeight;
   font-size: 12px;
   display: flex;
   flex-shrink: 0;
@@ -224,6 +239,7 @@ const changeSlideIndex = (index: number) => {
   padding: 5px 0;
   flex: 1;
   overflow: auto;
+  border-left: 1px solid $borderColor;
 }
 .thumbnail-item {
   display: flex;

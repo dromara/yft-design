@@ -13,7 +13,7 @@
       <CanvasMenu class="layout-content-menu" />
       <CanvasThumb class="w-[160px] h-full flex flex-shrink-0 bg-[#fff] flex-col select-none" />
       <div class="layout-content-center">
-        <CanvasHeader class="center-header relative flex justify-between py-[10px] text-[14px] select-none h-[40px]" />
+        <CanvasHeader class="center-header relative flex justify-between py-[10px] text-[14px] select-none h-[39px]" />
         <CanvasCenter class="center-body" />
         <CanvasFooter class="center-footer h-[40px] relative leading-1.5 flex justify-between" />
         <CanvasAffix  class="center-affix"/>
@@ -43,7 +43,7 @@ import CanvasTour from "./CanvasTour/index.vue";
   height: calc(100% - 40px);
 }
 .layout-content-left {
-  border-right: solid 1px $borderColor;
+  // border-right: solid 1px $borderColor;
 }
 .layout-content-center {
   width: calc(100% - 50px - 160px - 260px);

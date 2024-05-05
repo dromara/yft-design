@@ -85,7 +85,7 @@ const leftToggle = () => {
   cursor: pointer;
   height: 88px;
   position: absolute;
-  right: -16px;
+  right: -19px;
   top: 50%;
   transform: translateY(-50%);
   transition: right .1s linear;

@@ -39,7 +39,7 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue'
 import useI18n from '@/hooks/useI18n'
-import ReferencePopover from './ReferencePopover.vue'
+import ReferencePopover from '@/components/ReferencePopover.vue'
 
 const { t } = useI18n()
 const hasHelp = ref(false)

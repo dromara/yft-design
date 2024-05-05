@@ -2,8 +2,9 @@
   <div>
     <div class="left-top-tabs" id="left-top-tabs">
       <div class="top-tab">
-        <IconAllApplication class="handler-item" ref="menuRef" />
-        <HomePopover :menu-ref="menuRef" :menu-popover-ref="menuPopoverRef" />
+        <el-tooltip placement="top" :hide-after="0" content="首页">
+          <IconHome class="handler-item" @click="goLink('home')"/>
+        </el-tooltip>
       </div>
     </div>
     <div class="left-bottom-tabs">
@@ -39,10 +40,10 @@
 import { useMainStore } from "@/store";
 import { PoolType } from "@/types/common";
 import { storeToRefs } from "pinia";
+import { useRouter } from 'vue-router'
 import HotkeyDrawer from "./components/HotkeyDrawer.vue";
 import HelpPopover from "./components/HelpPopover.vue";
-import HomePopover from "./components/HomePopover.vue";
-
+const router = useRouter()
 const mainStore = useMainStore();
 const { poolType, poolShow } = storeToRefs(mainStore);
 
@@ -76,12 +77,16 @@ const setPoolType = (tab: PoolType) => {
   }
   mainStore.setPoolType(tab);
 };
+
+const goLink = (link: string) => {
+  router.push(link)
+}
 </script>
 
 <style lang="scss" scoped>
 .top-tab {
   width: 100%;
-  height: 40px;
+  height: $headerHeight;
   text-align: center;
   font-size: 20px;
   cursor: pointer;
@@ -105,9 +110,13 @@ const setPoolType = (tab: PoolType) => {
   }
 }
 .center-tabs {
-  overflow-y: scroll;
+  // overflow-y: scroll;
   overflow-x: hidden;
   height: calc(100vh - 160px);
+  .center-tab:hover {
+    background: #f1f1f1;
+    border-radius: 5px;
+  }
 }
 .center-tab {
   width: 100%;
@@ -120,10 +129,6 @@ const setPoolType = (tab: PoolType) => {
   flex-direction: column;
   justify-content: center;
   position: relative;
-
-  .left-icon {
-    font-size: 20px;
-  }
 }
 .left-active {
   color: $themeColor;
@@ -170,7 +175,7 @@ const setPoolType = (tab: PoolType) => {
   cursor: pointer;
   height: 88px;
   position: absolute;
-  right: -16px;
+  right: -19px;
   top: 50%;
   transform: translateY(-50%);
   transition: right 0.1s linear;
@@ -187,8 +192,9 @@ const setPoolType = (tab: PoolType) => {
 .bottom-tabs {
   position: absolute;
   bottom: 0;
-  width: 49px;
+  width: 51px;
   z-index: 30;
+  border-right: 1px solid #eee;
 }
 .bottom-tab {
   height: 60px;

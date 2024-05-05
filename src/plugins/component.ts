@@ -10,6 +10,7 @@ import SwipeInput from '@/components/SwipeInput.vue'
 import FileUpload from '@/components/FileUpload/index.vue'
 import ImageMatting from '@/components/ImageMatting/index.vue'
 import ImageFillColor from '@/components/ImageFillColor.vue'
+import HomePopover from '@/components/HomePopover.vue'
 
 const components = {
   FileInput,
@@ -22,6 +23,7 @@ const components = {
   FileUpload,
   ImageMatting,
   ImageFillColor,
+  HomePopover
 }
 
 export default {
