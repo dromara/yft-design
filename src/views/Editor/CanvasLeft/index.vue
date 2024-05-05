@@ -3,7 +3,7 @@
     <div class="left-top-tabs" id="left-top-tabs">
       <div class="top-tab">
         <el-tooltip placement="top" :hide-after="0" content="首页">
-          <IconHome class="handler-item" @click="goLink('home')"/>
+          <IconHome class="handler-item" @click="goHome"/>
         </el-tooltip>
       </div>
     </div>
@@ -78,8 +78,8 @@ const setPoolType = (tab: PoolType) => {
   mainStore.setPoolType(tab);
 };
 
-const goLink = (link: string) => {
-  router.push(link)
+const goHome = () => {
+  window.open(router.resolve({path: `/home`}).href, '_blank');
 }
 </script>
 

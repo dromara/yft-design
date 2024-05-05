@@ -267,7 +267,9 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  resizeObserver.unobserve(containerRef.value!);
+  if (containerRef.value) {
+    resizeObserver.unobserve(containerRef.value!);
+  }
 });
 </script>
 
