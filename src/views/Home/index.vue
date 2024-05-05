@@ -21,18 +21,20 @@
               智能AI
             </el-menu-item>
             <el-menu-item index="3">
-              <i class="el-icon-setting"></i>
-              模版空间
+              <IconMapDraw/>模版空间
             </el-menu-item>
           </el-menu>
         </el-aside>
-        <el-main>Main</el-main>
+        <el-main>
+          <MainContent />
+        </el-main>
       </el-container>
     </el-container>
   </div>
 </template>
 
 <script lang="ts" setup>
+import MainContent from './components/MainContent.vue';
 
 </script>
 
