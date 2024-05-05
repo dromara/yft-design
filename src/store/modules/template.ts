@@ -3,6 +3,7 @@ import { Templates } from '@/mocks/templates'
 import { Template, CanvasElement, ImageElement, GroupElement, RectElement } from '@/types/canvas'
 import { Object as FabricObject, SerializedImageProps, Image, Group } from 'fabric'
 import { WorkSpaceDrawType, propertiesToInclude } from '@/configs/canvas'
+import { DataState, ScrollState, ICardItem, IBookItemRect } from '@/types/templates'
 import { useMainStore } from './main'
 import { ElementNames } from '@/types/elements'
 import useCanvasScale from '@/hooks/useCanvasScale'
@@ -10,6 +11,7 @@ import useCanvas from '@/views/Canvas/useCanvas'
 import useHistorySnapshot from '@/hooks/useHistorySnapshot'
 import useCommon from '@/views/Canvas/useCommon'
 import usePixi from '@/views/Canvas/usePixi'
+import list from "@/configs/card";
 
 
 interface UpdateElementData {
@@ -19,17 +21,47 @@ interface UpdateElementData {
   props: Partial<CanvasElement>
 }
 
+function rafThrottle(fn: Function) {
+  let lock = false;
+  return function (this: any, ...args: any[]) {
+    if (lock) return;
+    lock = true;
+    window.requestAnimationFrame(() => {
+      fn.apply(this, args);
+      lock = false;
+    });
+  };
+}
 
 export interface TemplatesState {
+  mainRef: HTMLDivElement | null
   templates: Template[]
   templateIndex: number
+  dataState: DataState
+  scrollState: ScrollState
+  containerRef: HTMLDivElement | null
+  itemSizeInfo: Map<ICardItem["id"], IBookItemRect>
 }
 
 export const useTemplatesStore = defineStore('Templates', {
   state: (): TemplatesState => ({
     // theme: theme, // 主题样式
+    mainRef: null,
     templates: Templates, // 页面页面数据
     templateIndex: 0, // 当前页面索引
+    dataState: {
+      loading: false,
+      isFinish: false,
+      currentPage: 1,
+      list: []
+    },
+    scrollState: {
+      viewWidth: 0,
+      viewHeight: 0,
+      start: 0,
+    },
+    containerRef: null,
+    itemSizeInfo: new Map()
     // fixedRatio: false, // 固定比例
     // slideUnit: 'mm', // 尺寸单位
     // slideName: '', // 模板名称
@@ -232,6 +264,68 @@ export const useTemplatesStore = defineStore('Templates', {
 
     setBackgroundImage(props: SerializedImageProps) {
       this.currentTemplate.backgroundImage = props
-    }
+    },
+
+    getData(page: number, pageSize: number) {
+      return new Promise<ICardItem[]>((resolve) => {
+        setTimeout(() => {
+          resolve(list.slice((page - 1) * pageSize, (page - 1) * pageSize + pageSize));
+        }, 1000);
+      });
+    },
+
+    async getTemplateData() {
+      if (this.dataState.isFinish) return;
+      this.dataState.loading = true;
+      const list = await this.getData(this.dataState.currentPage++, 20);
+      if (!list.length) {
+        this.dataState.isFinish = true;
+        return;
+      }
+      this.dataState.list.push(...list);
+      this.dataState.loading = false;
+      return list.length;
+    },
+    handleScroll() {
+      const { scrollTop, clientHeight } = this.containerRef!;
+      this.scrollState.start = scrollTop;
+      if (!this.dataState.loading && !hasMoreData.value) {
+        this.getTemplateData().then((len) => {
+          len && this.setItemSize(2, 2);
+          len && mountTemporaryList();
+        });
+        return;
+      }
+      if (scrollTop + clientHeight > computedHeight.value.minHeight) {
+        mountTemporaryList();
+      }
+    },
+
+    setItemSize (column: number, gap: number) {
+      this.itemSizeInfo = this.dataState.list.reduce<Map<ICardItem["id"], IBookItemRect>>((pre, current) => {
+        const itemWidth = Math.floor((this.scrollState.viewWidth - (column - 1) * gap) / column);
+        const rect = this.itemSizeInfo.get(current.id);
+        pre.set(current.id, {
+          width: itemWidth,
+          height: rect ? rect.height : 0,
+          imageHeight: Math.floor((itemWidth * current.height) / current.width),
+        });
+        return pre;
+      }, new Map());
+    },
+    // handleScroll(rafThrottle(() => {
+    //   const { scrollTop, clientHeight } = containerRef.value!;
+    //   scrollState.start = scrollTop;
+    //   if (!this.dataState.loading && !hasMoreData.value) {
+    //     loadDataList().then((len) => {
+    //       len && setItemSize();
+    //       len && mountTemporaryList();
+    //     });
+    //     return;
+    //   }
+    //   if (scrollTop + clientHeight > computedHeight.value.minHeight) {
+    //     mountTemporaryList();
+    //   }
+    // }),
   }
 })

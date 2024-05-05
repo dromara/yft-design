@@ -56,12 +56,13 @@
         <b class="text-[20px]">今日推荐</b>
       </el-col>
     </el-row>
+    <MainTemplate />
   </div>
 </template>
 
 <script lang="ts" setup>
+import MainTemplate from './ContentTemplate.vue'
 import { Search } from '@element-plus/icons-vue';
-import { ref } from 'vue';
 
 const searchSelect = ref<string>('1')
 const scenes = ref([
@@ -102,6 +103,12 @@ const materials = ref([
   {id: 0, name: '电商', label: 'E-COMMERCE', icon: ''},
   {id: 0, name: '教育培训', label: 'EDUCATION', icon: ''},
 ])
+
+const handleScroll = () => {}
+
+defineExpose({
+  handleScroll
+});
 </script>
 
 <style lang="scss" scoped>
