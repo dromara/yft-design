@@ -26,7 +26,7 @@
           </el-menu>
         </el-aside>
         <el-main @scroll="handleScroll">
-          <MainContent ref="mainRef" @handleScroll="handleScroll"/>
+          <MainContent/>
         </el-main>
       </el-container>
     </el-container>
@@ -43,7 +43,7 @@ const { mainRef } = storeToRefs(useTemplatesStore())
 
 const handleScroll = () => {
   console.log('handleScroll:----')
-  templatesStore.handleScroll()
+  // templatesStore.handleScroll()
 }
 
 </script>

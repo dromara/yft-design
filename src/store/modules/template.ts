@@ -21,20 +21,7 @@ interface UpdateElementData {
   props: Partial<CanvasElement>
 }
 
-function rafThrottle(fn: Function) {
-  let lock = false;
-  return function (this: any, ...args: any[]) {
-    if (lock) return;
-    lock = true;
-    window.requestAnimationFrame(() => {
-      fn.apply(this, args);
-      lock = false;
-    });
-  };
-}
-
 export interface TemplatesState {
-  mainRef: HTMLDivElement | null
   templates: Template[]
   templateIndex: number
   dataState: DataState
@@ -50,7 +37,6 @@ export interface TemplatesState {
 export const useTemplatesStore = defineStore('Templates', {
   state: (): TemplatesState => ({
     // theme: theme, // 主题样式
-    mainRef: null,
     templates: Templates, // 页面页面数据
     templateIndex: 0, // 当前页面索引
     dataState: {
@@ -409,10 +395,14 @@ export const useTemplatesStore = defineStore('Templates', {
         const before = currentColumn.list[currentColumn.list.length - 1] || null;
         const dataItem = this.dataState.list[this.queueState.len];
         console.log('dataItem:', dataItem)
-        const item = this.generatorItem(dataItem, before, minIndex);
-        currentColumn.list.push(item);
-        currentColumn.height += item.h;
-        this.queueState.len++;
+        if (dataItem) {
+          const item = this.generatorItem(dataItem, before, minIndex);
+          currentColumn.list.push(item);
+          currentColumn.height += item.h;
+          this.queueState.len++;
+        }
+        
+        
       }
     },
     generatorItem (item: ICardItem, before: IBookRenderItem | null, index: number): IBookRenderItem {

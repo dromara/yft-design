@@ -56,13 +56,62 @@
         <b class="text-[20px]">今日推荐</b>
       </el-col>
     </el-row>
-    <MainTemplate />
+    <el-row>
+      <FsBookVirtualWaterfall2 :request="getData" :gap="15" :page-size="20" :column="column" :enter-size="column * 2">
+        <template #item="{ item, imageHeight }">
+          <FsBookCard
+            :detail="{
+              imageHeight,
+              title: item.title,
+              author: item.author,
+              bgColor: item.bgColor,
+            }"
+          />
+        </template>
+      </FsBookVirtualWaterfall2>
+    </el-row>
   </div>
 </template>
 
 <script lang="ts" setup>
-import MainTemplate from './ContentTemplate.vue'
+import FsBookCard from "./FsBookCard.vue";
+import FsBookVirtualWaterfall2 from "./FsBookVirtualWaterfall2.vue";
+import list from "@/configs/card";
+import { ICardItem } from "@/types/templates";
 import { Search } from '@element-plus/icons-vue';
+const fContainerRef = ref<HTMLDivElement | null>(null);
+const column = ref(6);
+const containerObserver = new ResizeObserver((entries) => {
+  changeColumn(entries[0].target.clientWidth);
+});
+
+const changeColumn = (width: number) => {
+  if (width > 960) {
+    column.value = 5;
+  } else if (width >= 690 && width < 960) {
+    column.value = 4;
+  } else if (width >= 500 && width < 690) {
+    column.value = 3;
+  } else {
+    column.value = 2;
+  }
+};
+
+onMounted(() => {
+  fContainerRef.value && containerObserver.observe(fContainerRef.value);
+});
+
+onUnmounted(() => {
+  fContainerRef.value && containerObserver.unobserve(fContainerRef.value);
+});
+
+const getData = (page: number, pageSize: number) => {
+  return new Promise<ICardItem[]>((resolve) => {
+    setTimeout(() => {
+      resolve(list.slice((page - 1) * pageSize, (page - 1) * pageSize + pageSize));
+    }, 1000);
+  });
+};
 
 const searchSelect = ref<string>('1')
 const scenes = ref([

@@ -17,9 +17,9 @@
 import { CSSProperties, computed, nextTick, onMounted, onUnmounted, reactive, ref, watch } from "vue";
 import type { IVirtualWaterFallProps, ICardItem, IBookColumnQueue, IBookRenderItem, IBookItemRect } from "@/types/templates";
 // import { debounce, rafThrottle } from "./tool";
-import { useTemplatesStore } from '@/store'
-import { storeToRefs } from "pinia";
-const { dataState, scrollState, queueState, temporaryList, itemSizeInfo, containerRef, temporaryRef, isShow } = storeToRefs(useTemplatesStore())
+// import { useTemplatesStore } from '@/store'
+// import { storeToRefs } from "pinia";
+// const { dataState, scrollState, queueState, temporaryList, itemSizeInfo, containerRef, temporaryRef, isShow } = storeToRefs(useTemplatesStore())
 const props = defineProps<IVirtualWaterFallProps>();
 
 defineSlots<{
@@ -49,50 +49,49 @@ function debounce(fn: Function, delay: number = 300) {
   };
 }
 
-// const containerRef = ref<HTMLDivElement | null>(null);
+const containerRef = ref<HTMLDivElement | null>(null);
 
 const resizeObserver = new ResizeObserver(() => {
   handleResize();
 });
 
-// const dataState = reactive({
-//   loading: false,
-//   isFinish: false,
-//   currentPage: 1,
-//   list: [] as ICardItem[],
-// });
-const dataStateRef = reactive(dataState.value)
+const dataState = reactive({
+  loading: false,
+  isFinish: false,
+  currentPage: 1,
+  list: [] as ICardItem[],
+});
 
-// const scrollState = reactive({
-//   viewWidth: 0,
-//   viewHeight: 0,
-//   start: 0,
-// });
+const scrollState = reactive({
+  viewWidth: 0,
+  viewHeight: 0,
+  start: 0,
+});
 
-// const queueState = reactive({
-//   queue: new Array(props.column).fill(0).map<IBookColumnQueue>(() => ({ list: [], height: 0 })),
-//   len: 0,
-// });
+const queueState = reactive({
+  queue: new Array(props.column).fill(0).map<IBookColumnQueue>(() => ({ list: [], height: 0 })),
+  len: 0,
+});
 
-const hasMoreData = computed(() => queueState.value.len < dataStateRef.list.length);
+const hasMoreData = computed(() => queueState.len < dataState.list.length);
 
-// const temporaryList = ref<IBookRenderItem[]>([]);
+const temporaryList = ref<IBookRenderItem[]>([]);
 
-// const isShow = ref(false);
+const isShow = ref(false);
 
-// const itemSizeInfo = ref(new Map<ICardItem["id"], IBookItemRect>());
+const itemSizeInfo = ref(new Map<ICardItem["id"], IBookItemRect>());
 
-const end = computed(() => scrollState.value.viewHeight + scrollState.value.start);
+const end = computed(() => scrollState.viewHeight + scrollState.start);
 
-const cardList = computed(() => queueState.value.queue.reduce<IBookRenderItem[]>((pre, { list }) => pre.concat(list), []));
+const cardList = computed(() => queueState.queue.reduce<IBookRenderItem[]>((pre, { list }) => pre.concat(list), []));
 
-const renderList = computed(() => cardList.value.filter((i) => i.h + i.y > scrollState.value.start && i.y < end.value));
+const renderList = computed(() => cardList.value.filter((i) => i.h + i.y > scrollState.start && i.y < end.value));
 
 const computedHeight = computed(() => {
   let minIndex = 0,
     minHeight = Infinity,
     maxHeight = -Infinity;
-  queueState.value.queue.forEach(({ height }, index) => {
+  queueState.queue.forEach(({ height }, index) => {
     if (height < minHeight) {
       minHeight = height;
       minIndex = index;
@@ -118,8 +117,8 @@ watch(
 );
 
 const setItemSize = () => {
-  itemSizeInfo.value = dataStateRef.list.reduce<Map<ICardItem["id"], IBookItemRect>>((pre, current) => {
-    const itemWidth = Math.floor((scrollState.value.viewWidth - (props.column - 1) * props.gap) / props.column);
+  itemSizeInfo.value = dataState.list.reduce<Map<ICardItem["id"], IBookItemRect>>((pre, current) => {
+    const itemWidth = Math.floor((scrollState.viewWidth - (props.column - 1) * props.gap) / props.column);
     const rect = itemSizeInfo.value.get(current.id);
     pre.set(current.id, {
       width: itemWidth,
@@ -140,13 +139,13 @@ const updateItemSize = () => {
 const addInQueue = (size = props.enterSize) => {
   for (let i = 0; i < size!; i++) {
     const minIndex = computedHeight.value.minIndex;
-    const currentColumn = queueState.value.queue[minIndex];
+    const currentColumn = queueState.queue[minIndex];
     const before = currentColumn.list[currentColumn.list.length - 1] || null;
-    const dataItem = dataStateRef.list[queueState.value.len];
+    const dataItem = dataState.list[queueState.len];
     const item = generatorItem(dataItem, before, minIndex);
     currentColumn.list.push(item);
     currentColumn.height += item.h;
-    queueState.value.len++;
+    queueState.len++;
   }
 };
 
@@ -171,32 +170,32 @@ const generatorItem = (item: ICardItem, before: IBookRenderItem | null, index: n
 };
 
 const loadDataList = async () => {
-  if (dataStateRef.isFinish) return;
-  dataStateRef.loading = true;
-  const list = await props.request(dataStateRef.currentPage++, props.pageSize);
+  if (dataState.isFinish) return;
+  dataState.loading = true;
+  const list = await props.request(dataState.currentPage++, props.pageSize);
   if (!list.length) {
-    dataStateRef.isFinish = true;
+    dataState.isFinish = true;
     return;
   }
-  dataStateRef.list.push(...list);
-  dataStateRef.loading = false;
+  dataState.list.push(...list);
+  dataState.loading = false;
   return list.length;
 };
 
-// const handleScroll = rafThrottle(() => {
-//   const { scrollTop, clientHeight } = containerRef.value!;
-//   scrollState.start = scrollTop;
-//   if (!dataStateRef.loading && !hasMoreData.value) {
-//     loadDataList().then((len) => {
-//       len && setItemSize();
-//       len && mountTemporaryList();
-//     });
-//     return;
-//   }
-//   if (scrollTop + clientHeight > computedHeight.value.minHeight) {
-//     mountTemporaryList();
-//   }
-// });
+const handleScroll = rafThrottle(() => {
+  const { scrollTop, clientHeight } = containerRef.value!;
+  scrollState.start = scrollTop;
+  if (!dataState.loading && !hasMoreData.value) {
+    loadDataList().then((len) => {
+      len && setItemSize();
+      len && mountTemporaryList();
+    });
+    return;
+  }
+  if (scrollTop + clientHeight > computedHeight.value.minHeight) {
+    mountTemporaryList();
+  }
+});
 
 const handleResize = debounce(() => {
   initScrollState();
@@ -205,8 +204,8 @@ const handleResize = debounce(() => {
 
 const reComputedQueue = () => {
   setItemSize();
-  queueState.value.queue = new Array(props.column).fill(0).map<IBookColumnQueue>(() => ({ list: [], height: 0 }));
-  queueState.value.len = 0;
+  queueState.queue = new Array(props.column).fill(0).map<IBookColumnQueue>(() => ({ list: [], height: 0 }));
+  queueState.len = 0;
   containerRef.value!.scrollTop = 0;
   mountTemporaryList(props.pageSize);
 };
@@ -215,7 +214,7 @@ const mountTemporaryList = (size = props.enterSize) => {
   if (!hasMoreData.value) return;
   isShow.value = false;
   for (let i = 0; i < size!; i++) {
-    const item = dataStateRef.list[queueState.value.len + i];
+    const item = dataState.list[queueState.len + i];
     if (!item) break;
     const rect = itemSizeInfo.value.get(item.id)!;
     temporaryList.value.push({
@@ -243,9 +242,9 @@ const mountTemporaryList = (size = props.enterSize) => {
 };
 
 const initScrollState = () => {
-  scrollState.value.viewWidth = containerRef.value!.clientWidth;
-  scrollState.value.viewHeight = containerRef.value!.clientHeight;
-  scrollState.value.start = containerRef.value!.scrollTop;
+  scrollState.viewWidth = containerRef.value!.clientWidth;
+  scrollState.viewHeight = containerRef.value!.clientHeight;
+  scrollState.start = containerRef.value!.scrollTop;
 };
 
 const init = async () => {
