@@ -64,3 +64,8 @@ export interface ScrollState {
   viewHeight: number
   start: number
 }
+
+export interface QueueState {
+  queue: Array<any>
+  len: number
+}

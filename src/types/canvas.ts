@@ -1,4 +1,4 @@
-import { Gradient, Pattern, Textbox, SerializedImageProps, Path, Rect, Image, Point, Polygon, Group, Line, Object as FabricObject, ImageProps, IText } from "fabric"
+import type { Gradient, Pattern, Textbox, SerializedImageProps, Path, Rect, Image, Point, Polygon, Group, Line, Object as FabricObject, ImageProps, IText, SerializedObjectProps } from "fabric"
 import { ColorStop } from "./elements"
 import JsBarcode from "jsbarcode"
 import { EffectItem } from "./common"
@@ -26,6 +26,8 @@ export interface GradientElement extends Gradient<'linear' | 'radial'> {
   gradientName: string
 }
 
+
+
 export interface Template {
   id: string
   version: string
@@ -36,7 +38,7 @@ export interface Template {
   width: number
   height: number
   clip: number,
-  objects: FabricObject[]
+  objects: SerializedObjectProps[]
 }
 
 export interface WorkSpaceElement {

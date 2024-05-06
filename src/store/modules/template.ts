@@ -3,7 +3,7 @@ import { Templates } from '@/mocks/templates'
 import { Template, CanvasElement, ImageElement, GroupElement, RectElement } from '@/types/canvas'
 import { Object as FabricObject, SerializedImageProps, Image, Group } from 'fabric'
 import { WorkSpaceDrawType, propertiesToInclude } from '@/configs/canvas'
-import { DataState, ScrollState, ICardItem, IBookItemRect } from '@/types/templates'
+import { DataState, ScrollState, QueueState, ICardItem, IBookItemRect, IBookRenderItem } from '@/types/templates'
 import { useMainStore } from './main'
 import { ElementNames } from '@/types/elements'
 import useCanvasScale from '@/hooks/useCanvasScale'
@@ -39,8 +39,12 @@ export interface TemplatesState {
   templateIndex: number
   dataState: DataState
   scrollState: ScrollState
+  queueState: QueueState
   containerRef: HTMLDivElement | null
+  temporaryRef: HTMLDivElement | null
   itemSizeInfo: Map<ICardItem["id"], IBookItemRect>
+  isShow: boolean
+  temporaryList: any[]
 }
 
 export const useTemplatesStore = defineStore('Templates', {
@@ -60,8 +64,15 @@ export const useTemplatesStore = defineStore('Templates', {
       viewHeight: 0,
       start: 0,
     },
+    queueState: {
+      queue: [],
+      len: 0,
+    },
     containerRef: null,
-    itemSizeInfo: new Map()
+    temporaryRef: null,
+    itemSizeInfo: new Map(),
+    isShow: false,
+    temporaryList: []
     // fixedRatio: false, // 固定比例
     // slideUnit: 'mm', // 尺寸单位
     // slideName: '', // 模板名称
@@ -240,7 +251,7 @@ export const useTemplatesStore = defineStore('Templates', {
       if (!elementIds) return
       const template = this.templates[this.templateIndex]
       const elements = template.objects.map(el => elementIds.includes(el.id) ? { ...el, ...props }: el)
-      this.templates[this.templateIndex].objects = (elements as FabricObject[])
+      this.templates[this.templateIndex].objects = elements as FabricObject[]
       addHistorySnapshot()
     },
 
@@ -287,17 +298,36 @@ export const useTemplatesStore = defineStore('Templates', {
       return list.length;
     },
     handleScroll() {
+      const computedHeight = computed(() => {
+        let minIndex = 0,
+          minHeight = Infinity,
+          maxHeight = -Infinity;
+        this.queueState.queue.forEach(({ height }, index) => {
+          if (height < minHeight) {
+            minHeight = height;
+            minIndex = index;
+          }
+          if (height > maxHeight) {
+            maxHeight = height;
+          }
+        });
+        return {
+          minIndex,
+          minHeight,
+          maxHeight,
+        };
+      });
       const { scrollTop, clientHeight } = this.containerRef!;
       this.scrollState.start = scrollTop;
-      if (!this.dataState.loading && !hasMoreData.value) {
+      if (!this.dataState.loading && !(this.queueState.len < this.dataState.list.length)) {
         this.getTemplateData().then((len) => {
           len && this.setItemSize(2, 2);
-          len && mountTemporaryList();
+          len && this.mountTemporaryList();
         });
         return;
       }
       if (scrollTop + clientHeight > computedHeight.value.minHeight) {
-        mountTemporaryList();
+        this.mountTemporaryList();
       }
     },
 
@@ -312,6 +342,97 @@ export const useTemplatesStore = defineStore('Templates', {
         });
         return pre;
       }, new Map());
+    },
+
+    mountTemporaryList(size = 12) {
+      this.queueState.len < this.dataState.list.length
+      if (!(this.queueState.len < this.dataState.list.length)) return;
+      this.isShow = false;
+      for (let i = 0; i < size!; i++) {
+        const item = this.dataState.list[this.queueState.len + i];
+        if (!item) break;
+        const rect = this.itemSizeInfo.get(item.id)!;
+        this.temporaryList.push({
+          item,
+          y: 0,
+          h: 0,
+          imageHeight: rect.imageHeight,
+          style: {
+            width: `${rect.width}px`,
+          },
+        });
+      }
+    
+      nextTick(() => {
+        const list = document.querySelector("#temporary-list")!;
+        if (!list) return
+        [...list.children].forEach((item, index) => {
+          const rect = item.getBoundingClientRect();
+          this.temporaryList[index].h = rect.height;
+        });
+        this.isShow = true;
+        this.updateItemSize();
+        this.addInQueue(this.temporaryList.length);
+        // this.temporaryList = [];
+      });
+    },
+
+    updateItemSize() {
+      this.temporaryList.forEach(({ item, h }) => {
+        const rect = this.itemSizeInfo.get(item.id)!;
+        this.itemSizeInfo.set(item.id, { ...rect, height: h });
+      });
+    },
+    addInQueue(size = 12) {
+      const computedHeight = computed(() => {
+        let minIndex = 0,
+          minHeight = Infinity,
+          maxHeight = -Infinity;
+        this.queueState.queue.forEach(({ height }, index) => {
+          if (height < minHeight) {
+            minHeight = height;
+            minIndex = index;
+          }
+          if (height > maxHeight) {
+            maxHeight = height;
+          }
+        });
+        return {
+          minIndex,
+          minHeight,
+          maxHeight,
+        };
+      });
+      for (let i = 0; i < size!; i++) {
+        const minIndex = computedHeight.value.minIndex;
+        const currentColumn = this.queueState.queue[minIndex];
+        const before = currentColumn.list[currentColumn.list.length - 1] || null;
+        const dataItem = this.dataState.list[this.queueState.len];
+        console.log('dataItem:', dataItem)
+        const item = this.generatorItem(dataItem, before, minIndex);
+        currentColumn.list.push(item);
+        currentColumn.height += item.h;
+        this.queueState.len++;
+      }
+    },
+    generatorItem (item: ICardItem, before: IBookRenderItem | null, index: number): IBookRenderItem {
+      const rect = this.itemSizeInfo.get(item.id)!;
+      const width = rect.width;
+      const height = rect.height;
+      const imageHeight = rect.imageHeight;
+      let y = 0;
+      if (before) y = before.y + before.h + 15;
+      return {
+        item,
+        y,
+        h: height,
+        imageHeight,
+        style: {
+          width: `${width}px`,
+          height: `${height}px`,
+          transform: `translate3d(${index === 0 ? 0 : (width + 15) * index}px, ${y}px, 0)`,
+        },
+      };
     },
     // handleScroll(rafThrottle(() => {
     //   const { scrollTop, clientHeight } = containerRef.value!;

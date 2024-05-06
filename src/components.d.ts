@@ -230,6 +230,11 @@ export declare module 'fabric' {
     name: string
   }
 
+  export declare interface SerializedObjectProps {
+    id: string
+    name: string
+  }
+
   export declare interface GroupProps extends FabricObjectProps, GroupOwnProps { }
 
   export declare class Control extends FabricControl {

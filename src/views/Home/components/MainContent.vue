@@ -103,12 +103,6 @@ const materials = ref([
   {id: 0, name: '电商', label: 'E-COMMERCE', icon: ''},
   {id: 0, name: '教育培训', label: 'EDUCATION', icon: ''},
 ])
-
-const handleScroll = () => {}
-
-defineExpose({
-  handleScroll
-});
 </script>
 
 <style lang="scss" scoped>

@@ -1,16 +1,10 @@
 <template>
   <div class="fs-virtual-waterfall-container" ref="containerRef" >
     <div class="fs-virtual-waterfall-list" :style="listStyle">
-      <div
-        v-if="isShow"
-        class="fs-virtual-waterfall-item"
-        v-for="{ item, style, imageHeight } in renderList"
-        :key="item.id"
-        :style="style"
-      >
+      <div v-if="isShow" class="fs-virtual-waterfall-item" v-for="{ item, style, imageHeight } in renderList" :key="item.id" :style="style">
         <slot name="item" :item="item" :imageHeight="imageHeight"></slot>
       </div>
-      <div id="temporary-list" v-else>
+      <div v-else ref="temporaryRef" id="temporary-list" >
         <div v-for="{ item, style, imageHeight } in temporaryList" :style="style">
           <slot name="item" :item="item" :imageHeight="imageHeight"></slot>
         </div>
@@ -25,7 +19,7 @@ import type { IVirtualWaterFallProps, ICardItem, IBookColumnQueue, IBookRenderIt
 // import { debounce, rafThrottle } from "./tool";
 import { useTemplatesStore } from '@/store'
 import { storeToRefs } from "pinia";
-const { dataState, scrollState, itemSizeInfo, containerRef } = storeToRefs(useTemplatesStore())
+const { dataState, scrollState, queueState, temporaryList, itemSizeInfo, containerRef, temporaryRef, isShow } = storeToRefs(useTemplatesStore())
 const props = defineProps<IVirtualWaterFallProps>();
 
 defineSlots<{
@@ -75,22 +69,22 @@ const dataStateRef = reactive(dataState.value)
 //   start: 0,
 // });
 
-const queueState = reactive({
-  queue: new Array(props.column).fill(0).map<IBookColumnQueue>(() => ({ list: [], height: 0 })),
-  len: 0,
-});
+// const queueState = reactive({
+//   queue: new Array(props.column).fill(0).map<IBookColumnQueue>(() => ({ list: [], height: 0 })),
+//   len: 0,
+// });
 
-const hasMoreData = computed(() => queueState.len < dataStateRef.list.length);
+const hasMoreData = computed(() => queueState.value.len < dataStateRef.list.length);
 
-const temporaryList = ref<IBookRenderItem[]>([]);
+// const temporaryList = ref<IBookRenderItem[]>([]);
 
-const isShow = ref(false);
+// const isShow = ref(false);
 
 // const itemSizeInfo = ref(new Map<ICardItem["id"], IBookItemRect>());
 
 const end = computed(() => scrollState.value.viewHeight + scrollState.value.start);
 
-const cardList = computed(() => queueState.queue.reduce<IBookRenderItem[]>((pre, { list }) => pre.concat(list), []));
+const cardList = computed(() => queueState.value.queue.reduce<IBookRenderItem[]>((pre, { list }) => pre.concat(list), []));
 
 const renderList = computed(() => cardList.value.filter((i) => i.h + i.y > scrollState.value.start && i.y < end.value));
 
@@ -98,7 +92,7 @@ const computedHeight = computed(() => {
   let minIndex = 0,
     minHeight = Infinity,
     maxHeight = -Infinity;
-  queueState.queue.forEach(({ height }, index) => {
+  queueState.value.queue.forEach(({ height }, index) => {
     if (height < minHeight) {
       minHeight = height;
       minIndex = index;
@@ -146,13 +140,13 @@ const updateItemSize = () => {
 const addInQueue = (size = props.enterSize) => {
   for (let i = 0; i < size!; i++) {
     const minIndex = computedHeight.value.minIndex;
-    const currentColumn = queueState.queue[minIndex];
+    const currentColumn = queueState.value.queue[minIndex];
     const before = currentColumn.list[currentColumn.list.length - 1] || null;
-    const dataItem = dataStateRef.list[queueState.len];
+    const dataItem = dataStateRef.list[queueState.value.len];
     const item = generatorItem(dataItem, before, minIndex);
     currentColumn.list.push(item);
     currentColumn.height += item.h;
-    queueState.len++;
+    queueState.value.len++;
   }
 };
 
@@ -211,8 +205,8 @@ const handleResize = debounce(() => {
 
 const reComputedQueue = () => {
   setItemSize();
-  queueState.queue = new Array(props.column).fill(0).map<IBookColumnQueue>(() => ({ list: [], height: 0 }));
-  queueState.len = 0;
+  queueState.value.queue = new Array(props.column).fill(0).map<IBookColumnQueue>(() => ({ list: [], height: 0 }));
+  queueState.value.len = 0;
   containerRef.value!.scrollTop = 0;
   mountTemporaryList(props.pageSize);
 };
@@ -221,7 +215,7 @@ const mountTemporaryList = (size = props.enterSize) => {
   if (!hasMoreData.value) return;
   isShow.value = false;
   for (let i = 0; i < size!; i++) {
-    const item = dataStateRef.list[queueState.len + i];
+    const item = dataStateRef.list[queueState.value.len + i];
     if (!item) break;
     const rect = itemSizeInfo.value.get(item.id)!;
     temporaryList.value.push({
