@@ -12,7 +12,8 @@ import { LinePoint } from "@/types/elements";
 import { Image } from "@/extension/object/Image";
 import { QRCode } from "@/extension/object/QRCode";
 import { BarCode } from "@/extension/object/BarCode";
-import { ArcText } from '@/extension/object/ArcText'
+import { ArcText } from '@/extension/object/ArcText';
+import { Table } from "@/extension/object/Table";
 import { VerticalText } from '@/extension/object/VerticalText'
 import JsBarcode from "jsbarcode";
 import { i18nObj } from "@/plugins/i18n/index"
@@ -65,7 +66,7 @@ export default () => {
       splitByGrapheme: false,
       width: fontSize * textValue.length / 2
     });
-    textBoxElement.set({left: textBoxElement.left - textBoxElement.width / 2, top: textBoxElement.top - textBoxElement.height / 2, splitByGrapheme: true})
+    textBoxElement.set({ left: textBoxElement.left - textBoxElement.width / 2, top: textBoxElement.top - textBoxElement.height / 2, splitByGrapheme: true })
     if (textHollow) {
       textBoxElement.fill = "";
       textBoxElement.stroke = "black";
@@ -76,7 +77,7 @@ export default () => {
 
   const createArcTextElement = (fontSize: number, textStyle = 'transverse', textHollow = false, textValue = '双击修改文字') => {
     const { centerPoint } = useCenter()
-    
+
     const textBoxElement = new ArcText(textValue, {
       id: nanoid(10),
       left: centerPoint.x,
@@ -96,18 +97,18 @@ export default () => {
       name: ElementNames.TEXTBOX,
       splitByGrapheme: textStyle === 'direction' ? true : false,
     })
-    textBoxElement.set({left: textBoxElement.left - textBoxElement.width / 2, top: textBoxElement.top - textBoxElement.height / 2})
+    textBoxElement.set({ left: textBoxElement.left - textBoxElement.width / 2, top: textBoxElement.top - textBoxElement.height / 2 })
     if (textHollow) {
       textBoxElement.fill = ''
       textBoxElement.stroke = 'black'
-      textBoxElement.strokeWidth = 1 
+      textBoxElement.strokeWidth = 1
     }
     renderCanvas(textBoxElement)
   }
 
   const createVerticalTextElement = (fontSize: number, textHollow = false, textValue = '双击修改文字') => {
     const { centerPoint } = useCenter()
-    
+
     const textBoxElement = new VerticalText(textValue, {
       id: nanoid(10),
       left: centerPoint.x,
@@ -125,7 +126,7 @@ export default () => {
       originY: 'top',
       name: ElementNames.VERTICALTEXT,
     })
-    textBoxElement.set({left: textBoxElement.left - textBoxElement.width / 2, top: textBoxElement.top - textBoxElement.height / 2})
+    textBoxElement.set({ left: textBoxElement.left - textBoxElement.width / 2, top: textBoxElement.top - textBoxElement.height / 2 })
     if (textHollow) {
       textBoxElement.fill = "";
       textBoxElement.stroke = "black";
@@ -320,6 +321,16 @@ export default () => {
     });
   };
 
+  const createTableElement = () => {
+    // const { centerPoint } = useCenter();
+    // const [canvas] = useCanvas();
+
+    const table = new Table();
+
+    renderCanvas(table)
+
+  }
+
   return {
     createTextElement,
     createPathElement,
@@ -330,5 +341,6 @@ export default () => {
     createVideoElement,
     createArcTextElement,
     createVerticalTextElement,
+    createTableElement
   };
 };

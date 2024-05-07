@@ -91,6 +91,13 @@
     <div class="edit-section">
       <div class="font-bold text-lg mb-6px">{{ $t('message.module') }}</div>
       <el-row :gutter="10" class="mt-10">
+        <!-- 添加表格 -->
+        <el-col :span="8">
+          <div class="item-box" @click="drawTable">
+            <IconInsertTable class="icon-font" />
+            <div class="mt-5px">{{ $t("message.fabricTable") }}</div>
+          </div>
+        </el-col>
         <el-col :span="8">
           <div class="item-box" @click="createBarElement">
             <IconPayCodeTwo class="icon-font" />
@@ -148,7 +155,8 @@ const {
   createLineElement, 
   createArcTextElement, 
   createVerticalTextElement, 
-  createVideoElement 
+  createVideoElement,
+  createTableElement
 } = useHandleCreate();
 const codeContent = ref<string>(window.location.href);
 const codeSpace = ref<boolean>(true);
@@ -300,6 +308,12 @@ const drawLine = (line: LinePoolItem) => {
   const strokeDashArray: [number, number] | undefined = line.style === "dashed" ? [6, 6] : undefined;
   createLineElement(line.data, line.points[0], line.points[1], strokeDashArray);
 };
+
+// 添加表格
+const drawTable = () => {
+  console.log("==>")
+  createTableElement();
+}
 </script>
 
 <style lang="scss" scoped>
