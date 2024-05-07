@@ -109,6 +109,7 @@ export default {
 
     searchTools: '搜索工具',
     barCode: '条形码',
+    fabricTable:"表格",
     barCodeTips: '快速生成一维码,支持4种码制',
     QRCode: '二维码',
     QRCodeTips: '快速生成二维码,支持13种样式',

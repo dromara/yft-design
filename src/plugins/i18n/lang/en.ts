@@ -106,6 +106,7 @@ export default {
 
     searchTools: 'Search tools',
     barCode: 'Bar code',
+    fabricTable:"Table",
     barCodeTips: 'Quickly generate one-dimensional codes, supporting 4 types of coding',
     QRCode: 'QR code',
     QRCodeTips: 'Quickly generate QR codes, supporting 13 styles',
