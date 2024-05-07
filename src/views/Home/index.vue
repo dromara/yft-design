@@ -25,8 +25,8 @@
             </el-menu-item>
           </el-menu>
         </el-aside>
-        <el-main @scroll="handleScroll" class="h-lvh" ref="mainRef">
-          <MainContent />
+        <el-main @scroll="handleScroll" class="h-lvh" id="main">
+          <MainContent ref="contentRef"/>
         </el-main>
       </el-container>
     </el-container>
@@ -35,16 +35,29 @@
 
 <script lang="ts" setup>
 import MainContent from './components/MainContent.vue';
-import { useTemplatesStore } from '@/store';
-import { storeToRefs } from 'pinia';
+import { ref } from 'vue';
 
-const mainRef = ref<HTMLElement | undefined>()
+const contentRef = ref()
 
-const handleScroll = () => {
-  console.log('handleScroll:----')
-  if (!mainRef.value) return
-  // templatesStore.handleScroll()
+function rafThrottle(fn: Function) {
+  let lock = false;
+  return function (this: any, ...args: any[]) {
+    if (lock) return;
+    lock = true;
+    window.requestAnimationFrame(() => {
+      fn.apply(this, args);
+      lock = false;
+    });
+  };
 }
+
+const handleScroll = rafThrottle(() => {
+  const mainElement = document.getElementById('main') as HTMLElement
+  const scrollHeight = mainElement.scrollHeight, scrollTop = mainElement.scrollTop, clientHeight = mainElement.clientHeight
+  if (scrollHeight - (scrollTop + clientHeight) <= 200) {
+    contentRef.value?.getData()
+  }
+})
 
 </script>
 

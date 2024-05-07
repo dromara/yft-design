@@ -138,7 +138,9 @@ onUnmounted(() => {
   observer.disconnect();
 })
 
-
+defineExpose({
+  getData,
+});
 
 </script>
 
