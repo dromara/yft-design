@@ -57,63 +57,90 @@
       </el-col>
     </el-row>
     <el-row>
-      <FsBookVirtualWaterfall2 :request="getData" :gap="15" :page-size="20" :column="column" :enter-size="column * 2">
-        <template #item="{ item, imageHeight }">
-          <FsBookCard
-            :detail="{
-              imageHeight,
-              title: item.title,
-              author: item.author,
-              bgColor: item.bgColor,
-            }"
-          />
-        </template>
-      </FsBookVirtualWaterfall2>
+      <TransitionGroup :name="page.move ? 'group' : ''" tag="div" class="waterfall-box">
+        <div class="waterfall-item" v-for="(item, index) in page.list" :key="item.id">
+          <img class="pic" :src="item.photo" alt="" :ref="e => setItemStyle(e as any, index)">
+          <div class="title">{{ item.title }}</div>
+          <div class="content ellipsis_2">{{ item.text }}</div>
+        </div>
+      </TransitionGroup>
     </el-row>
   </div>
 </template>
 
 <script lang="ts" setup>
-import FsBookCard from "./FsBookCard.vue";
-import FsBookVirtualWaterfall2 from "./FsBookVirtualWaterfall2.vue";
-import list from "@/configs/card";
-import { ICardItem } from "@/types/templates";
 import { Search } from '@element-plus/icons-vue';
-const fContainerRef = ref<HTMLDivElement | null>(null);
-const column = ref(6);
-const containerObserver = new ResizeObserver((entries) => {
-  changeColumn(entries[0].target.clientWidth);
-});
-
-const changeColumn = (width: number) => {
-  if (width > 960) {
-    column.value = 5;
-  } else if (width >= 690 && width < 960) {
-    column.value = 4;
-  } else if (width >= 500 && width < 690) {
-    column.value = 3;
-  } else {
-    column.value = 2;
-  }
-};
-
-onMounted(() => {
-  fContainerRef.value && containerObserver.observe(fContainerRef.value);
-});
-
-onUnmounted(() => {
-  fContainerRef.value && containerObserver.unobserve(fContainerRef.value);
-});
-
-const getData = (page: number, pageSize: number) => {
-  return new Promise<ICardItem[]>((resolve) => {
-    setTimeout(() => {
-      resolve(list.slice((page - 1) * pageSize, (page - 1) * pageSize + pageSize));
-    }, 1000);
-  });
-};
-
+import { reactive, onMounted, onUnmounted } from "vue";
+import { useRequest, type ItemList } from "./hooks";
 const searchSelect = ref<string>('1')
+const { getList, defaultPic } = useRequest();
+
+const page = reactive({
+  loading: false,
+  column: 4,
+  move: true,
+  list: [] as ItemList,
+});
+
+function setItemStyle(img: HTMLImageElement, index: number) {
+  // console.log(index, img);
+  if (!img) return;
+  function update() {
+    const item = img.parentElement;
+    if (!item) return;
+    const gapRows = index >= page.column ? 8 : 0;
+    const rows = Math.ceil(item.clientHeight / 2) + gapRows;
+    item.style.gridRowEnd = `span ${rows}`;
+  }
+  update();
+  img.onload = update;
+  img.onerror = function() {
+    img.src = defaultPic.data;
+    update();
+  };
+}
+
+async function getData(reset = false) {
+  page.loading = true;
+  const res = await getList(20);
+  page.loading = false;
+  if (res.code === 1) {
+    if (reset) {
+      page.list = res.data;
+    } else {
+      page.list = page.list.concat(res.data);
+    }
+  }
+}
+
+function refresh() {
+  getData(true);
+}
+
+let observer: ResizeObserver;
+
+onMounted(function() {
+  refresh();
+  const el = document.querySelector(".waterfall-box")! as HTMLElement;
+  observer = new ResizeObserver(function(entries) {
+    const rect = entries[0].contentRect;
+    if (rect.width > 1200) {
+      page.column = 4;
+    } else if (rect.width > 900) {
+      page.column = 3;
+    } else if (rect.width > 600) {
+      page.column = 2;
+    }
+    el.style.setProperty("--column", page.column.toString());
+  });
+  observer.observe(el);
+});
+
+onUnmounted(function() {
+  observer.disconnect();
+})
+
+
 const scenes = ref([
   {id: 0, name: '精选推荐', label: 'RECOMMEND', icon: ''},
   {id: 0, name: '小红书', label: 'REDBOOK', icon: ''},
@@ -181,6 +208,118 @@ const materials = ref([
   cursor: pointer;
   &:hover {
     background: #fff;
+  }
+}
+.water-list {
+  width: 100%;
+  padding: 20px 14px;
+  .water-list-column {
+    flex: 1;
+    padding: 0 6px;
+    .water-list-item {
+      // width: 100%;
+      background-color: #fff;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0px 0px 12px rgba(0, 0, 0, .12);
+      padding: 10px;
+      .pic {
+        display: block;
+        width: 100%;
+        border-radius: 10px;
+        overflow: hidden;
+        margin-bottom: 14px;
+      }
+      .title {
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 8px;
+      }
+      .content {
+        font-size: 14px;
+        color: #222;
+        line-height: 20px;
+        height: 40px;
+      }
+    }
+  }
+  .water-list-column + .water-list-column {
+    margin-left: 14px;
+  }
+}
+.water-list.develop {
+  outline: #13ce66 dashed 1px;
+  .water-list-column {
+    outline: #1890FF solid 1px;
+    .water-list-item {
+      outline: #fdd835 solid 1px;
+    }
+  }
+}
+.top {
+  width: 100%;
+  height: 80px;
+  border-bottom: solid 1px #ddd;
+  background-color: #fff;
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  .link {
+    font-size: 14px;
+    padding: 4px 12px;
+    color: #13ce66;
+  }
+}
+
+.group-move,
+.group-enter-active,
+.group-leave-active {
+  transition: .8s all;
+}
+
+.group-enter-from,
+.group-leave-to {
+  opacity: 0;
+  transform: translate3d(0px, 30px, 0);
+}
+
+.group-leave-active {
+  position: absolute;
+}
+.waterfall-box {
+  --column: 4;
+  display: grid;
+  grid-template-columns: repeat(var(--column), 1fr);
+  grid-gap: 0 20px;
+  padding: 20px 0;
+  align-items: end;
+  .waterfall-item {
+    background-color: #fff;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0px 0px 12px rgba(0, 0, 0, .12);
+    padding: 10px;
+    .pic {
+      display: block;
+      width: 100%;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+    .title {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+    .content {
+      font-size: 14px;
+      color: #222;
+      line-height: 20px;
+      height: 40px;
+    }
   }
 }
 </style>
