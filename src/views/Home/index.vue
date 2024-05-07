@@ -25,8 +25,8 @@
             </el-menu-item>
           </el-menu>
         </el-aside>
-        <el-main @scroll="handleScroll" class="h-lvh">
-          <MainContent/>
+        <el-main @scroll="handleScroll" class="h-lvh" ref="mainRef">
+          <MainContent />
         </el-main>
       </el-container>
     </el-container>
@@ -38,8 +38,11 @@ import MainContent from './components/MainContent.vue';
 import { useTemplatesStore } from '@/store';
 import { storeToRefs } from 'pinia';
 
+const mainRef = ref<HTMLElement | undefined>()
+
 const handleScroll = () => {
   console.log('handleScroll:----')
+  if (!mainRef.value) return
   // templatesStore.handleScroll()
 }
 

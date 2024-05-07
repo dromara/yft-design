@@ -13,7 +13,6 @@ import { Image } from "@/extension/object/Image";
 import { QRCode } from "@/extension/object/QRCode";
 import { BarCode } from "@/extension/object/BarCode";
 import { ArcText } from '@/extension/object/ArcText';
-import { Table } from "@/extension/object/Table";
 import { VerticalText } from '@/extension/object/VerticalText'
 import JsBarcode from "jsbarcode";
 import { i18nObj } from "@/plugins/i18n/index"
@@ -218,7 +217,7 @@ export default () => {
       } else if (height > currentTemplateHeight.value) {
         imageScale = currentTemplateHeight.value / height;
       }
-      const imageElement = await Image.fromURL(url, {
+      const imageElement = await Image.fromURL(url, {}, {
         id: nanoid(10),
         angle: 0,
         left: centerPoint.x - (width * imageScale) / 2,
@@ -241,7 +240,7 @@ export default () => {
   const createQRCodeElement = async (url: string, codeOption: QRCodeOption, codeContent?: string) => {
     const { centerPoint } = useCenter();
     // const QRCode = classRegistry.getClass('QRCode')
-    const codeObject = (await QRCode.fromURL(url, {
+    const codeObject = (await QRCode.fromURL(url, {}, {
       id: nanoid(10),
       name: ElementNames.QRCODE,
       angle: 0,
@@ -266,7 +265,7 @@ export default () => {
   const createBarCodeElement = async (url: string, codeContent: string, codeOption: JsBarcode.BaseOptions) => {
     const { centerPoint } = useCenter();
     // const Barcode = classRegistry.getClass('BarCode')
-    const barcodeObject = await BarCode.fromURL(url, {
+    const barcodeObject = await BarCode.fromURL(url, {}, {
       id: nanoid(10),
       name: ElementNames.BARCODE,
       angle: 0,
@@ -325,9 +324,9 @@ export default () => {
     // const { centerPoint } = useCenter();
     // const [canvas] = useCanvas();
 
-    const table = new Table();
+    // const table = new Table();
 
-    renderCanvas(table)
+    // renderCanvas(table)
 
   }
 
