@@ -14,7 +14,7 @@
     </el-row>
     <el-row>
       <el-row class="overflow-hidden flex-nowrap relative">
-        <el-col v-for="item in scenes" :span="2" class="scene-col">
+        <el-col v-for="item in HomeScenes" :span="2" class="scene-col">
           <el-row>{{ item.name }}</el-row>
           <el-row>{{ item.label }}</el-row>
         </el-col>
@@ -35,7 +35,7 @@
       <el-row>
         <el-col :span="13">
           <el-row class="bg-[#eee] rounded-[10px] h-[120px] justify-between">
-            <el-col v-for="item in tools" :span="4" class="tool-col">
+            <el-col v-for="item in HomeTools" :span="4" class="tool-col">
               <el-row>{{ item.name }}</el-row>
             </el-col>
           </el-row>
@@ -43,7 +43,7 @@
         <el-col :span="1"></el-col>
         <el-col :span="10">
           <el-row class="bg-[#eee] rounded-[10px] h-[120px] justify-between">
-            <el-col v-for="item in materials" :span="4" class="tool-col">
+            <el-col v-for="item in HomeMaterials" :span="4" class="tool-col">
               <el-row>{{ item.name }}</el-row>
               <el-row>{{ item.label }}</el-row>
             </el-col>
@@ -56,36 +56,34 @@
         <b class="text-[20px]">今日推荐</b>
       </el-col>
     </el-row>
-    <el-row>
-      <TransitionGroup :name="page.move ? 'group' : ''" tag="div" class="waterfall-box">
-        <div class="waterfall-item" v-for="(item, index) in page.list" :key="item.id">
-          <img class="pic" :src="item.photo" alt="" :ref="e => setItemStyle(e as any, index)">
-          <div class="title">{{ item.title }}</div>
-          <div class="content ellipsis_2">{{ item.text }}</div>
-        </div>
-      </TransitionGroup>
-    </el-row>
+    <TransitionGroup :name="page.move ? 'group' : ''" tag="div" class="waterfall-box" ref="waterfallRef">
+      <div class="waterfall-item" v-for="(item, index) in page.list" :key="item.id">
+        <img class="pic" :src="item.photo" alt="" :ref="e => setItemStyle(e as any, index)">
+        <div class="title">{{ item.title }}</div>
+        <div class="content ellipsis_2">{{ item.text }}</div>
+      </div>
+    </TransitionGroup>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue';
 import { reactive, onMounted, onUnmounted } from "vue";
-import { useRequest, type ItemList } from "./hooks";
-const searchSelect = ref<string>('1')
-const { getList, defaultPic } = useRequest();
+import { HomeScenes, HomeTools, HomeMaterials } from '@/configs/home';
+import { ItemList } from '@/api/template/types';
+import { getList } from '@/api/template'
 
+const searchSelect = ref<string>('1')
 const page = reactive({
   loading: false,
-  column: 4,
+  column: 6,
   move: true,
   list: [] as ItemList,
 });
 
-function setItemStyle(img: HTMLImageElement, index: number) {
-  // console.log(index, img);
+const setItemStyle = (img: HTMLImageElement, index: number) => {
   if (!img) return;
-  function update() {
+  const update = () => {
     const item = img.parentElement;
     if (!item) return;
     const gapRows = index >= page.column ? 8 : 0;
@@ -95,12 +93,12 @@ function setItemStyle(img: HTMLImageElement, index: number) {
   update();
   img.onload = update;
   img.onerror = function() {
-    img.src = defaultPic.data;
+    img.src = new URL(`/src/assets/images/loading.gif`, import.meta.url).href;
     update();
   };
 }
 
-async function getData(reset = false) {
+const getData = async (reset = false) => {
   page.loading = true;
   const res = await getList(20);
   page.loading = false;
@@ -119,66 +117,29 @@ function refresh() {
 
 let observer: ResizeObserver;
 
-onMounted(function() {
+onMounted(() => {
   refresh();
   const el = document.querySelector(".waterfall-box")! as HTMLElement;
-  observer = new ResizeObserver(function(entries) {
+  observer = new ResizeObserver((entries) => {
     const rect = entries[0].contentRect;
     if (rect.width > 1200) {
-      page.column = 4;
+      page.column = 6;
     } else if (rect.width > 900) {
-      page.column = 3;
+      page.column = 5;
     } else if (rect.width > 600) {
-      page.column = 2;
+      page.column = 4;
     }
     el.style.setProperty("--column", page.column.toString());
   });
   observer.observe(el);
 });
 
-onUnmounted(function() {
+onUnmounted(() => {
   observer.disconnect();
 })
 
 
-const scenes = ref([
-  {id: 0, name: '精选推荐', label: 'RECOMMEND', icon: ''},
-  {id: 0, name: '小红书', label: 'REDBOOK', icon: ''},
-  {id: 0, name: '公众号', label: 'WECHAT', icon: ''},
-  {id: 0, name: '电商', label: 'E-COMMERCE', icon: ''},
-  {id: 0, name: '教育培训', label: 'EDUCATION', icon: ''},
-  {id: 0, name: '短视频', label: 'VIDEO', icon: ''},
-  {id: 0, name: '金融保险', label: 'FINANCIAL', icon: ''},
-  {id: 0, name: '粉丝应援', label: 'SUPPORT', icon: ''},
-  {id: 0, name: '个人生活', label: 'LIFE', icon: ''},
-  {id: 0, name: '设计师', label: 'DESIGN', icon: ''},
-  {id: 0, name: '门店', label: 'STORE', icon: ''},
-  {id: 0, name: '电竞运营', label: 'ESPORTS', icon: ''},
-  {id: 0, name: '精选推荐', label: 'RECOMMEND', icon: ''},
-  {id: 0, name: '精选推荐', label: 'RECOMMEND', icon: ''},
-  {id: 0, name: '精选推荐', label: 'RECOMMEND', icon: ''},
-])
 
-const tools = ref([
-  {id: 0, name: '精选推荐', label: 'RECOMMEND', icon: ''},
-  {id: 0, name: '小红书', label: 'REDBOOK', icon: ''},
-  {id: 0, name: '公众号', label: 'WECHAT', icon: ''},
-  {id: 0, name: '电商', label: 'E-COMMERCE', icon: ''},
-  {id: 0, name: '教育培训', label: 'EDUCATION', icon: ''},
-  {id: 0, name: '短视频', label: 'VIDEO', icon: ''},
-  {id: 0, name: '金融保险', label: 'FINANCIAL', icon: ''},
-  {id: 0, name: '粉丝应援', label: 'SUPPORT', icon: ''},
-  {id: 0, name: '个人生活', label: 'LIFE', icon: ''},
-  {id: 0, name: '设计师', label: 'DESIGN', icon: ''},
-])
-
-const materials = ref([
-  {id: 0, name: '精选推荐', label: 'RECOMMEND', icon: ''},
-  {id: 0, name: '小红书', label: 'REDBOOK', icon: ''},
-  {id: 0, name: '公众号', label: 'WECHAT', icon: ''},
-  {id: 0, name: '电商', label: 'E-COMMERCE', icon: ''},
-  {id: 0, name: '教育培训', label: 'EDUCATION', icon: ''},
-])
 </script>
 
 <style lang="scss" scoped>
@@ -289,7 +250,7 @@ const materials = ref([
   position: absolute;
 }
 .waterfall-box {
-  --column: 4;
+  --column: 6;
   display: grid;
   grid-template-columns: repeat(var(--column), 1fr);
   grid-gap: 0 20px;
