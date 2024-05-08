@@ -55,4 +55,5 @@ export class Textbox extends OriginTextbox {
   }
 }
 
-classRegistry.setClass(Textbox, 'Textbox')
+classRegistry.setClass(Textbox)
+classRegistry.setSVGClass(Textbox)

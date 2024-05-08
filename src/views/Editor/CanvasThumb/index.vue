@@ -5,22 +5,16 @@
     v-contextmenu="contextMenusThumbnails"  
   >
     <el-row class="thumb-handle items-center">
-      <el-col :span="8">
-        <div class="flex justify-center text-[16px]">
-          <!-- <IconAllApplication class="handler-item" ref="menuRef" /> -->
-          
+      <el-col :span="12" class="flex justify-center text-[16px]">
+        <div>
           <el-button text ref="menuRef">文件</el-button>
           <HomePopover :menu-ref="menuRef" :menu-popover-ref="menuPopoverRef" />
         </div>
       </el-col>
-      <el-col :span="16">
-        <el-button @click="createTemplate()" text> <IconPlus class="icon" />{{ t('message.addPage') }}</el-button>
-        <!-- <div class="btn" @click="createTemplate()"><IconPlus class="icon" /></div> -->
+      <el-col :span="12" class="flex justify-center text-[16px]">
+        <el-button @click="createTemplate()" text> <IconPlus class="icon" /></el-button>
       </el-col>
     </el-row>
-    <!-- <div class="thumb-handle">
-      <div class="btn" @click="createTemplate()"><IconPlus class="icon" />{{ t('message.addPage') }}</div>
-    </div> -->
     <Draggable
       class="thumb-content"
       :modelValue="templates"

@@ -7,7 +7,7 @@
     v-contextmenu="contextMenusThumbnails"  
   >
     <div class="thumb-handle">
-      <div class="btn" @click="createTemplate()"><IconPlus class="icon" />{{ t('message.addPage') }}</div>
+      <div class="btn" @click="createTemplate()"><IconPlus class="icon" /></div>
     </div>
     <Draggable
       class="thumb-content"

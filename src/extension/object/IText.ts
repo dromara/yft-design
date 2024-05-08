@@ -100,4 +100,5 @@ export class IText extends OriginIText {
 
 }
 
-classRegistry.setClass(IText, 'IText')
+classRegistry.setClass(IText)
+classRegistry.setSVGClass(IText)
