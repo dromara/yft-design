@@ -42,9 +42,6 @@ import CanvasTour from "./CanvasTour/index.vue";
 .layout-content {
   height: calc(100% - 40px);
 }
-.layout-content-left {
-  // border-right: solid 1px $borderColor;
-}
 .layout-content-center {
   width: calc(100% - 50px - 160px - 260px);
 

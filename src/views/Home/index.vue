@@ -26,7 +26,19 @@
           </el-menu>
         </el-aside>
         <el-main @scroll="handleScroll" class="h-lvh" id="main">
-          <MainContent ref="contentRef"/>
+          <MainSearch />
+          <MainScene />
+          <MainTools />
+          <el-row class="mt-[40px]">
+            <b class="text-[20px]">今日推荐</b>
+          </el-row>
+          <TransitionGroup :name="page.move ? 'group' : ''" tag="div" class="waterfall-box" id="waterfall">
+            <div class="waterfall-item" v-for="(item, index) in page.list" :key="item.id">
+              <img class="pic" :src="item.photo" alt="" :ref="e => setItemStyle(e as any, index)">
+              <div class="title">{{ item.title }}</div>
+              <div class="content ellipsis_2">{{ item.text }}</div>
+            </div>
+          </TransitionGroup>
         </el-main>
       </el-container>
     </el-container>
@@ -34,36 +46,84 @@
 </template>
 
 <script lang="ts" setup>
-import MainContent from './components/MainContent.vue';
-import { ref } from 'vue';
+import MainSearch from './components/MainSearch.vue';
+import MainScene from './components/MainScene.vue';
+import MainTools from './components/MainTools.vue';
+import { ItemList } from '@/api/template/types';
+import { getList } from '@/api/template'
+import { throttle } from 'lodash-es'
 
-const contentRef = ref()
-
-function rafThrottle(fn: Function) {
-  let lock = false;
-  return function (this: any, ...args: any[]) {
-    if (lock) return;
-    lock = true;
-    window.requestAnimationFrame(() => {
-      fn.apply(this, args);
-      lock = false;
-    });
-  };
-}
-
-const handleScroll = rafThrottle(() => {
+const handleScroll = throttle(() => {
   const mainElement = document.getElementById('main') as HTMLElement
   const scrollHeight = mainElement.scrollHeight, scrollTop = mainElement.scrollTop, clientHeight = mainElement.clientHeight
   if (scrollHeight - (scrollTop + clientHeight) <= 200) {
-    console.log('到底了')
-    contentRef.value?.getData()
+    getData()
   }
+}, 2000)
+
+const page = reactive({
+  loading: false,
+  column: 6,
+  move: true,
+  list: [] as ItemList,
+});
+
+const setItemStyle = (img: HTMLImageElement, index: number) => {
+  if (!img) return;
+  const update = () => {
+    const item = img.parentElement;
+    if (!item) return;
+    const gapRows = index >= page.column ? 8 : 0;
+    const rows = Math.ceil(item.clientHeight / 2) + gapRows;
+    item.style.gridRowEnd = `span ${rows}`;
+  }
+  update();
+  img.onload = update;
+  img.onerror = function() {
+    img.src = new URL(`/src/assets/images/loading.gif`, import.meta.url).href;
+    update();
+  };
+}
+
+const getData = async (reset = false) => {
+  page.loading = true;
+  const res = await getList(20);
+  page.loading = false;
+  if (res.code === 1) {
+    if (reset) {
+      page.list = res.data;
+    } else {
+      page.list = page.list.concat(res.data);
+    }
+  }
+}
+
+let observer: ResizeObserver;
+
+onMounted(() => {
+  getData(true);
+  const el = document.getElementById('waterfall') as HTMLElement;
+  observer = new ResizeObserver((entries) => {
+    const rect = entries[0].contentRect;
+    if (rect.width > 1200) {
+      page.column = 6;
+    } else if (rect.width > 900) {
+      page.column = 5;
+    } else if (rect.width > 600) {
+      page.column = 4;
+    }
+    el.style.setProperty("--column", page.column.toString());
+  });
+  observer.observe(el);
+});
+
+onUnmounted(() => {
+  observer.disconnect();
 })
 
 </script>
 
 <style lang="scss" scoped>
-
 .el-aside .el-menu .el-menu-item {
   height: 40px;
   padding-left: 0;
@@ -73,5 +133,111 @@ const handleScroll = rafThrottle(() => {
   &:hover {
     background-color: #f1f2f4;
   }
+}
+.water-list {
+  width: 100%;
+  padding: 20px 14px;
+  .water-list-column {
+    flex: 1;
+    padding: 0 6px;
+    .water-list-item {
+      // width: 100%;
+      background-color: #fff;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0px 0px 12px rgba(0, 0, 0, .12);
+      padding: 10px;
+      .pic {
+        display: block;
+        width: 100%;
+        border-radius: 10px;
+        overflow: hidden;
+        margin-bottom: 14px;
+      }
+      .title {
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 8px;
+      }
+      .content {
+        font-size: 14px;
+        color: #222;
+        line-height: 20px;
+        height: 40px;
+      }
+    }
+  }
+  .water-list-column + .water-list-column {
+    margin-left: 14px;
+  }
+}
+.water-list.develop {
+  outline: #13ce66 dashed 1px;
+  .water-list-column {
+    outline: #1890FF solid 1px;
+    .water-list-item {
+      outline: #fdd835 solid 1px;
+    }
+  }
+}
+.group-move,
+.group-enter-active,
+.group-leave-active {
+  transition: .8s all;
+}
+
+.group-enter-from,
+.group-leave-to {
+  opacity: 0;
+  transform: translate3d(0px, 30px, 0);
+}
+
+.group-leave-active {
+  position: absolute;
+}
+.waterfall-box {
+  --column: 6;
+  display: grid;
+  grid-template-columns: repeat(var(--column), 1fr);
+  grid-gap: 0 20px;
+  padding: 20px 0;
+  align-items: end;
+  .waterfall-item {
+    background-color: #fff;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0px 0px 12px rgba(0, 0, 0, .12);
+    padding: 10px;
+    .pic {
+      display: block;
+      width: 100%;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+    .title {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+    .content {
+      font-size: 14px;
+      color: #222;
+      line-height: 20px;
+      height: 40px;
+    }
+  }
+}
+</style>
+<style scoped>
+:deep(.row-home .el-input .el-select) {
+  width: 115px;
+  height: 40px;
+}
+:deep(.row-home .el-input .el-select__wrapper) {
+  width: 115px;
+  height: 40px;
 }
 </style>
