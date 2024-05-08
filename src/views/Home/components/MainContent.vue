@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-[20px]">
+  <el-scrollbar ref="scrollbarRef" @scroll="onScroll" class="mx-[20px]">
     <el-row :gutter="20" class="h-[100px] flex items-center row-home">
       <el-col :span="10" :offset="7">
         <el-input class="h-[40px]" :prefix-icon="Search" placeholder="五一假期">
@@ -63,7 +63,7 @@
         <div class="content ellipsis_2">{{ item.text }}</div>
       </div>
     </TransitionGroup>
-  </div>
+  </el-scrollbar>
 </template>
 
 <script lang="ts" setup>
@@ -72,6 +72,7 @@ import { reactive, onMounted, onUnmounted } from "vue";
 import { HomeScenes, HomeTools, HomeMaterials } from '@/configs/home';
 import { ItemList } from '@/api/template/types';
 import { getList } from '@/api/template'
+import { throttle } from 'lodash-es'
 
 const searchSelect = ref<string>('1')
 const page = reactive({
@@ -116,6 +117,19 @@ function refresh() {
 }
 
 let observer: ResizeObserver;
+
+// 滚动相关 
+const scrollbarRef = ref()
+const onScroll = throttle(function(e: any) {
+  if(!e) return
+  const _scrollbarRef =unref(scrollbarRef) // scrollbar的包裹元素
+  const warpH = _scrollbarRef?.wrapRef.clientHeight; // 窗口高度
+  const scrollH = e.scrollTop // 滚动高度
+  const warpScrollH = _scrollbarRef?.wrapRef.scrollHeight // scrollbar的滚动高度
+  if(warpH + scrollH > warpScrollH - 50) {
+    console.log('触底了')
+  }
+}, 200)
 
 onMounted(() => {
   refresh();

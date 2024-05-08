@@ -55,6 +55,7 @@ const handleScroll = rafThrottle(() => {
   const mainElement = document.getElementById('main') as HTMLElement
   const scrollHeight = mainElement.scrollHeight, scrollTop = mainElement.scrollTop, clientHeight = mainElement.clientHeight
   if (scrollHeight - (scrollTop + clientHeight) <= 200) {
+    console.log('到底了')
     contentRef.value?.getData()
   }
 })
