@@ -11,9 +11,11 @@
           </el-col>
         </el-row>
         <el-row class="category-box mt-5" v-loading="item.category.length === 0">
-          <el-col :span="8" class="box-image" v-for="(img, index) in item.category" :key="index">
-            <img :src="img.previewURL" :alt="img.tags" @click="createImage(img)"/>
-          </el-col>
+          <div class="box-image" v-for="(img, index) in item.category" :key="index" :style="{ height: (img.previewHeight < 100 ? 100 : img.previewHeight) + 'px' }">
+            <el-tooltip placement="top" :content="img.tags" :hide-after="0">
+              <el-image :src="img.previewURL" :alt="img.tags" @click="createImage(img)" lazy loading="lazy"></el-image>
+            </el-tooltip>
+          </div>
         </el-row>
       </div>
     </div>
@@ -24,8 +26,10 @@
         </el-col>
       </el-row>
       <el-row class="total-box mt-5" v-loading="categoryData.total.length === 0">
-        <div class="box-image" v-for="(img, index) in categoryData.total" :key="index" :style="{ justifyContent: index % 2 === 0 ? 'flex-start' : 'flex-end'}">
-          <img :src="img.previewURL" :alt="img.tags" @click="createImage(img)"/>
+        <div class="box-image" v-for="(img, index) in categoryData.total" :key="index">
+          <el-tooltip placement="top" :content="img.tags" :hide-after="0">
+            <el-image :src="img.previewURL" :alt="img.tags" @click="createImage(img)" lazy loading="lazy"></el-image>
+          </el-tooltip>
         </div>
       </el-row>
     </div>
@@ -193,23 +197,21 @@ onMounted(() => {
 }
 .category-box {
   align-items: center;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
+  flex-direction: column;
   overflow: hidden;
   height: 100px;
   .box-image {
-    display: flex;
-    align-items: center;
+    height: 100px;
     padding: 0 2px;
-    &:first-child {
-      justify-content: flex-start;
-    }
-    &:last-child {
-      justify-content: flex-end;
-    }
-    img {
-      max-width: 100%;
+    .el-image {
+      height: 100%;
       cursor: pointer;
+      &:hover {
+        filter: brightness(90%);
+      }
     }
+    
   }
 }
 
@@ -221,12 +223,19 @@ onMounted(() => {
 .total-box {
   .box-image {
     padding: 2px;
-    width: 48%;
-    height: 120px;
-    overflow: hidden;
-    display: flex;
-    img {
-      max-width: 100%;
+    width: 50%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    .el-image {
+      
+      width: 128px;
+      cursor: pointer;
+      &:hover {
+        filter: brightness(90%);
+      }
+      img {
+        border-radius: 5px;
+      }
     }
   }
 }
