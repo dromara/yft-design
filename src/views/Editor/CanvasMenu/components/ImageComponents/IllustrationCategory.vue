@@ -28,7 +28,7 @@
       <el-row class="total-box mt-5" v-loading="categoryData.total.length === 0">
         <div class="box-image" v-for="(img, index) in categoryData.total" :key="index">
           <el-tooltip placement="top" :content="img.tags" :hide-after="0">
-            <el-image :src="img.previewURL" :alt="img.tags" @click="createImage(img)" lazy loading="lazy"></el-image>
+            <img :src="img.previewURL" :alt="img.tags" @click="createImage(img)" lazy loading="lazy" :ref="e => setItemStyle(e, index)" />
           </el-tooltip>
         </div>
       </el-row>
@@ -75,6 +75,23 @@ const getImageCategoryData = throttle(
   100,
   { leading: true, trailing: false }
 );
+
+const setItemStyle = (img: HTMLImageElement, index: number) => {
+  if (!img) return;
+  const update = () => {
+    const item = img.parentElement;
+    if (!item) return;
+    const gapRows = index >= 2 ? 8 : 0;
+    const rows = Math.ceil(item.clientHeight / 2) + gapRows;
+    item.style.gridRowEnd = `span ${rows}`;
+  }
+  update();
+  img.onload = update;
+  img.onerror = function() {
+    img.src = new URL(`/src/assets/images/loading.gif`, import.meta.url).href;
+    update();
+  };
+}
 
 const getImagePageData = throttle(
   async (t: string, page: 1) => {
@@ -205,13 +222,13 @@ onMounted(() => {
     height: 100px;
     padding: 0 2px;
     .el-image {
+      border-radius: 2px;
       height: 100%;
       cursor: pointer;
       &:hover {
         filter: brightness(90%);
       }
     }
-    
   }
 }
 
@@ -221,20 +238,16 @@ onMounted(() => {
   align-items: center;
 }
 .total-box {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   .box-image {
     padding: 2px;
-    width: 50%;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    .el-image {
-      
+    img {
       width: 128px;
       cursor: pointer;
+      border-radius: 5px;
       &:hover {
         filter: brightness(90%);
-      }
-      img {
-        border-radius: 5px;
       }
     }
   }
