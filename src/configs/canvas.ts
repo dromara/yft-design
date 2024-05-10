@@ -105,7 +105,7 @@ export const WorkSpaceDrawData = {
   "ry": 0,
   "id": "WorkSpaceDrawType",
   "name": "rect",
-  "fill": "",
+  "fill": "#fff",
   "selectable": false,
   "evented": false,
   "lockMovementX": false,

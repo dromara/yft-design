@@ -8,7 +8,7 @@
     <!-- <el-divider style="margin: 12px 0" />
     <ElementClip /> -->
     <el-divider style="margin: 12px 0" />
-    <ElementOutline />
+    <ElementStroke :hasStroke="hasStroke" />
     <el-divider style="margin: 12px 0" />
     <ElementShadow :hasShadow="hasShadow" />
     <el-divider style="margin: 12px 0" />
@@ -17,7 +17,6 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue'
 import ElementPosition from '../Components/ElementPosition.vue'
 import ElementOpacity from '../Components/ElementOpacity.vue'
 import ElementOutline from '../Components/ElementOutline.vue'
@@ -25,15 +24,18 @@ import ElementShadow from '../Components/ElementShadow.vue'
 import ElementFlip from '../Components/ElementFlip.vue'
 import ElementClip from '../Components/ElementClip.vue'
 import ElementText from '../Components/ElementText.vue'
+import ElementStroke from '../Components/ElementStroke.vue'
 import ElementFill from '../Backgrounds/ElementFill.vue'
 import { storeToRefs } from 'pinia'
 import { useMainStore } from '@/store'
 import { Path } from 'fabric'
 
+
 const mainStore = useMainStore()
 const { canvasObject } = storeToRefs(mainStore)
 const handleElement = computed(() => canvasObject.value as Path) 
 const hasShadow = computed(() => handleElement.value.shadow ? true : false)
+const hasStroke = computed(() => handleElement.value.stroke ? true : false)
 </script>
 
 <style lang="scss" scoped>
