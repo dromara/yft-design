@@ -233,6 +233,7 @@ export declare module 'fabric' {
   export declare interface SerializedObjectProps {
     id: string
     name: string
+    type: string
   }
 
   export declare interface GroupProps extends FabricObjectProps, GroupOwnProps { }

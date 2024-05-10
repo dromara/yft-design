@@ -28,7 +28,7 @@
       <el-row class="total-box mt-5" v-loading="categoryData.total.length === 0">
         <div class="box-image" v-for="(img, index) in categoryData.total" :key="index">
           <el-tooltip placement="top" :content="img.tags" :hide-after="0">
-            <img :src="img.previewURL" :alt="img.tags" @click="createImage(img)" lazy loading="lazy" :ref="e => setItemStyle(e, index)" />
+            <img :src="img.previewURL" :alt="img.tags" @click="createImage(img)" lazy loading="lazy" :ref="(e: HTMLImageElement) => setItemStyle(e, index)" />
           </el-tooltip>
         </div>
       </el-row>

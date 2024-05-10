@@ -22,7 +22,7 @@
 
 <script lang="ts" setup>
 import { PropType } from 'vue'
-import { Object as FabricObject } from 'fabric'
+import { Object as FabricObject, SerializedObjectProps } from 'fabric'
 import { ElementNames } from '@/types/elements'
 import { contextMenusThumbnails } from '@/configs/contextMenu'
 import Draggable from 'vuedraggable'
@@ -35,7 +35,7 @@ const {  sortElement, layerElement } = useHandleElement()
 
 const props = defineProps({
   elements: {
-    type: Object as PropType<FabricObject[]>,
+    type: Object as PropType<SerializedObjectProps[]>,
     required: true,
   },
   index: {

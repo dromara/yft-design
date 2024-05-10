@@ -34,7 +34,7 @@
           </el-row>
           <TransitionGroup :name="page.move ? 'group' : ''" tag="div" class="waterfall-box" id="waterfall">
             <div class="waterfall-item" v-for="(item, index) in page.list" :key="item.id">
-              <img class="pic" :src="item.photo" alt="" :ref="e => setItemStyle(e as any, index)">
+              <img class="pic" :src="item.photo" alt="" :ref="(e: HTMLImageElement) => setItemStyle(e, index)">
               <div class="title">{{ item.title }}</div>
               <div class="content ellipsis_2">{{ item.text }}</div>
             </div>
