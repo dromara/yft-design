@@ -205,7 +205,7 @@ const goHome = () => {
   cursor: pointer;
   background: #fff;
   position: relative;
-
+  border-radius: 5px;
   .help-handle {
     font-size: 20px;
   }
@@ -216,6 +216,9 @@ const goHome = () => {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+  }
+  &:hover {
+    background: #f1f1f1;
   }
 }
 .has-help {

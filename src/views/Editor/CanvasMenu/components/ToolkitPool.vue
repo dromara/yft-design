@@ -176,6 +176,9 @@ const closeImageFillColor = () => {
   background: #f6f6f6;
   display: flex;
   cursor: pointer;
+  &:hover {
+    filter: brightness(90%);
+  }
 }
 .code-icon {
   width: 50px;

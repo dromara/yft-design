@@ -14,10 +14,7 @@
         :placeholder="$t('message.searchLayer')"
       ></el-input>
     </el-row>
-    <LayerDraggableSelf
-      :elements="layerObjects"
-      :index="0"
-    ></LayerDraggableSelf>
+    <LayerDraggableSelf :elements="layerObjects" :index="0" />
   </div>
 </template>
 
@@ -40,14 +37,10 @@ const { cancelElement } = useHandleElement();
 const layerObjects = computed(() => {
   const _keywords = unref(keywords)
   if(!_keywords) return currentTemplate.value.objects.filter(
-    (item) =>
-      !WorkSpaceThumbType.includes(item.id) &&
-      item.type.toLowerCase() !== ElementNames.REFERENCELINE
+    (item) => !WorkSpaceThumbType.includes(item.id) && item.type.toLowerCase() !== ElementNames.REFERENCELINE
   )
   return currentTemplate.value.objects.filter(
-    (item) =>
-      !WorkSpaceThumbType.includes(item.id) &&
-      item.type.toLowerCase() !== ElementNames.REFERENCELINE && item.type.toLowerCase().includes(_keywords) 
+    (item) => !WorkSpaceThumbType.includes(item.id) && item.type.toLowerCase() !== ElementNames.REFERENCELINE && item.type.toLowerCase().includes(_keywords) 
   )
 });
 </script>

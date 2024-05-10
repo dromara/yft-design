@@ -92,14 +92,27 @@ const drawText = (fontSize: number) => {
     white-space: nowrap; 
     &:hover {
       overflow: visible;
+      padding: 0 5px;
+      border-radius: 5px;
+      background-color: #f3f3f3;
     }
   }
   .middle {
     font-size: 16px;
     font-weight: bold;
+    &:hover {
+      padding: 0 5px;
+      border-radius: 5px;
+      background-color: #f3f3f3;
+    }
   }
   .small {
     font-size: 14px;
+    &:hover {
+      border-radius: 5px;
+      padding: 0 5px;
+      background-color: #f3f3f3;
+    }
   }
 }
 .layout-tabs {
