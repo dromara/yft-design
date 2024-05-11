@@ -37,6 +37,9 @@
     </div>
 
     <el-divider style="margin: 12px 0" />
+    <ElementEffects />
+
+    <el-divider style="margin: 12px 0" />
 
     <div v-if="hasTextbox && handleTextboxElement">
       <el-row>
@@ -136,6 +139,7 @@ import { WEB_FONTS } from '@/configs/fonts'
 import { ElementNames, FontGroupOption } from '@/types/elements'
 import { CanvasElement, GroupElement, ImageElement, PathElement, TextboxElement } from '@/types/canvas'
 import ElementPosition from '../Components/ElementPosition.vue'
+import ElementEffects from '../Components/ElementEffects.vue'
 import useCanvas from '@/views/Canvas/useCanvas'
 // 组合元素编辑
 // http://jsfiddle.net/crandellws/1cad3e4o/
@@ -222,7 +226,7 @@ const updateFillColor = (color: string) => {
     groupElement._objects.forEach(obj => {
       const canvasElement = obj as CanvasElement
       if (canvasElement.type === ElementNames.GROUP) {
-        setFill(canvasElement)
+        setFill(canvasElement as GroupElement)
         return
       }
       canvasElement.fill = color

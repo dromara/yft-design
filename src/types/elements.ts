@@ -1,4 +1,4 @@
-import { ImageHit } from "@/api/image/types"
+import { ImageHit } from "@/api/static/types"
 import { XY } from "fabric"
 import { ImageElement } from "./canvas"
 
@@ -26,6 +26,15 @@ export const enum ElementNames {
   REFERENCELINE = 'referenceline',
   DOT = 'dot',
 }
+
+export const SupportEffects = [
+  'group',
+  'activeselection',
+  'itext',
+  'text',
+  'textbo',
+  'image',
+]
 
 export interface ColorStop {
   color: string

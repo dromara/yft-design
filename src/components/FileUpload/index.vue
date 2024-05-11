@@ -70,7 +70,7 @@ const generateSVGTemplate = async (dataText: string) => {
   const content = await loadSVGFromString(dataText)
   const options = content.options
   const svgData: any[] = []
-  content.objects.forEach(ele => svgData.push(ele.toObject(propertiesToInclude)))
+  content.objects.forEach(ele => svgData.push((ele as FabricObject).toObject(propertiesToInclude)))
   WorkSpaceDrawData.width = options.width
   WorkSpaceDrawData.height = options.height
   const emptyTemplate: Template = {

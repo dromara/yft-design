@@ -34,7 +34,7 @@
           </el-row>
           <TransitionGroup :name="page.move ? 'group' : ''" tag="div" class="waterfall-box" id="waterfall">
             <div class="waterfall-item" v-for="(item, index) in page.list" :key="item.id">
-              <img class="pic" :src="item.photo" alt="" :ref="(e: HTMLImageElement) => setItemStyle(e, index)">
+              <img class="pic" :src="item.photo" alt="" :ref="(e: any) => setItemStyle(e, index)">
               <div class="title">{{ item.title }}</div>
               <div class="content ellipsis_2">{{ item.text }}</div>
             </div>
@@ -134,53 +134,7 @@ onUnmounted(() => {
     background-color: #f1f2f4;
   }
 }
-// .water-list {
-//   width: 100%;
-//   padding: 20px 14px;
-//   .water-list-column {
-//     flex: 1;
-//     padding: 0 6px;
-//     .water-list-item {
-//       // width: 100%;
-//       background-color: #fff;
-//       margin-bottom: 20px;
-//       border-radius: 10px;
-//       overflow: hidden;
-//       box-shadow: 0px 0px 12px rgba(0, 0, 0, .12);
-//       padding: 10px;
-//       .pic {
-//         display: block;
-//         width: 100%;
-//         border-radius: 10px;
-//         overflow: hidden;
-//         margin-bottom: 14px;
-//       }
-//       .title {
-//         font-size: 20px;
-//         font-weight: bold;
-//         margin-bottom: 8px;
-//       }
-//       .content {
-//         font-size: 14px;
-//         color: #222;
-//         line-height: 20px;
-//         height: 40px;
-//       }
-//     }
-//   }
-//   .water-list-column + .water-list-column {
-//     margin-left: 14px;
-//   }
-// }
-// .water-list.develop {
-//   outline: #13ce66 dashed 1px;
-//   .water-list-column {
-//     outline: #1890FF solid 1px;
-//     .water-list-item {
-//       outline: #fdd835 solid 1px;
-//     }
-//   }
-// }
+
 .group-move,
 .group-enter-active,
 .group-leave-active {

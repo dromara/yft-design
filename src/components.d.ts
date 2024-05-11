@@ -194,6 +194,11 @@ export declare module 'fabric' {
     renderEffects(type?: string): void
   }
 
+  export declare class Textbox {
+    color: string
+  }
+
+
   export declare class Polygon {
     startStyle: LinePoint
     endStyle: LinePoint

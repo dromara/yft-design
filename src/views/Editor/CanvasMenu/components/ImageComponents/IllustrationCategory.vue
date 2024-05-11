@@ -28,7 +28,7 @@
       <el-row class="total-box mt-5" v-loading="categoryData.total.length === 0">
         <div class="box-image" v-for="(img, index) in categoryData.total" :key="index">
           <el-tooltip placement="top" :content="img.tags" :hide-after="0">
-            <img :src="img.previewURL" :alt="img.tags" @click="createImage(img)" lazy loading="lazy" :ref="(e: HTMLImageElement) => setItemStyle(e, index)" />
+            <img :src="img.previewURL" :alt="img.tags" @click="createImage(img)" lazy loading="lazy" :ref="(e: any) => setItemStyle(e, index)" />
           </el-tooltip>
         </div>
       </el-row>
@@ -40,8 +40,8 @@
 <script lang="ts" setup>
 import { onMounted, ref, computed } from "vue";
 import { debounce, throttle } from "lodash-es";
-import { getIllustrationPages, getIllustrationCategory } from "@/api/image";
-import { ImageHit } from "@/api/image/types";
+import { getIllustrationPages, getIllustrationCategory } from "@/api/static/image";
+import { ImageHit } from "@/api/static/types";
 import { useMainStore } from "@/store";
 import { storeToRefs } from "pinia";
 import { util } from "fabric";

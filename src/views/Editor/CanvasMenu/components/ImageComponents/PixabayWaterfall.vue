@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 // import { propTypes } from '@/utils/propTypes'
 // import { useDesign } from '@/hooks/web/useDesign'
-import { ImageHit } from '@/api/image/types'
+import { ImageHit } from '@/api/static/types'
 import { ref, nextTick, unref, onMounted, watch } from 'vue'
 import { useEventListener, useIntersectionObserver } from '@vueuse/core'
 import { debounce } from 'lodash-es'

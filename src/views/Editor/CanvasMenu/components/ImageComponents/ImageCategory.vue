@@ -82,8 +82,8 @@
 <script lang="ts" setup>
 import { onMounted, ref, computed } from "vue";
 import { debounce, throttle } from "lodash-es";
-import { getImageCategory, getImagePages } from "@/api/image";
-import { ImageHit } from "@/api/image/types";
+import { getImageCategory, getImagePages } from "@/api/static/image";
+import { ImageHit } from "@/api/static/types";
 import { useMainStore } from "@/store";
 import { storeToRefs } from "pinia";
 import useHandleCreate from "@/hooks/useHandleCreate";

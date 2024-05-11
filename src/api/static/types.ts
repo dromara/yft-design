@@ -3,6 +3,18 @@ export interface QueryPgaes {
   page: number
 }
 
+export interface FontPageResult {
+  code: number
+  msg: string
+  data: any[]
+}
+
+
+export interface QueryPgaes {
+  t: string
+  page: number
+}
+
 export interface QueryCategory {
   t: string
 }

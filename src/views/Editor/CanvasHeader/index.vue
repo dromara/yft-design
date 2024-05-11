@@ -19,7 +19,8 @@
       </el-tooltip>
       <el-tooltip placement="top" :hide-after="0">
         <template #content>{{ t("message.ruler") }}</template>
-        <i class="handler-item iconfont icon-ruler" @click="changeRuler()" />
+        <!-- <i class="handler-item iconfont icon-ruler" @click="changeRuler()" /> -->
+        <IconRuler class="handler-item" @click="changeRuler()" />
       </el-tooltip>
     </div>
 

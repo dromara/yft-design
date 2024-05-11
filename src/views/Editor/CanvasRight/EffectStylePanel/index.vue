@@ -138,12 +138,12 @@
 </template>
 
 <script lang="ts" setup>
-import { Image, Rect, Textbox, IText, Object as FabricObject } from "fabric";
+import { Image, Rect, Textbox, IText, Object as FabricObject, Group } from "fabric";
 import { storeToRefs } from "pinia";
 import { ElMessage } from "element-plus";
 import { ref, watch, onMounted, computed } from "vue";
 import { mm2px, px2mm } from "@/utils/image";
-import { RightStates } from '@/types/elements'
+import { ElementNames, RightStates, SupportEffects } from '@/types/elements'
 
 import { useFabricStore, useMainStore, useTemplatesStore } from "@/store";
 import useI18n from "@/hooks/useI18n";
@@ -164,7 +164,7 @@ const { canvasObject, rightState } = storeToRefs(mainStore);
 const { currentTemplate } = storeToRefs(templatesStore);
 const { clip, safe, zoom, opacity } = storeToRefs(fabricStore);
 const { setCanvasSize, resetCanvas } = useCanvasScale();
-const handleElement = computed(() => canvasObject.value as Image | IText);
+const handleElement = computed(() => canvasObject.value as Image | IText | Group);
 
 const handleReturn = () => {
   rightState.value = RightStates.ELEMENT_STYLE
@@ -228,9 +228,21 @@ const updateStrokeWidth = () => {
 
 const updateElement = () => {
   if (!handleElement.value.effects) return
-  handleElement.value.renderEffects()
-  // const [ canvas ] = useCanvas()
-  // canvas.renderAll()
+  const elementType = handleElement.value.type.toLowerCase()
+  if (!SupportEffects.includes(elementType)) return
+  if (elementType === ElementNames.GROUP || elementType === ElementNames.ACTIVE) {
+    const groupObject = handleElement.value as Group
+    groupObject._objects.forEach(item => {
+      if (SupportEffects.includes(item.type.toLowerCase())) {
+        const element = item as IText
+        element.set({effects: handleElement.value.effects})
+        element.renderEffects()
+      }
+    })
+  } 
+  else {
+    (handleElement.value as IText | Image).renderEffects()
+  }
 }
 
 </script>

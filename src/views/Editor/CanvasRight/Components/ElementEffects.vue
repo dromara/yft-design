@@ -6,7 +6,7 @@
  * @LastEditTime: 2024-04-14 10:25:55
 -->
 <template>
-   <div class="element-shadow">
+   <div>
     <el-row>
       <el-col :span="18">
         <el-button size="large" class="full-btn">特效</el-button>
@@ -34,34 +34,6 @@ const changeElementEffect = () => {
 </script>
 
 <style lang="scss" scoped>
-.row {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-}
-.stroke-name {
-  flex: 1;
-  display: flex;
-  justify-content: flex-start;
-  align-self: center;
-}
-.stroke-width {
-  flex: 2;
-  display: flex;
-  justify-content: flex-start;
-  align-self: center;
-}
-.stroke-option {
-  flex: 1;
-}
-.switch-wrapper {
-  text-align: right;
-}
-.slider {
-  flex: 3;
-  width: 80%;
-}
 .full-btn {
   width: 98%;
   .btn-right {

@@ -163,8 +163,8 @@
 
     <el-row class="mt-10" v-show="handleElement.type.toLowerCase() === ElementNames.ARCTEXT">
       <el-col :span="4" class="flex-align">
-        <el-radio-group class="full-ratio" v-model="handleElement.showCurvature" @change="changeArcTextStatus">
-          <el-tooltip placement="top" content="隐藏弧度" :hide-after="0" v-if="handleElement.showCurvature">
+        <el-radio-group class="full-ratio" v-model="(handleElement as ArcText).showCurvature" @change="changeArcTextStatus">
+          <el-tooltip placement="top" content="隐藏弧度" :hide-after="0" v-if="(handleElement as ArcText).showCurvature">
             <el-radio-button :value="false">
               <IconPreviewClose />
             </el-radio-button>
@@ -178,11 +178,11 @@
       </el-col>
       <el-col :span="1"></el-col>
       <el-col :span="12" class="flex-align">
-        <el-slider :min="66" :max="1000" :step="1" v-model="handleElement.radius" @change="changeArcTextRadius" size="small"></el-slider>
+        <el-slider :min="66" :max="1000" :step="1" v-model="(handleElement as ArcText).radius" @change="changeArcTextRadius" size="small"></el-slider>
       </el-col>
       <el-col :span="1"></el-col>
       <el-col :span="6" class="flex-align">
-        <el-input :min="1" :max="10" v-model="handleElement.radius" controls-position="right" size="default"/>
+        <el-input :min="1" :max="10" v-model="(handleElement as ArcText).radius" controls-position="right" size="default"/>
       </el-col>
     </el-row>
 
@@ -220,7 +220,7 @@ import { computed, ref, onMounted } from 'vue'
 import { useMainStore, useTemplatesStore } from '@/store'
 import { storeToRefs } from 'pinia'
 import { ElMessage } from 'element-plus'
-import { IText } from 'fabric'
+import { IText, Textbox } from 'fabric'
 import { FontSizeLibs, LineHeightLibs, CharSpaceLibs } from '@/configs/texts'
 import { WEB_FONTS } from '@/configs/fonts'
 import { propertiesToInclude } from '@/configs/canvas'
@@ -249,7 +249,7 @@ const templatesStore = useTemplatesStore()
 const { canvasObject, systemFonts } = storeToRefs(mainStore)
 const { createPathElement } = useHandleCreate()
 const [ canvas ] = useCanvas()
-const handleElement = computed(() => canvasObject.value as TextboxElement | ArcText)
+const handleElement = computed(() => canvasObject.value as Textbox | ArcText)
 const elementGrapheme = computed(() => handleElement.value.splitByGrapheme)
 const elementBackgrounColor = computed(() => {
   if (handleElement.value.type.toLowerCase() === ElementNames.ARCTEXT) {
@@ -471,7 +471,7 @@ const changeCharSpacing = (charSpacing: number) => {
 
 const handleElementArrange = (status: boolean) => {
   // handleElement.value.set({splitByGrapheme: status, width: handleElement.value.fontSize})
-  const options = handleElement.value.toObject(propertiesToInclude as any[]) as any
+  const options = (handleElement.value as any).toObject(propertiesToInclude as any[])
   options.lineHeight = 12
   delete options.type
   options.id = nanoid(10)
@@ -503,7 +503,7 @@ const handleElementCurve = async () => {
 }
 
 const handleElementDeformation = () => {
-  const options = handleElement.value.toObject(propertiesToInclude as any[]) as any
+  const options = (handleElement.value as any).toObject(propertiesToInclude as any[]) as any
   options.originType = options.type
   delete options.type
   options.id = nanoid(10)
