@@ -15,7 +15,7 @@
 
     <el-row class="mt-10">
       <el-col :span="6">
-        <el-tooltip placement="top" content="文字颜色">
+        <el-tooltip placement="top" :content="$t('style.color')">
           <div @click.stop class="tooltip-popover">
             <el-popover trigger="click" placement="bottom" :width="265" @click.stop>
               <template #reference>
@@ -29,7 +29,7 @@
         </el-tooltip>
       </el-col>
       <el-col :span="6">
-        <el-tooltip placement="top" content="文字高亮">
+        <el-tooltip placement="top" :content="$t('style.highlight')">
           <div @click.stop class="tooltip-popover">
             <el-popover trigger="click" placement="bottom" :width="265">
               <template #reference>
@@ -44,13 +44,13 @@
       </el-col>
       <el-col :span="12">
         <el-button-group class="full-group">
-          <el-tooltip placement="top" content="增大字号">
+          <el-tooltip placement="top" :content="$t('style.increaseFontSize')">
             <el-button class="font-size">
               <IconFontSize />+
             </el-button>
           </el-tooltip>
 
-          <el-tooltip placement="top" content="减小字号">
+          <el-tooltip placement="top" :content="$t('style.decreaseFontSize')">
             <el-button>
               <IconFontSize />-
             </el-button>
@@ -61,16 +61,16 @@
 
     <el-row class="mt-10">
       <el-button-group class="full-group">
-        <el-tooltip placement="top" content="加粗">
+        <el-tooltip placement="top" :content="$t('style.bold')">
           <el-button><IconTextBold /></el-button>
         </el-tooltip>
-        <el-tooltip placement="top" content="斜体">
+        <el-tooltip placement="top" :content="$t('style.italic')">
           <el-button><IconTextItalic /></el-button>
         </el-tooltip>
-        <el-tooltip placement="top" content="下划线">
+        <el-tooltip placement="top" :content="$t('style.underline')">
           <el-button><IconTextUnderline /></el-button>
         </el-tooltip>
-        <el-tooltip placement="top" content="删除线">
+        <el-tooltip placement="top" :content="$t('style.strikethrough')">
           <el-button><IconStrikethrough /></el-button>
         </el-tooltip>
       </el-button-group>
@@ -78,16 +78,16 @@
 
     <el-row class="mt-10">
       <el-button-group class="full-group">
-        <el-tooltip placement="top" content="清除格式">
+        <el-tooltip placement="top" :content="$t('style.clearFormat')">
           <el-button><IconFormat /></el-button>
         </el-tooltip>
-        <el-tooltip placement="top" content="格式刷">
+        <el-tooltip placement="top" :content="$t('style.formatPainter')">
           <el-button><IconFormatBrush /></el-button>
         </el-tooltip>
-        <el-tooltip placement="top" content="减小缩进">
+        <el-tooltip placement="top" :content="$t('style.decreaseIndent')">
           <el-button><IconIndentLeft /></el-button>
         </el-tooltip>
-        <el-tooltip placement="top" content="增大缩进">
+        <el-tooltip placement="top" :content="$t('style.increaseIndent')">
           <el-button><IconIndentRight /></el-button>
         </el-tooltip>
       </el-button-group>
@@ -95,13 +95,13 @@
 
     <el-row class="mt-10">
       <el-button-group class="full-group">
-        <el-tooltip placement="top" content="左对齐">
+        <el-tooltip placement="top" :content="$t('style.leftAlign')">
           <el-button><IconAlignTextLeft /></el-button>
         </el-tooltip>
-        <el-tooltip placement="top" content="居中">
+        <el-tooltip placement="top" :content="$t('style.center')">
           <el-button><IconAlignTextCenter /></el-button>
         </el-tooltip>
-        <el-tooltip placement="top" content="右对齐">
+        <el-tooltip placement="top" :content="$t('style.rightAlign')">
           <el-button><IconAlignTextRight /></el-button>
         </el-tooltip>
       </el-button-group>
@@ -109,13 +109,13 @@
 
     <el-row class="mt-10">
       <el-button-group class="full-group">
-        <el-tooltip placement="top" content="顶对齐">
+        <el-tooltip placement="top" :content="$t('style.topAlign')">
           <el-button><IconAlignTextTopOne /></el-button>
         </el-tooltip>
-        <el-tooltip placement="top" content="居中">
+        <el-tooltip placement="top" :content="$t('style.center')">
           <el-button><IconAlignTextMiddleOne /></el-button>
         </el-tooltip>
-        <el-tooltip placement="top" content="底对齐">
+        <el-tooltip placement="top" :content="$t('style.bottomAlign')">
           <el-button><IconAlignTextBottomOne /></el-button>
         </el-tooltip>
       </el-button-group>

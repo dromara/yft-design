@@ -9,7 +9,7 @@
    <div>
     <el-row>
       <el-col :span="18">
-        <el-button size="large" class="full-btn">特效</el-button>
+        <el-button size="large" class="full-btn">{{ $t('style.specialEffects') }}</el-button>
       </el-col>
       <el-col :span="6">
         <el-button size="large" class="full-btn btn-right" @click="changeElementEffect">

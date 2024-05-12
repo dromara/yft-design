@@ -2,7 +2,7 @@
   <div class="element-blend">
     <el-row class="blend-row">
       <el-col :span="12" class="belnd-col">
-        <div class="blend-name">混合模式</div>
+        <div class="blend-name">{{ $t('style.blendMode') }}</div>
       </el-col>
       <el-col :span="12">
         <el-select v-model="elementBlend" @change="changeBlendMode">

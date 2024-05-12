@@ -1,7 +1,7 @@
 <template>
   <div class="element-clip">
     <div class="row">
-      <div style="flex: 2;"><b>启用剪切：</b></div>
+      <div style="flex: 2;"><b>{{$t('style.cut')}}：</b></div>
       <div class="switch-wrapper" style="flex: 3;">
         <el-switch v-model="hasClippath" @change="toggleStroke()"></el-switch>
       </div>
