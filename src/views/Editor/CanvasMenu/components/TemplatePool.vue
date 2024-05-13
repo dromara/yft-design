@@ -9,8 +9,8 @@
     <el-tabs v-model="activeTemplate" class="layout-tabs">
       <el-tab-pane :label="$t('message.recommendTemp')" name="data">
         <div class="layout-templates">
-          <div v-for="item in templateItems" :key="item.id" class="thumbnail">
-            <img :src="item.previewURL" alt="" style="width: 124px; height: 74.4px" />
+          <div v-for="(item, index) in templateItems" :key="item.id" class="thumbnail">
+            <img :src="item.previewURL" alt="" :ref="(e: any) => setItemStyle(e, index)" />
           </div>
         </div>
       </el-tab-pane>
@@ -42,6 +42,23 @@ const activeSelfTemplate = ref("buy");
 //   emit('select', JSON.parse(templateDetail.template_data))
 // }
 
+const setItemStyle = (img: HTMLImageElement, index: number) => {
+  if (!img) return;
+  const update = () => {
+    const item = img.parentElement;
+    if (!item) return;
+    const gapRows = index >= 2 ? 2 : 0;
+    const rows = Math.ceil(item.clientHeight / 2) + gapRows;
+    item.style.gridRowEnd = `span ${rows}`;
+  }
+  update();
+  img.onload = update;
+  img.onerror = function() {
+    img.src = new URL(`/src/assets/images/loading.gif`, import.meta.url).href;
+    update();
+  };
+}
+
 const getTemplateItems = async () => {
   const pageParams = { page: 1, size: 20 }
   const result = await getTemplatePages(pageParams)
@@ -69,16 +86,21 @@ onMounted(async () => {
   margin: 0 auto;
 }
 .layout-templates {
-  display: flex;
+  overflow: scroll;
+  height: 100vh;
   flex-wrap: wrap;
   padding: 2px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 2px 0;
+  padding-bottom: 20px;
+  align-items: start;
   .thumbnail {
-    display: flex;
-    width: 124px;
-    margin: 2px;
+    padding: 2px 0;
   }
   .thumbnail img {
     outline: 1px solid $borderColor;
+    width: 124px;
     margin: 0 5px;
     cursor: pointer;
     &:hover {
