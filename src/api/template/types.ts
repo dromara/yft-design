@@ -16,3 +16,24 @@ export interface ItemInfo {
 }
 
 export type ItemList = Array<ItemInfo>;
+
+export interface PageParams {
+  page: number
+  size: number
+}
+
+export interface TemplateItem {
+  id: number
+  previewURL: string
+  previewWidth: number
+  previewHeight: number
+  data: string
+}
+
+export interface PageResult {
+  total: number
+  page: number
+  size: number
+  pages: number
+  items: TemplateItem[]
+}

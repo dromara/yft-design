@@ -9,24 +9,18 @@
     <el-tabs v-model="activeTemplate" class="layout-tabs">
       <el-tab-pane :label="$t('message.recommendTemp')" name="data">
         <div class="layout-templates">
-          <div v-for="item in Templates" :key="item.index" class="thumbnail">
-            <img :src="item.url" alt="" style="width: 124px; height: 74.4px" />
+          <div v-for="item in templateItems" :key="item.id" class="thumbnail">
+            <img :src="item.previewURL" alt="" style="width: 124px; height: 74.4px" />
           </div>
         </div>
       </el-tab-pane>
       <el-tab-pane :label="$t('message.myTemp')" name="self">
-        <el-radio-group
-          v-model="activeSelfTemplate"
-          size="large"
-          class="full-ratio"
-        >
+        <el-radio-group v-model="activeSelfTemplate" size="large" class="full-ratio">
           <el-radio-button value="buy" :label="$t('message.myPurchases')" />
           <el-radio-button value="collect" :label="$t('message.myFavorites')" />
         </el-radio-group>
       </el-tab-pane>
-      <el-tab-pane :label="$t('message.teamTemp')" name="team">{{
-        $t("message.teamTemp")
-      }}</el-tab-pane>
+      <el-tab-pane :label="$t('message.teamTemp')" name="team">{{ $t("message.teamTemp") }}</el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -34,13 +28,13 @@
 <script lang="ts" setup>
 import { Search } from "@element-plus/icons-vue";
 import { onMounted, ref } from "vue";
+import { getTemplatePages } from '@/api/template'
+import { TemplateItem } from '@/api/template/types'
 // import { storeToRefs } from 'pinia'
 // import { useSlidesStore } from '@/store'
 import { Templates } from "@/mocks/templates";
-import useI18n from "@/hooks/useI18n";
 
-const { t } = useI18n();
-
+const templateItems = ref<TemplateItem[]>([])
 const activeTemplate = ref("data");
 const activeSelfTemplate = ref("buy");
 // const selectSlideTemplate = (tid: string) => {
@@ -48,10 +42,17 @@ const activeSelfTemplate = ref("buy");
 //   emit('select', JSON.parse(templateDetail.template_data))
 // }
 
-// onMounted(async () => {
-//   const queryData = await getTemplateInfoData()
-//   templateInfo.value = queryData.data.data
-// })
+const getTemplateItems = async () => {
+  const pageParams = { page: 1, size: 20 }
+  const result = await getTemplatePages(pageParams)
+  if (result.data && result.data.items) {
+    templateItems.value = result.data.items
+  }
+}
+
+onMounted(async () => {
+  await getTemplateItems()
+})
 </script>
 
 <style lang="scss" scoped>

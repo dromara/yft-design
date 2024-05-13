@@ -1,6 +1,7 @@
-
+import { AxiosPromise } from 'axios'
+import request from '@/utils/request'
 import { randomText, ranInt } from "@/utils";
-import { ItemList } from "./types"
+import { ItemList, PageParams, PageResult } from "./types"
 
 
 let id = 0;
@@ -52,4 +53,13 @@ export const getList = (total: number): Promise<{ code: number, data: ItemList }
       resolve({ code: 1, data: list});
     }, ranInt(100, 1000));
   });
+}
+
+
+export const getTemplatePages = (params: PageParams): AxiosPromise<PageResult> => {
+  return request({
+    url: '/api/template/pages',
+    method: 'get',
+    params,
+  })
 }
