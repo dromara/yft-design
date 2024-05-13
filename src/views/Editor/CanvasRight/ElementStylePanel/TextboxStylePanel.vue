@@ -263,12 +263,10 @@ const hasFontStyle = computed(() => handleElement.value.fontStyle !== 'normal')
 const hasUnderline = computed(() => handleElement.value.underline)
 const hasLinethrough = computed(() => handleElement.value.linethrough)
 const textAlign = computed(() => handleElement.value.textAlign)
-const radius = computed(() => 0)
 const hasStroke = computed(() => handleElement.value.stroke ? true : false)
 const hasShadow = computed(() => handleElement.value.shadow ? true : false)
 const hasPatterns = computed(() => (handleElement.value as TextboxElement).fillType === 1 ? true : false)
 const elementFontFamily = ref<string>(hasFontFamily.value)
-const fontSizeRef = ref<Element>()
 const fontOptionGroups = ref<FontGroupOption[]>([
   {
     label: '系统字体',

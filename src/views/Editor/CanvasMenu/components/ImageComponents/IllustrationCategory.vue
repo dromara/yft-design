@@ -81,7 +81,7 @@ const setItemStyle = (img: HTMLImageElement, index: number) => {
   const update = () => {
     const item = img.parentElement;
     if (!item) return;
-    const gapRows = index >= 2 ? 8 : 0;
+    const gapRows = index >= 2 ? 2 : 0;
     const rows = Math.ceil(item.clientHeight / 2) + gapRows;
     item.style.gridRowEnd = `span ${rows}`;
   }
@@ -240,6 +240,9 @@ onMounted(() => {
 .total-box {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
+  grid-gap: 0 2px;
+  padding-bottom: 20px;
+  align-items: end;
   .box-image {
     padding: 2px;
     img {
