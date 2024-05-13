@@ -34,6 +34,13 @@ export default ({ command }: ConfigEnv): UserConfigExport => {
           changeOrigin: true,
           rewrite: (path) => path.replace(new RegExp('^'), ''),
         },
+        '/yft-static': {
+          target: 'https://yft.design',
+          // target: 'http://120.77.139.244:8789',
+          // target: 'http://127.0.0.1:8789',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(new RegExp('^'), ''),
+        },
       },
     },
     plugins: [                                                                                                                                                                                                                            
