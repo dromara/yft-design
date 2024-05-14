@@ -28,6 +28,8 @@ export interface TemplateItem {
   previewWidth: number
   previewHeight: number
   data: string
+  title: string
+  text: string
 }
 
 export interface PageResult {
