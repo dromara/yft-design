@@ -10,7 +10,7 @@
       <el-tab-pane :label="$t('message.recommendTemp')" name="data">
         <div class="layout-templates">
           <div v-for="(item, index) in templateItems" :key="item.id" class="thumbnail">
-            <img :src="item.previewURL" alt="" :ref="(e: any) => setItemStyle(e, index)" />
+            <img :src="item.previewURL + '?x-oss-process=style/img_tum'" alt="" :ref="(e: any) => setItemStyle(e, index)" @click="handleChangeTemplate(item)"/>
           </div>
         </div>
       </el-tab-pane>
@@ -30,17 +30,13 @@ import { Search } from "@element-plus/icons-vue";
 import { onMounted, ref } from "vue";
 import { getTemplatePages } from '@/api/template'
 import { TemplateItem } from '@/api/template/types'
-// import { storeToRefs } from 'pinia'
-// import { useSlidesStore } from '@/store'
-import { Templates } from "@/mocks/templates";
-
+import { useTemplatesStore } from '@/store'
+import { ElMessage, ElMessageBox } from 'element-plus'
+const templatesStore = useTemplatesStore()
 const templateItems = ref<TemplateItem[]>([])
 const activeTemplate = ref("data");
 const activeSelfTemplate = ref("buy");
-// const selectSlideTemplate = (tid: string) => {
-//   const templateDetail = templateInfo.value.filter(template => template.template_id === tid)[0]
-//   emit('select', JSON.parse(templateDetail.template_data))
-// }
+
 
 const setItemStyle = (img: HTMLImageElement, index: number) => {
   if (!img) return;
@@ -65,6 +61,33 @@ const getTemplateItems = async () => {
   if (result.data && result.data.items) {
     templateItems.value = result.data.items
   }
+}
+
+const handleChangeTemplate = (item: TemplateItem) => {
+  ElMessageBox.confirm(
+    '是否确认更换模板？',
+    {
+      confirmButtonText: 'OK',
+      cancelButtonText: 'Cancel',
+      type: 'warning',
+    }
+  )
+    .then(async () => {
+      
+      const data = JSON.parse(item.data)
+      await templatesStore.changeTemplate(data)
+      ElMessage({
+        type: 'success',
+        message: '更换模板成功',
+      })
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '取消更换模板',
+      })
+    })
+  
 }
 
 onMounted(async () => {
