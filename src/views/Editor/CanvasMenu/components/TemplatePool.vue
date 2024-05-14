@@ -32,6 +32,7 @@ import { getTemplatePages } from '@/api/template'
 import { TemplateItem } from '@/api/template/types'
 import { useTemplatesStore } from '@/store'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { unzip } from "@/utils/crypto";
 const templatesStore = useTemplatesStore()
 const templateItems = ref<TemplateItem[]>([])
 const activeTemplate = ref("data");
@@ -73,8 +74,8 @@ const handleChangeTemplate = (item: TemplateItem) => {
     }
   )
     .then(async () => {
-      
-      const data = JSON.parse(item.data)
+      const templateData = unzip(item.data)
+      const data = JSON.parse(templateData)
       await templatesStore.changeTemplate(data)
       ElMessage({
         type: 'success',

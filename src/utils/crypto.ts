@@ -21,18 +21,18 @@ export const decrypt = (ciphertext: string) => {
 
 
 export const zip = (str: string) => {
-  // const binaryString = pako.gzip(encodeURIComponent(str), { level: 9 })
-  const binaryString = pako.gzip(encodeURIComponent(str), {to: 'string'})
-  return btoa(binaryString);
+  const arr = pako.deflate(str, { gzip: true } as any);
+  const ret = btoa(String.fromCharCode.apply(null, arr as any));
+  return ret;
 }
  
 export const unzip = (b64Data: string) => {
-  var strData = atob(b64Data);
-  var charData = strData.split("").map(function (x) {
+  let strData = atob(b64Data);
+  const charData = strData.split("").map(function (x) {
     return x.charCodeAt(0);
   });
-  var binData = new Uint8Array(charData);
-  var data = pako.inflate(binData);
-  var strData = new TextDecoder("utf-8").decode(data);
+  const binData = new Uint8Array(charData);
+  const data = pako.inflate(binData);
+  strData = new TextDecoder("utf-8").decode(data);
   return decodeURIComponent(strData);
 };
