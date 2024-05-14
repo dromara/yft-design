@@ -34,7 +34,7 @@
           </el-row>
           <TransitionGroup :name="page.move ? 'group' : ''" tag="div" class="waterfall-box" id="homeWaterfall">
             <div class="waterfall-item" v-for="(item, index) in page.list" :key="item.id">
-              <img class="pic" :src="item.previewURL" alt="" :ref="(e: any) => setItemStyle(e, index)">
+              <img class="pic" :src="item.previewURL + '?image/auto-orient,1/quality,q_50'" alt="" :ref="(e: any) => setItemStyle(e, index)">
               <div class="title">{{ item.title }}</div>
               <div class="content ellipsis_2">{{ item.text }}</div>
             </div>

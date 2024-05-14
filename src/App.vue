@@ -17,7 +17,7 @@ import { onMounted, computed } from 'vue'
 import { deleteDiscardedDB } from '@/utils/database'
 import { useMainStore, useSnapshotStore } from '@/store'
 import { storeToRefs } from 'pinia'
-import { isMobile } from '@/utils/common'
+import { unzip, zip } from '@/utils/crypto'
 import { LocalStorageDiscardedKey } from '@/configs/canvas'
 import useI18n from '@/hooks/useI18n'
 
@@ -32,6 +32,8 @@ onMounted(async () => {
   await deleteDiscardedDB()
   await snapshotStore.initSnapshotDatabase()
   mainStore.setSystemFonts()
+  console.log(unzip('H4sIANZsQ2YC/6tWKi5JLCktds5PSVWyUjA1MNBRUMpNLS5OTAfxlTzzSlKL8hJzFIpTi8pSixRSi4ryi5RqAXUch8A3AAAA'))
+  console.log(zip(unzip('H4sIANZsQ2YC/6tWKi5JLCktds5PSVWyUjA1MNBRUMpNLS5OTAfxlTzzSlKL8hJzFIpTi8pSixRSi4ryi5RqAXUch8A3AAAA')))
 })
 
 if (import.meta.env.MODE === 'production') {
