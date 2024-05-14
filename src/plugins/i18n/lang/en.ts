@@ -72,7 +72,7 @@ export default {
 
     searchTemp: 'Search For Template',
     recommendTemp: 'Recommend',
-    myTemp: 'My',
+    myTemp: 'Mine',
     myPurchases: 'My Purchases',
     myFavorites: 'My Favorites',
     teamTemp: 'Team',
