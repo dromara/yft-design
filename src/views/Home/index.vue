@@ -32,9 +32,9 @@
           <el-row class="mt-[40px]">
             <b class="text-[20px]">今日推荐</b>
           </el-row>
-          <TransitionGroup :name="page.move ? 'group' : ''" tag="div" class="waterfall-box" id="waterfall">
+          <TransitionGroup :name="page.move ? 'group' : ''" tag="div" class="waterfall-box" id="homeWaterfall">
             <div class="waterfall-item" v-for="(item, index) in page.list" :key="item.id">
-              <img class="pic" :src="item.photo" alt="" :ref="(e: any) => setItemStyle(e, index)">
+              <img class="pic" :src="item.previewURL" alt="" :ref="(e: any) => setItemStyle(e, index)">
               <div class="title">{{ item.title }}</div>
               <div class="content ellipsis_2">{{ item.text }}</div>
             </div>
@@ -49,15 +49,15 @@
 import MainSearch from './components/MainSearch.vue';
 import MainScene from './components/MainScene.vue';
 import MainTools from './components/MainTools.vue';
-import { ItemList } from '@/api/template/types';
-import { getList } from '@/api/template'
+import { getTemplatePages } from '@/api/template'
+import { TemplateItem } from '@/api/template/types'
 import { throttle } from 'lodash-es'
 
 const handleScroll = throttle(() => {
   const mainElement = document.getElementById('main') as HTMLElement
   const scrollHeight = mainElement.scrollHeight, scrollTop = mainElement.scrollTop, clientHeight = mainElement.clientHeight
   if (scrollHeight - (scrollTop + clientHeight) <= 200) {
-    getData()
+    // await getTemplateItems()
   }
 }, 2000)
 
@@ -65,7 +65,7 @@ const page = reactive({
   loading: false,
   column: 6,
   move: true,
-  list: [] as ItemList,
+  list: [] as TemplateItem[],
 });
 
 const setItemStyle = (img: HTMLImageElement, index: number) => {
@@ -85,24 +85,20 @@ const setItemStyle = (img: HTMLImageElement, index: number) => {
   };
 }
 
-const getData = async (reset = false) => {
-  page.loading = true;
-  const res = await getList(20);
-  page.loading = false;
-  if (res.code === 1) {
-    if (reset) {
-      page.list = res.data;
-    } else {
-      page.list = page.list.concat(res.data);
-    }
+const getTemplateItems = async () => {
+  const pageParams = { page: 1, size: 20 }
+  const result = await getTemplatePages(pageParams)
+  if (result.data && result.data.items) {
+    page.list = result.data.items
   }
 }
 
 let observer: ResizeObserver;
 
-onMounted(() => {
-  getData(true);
-  const el = document.getElementById('waterfall') as HTMLElement;
+onMounted(async () => {
+  // getData(true);
+  await getTemplateItems()
+  const el = document.getElementById('homeWaterfall') as HTMLElement;
   observer = new ResizeObserver((entries) => {
     const rect = entries[0].contentRect;
     if (rect.width > 1200) {
@@ -171,6 +167,11 @@ onUnmounted(() => {
       border-radius: 10px;
       overflow: hidden;
       margin-bottom: 14px;
+      outline: 1px solid $borderColor;
+      cursor: pointer;
+      &:hover {
+        outline-color: $themeColor;
+      }
     }
     .title {
       font-size: 20px;
