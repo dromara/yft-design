@@ -8,7 +8,7 @@
     </el-row>
     <el-tabs v-model="activeTemplate" class="layout-tabs">
       <el-tab-pane :label="$t('message.recommendTemp')" name="data">
-        <div class="layout-templates">
+        <div class="layout-templates" @scroll="handleScroll" ref="templateRef">
           <div v-for="(item, index) in templateItems" :key="item.id" class="thumbnail">
             <img :src="item.previewURL + '?x-oss-process=style/img_tum'" alt="" :ref="(e: any) => setItemStyle(e, index)" @click="handleChangeTemplate(item)"/>
           </div>
@@ -26,19 +26,22 @@
 </template>
 
 <script lang="ts" setup>
-import { Search } from "@element-plus/icons-vue";
-import { onMounted, ref } from "vue";
+import { Search } from "@element-plus/icons-vue"
+import { onMounted, ref } from "vue"
 import { getTemplatePages } from '@/api/template'
 import { TemplateItem } from '@/api/template/types'
 import { useTemplatesStore } from '@/store'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { unzip } from "@/utils/crypto";
+import { unzip } from "@/utils/crypto"
+import { PageSize } from "@/configs/size"
+import { throttle } from 'lodash-es'
+
 const templatesStore = useTemplatesStore()
 const templateItems = ref<TemplateItem[]>([])
 const activeTemplate = ref("data");
 const activeSelfTemplate = ref("buy");
-
-
+const page = ref(1)
+const templateRef = ref<HTMLElement | undefined>()
 const setItemStyle = (img: HTMLImageElement, index: number) => {
   if (!img) return;
   const update = () => {
@@ -56,11 +59,20 @@ const setItemStyle = (img: HTMLImageElement, index: number) => {
   };
 }
 
+const handleScroll = throttle(async () => {
+  const mainElement = templateRef.value as HTMLElement
+  const scrollHeight = mainElement.scrollHeight, scrollTop = mainElement.scrollTop, clientHeight = mainElement.clientHeight
+  if (scrollHeight - (scrollTop + clientHeight) <= 200) {
+    page.value += 1
+    await getTemplateItems()
+  }
+}, 1000)
+
 const getTemplateItems = async () => {
-  const pageParams = { page: 1, size: 20 }
+  const pageParams = { page: page.value, size: PageSize }
   const result = await getTemplatePages(pageParams)
   if (result.data && result.data.items) {
-    templateItems.value = result.data.items
+    templateItems.value = templateItems.value.concat(result.data.items)
   }
 }
 
@@ -76,6 +88,7 @@ const handleChangeTemplate = (item: TemplateItem) => {
     .then(async () => {
       const templateData = unzip(item.data)
       const data = JSON.parse(templateData)
+      console.log('data:', data)
       await templatesStore.changeTemplate(data)
       ElMessage({
         type: 'success',

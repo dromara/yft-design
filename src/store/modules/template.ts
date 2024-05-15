@@ -153,9 +153,10 @@ export const useTemplatesStore = defineStore('Templates', {
       });
     },
 
-    async changeTemplate(template: Template) {
+    async changeTemplate(template: Template | Template[]) {
       const { setCanvasTransform } = useCanvasScale()
-      this.templates = [template]
+      const templates = Array.isArray(template) ? template : [template]
+      this.templates = templates
       this.templateIndex = 0
       await this.renderTemplate()
       setCanvasTransform()

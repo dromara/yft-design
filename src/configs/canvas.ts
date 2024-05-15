@@ -94,6 +94,7 @@ export const propertiesToInclude = [
   'startStyle',
   'endStyle',
   'effects',
+  'mask',
   'originSrc',
   'originWidth',
   'originHeight',

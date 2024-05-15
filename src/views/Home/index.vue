@@ -52,7 +52,7 @@ import MainTools from './components/MainTools.vue';
 import { getTemplatePages } from '@/api/template'
 import { TemplateItem } from '@/api/template/types'
 import { throttle } from 'lodash-es'
-
+import { PageSize } from "@/configs/size"
 const handleScroll = throttle(() => {
   const mainElement = document.getElementById('main') as HTMLElement
   const scrollHeight = mainElement.scrollHeight, scrollTop = mainElement.scrollTop, clientHeight = mainElement.clientHeight
@@ -86,7 +86,7 @@ const setItemStyle = (img: HTMLImageElement, index: number) => {
 }
 
 const getTemplateItems = async () => {
-  const pageParams = { page: 1, size: 20 }
+  const pageParams = { page: 1, size: PageSize }
   const result = await getTemplatePages(pageParams)
   if (result.data && result.data.items) {
     page.list = result.data.items
