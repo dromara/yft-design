@@ -28,6 +28,7 @@ import { useMainStore } from "@/store/modules/main";
 import CanvasStylePanel from "./CanvasStylePanel/index.vue";
 import ElemnetStylePanel from "./ElementStylePanel/index.vue";
 import EffectStylePanel from "./EffectStylePanel/index.vue";
+import LayerStylePanel from "./LayerStylePanel/index.vue";
 import useI18n from "@/hooks/useI18n";
 const { t } = useI18n();
 
@@ -36,10 +37,11 @@ const { canvasObject, rightState } = storeToRefs(mainStore);
 
 const canvasTabs = [
   { label: t("style.canvas"), value: RightStates.ELEMENT_CANVAS },
+  { label: t("style.layer"), value: RightStates.ELEMENT_LAYER },
 ];
 const styleTabs = [
   { label: t("style.style"), value: RightStates.ELEMENT_STYLE },
-  // { label: '位置', value: RightStates.ELEMENT_POSITION },
+  { label: t("style.layer"), value: RightStates.ELEMENT_LAYER },
 ];
 
 const setRightState = (value: RightStates) => {
@@ -66,6 +68,7 @@ const currentPanelComponent = computed(() => {
     [RightStates.ELEMENT_CANVAS]: CanvasStylePanel,
     [RightStates.ELEMENT_STYLE]: ElemnetStylePanel,
     [RightStates.ELEMENT_EFFECT]: EffectStylePanel,
+    [RightStates.ELEMENT_LAYER]: LayerStylePanel,
   };
   return panelMap[rightState.value as RightStates.ELEMENT_STYLE];
 });

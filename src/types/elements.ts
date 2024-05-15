@@ -164,6 +164,7 @@ export const enum RightStates {
   ELEMENT_CODE = 'code',
   ELEMENT_STYLE = 'style',
   ELEMENT_POSITION = 'position',
+  ELEMENT_LAYER = 'layer',
   ELEMENT_EFFECT = 'effect',
 }
 

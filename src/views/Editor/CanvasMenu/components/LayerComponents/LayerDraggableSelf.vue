@@ -56,7 +56,6 @@ const props = defineProps({
   height: calc(100% - 100px);
 }
 .layer-content {
-  padding: 0 10px;
   .element-content {
     display: flex;
     align-items: center;

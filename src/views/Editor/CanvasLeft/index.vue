@@ -17,12 +17,12 @@
         </div>
       </div>
       <div class="bottom-tabs">
-        <div class="bottom-tab" :class="{ 'left-active': 'layer' === poolType }" @click="setPoolType('layer')">
+        <!-- <div class="bottom-tab" :class="{ 'left-active': 'layer' === poolType }" @click="setPoolType('layer')">
           <div :id="`left-tabs-layer`">
             <div><SvgIcon icon-class="layer" className="svg-size" /></div>
             <div class="left-name">{{ $t("message.layer") }}</div>
           </div>
-        </div>
+        </div> -->
         <div class="bottom-tab" :class="{ 'left-active': 'help' === poolType }" ref="helpRef" @click="setPoolType('help')">
           <div :id="`left-tabs-help`">
             <div><SvgIcon icon-class="help" className="svg-size" /></div>
@@ -48,9 +48,7 @@ const mainStore = useMainStore();
 const { poolType, poolShow } = storeToRefs(mainStore);
 
 const helpRef = ref();
-const menuRef = ref();
 const helpPopoverRef = ref();
-const menuPopoverRef = ref();
 const hasHotkey = ref(false);
 
 interface TabItem {
@@ -112,7 +110,7 @@ const goHome = () => {
 .center-tabs {
   // overflow-y: scroll;
   overflow-x: hidden;
-  height: calc(100vh - 160px);
+  height: calc(100vh - 100px);
   .center-tab:hover {
     background: #f1f1f1;
     border-radius: 5px;

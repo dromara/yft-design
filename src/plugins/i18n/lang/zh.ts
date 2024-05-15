@@ -159,6 +159,7 @@ export default {
     canvas: '画布',
     canvasSize: '画布尺寸',
     style: '样式',
+    layer: '图层',
     width: '宽',
     height: '高',
     w: '宽',

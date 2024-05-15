@@ -48,11 +48,12 @@ const props = defineProps({
 <style lang="scss" scoped>
 .layout-search {
   margin: 0 auto;
-  width: 68%;
+  width: 80%;
   padding: 20px 10px 10px;
 }
 .layer-draggable {
   overflow-y: scroll;
+  overflow-x: hidden;
   height: calc(100% - 100px);
 }
 .layer-content {

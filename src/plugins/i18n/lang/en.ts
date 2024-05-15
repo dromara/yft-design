@@ -156,6 +156,7 @@ export default {
     canvas: 'Canvas',
     canvasSize: 'Canvas Size',
     style: 'Style',
+    layer: 'Layer',
     width: 'Width',
     height: 'Height',
     w: 'W',

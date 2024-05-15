@@ -9,38 +9,39 @@
       :style="{ marginLeft: `${props.index * 10}px` }"
       >
       <div class="element-info">
+        <!-- <el-tooltip placement="top" :hide-after="0" :content="element.visible ? '隐藏' : '显示'"> -->
+          <IconPreviewOpen class="common-icon" v-if="element.visible" @click.stop="visibleElement(element.id, false)"/>
+          <IconPreviewClose class="common-icon" v-else @click.stop="visibleElement(element.id, true)"/>
+        <!-- </el-tooltip> -->
         <div v-if="element.type.toLowerCase() === ElementNames.GROUP">
-          <el-tooltip placement="top" :hide-after="0" :content="(element as Group).isShow ? '收回' : '展开'">
-            <IconExpandDownOne v-if="(element as Group).isShow" class="common-icon" @click.stop="showElement(element.id)"/>
-            <IconFoldUpOne v-else class="common-icon" @click.stop="showElement(element.id)"/>
-          </el-tooltip>
+          <!-- <el-tooltip placement="top" :hide-after="0" :content="(element as Group).isShow ? '收回' : '展开'"> -->
+            <IconDownOne v-if="(element as Group).isShow" class="common-icon text-[20px]" @click.stop="showElement(element.id)"/>
+            <IconRightOne v-else class="common-icon text-[20px]" @click.stop="showElement(element.id)"/>
+          <!-- </el-tooltip> -->
         </div>
-        <el-tooltip placement="top" :hide-after="0" content="拖拽" v-else>
-          <IconApplicationMenu class="common-icon"/>
-        </el-tooltip>
         <div class="element-type">{{ element.type }}</div>
         <div class="element-text" v-if="element.type === ElementNames.TEXTBOX || element.type === ElementNames.TEXT">{{ (element as TextboxElement).text }}</div>
         <div class="element-layer" v-if="element.layer">{{ element.layer }}</div>
       </div>
       
       <div class="element-handler">
-        <el-tooltip placement="top" :hide-after="0" :content="element.visible ? '隐藏' : '显示'">
+        <!-- <el-tooltip placement="top" :hide-after="0" :content="element.visible ? '隐藏' : '显示'">
           <IconPreviewOpen class="common-icon" v-if="element.visible" @click.stop="visibleElement(element.id, false)"/>
           <IconPreviewClose class="common-icon" v-else @click.stop="visibleElement(element.id, true)"/>
-        </el-tooltip>
+        </el-tooltip> -->
         <el-tooltip placement="top" :hide-after="0" :content="element.lockMovementX && element.lockMovementY ? '解锁' : '锁定'">
           <IconLock class="common-icon" v-if="element.lockMovementX && element.lockMovementY" @click.stop="lockElement(element.id, false)"/>
           <IconUnlock class="common-icon" v-else @click.stop="lockElement(element.id, true)"/>
         </el-tooltip>
-        <el-tooltip placement="top" :hide-after="0" content="删除">
+        <!-- <el-tooltip placement="top" :hide-after="0" content="删除">
           <IconDelete class="common-icon" @click.stop="deleteElement(element.id)"/>
-        </el-tooltip>
-        <div v-if="element.type.toLowerCase() === ElementNames.TEXTBOX || element.type.toLowerCase() === ElementNames.ITEXT">
+        </el-tooltip> -->
+        <!-- <div v-if="element.type.toLowerCase() === ElementNames.TEXTBOX || element.type.toLowerCase() === ElementNames.ITEXT">
           <el-tooltip placement="top" :hide-after="0" :content="(element as TextboxElement).editable ? '可编辑文字' : '不可编辑文字'">
             <IconCheckOne class="common-icon" v-if="(element as TextboxElement).editable" @click.stop="checkElement(element.id)"/>
             <IconRound class="common-icon" v-else  @click.stop="checkElement(element.id)"/>
           </el-tooltip>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -95,9 +96,9 @@ const handleElement = computed(() => canvasObject.value as FabricObject)
     align-items: center;
     justify-content: space-between;
     height: 30px;
-    padding: 5px;
+    padding: 5px 2px;
     border: 1px solid $borderColor;
-    border-radius: 5px;
+    border-radius: 2px;
     margin-bottom: 5px;
 
     .element-info {

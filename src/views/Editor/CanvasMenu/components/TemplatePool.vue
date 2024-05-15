@@ -34,7 +34,7 @@ import { useTemplatesStore } from '@/store'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { unzip } from "@/utils/crypto"
 import { PageSize } from "@/configs/size"
-import { throttle } from 'lodash-es'
+import { throttle, debounce } from 'lodash-es'
 
 const templatesStore = useTemplatesStore()
 const templateItems = ref<TemplateItem[]>([])
@@ -59,14 +59,14 @@ const setItemStyle = (img: HTMLImageElement, index: number) => {
   };
 }
 
-const handleScroll = throttle(async () => {
+const handleScroll = debounce(async () => {
   const mainElement = templateRef.value as HTMLElement
   const scrollHeight = mainElement.scrollHeight, scrollTop = mainElement.scrollTop, clientHeight = mainElement.clientHeight
   if (scrollHeight - (scrollTop + clientHeight) <= 200) {
     page.value += 1
     await getTemplateItems()
   }
-}, 1000)
+}, 300)
 
 const getTemplateItems = async () => {
   const pageParams = { page: page.value, size: PageSize }

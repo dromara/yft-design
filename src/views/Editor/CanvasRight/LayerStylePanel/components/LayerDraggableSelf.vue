@@ -14,7 +14,7 @@
     <template #item="{ element }">
       <div v-contextmenu="contextMenusThumbnails">
         <LayerDraggableCom :index="props.index" :element="element" />
-        <LayerDraggableSelf v-if="element.type.toLowerCase() === ElementNames.GROUP && element.objects" v-show="element.isShow" :elements="element.objects" :index="props.index + 1"/>
+        <LayerDraggableSon v-if="element.type.toLowerCase() === ElementNames.GROUP && element.objects" v-show="element.isShow" :elements="element.objects" :index="props.index + 1"/>
       </div>
     </template>
   </Draggable>
@@ -22,19 +22,20 @@
 
 <script lang="ts" setup>
 import { PropType } from 'vue'
-import { Object as FabricObject } from 'fabric'
+import { Object as FabricObject, SerializedObjectProps } from 'fabric'
 import { ElementNames } from '@/types/elements'
 import { contextMenusThumbnails } from '@/configs/contextMenu'
 import Draggable from 'vuedraggable'
 import useHandleElement from '@/hooks/useHandleElement'
-import LayerDraggableSelf from './LayerDraggableSelf.vue'
+import LayerDraggableSon from './LayerDraggableSon.vue'
 import LayerDraggableCom from './LayerDraggableCom.vue'
 
-const { sortElement, layerElement } = useHandleElement()
+
+const {  sortElement, layerElement } = useHandleElement()
 
 const props = defineProps({
   elements: {
-    type: Object as PropType<FabricObject[]>,
+    type: Object as PropType<SerializedObjectProps[]>,
     required: true,
   },
   index: {
@@ -42,17 +43,17 @@ const props = defineProps({
     required: true,
   }
 })
-
 </script>
 
 <style lang="scss" scoped>
 .layout-search {
   margin: 0 auto;
-  width: 68%;
+  width: 80%;
   padding: 20px 10px 10px;
 }
 .layer-draggable {
   overflow-y: scroll;
+  overflow-x: hidden;
   height: calc(100% - 100px);
 }
 .layer-content {
@@ -97,6 +98,7 @@ const props = defineProps({
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
 .common-icon {
   width: 24px;
   height: 24px;
