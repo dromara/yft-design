@@ -5,6 +5,7 @@ import { Object as FabricObject, SerializedImageProps, Image, Group } from 'fabr
 import { WorkSpaceDrawType, propertiesToInclude } from '@/configs/canvas'
 import { useMainStore } from './main'
 import { ElementNames } from '@/types/elements'
+import { ElLoading } from 'element-plus'
 import useCanvasScale from '@/hooks/useCanvasScale'
 import useCanvas from '@/views/Canvas/useCanvas'
 import useHistorySnapshot from '@/hooks/useHistorySnapshot'
@@ -154,12 +155,16 @@ export const useTemplatesStore = defineStore('Templates', {
     },
 
     async changeTemplate(template: Template | Template[]) {
+      const loadingInstance = ElLoading.service({ fullscreen: true, background: '#fffff00' })
       const { setCanvasTransform } = useCanvasScale()
       const templates = Array.isArray(template) ? template : [template]
       this.templates = templates
       this.templateIndex = 0
       await this.renderTemplate()
       setCanvasTransform()
+      nextTick(() => {
+        loadingInstance.close()
+      })
     },
 
     async setTemplates(templates: Template[]) {
