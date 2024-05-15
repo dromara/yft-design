@@ -376,6 +376,10 @@ export default () => {
     isChecked.value = queryTextboxChecked(elements)
   }
 
+  const maskElement = (eid: string) => {
+
+  }
+
   return {
     // createElement,
     layerElement,
@@ -398,6 +402,7 @@ export default () => {
     forwardElement,
     backwardElement,
     checkElement,
-    intersectElements
+    intersectElements,
+    maskElement
   }
 }

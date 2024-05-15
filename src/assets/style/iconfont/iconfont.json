@@ -6,6 +6,20 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "40355037",
+      "name": "链条",
+      "font_class": "mask",
+      "unicode": "e638",
+      "unicode_decimal": 58936
+    },
+    {
+      "icon_id": "37288684",
+      "name": "AI",
+      "font_class": "ai",
+      "unicode": "e649",
+      "unicode_decimal": 58953
+    },
+    {
       "icon_id": "7473782",
       "name": "text-path",
       "font_class": "text-path",

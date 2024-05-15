@@ -6,29 +6,27 @@
       @click.stop="selectElement(element.id)"
       @mousemove.stop="mouseoverElement(element.id)"
       @mouseleave.stop="mouseleaveElement(element.id)"
-      :style="{ marginLeft: `${props.index * 10}px` }"
       >
       <div class="element-info">
-        <!-- <el-tooltip placement="top" :hide-after="0" :content="element.visible ? '隐藏' : '显示'"> -->
-          <IconPreviewOpen class="common-icon" v-if="element.visible" @click.stop="visibleElement(element.id, false)"/>
-          <IconPreviewClose class="common-icon" v-else @click.stop="visibleElement(element.id, true)"/>
-        <!-- </el-tooltip> -->
+        
+        <IconPreviewOpen class="common-icon" v-if="element.visible" @click.stop="visibleElement(element.id, false)"/>
+        <IconPreviewClose class="common-icon" v-else @click.stop="visibleElement(element.id, true)"/>
+        <span class="common-span" v-if="props.index"/>
         <div v-if="element.type.toLowerCase() === ElementNames.GROUP">
-          <!-- <el-tooltip placement="top" :hide-after="0" :content="(element as Group).isShow ? '收回' : '展开'"> -->
-            <IconDownOne v-if="(element as Group).isShow" class="common-icon text-[20px]" @click.stop="showElement(element.id)"/>
-            <IconRightOne v-else class="common-icon text-[20px]" @click.stop="showElement(element.id)"/>
-          <!-- </el-tooltip> -->
+          <IconDownOne v-if="(element as Group).isShow" class="common-icon text-[20px]" @click.stop="showElement(element.id)"/>
+          <IconRightOne v-else class="common-icon text-[20px]" @click.stop="showElement(element.id)"/>
         </div>
         <div class="element-type">{{ element.type }}</div>
+        <i class="icon-font iconfont icon-mask" v-if="(element as Image).mask" @click.stop="maskElement(element.id)"/>
+        <span class="icon-span" v-else/>
+        <div class="mask-image" v-if="(element as Image).mask">
+          <img :src="(element as Image).mask?.src" alt="">
+        </div>
         <div class="element-text" v-if="element.type === ElementNames.TEXTBOX || element.type === ElementNames.TEXT">{{ (element as TextboxElement).text }}</div>
         <div class="element-layer" v-if="element.layer">{{ element.layer }}</div>
       </div>
       
       <div class="element-handler">
-        <!-- <el-tooltip placement="top" :hide-after="0" :content="element.visible ? '隐藏' : '显示'">
-          <IconPreviewOpen class="common-icon" v-if="element.visible" @click.stop="visibleElement(element.id, false)"/>
-          <IconPreviewClose class="common-icon" v-else @click.stop="visibleElement(element.id, true)"/>
-        </el-tooltip> -->
         <el-tooltip placement="top" :hide-after="0" :content="element.lockMovementX && element.lockMovementY ? '解锁' : '锁定'">
           <IconLock class="common-icon" v-if="element.lockMovementX && element.lockMovementY" @click.stop="lockElement(element.id, false)"/>
           <IconUnlock class="common-icon" v-else @click.stop="lockElement(element.id, true)"/>
@@ -49,13 +47,12 @@
 
 <script lang="ts" setup>
 import { computed, PropType } from 'vue'
-import { CanvasElement, TextboxElement } from '@/types/canvas'
+import { CanvasElement, TextboxElement, ImageElement } from '@/types/canvas'
 import { ElementNames } from '@/types/elements'
-
-import { useMainStore } from '@/store'
+import { useMainStore, useTemplatesStore } from '@/store'
 import { storeToRefs } from 'pinia'
+import { Group, Object as FabricObject, Image } from 'fabric'
 import useHandleElement from "@/hooks/useHandleElement"
-import { Group, Object as FabricObject } from 'fabric'
 
 const { 
   selectElement, 
@@ -66,6 +63,7 @@ const {
   mouseoverElement, 
   mouseleaveElement,
   checkElement,
+  maskElement,
 } = useHandleElement()
 
 const props = defineProps({
@@ -80,22 +78,18 @@ const props = defineProps({
 })
 // console.log('props:', props.element, 'id:', props.element.id, 'layerName:', props.element.layer)
 const mainStore = useMainStore()
+const templatesStore = useTemplatesStore()
 const { canvasObject } = storeToRefs(mainStore)
-
+const { currentTemplate } = storeToRefs(templatesStore)
 const handleElement = computed(() => canvasObject.value as FabricObject)
 </script>
 <style lang="scss" scoped>
-.layout-search {
-  margin: 0 auto;
-  width: 68%;
-  padding: 20px 10px 10px;
-}
 .layer-content {
   .element-content {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 30px;
+    height: 35px;
     padding: 5px 2px;
     border: 1px solid $borderColor;
     border-radius: 2px;
@@ -119,8 +113,7 @@ const handleElement = computed(() => canvasObject.value as FabricObject)
   }
 }
 .element-type {
-  width: 58px;
-  margin-left: 10px;
+  margin-left: 5px;
   font-size: 12px;
 }
 
@@ -133,6 +126,7 @@ const handleElement = computed(() => canvasObject.value as FabricObject)
   white-space: nowrap;
 }
 .element-layer {
+  margin-left: 3px;
   width: 80px;
   font-size: 12px;
   overflow: hidden;
@@ -155,6 +149,27 @@ const handleElement = computed(() => canvasObject.value as FabricObject)
 
   &:not(.group-btn):hover {
     background-color: #f1f1f1;
+  }
+}
+.common-span {
+  width: 24px;
+}
+.icon-font {
+  cursor: pointer;
+  border-radius: $borderRadius;
+  &:not(.group-btn):hover {
+    background-color: #f1f1f1;
+  }
+}
+.icon-span {
+  width: 16px;
+}
+.mask-image {
+  height: 35px;
+  padding: 3px 0;
+  img {
+    height: 100%;
+    border: 1px solid $borderColor;
   }
 }
 </style>
