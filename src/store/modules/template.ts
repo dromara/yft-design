@@ -155,7 +155,7 @@ export const useTemplatesStore = defineStore('Templates', {
     },
 
     async changeTemplate(template: Template | Template[]) {
-      const loadingInstance = ElLoading.service({ fullscreen: true, background: '#fffff00' })
+      const loadingInstance = ElLoading.service({ fullscreen: true, background: 'rgba(122, 122, 122, 0.5)' })
       const { setCanvasTransform } = useCanvasScale()
       const templates = Array.isArray(template) ? template : [template]
       this.templates = templates
