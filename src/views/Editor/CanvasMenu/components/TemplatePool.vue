@@ -42,6 +42,7 @@ const activeTemplate = ref("data");
 const activeSelfTemplate = ref("buy");
 const page = ref(1)
 const templateRef = ref<HTMLElement | undefined>()
+
 const setItemStyle = (img: HTMLImageElement, index: number) => {
   if (!img) return;
   const update = () => {
@@ -71,8 +72,8 @@ const handleScroll = debounce(async () => {
 const getTemplateItems = async () => {
   const pageParams = { page: page.value, size: PageSize }
   const result = await getTemplatePages(pageParams)
-  if (result.data && result.data.items) {
-    templateItems.value = templateItems.value.concat(result.data.items)
+  if (result.data && result.data.code === 200) {
+    templateItems.value = templateItems.value.concat(result.data.data.items)
   }
 }
 

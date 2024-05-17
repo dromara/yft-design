@@ -39,3 +39,10 @@ export interface PageResult {
   pages: number
   items: TemplateItem[]
 }
+
+export interface TemplateResult {
+  code: number
+  data: PageResult
+  msg: string
+}
+

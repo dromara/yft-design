@@ -88,8 +88,8 @@ const setItemStyle = (img: HTMLImageElement, index: number) => {
 const getTemplateItems = async () => {
   const pageParams = { page: 1, size: PageSize }
   const result = await getTemplatePages(pageParams)
-  if (result.data && result.data.items) {
-    page.list = result.data.items
+  if (result.data && result.data.code === 200) {
+    page.list = page.list.concat(result.data.data.items)
   }
 }
 
