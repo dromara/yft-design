@@ -16,7 +16,7 @@ export default {
     test: '测试',
     edit: '编辑',
     template: '模板',
-    chatgpt: 'Chatgpt',
+    chatgpt: '智能',
     material: '素材',
     text: '文字',
     image: '图片',

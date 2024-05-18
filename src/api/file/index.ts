@@ -29,7 +29,7 @@ export function uploadFile(file: File, type: string): AxiosPromise<UploadResult>
 export function exportFile(data: ExportData): AxiosPromise<ExportResult> {
 
   return request({
-    url: '/api/export/file',
+    url: '/api/design/export/file',
     method: 'post',
     data,
   })
