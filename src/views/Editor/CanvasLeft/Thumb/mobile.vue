@@ -1,20 +1,14 @@
 <template>
   <div
+    class="thumb-open"
+    :class="{ 'thumb-close': thumbShow !== true }"
     @mousedown="() => setThumbnailsFocus(true)"
     v-click-outside="() => setThumbnailsFocus(false)"
     v-contextmenu="contextMenusThumbnails"  
   >
-    <el-row class="thumb-handle items-center">
-      <el-col :span="12" class="flex justify-center text-[16px]">
-        <div>
-          <el-button text ref="menuRef">文件</el-button>
-          <HomePopover :menu-ref="menuRef" :menu-popover-ref="menuPopoverRef" />
-        </div>
-      </el-col>
-      <el-col :span="12" class="flex justify-center text-[16px]">
-        <el-button @click="createTemplate()" text> <IconPlus class="icon" /></el-button>
-      </el-col>
-    </el-row>
+    <div class="thumb-handle">
+      <div class="btn" @click="createTemplate()"><IconPlus class="icon" /></div>
+    </div>
     <Draggable
       class="thumb-content"
       :modelValue="templates"
@@ -32,8 +26,8 @@
             'active': templateIndex === index,
             'selected': selectedTemplatesIndex.includes(index),
           }"
-          @mousedown="$event => handleClickTemplateThumbnail($event, index)"
-          v-contextmenu="contextmenusThumbnailItem"
+          @mousedown="($event: MouseEvent) => handleClickTemplateThumbnail($event, index)"
+          v-contextmenu="contextMenusThumbnails"
         >
           <div class="label" :class="{ 'offset-left': index >= 99 }">{{ fillDigit(index + 1, 2) }}</div>
           <ThumbnailTemplate class="thumbnail" :template="element" :size="120" :visible="index < templatesLoadLimit" />
@@ -42,18 +36,23 @@
     </Draggable>
 
     <div class="thumb-number">{{ t('message.pages') }}{{ templateIndex + 1 }} / {{ templates.length }}</div>
+
+    <div class="layout-toggle" @click="thumbToggle">
+      <IconLeft v-if="thumbShow"/>
+      <IconRight v-else/>
+    </div>
+
   </div>
 </template>
 
 <script lang="ts" setup>
 import useLoadTemplates from '@/hooks/useLoadTemplates'
 import useHandleTemplate from '@/hooks/useHandleTemplate'
-import ThumbnailTemplate from '@/views/Editor/CanvasThumb/ThumbnailTemplate.vue'
+import ThumbnailTemplate from './components/Template.vue'
 import Draggable from 'vuedraggable'
 import useI18n from '@/hooks/useI18n'
 import { contextMenusThumbnails } from '@/configs/contextMenu'
 import { useMainStore, useTemplatesStore, useKeyboardStore } from '@/store'
-import { ContextMenu } from '@/components/ContextMenu/types'
 import { storeToRefs } from 'pinia'
 import { computed, ref } from 'vue'
 import { fillDigit } from '@/utils/common/common'
@@ -69,54 +68,7 @@ const { ctrlKeyState, shiftKeyState } = storeToRefs(keyboardStore)
 const { createTemplate, deleteTemplate, sortTemplates, cutTemplate, pasteTemplate } = useHandleTemplate()
 
 const selectedTemplatesIndex = computed(() => [..._selectedTemplatesIndex.value, templateIndex.value])
-const menuRef = ref();
-const menuPopoverRef = ref();
-const contextmenusThumbnailItem = (): ContextMenu[] => {
-  return [
-    {
-      text: '剪切',
-      subText: 'Ctrl + X',
-      handler: cutTemplate,
-    },
-    {
-      text: '复制',
-      subText: 'Ctrl + C',
-      // handler: copySlide,
-    },
-    {
-      text: '粘贴',
-      subText: 'Ctrl + V',
-      handler: pasteTemplate,
-    },
-    {
-      text: '全选',
-      subText: 'Ctrl + A',
-      // handler: selectAllSlide,
-    },
-    { divider: true },
-    {
-      text: '新建页面',
-      subText: 'Enter',
-      handler: createTemplate,
-    },
-    {
-      text: '复制页面',
-      subText: 'Ctrl + D',
-      // handler: copyAndPasteSlide,
-    },
-    {
-      text: '删除页面',
-      subText: 'Delete',
-      handler: () => deleteTemplate(),
-    },
-    { divider: true },
-    {
-      text: '从当前预览',
-      subText: 'Shift + F5',
-      // handler: enterScreening,
-    },
-  ]
-}
+const thumbShow = ref(false)
 
 // 设置缩略图工具栏聚焦状态（只有聚焦状态下，该部分的快捷键才能生效）
 const setThumbnailsFocus = (focus: boolean) => {
@@ -191,11 +143,14 @@ const changeSlideIndex = (index: number) => {
   templatesStore.renderTemplate()
 }
 
+const thumbToggle = () => {
+  thumbShow.value = !thumbShow.value
+}
 </script>
 
 <style lang="scss" scoped>
 .thumb-handle {
-  height: $headerHeight;
+  height: 40px;
   font-size: 12px;
   display: flex;
   flex-shrink: 0;
@@ -233,7 +188,6 @@ const changeSlideIndex = (index: number) => {
   padding: 5px 0;
   flex: 1;
   overflow: auto;
-  border-left: 1px solid $borderColor;
 }
 .thumbnail-item {
   display: flex;
@@ -281,5 +235,30 @@ const changeSlideIndex = (index: number) => {
   line-height: 40px;
   text-align: center;
   color: #666;
+}
+.layout-toggle {
+  background: #fff;
+  cursor: pointer;
+  height: 88px;
+  position: absolute;
+  right: -19px;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: right .1s linear;
+  width: 16px;
+  z-index: 1;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+  display: flex;
+  align-items: center;
+  border-top: 1px solid $borderColor;
+  border-bottom: 1px solid $borderColor;
+  border-right: 1px solid $borderColor;
+}
+.thumb-open {
+  left: 0;
+}
+.thumb-close {
+  left: -160px;
 }
 </style>

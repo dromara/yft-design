@@ -18,9 +18,9 @@
 </template>
 
 <script lang="ts" setup>
-import CanvasLeft from './CanvasLeft/index.vue'
-import CanvasMenu from './CanvasMenu/index.vue'
-import MobileThumb from './CanvasThumb/mobile.vue'
+// import CanvasLeft from './CanvasLeft/index.vue'
+// import CanvasMenu from './CanvasMenu/index.vue'
+import MobileThumb from './CanvasLeft/Thumb/mobile.vue'
 import CanvasHeader from './CanvasHeader/index.vue'
 import CanvasCenter from './CanvasCenter/index.vue'
 import CanvasRight from './CanvasRight/index.vue'
@@ -33,22 +33,9 @@ import CanvasAffix from './CanvasAffix/index.vue'
 .yft-design {
   height: 100%;
 }
-.layout-header {
-  height: 40px;
-}
 .layout-content {
   height: calc(100% - 40px);
   display: flex;
-}
-.layout-content-left {
-  width: 50px;
-  height: 100vh;
-  z-index: 10;
-  background: #fff;
-  border-right: solid 1px $borderColor;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
 }
 .layout-mobile-thumb {
   position: absolute;
@@ -89,14 +76,6 @@ import CanvasAffix from './CanvasAffix/index.vue'
     display: flex;
     justify-content: space-between;
   }
-}
-.layout-content-right {
-  width: 260px;
-  height: 100%;
-  border-left: solid 1px $borderColor;
-  background-color: #fff;
-  display: flex;
-  flex-direction: column;
 }
 .layout-barcode {
   position: absolute;

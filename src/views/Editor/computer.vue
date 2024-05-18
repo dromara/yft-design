@@ -9,9 +9,7 @@
 <template>
   <div class="h-full" v-drop-image="{ url: 'UploadUrl', highlightStyle: { backgroundColor: 'lightblue' } }">
     <div class="layout-content flex">
-      <CanvasLeft class="layout-content-left w-[50px] h-[100vh] z-10 bg-[#fff]" />
-      <CanvasMenu class="layout-content-menu" />
-      <CanvasThumb class="w-[160px] h-full flex flex-shrink-0 bg-[#fff] flex-col select-none" />
+      <CanvasLeft />
       <div class="layout-content-center">
         <CanvasHeader class="center-header relative flex justify-between py-[10px] text-[14px] select-none h-[39px]" />
         <CanvasCenter class="center-body" />
@@ -27,8 +25,6 @@
 
 <script lang="ts" setup>
 import CanvasLeft from "./CanvasLeft/index.vue";
-import CanvasMenu from "./CanvasMenu/index.vue";
-import CanvasThumb from "./CanvasThumb/index.vue";
 import CanvasHeader from "./CanvasHeader/index.vue";
 import CanvasCenter from "./CanvasCenter/index.vue";
 import CanvasRight from "./CanvasRight/index.vue";
