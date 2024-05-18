@@ -177,7 +177,9 @@ import {
   RightC,
   LeftC,
   RightOne,
-  DownOne
+  DownOne,
+  CopyOne,
+  Wechat,
 } from '@icon-park/vue-next'
 
 export const icons = {
@@ -356,6 +358,8 @@ export const icons = {
   IconLeftC: LeftC,
   IconRightOne: RightOne,
   IconDownOne: DownOne,
+  IconCopyOne: CopyOne,
+  IconWechat: Wechat
 }
 
 export default {

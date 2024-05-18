@@ -13,6 +13,7 @@ export default {
     test: 'test',
     edit: 'Edit',
     template: 'Template',
+    chatgpt: 'Chatgpt',
     material: 'Material',
     text: 'Text',
     image: 'Image',

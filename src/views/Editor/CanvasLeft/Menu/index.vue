@@ -20,6 +20,7 @@ import MaterialPool from './components/MaterialPool.vue'
 import TextboxPool from './components/TextboxPool.vue'
 import ImagePool from './components/ImagePool.vue'
 import ToolkitPool from './components/ToolkitPool.vue'
+import ChatgptPool from './components/ChatgptPool.vue'
 import LayerPool from './components/LayerPool.vue'
 import CodePool from './components/CodePool.vue'
 
@@ -36,6 +37,7 @@ const leftMap = {
   'code': CodePool,
   'toolkit': ToolkitPool,
   'layer': LayerPool,
+  'chatgpt': ChatgptPool,
   'help': null,
 }
 const currentComponent = computed(() => {

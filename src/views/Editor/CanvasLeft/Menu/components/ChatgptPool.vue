@@ -7,51 +7,27 @@
       ></el-input>
     </el-row>
     <el-row>
-      <el-row class="code-common" @click="createBarElement">
+      <el-row class="code-common" @click="openUseGPT">
         <el-col :span="4" class="code-icon">
-          <IconPayCodeTwo class="icon-font" />
+          <i class="iconfont icon-gpt" />
         </el-col>
         <el-col :span="20" class="code-text">
-          <div class="font-middle">{{ $t("message.barCode") }}</div>
-          <div class="font-little">{{ $t("message.barCodeTips") }}</div>
+          <div class="font-middle">{{ $t("gpt.gptTitle") }}</div>
+          <div class="font-little">{{ $t("gpt.gptIntro") }}</div>
         </el-col>
       </el-row>
     </el-row>
     <el-row>
-      <el-row class="code-common" @click="createQRElement('A1')">
+      <el-row class="code-common" @click="openGPTServer">
         <el-col :span="4" class="code-icon">
-          <IconTwoDimensionalCodeTwo class="icon-font" />
+          <i class="iconfont icon-gpt" />
         </el-col>
         <el-col :span="20" class="code-text">
-          <div class="font-middle">{{ $t("message.QRCode") }}</div>
-          <div class="font-little">{{ $t("message.QRCodeTips") }}</div>
+          <div class="font-middle">{{ $t("gpt.openGPTTitle") }}</div>
+          <div class="font-little">{{ $t("gpt.openGPTIntro") }}</div>
         </el-col>
       </el-row>
     </el-row>
-    <el-row>
-      <el-row class="code-common" @click="openUpload">
-        <el-col :span="4" class="code-icon">
-          <IconMagicWand class="icon-font" />
-        </el-col>
-        <el-col :span="20" class="code-text">
-          <div class="font-middle">{{ $t("message.AICutoutImage") }}</div>
-          <div class="font-little">{{ $t("message.AICutoutImageTips") }}</div>
-        </el-col>
-      </el-row>
-    </el-row>
-    <el-row>
-      <el-row class="code-common" @click="openImageFillColor">
-        <el-col :span="4" class="code-icon">
-          <IconPlatte class="icon-font" />
-        </el-col>
-        <el-col :span="20" class="code-text">
-          <div class="font-middle">{{ $t("message.ColorFillImage") }}</div>
-          <div class="font-little">{{ $t("message.ColorFillImageTips") }}</div>
-        </el-col>
-      </el-row>
-    </el-row>
-    <ImageMatting :visible="dialogVisible" @close="closeUpload" />
-    <ImageFillColor :visible="ImageFillColorVisible" @close="closeImageFillColor" />\
     <OpenGpt :visible="openGPTVisible" @close="openGPTVisible = false"  />
   </div>
 </template>

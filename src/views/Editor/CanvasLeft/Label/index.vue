@@ -65,6 +65,7 @@ const topTabs: TabItem[] = [
   { key: "text", label: "message.text", icon: "text", index: 3 },
   { key: "image", label: "message.image", icon: "picture", index: 4 },
   { key: "toolkit", label: "message.tool", icon: "toolkit", index: 5 },
+  { key: "chatgpt", label: "message.chatgpt", icon: "chatgpt", index: 6 },
 ];
 
 const setPoolType = (tab: PoolType) => {
