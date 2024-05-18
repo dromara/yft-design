@@ -50,8 +50,31 @@
         </el-col>
       </el-row>
     </el-row>
+    <el-row>
+      <el-row class="code-common" @click="openUseGPT">
+        <el-col :span="4" class="code-icon">
+          <i class="iconfont icon-gpt" />
+        </el-col>
+        <el-col :span="20" class="code-text">
+          <div class="font-middle">{{ $t("gpt.gptTitle") }}</div>
+          <div class="font-little">{{ $t("gpt.gptIntro") }}</div>
+        </el-col>
+      </el-row>
+    </el-row>
+    <el-row>
+      <el-row class="code-common" @click="openGPTServer">
+        <el-col :span="4" class="code-icon">
+          <i class="iconfont icon-gpt" />
+        </el-col>
+        <el-col :span="20" class="code-text">
+          <div class="font-middle">{{ $t("gpt.openGPTTitle") }}</div>
+          <div class="font-little">{{ $t("gpt.openGPTIntro") }}</div>
+        </el-col>
+      </el-row>
+    </el-row>
     <ImageMatting :visible="dialogVisible" @close="closeUpload" />
-    <ImageFillColor :visible="ImageFillColorVisible" @close="closeImageFillColor" />
+    <ImageFillColor :visible="ImageFillColorVisible" @close="closeImageFillColor" />\
+    <OpenGpt :visible="openGPTVisible" @close="openGPTVisible = false"  />
   </div>
 </template>
 
@@ -81,6 +104,9 @@ import { QRCodeType } from "@/types/canvas";
 import JsBarCode from "jsbarcode";
 import useHandleCreate from "@/hooks/useHandleCreate";
 import useI18n from "@/hooks/useI18n";
+import { debounce } from "lodash-es";
+import { ElMessageBox  } from 'element-plus'
+import type { Action } from 'element-plus'
 
 const { t } = useI18n();
 const { createQRCodeElement, createBarCodeElement } = useHandleCreate();
@@ -89,6 +115,7 @@ const codeSpace = ref<boolean>(true);
 const codeError = ref<number>(0);
 const dialogVisible = ref(false);
 const ImageFillColorVisible = ref(false);
+const openGPTVisible = ref(false)
 const generateQRCodeMap = {
   A1: rendererRect,
   A2: rendererRound,
@@ -159,6 +186,17 @@ const openImageFillColor = () => {
 const closeImageFillColor = () => {
   ImageFillColorVisible.value = false;
 };
+const openUseGPT = debounce(function() {
+  ElMessageBox.alert('功能开发中，敬请期待', '提示', {
+    confirmButtonText: '我知道了',
+    callback: (action: Action) => {
+      console.log(action)
+    },
+  })
+}, 250)
+const openGPTServer = debounce(function() {
+  openGPTVisible.value = true
+}, 250)
 </script>
 
 <style lang="scss" scoped>

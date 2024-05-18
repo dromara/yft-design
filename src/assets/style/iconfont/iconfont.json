@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "36370538",
+      "name": "gpt",
+      "font_class": "gpt",
+      "unicode": "e68b",
+      "unicode_decimal": 59019
+    },
+    {
       "icon_id": "40355037",
       "name": "链条",
       "font_class": "mask",
