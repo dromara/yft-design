@@ -12,7 +12,7 @@ import { UploadResult } from './types'
   const formData = new FormData()
   formData.append('image', image)
   return request({
-    url: '/api/matting/file',
+    url: '/api/design/matting/file',
     method: 'post',
     data: formData,
     headers: {

@@ -5,7 +5,7 @@ import { PageParams, TemplateResult } from "./types"
 
 export const getTemplatePages = (params: PageParams): AxiosPromise<TemplateResult> => {
   return request({
-    url: '/api/template/pages',
+    url: '/api/design/template/pages',
     method: 'get',
     params,
   })

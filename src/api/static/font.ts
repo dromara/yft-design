@@ -4,7 +4,7 @@ import { AxiosPromise } from 'axios'
 
 export const getImagePages = (params?: QueryPgaes): AxiosPromise<FontPageResult> => {
   return request({
-    url: 'api/static/font',
+    url: 'api/design/static/font',
     method: 'get',
     params,
   });

@@ -4,7 +4,7 @@ import { AxiosPromise } from 'axios'
 
 export function getImagePages(params?: QueryPgaes): AxiosPromise<ImagePageResult> {
   return request({
-    url: 'api/image/page',
+    url: 'api/design/image/page',
     method: 'get',
     params,
   });
@@ -12,7 +12,7 @@ export function getImagePages(params?: QueryPgaes): AxiosPromise<ImagePageResult
 
 export function getImageCategory(params?: QueryCategory): AxiosPromise<ImageCategoryResult> {
   return request({
-    url: 'api/image/category',
+    url: 'api/design/image/category',
     method: 'get',
     params
   });
@@ -20,7 +20,7 @@ export function getImageCategory(params?: QueryCategory): AxiosPromise<ImageCate
 
 export function getIllustrationPages(params?: QueryPgaes): AxiosPromise<ImagePageResult> {
   return request({
-    url: 'api/illustration/page',
+    url: 'api/design/illustration/page',
     method: 'get',
     params,
   });
@@ -28,7 +28,7 @@ export function getIllustrationPages(params?: QueryPgaes): AxiosPromise<ImagePag
 
 export function getIllustrationCategory(params?: QueryCategory): AxiosPromise<ImageCategoryResult> {
   return request({
-    url: 'api/illustration/category',
+    url: 'api/design/illustration/category',
     method: 'get',
     params
   });

@@ -12,7 +12,7 @@ export function uploadFile(file: File, type: string): AxiosPromise<UploadResult>
   formData.append('file', file)
   formData.append('type', type)
   return request({
-    url: '/api/parse/file',
+    url: '/api/design/parse/file',
     method: 'post',
     data: formData,
     headers: {
