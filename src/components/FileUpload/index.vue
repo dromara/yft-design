@@ -128,7 +128,7 @@ const uploadHandle = async (option: any) => {
   if (res && res.data.code === 200) {
     const template = res.data.data
     if (!template) return
-    if (['pdf'].includes(fileSuffix)) {
+    if (['pdf', 'ai'].includes(fileSuffix)) {
       const parseTemplate: Template[] = []
       const pdfTemplate = template as any[]
       for (let i = 0; i < pdfTemplate.length; i++) {
