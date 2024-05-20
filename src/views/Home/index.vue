@@ -34,7 +34,7 @@
           </el-row>
           <TransitionGroup :name="page.move ? 'group' : ''" tag="div" class="waterfall-box" id="homeWaterfall">
             <div class="waterfall-item" v-for="(item, index) in page.list" :key="item.id">
-              <img class="pic" :src="item.previewURL + '?image/auto-orient,1/quality,q_50'" alt="" :ref="(e: any) => setItemStyle(e, index)">
+              <img class="pic" :src="item.previewURL + '?image/auto-orient,1/quality,q_50'" alt="" :ref="(e: any) => setItemStyle(e, index)" @click="changeTemplate(item.id)">
               <div class="title">{{ item.title }}</div>
               <div class="content ellipsis_2">{{ item.text }}</div>
             </div>
@@ -53,6 +53,10 @@ import { getTemplatePages } from '@/api/template'
 import { TemplateItem } from '@/api/template/types'
 import { throttle } from 'lodash-es'
 import { PageSize } from "@/configs/size"
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
 const handleScroll = throttle(() => {
   const mainElement = document.getElementById('main') as HTMLElement
   const scrollHeight = mainElement.scrollHeight, scrollTop = mainElement.scrollTop, clientHeight = mainElement.clientHeight
@@ -93,6 +97,16 @@ const getTemplateItems = async () => {
   }
 }
 
+const changeTemplate = (pk: number) => {
+  const { href } = router.resolve({
+    path: '/',
+    query: {
+      template: pk
+    }
+  })
+  window.open(href, '_blank')
+}
+
 let observer: ResizeObserver;
 
 onMounted(async () => {
@@ -103,10 +117,18 @@ onMounted(async () => {
     const rect = entries[0].contentRect;
     if (rect.width > 1200) {
       page.column = 6;
-    } else if (rect.width > 900) {
+    } 
+    else if (rect.width > 900) {
       page.column = 5;
-    } else if (rect.width > 600) {
+    } 
+    else if (rect.width > 600) {
       page.column = 4;
+    }
+    else if (rect.width > 300) {
+      page.column = 3;
+    }
+    else if (rect.width > 200) {
+      page.column = 2;
     }
     el.style.setProperty("--column", page.column.toString());
   });

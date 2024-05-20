@@ -22,6 +22,10 @@ export interface PageParams {
   size: number
 }
 
+export interface infoParams {
+  pk: number
+}
+
 export interface TemplateItem {
   id: number
   previewURL: string
@@ -46,3 +50,8 @@ export interface TemplateResult {
   msg: string
 }
 
+export interface TemplateInfo {
+  code: number
+  data: TemplateItem
+  msg: string
+}
