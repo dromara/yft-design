@@ -17,4 +17,4 @@ RUN npm run build
 # 产生静态文件
 FROM nginx:stable-alpine
 COPY --from=0 ./app/dist /usr/share/nginx/html/
-COPY docs/nginx.conf /etc/nginx/conf.d/
+COPY docker/nginx.conf /etc/nginx/conf.d/
