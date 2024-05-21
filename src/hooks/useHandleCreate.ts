@@ -325,9 +325,9 @@ export default () => {
     // const { centerPoint } = useCenter();
     // const [canvas] = useCanvas();
 
-    const table = new Table();
+    // const table = new Table();
 
-    renderCanvas(table)
+    // renderCanvas(table)
 
   }
 
