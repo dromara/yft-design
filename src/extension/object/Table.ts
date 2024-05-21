@@ -92,51 +92,42 @@ const defaultProperties: [] = {
 
 const tableOwnProperties = ["columns", "rows", "cells", "fontSize"];
 
+
 export class Table extends Group {
-  /**
-  * Selected Cells Properties
-  */
-  fillActive?: string;
-  /**
-   * Cell Highlighting On Hover. null to disable
-   */
-  fillHover?: string;
-  /**
-   * Text Properties
-   */
-  fillText?: string;
-  /**
-   * Header Cells Properties
-   */
-  fillHeader?: string;
+  fillText = "#000000";
+  fillActive = "#fff";
+  fillHover = "#ffffff33";
+  fillHeader = "#00000066";
+
+
   /**
    * Rows And Columns Properties
    */
-  cellPadding = 0;
+  cellPadding = 3;
 
-  fontSize?: number;
+  fontSize = 14;
 
-  minRowHeight = 0;
+  minRowHeight = 5;
 
-  minColumnWidth = 0;
+  minColumnWidth = 5;
 
   /**
    * Rows/Columns Resizing Area
    */
-  resizerSize?: number;
+  resizerSize?: number = 6;
 
   /**
    * columns data
    */
-  columns?: TableColumnOptions[];
+  columns?: TableColumnOptions[]=[];
   /**
    * rows data
    */
-  rows?: TableRowOptions[];
+  rows?: TableRowOptions[]=[];
   /**
    * cells data
    */
-  cells?: TableCellOptions[][];
+  cells?: TableCellOptions[][]=[];
   /**
    * array of selected cells
    */
@@ -180,51 +171,29 @@ export class Table extends Group {
   private _textMap: Map<Text, TableCell> = new Map();
 
   constructor(objects: FabricObject[] = [], options: Partial<GroupProps> = {}) {
-    super()
+    super([], {...defaultProperties as any })
 
-    // const _options = Object.assign(
-    //   {},
-    //   defaultProperties
-    // ) as unknown as TableOptions;
+    this.__setcolumns(mockData.columns);
+    this.__setrows(mockData.rows);
+    this._updateRows();
+    this._updateColumns();
 
-    // Object.assign(_options, mockData);
+    this.__setcells(mockData.cells);
+    this._updateCellsGeometry();
 
-    // if (_options.columns && _options.rows && !_options.cells) {
-    //   _options.cells = new Array(_options.rows.length);
-    //   for (let y = 0; y < _options.columns.length; y++) {
-    //     _options.cells[y] = new Array(_options.columns.length);
+    this.controls = this._getControls();
 
-    //     for (let x = 0; x < _options.columns.length; x++) {
-    //       _options.cells[y][x] = {};
-    //     }
-    //   }
-    // }
+    this.on({
+      modified: this._cleanCache.bind(this),
+      resizing: this._cleanCache.bind(this),
+      added: this._updateLines.bind(this),
+      deselected: this.clearSelection.bind(this),
+      row: this._cleanCache.bind(this),
+      column: this._cleanCache.bind(this),
+    });
 
-    // super([],_options);
-
-    // this.on({
-    //   modified: this._cleanCache.bind(this),
-    //   resizing: this._cleanCache.bind(this),
-    //   row: this._cleanCache.bind(this),
-    //   column: this._cleanCache.bind(this),
-    //   added: this._updateLines.bind(this),
-    //   deselected: this.clearSelection.bind(this),
-    // });
-    // this.enableHover();
-    // this.enableSelection();
-    // this._updateCellsGeometry();
-
-    // if (!this.columns?.length && this.width) {
-    //   this.set("columns", [{ width: this.width }]);
-    // }
-    // if (!this.rows?.length && this.height) {
-    //   this.set("rows", [{ height: this.height }]);
-    // }
-    // if (!this._cells?.length) {
-    //   this.set("cells", [[{}]]);
-    // }
-
-    // this.initUndo();
+    this.enableHover();
+    this.enableSelection();
   }
 
   public onSet(options: { [key: string]: any }) {
@@ -329,7 +298,7 @@ export class Table extends Group {
     this.fire("modified");
     this.canvas?.fire("object:modified", { target: this });
     this.canvas?.renderAll();
-  }          
+  }
 
   // Get columns data
   getColumns(): TableColumnOptions[] {
@@ -1403,7 +1372,7 @@ export class Table extends Group {
     if (!this._cells[y][x]) {
       return;
     }
-    const cell = this._cells[y][x] as fabric.TableCell;
+    const cell = this._cells[y][x] as TableCell;
     if (cell.text === text) {
       return;
     }
@@ -1439,7 +1408,7 @@ export class Table extends Group {
   private _createCell(
     x: number,
     y: number,
-    cell: fabric.TableCellOptions = {}
+    cell: TableCellOptions = {}
   ) {
     const w = cell?.colspan || 1,
       h = cell?.rowspan || 1;
@@ -1463,12 +1432,12 @@ export class Table extends Group {
       } as fabric.TableColumn);
     }
 
-    const cellData: fabric.TableCell = {
+    const cellData: TableCell = {
       r: this._rows[y],
       c: this._cols[x],
       colspan: w,
       rowspan: h,
-    } as fabric.TableCell;
+    } as TableCell;
 
     for (let xi = 0; xi < w; xi++) {
       for (let yi = 0; yi < h; yi++) {
@@ -1500,8 +1469,8 @@ export class Table extends Group {
       lockMovementY: true,
       originX: "left",
       originY: "top",
-      left: 0,
-      top: 0,
+      left: this.left,
+      top: this.top,
       width: 1,
       height: 1,
       fill: this.isHeaderCell(cellData) ? this.fillHeader : this.fill,

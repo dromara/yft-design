@@ -14,6 +14,7 @@ import { QRCode } from "@/extension/object/QRCode";
 import { BarCode } from "@/extension/object/BarCode";
 import { ArcText } from '@/extension/object/ArcText';
 import { VerticalText } from '@/extension/object/VerticalText'
+import { Table } from "@/extension/object/Table"
 import JsBarcode from "jsbarcode";
 import { i18nObj } from "@/plugins/i18n/index"
 import useCenter from "@/views/Canvas/useCenter";
@@ -324,9 +325,9 @@ export default () => {
     // const { centerPoint } = useCenter();
     // const [canvas] = useCanvas();
 
-    // const table = new Table();
+    const table = new Table();
 
-    // renderCanvas(table)
+    renderCanvas(table)
 
   }
 
