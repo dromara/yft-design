@@ -180,48 +180,49 @@ export class Table extends Group {
   private _textMap: Map<Text, TableCell> = new Map();
 
   constructor(objects: FabricObject[] = [], options: Partial<GroupProps> = {}) {
+    super()
 
-    const _options = Object.assign(
-      {},
-      defaultProperties
-    ) as unknown as TableOptions;
+    // const _options = Object.assign(
+    //   {},
+    //   defaultProperties
+    // ) as unknown as TableOptions;
 
-    Object.assign(_options, mockData);
+    // Object.assign(_options, mockData);
 
-    if (_options.columns && _options.rows && !_options.cells) {
-      _options.cells = new Array(_options.rows.length);
-      for (let y = 0; y < _options.columns.length; y++) {
-        _options.cells[y] = new Array(_options.columns.length);
+    // if (_options.columns && _options.rows && !_options.cells) {
+    //   _options.cells = new Array(_options.rows.length);
+    //   for (let y = 0; y < _options.columns.length; y++) {
+    //     _options.cells[y] = new Array(_options.columns.length);
 
-        for (let x = 0; x < _options.columns.length; x++) {
-          _options.cells[y][x] = {};
-        }
-      }
-    }
+    //     for (let x = 0; x < _options.columns.length; x++) {
+    //       _options.cells[y][x] = {};
+    //     }
+    //   }
+    // }
 
-    super([],_options);
+    // super([],_options);
 
-    this.on({
-      modified: this._cleanCache.bind(this),
-      resizing: this._cleanCache.bind(this),
-      row: this._cleanCache.bind(this),
-      column: this._cleanCache.bind(this),
-      added: this._updateLines.bind(this),
-      deselected: this.clearSelection.bind(this),
-    });
-    this.enableHover();
-    this.enableSelection();
-    this._updateCellsGeometry();
+    // this.on({
+    //   modified: this._cleanCache.bind(this),
+    //   resizing: this._cleanCache.bind(this),
+    //   row: this._cleanCache.bind(this),
+    //   column: this._cleanCache.bind(this),
+    //   added: this._updateLines.bind(this),
+    //   deselected: this.clearSelection.bind(this),
+    // });
+    // this.enableHover();
+    // this.enableSelection();
+    // this._updateCellsGeometry();
 
-    if (!this.columns?.length && this.width) {
-      this.set("columns", [{ width: this.width }]);
-    }
-    if (!this.rows?.length && this.height) {
-      this.set("rows", [{ height: this.height }]);
-    }
-    if (!this._cells?.length) {
-      this.set("cells", [[{}]]);
-    }
+    // if (!this.columns?.length && this.width) {
+    //   this.set("columns", [{ width: this.width }]);
+    // }
+    // if (!this.rows?.length && this.height) {
+    //   this.set("rows", [{ height: this.height }]);
+    // }
+    // if (!this._cells?.length) {
+    //   this.set("cells", [[{}]]);
+    // }
 
     // this.initUndo();
   }
@@ -323,7 +324,7 @@ export class Table extends Group {
   }
 
   // Set columns for the table
-  setColumns(value: fabric.TableColumnOptions[]) {
+  setColumns(value: TableColumnOptions[]) {
     this.__setcolumns(value);
     this.fire("modified");
     this.canvas?.fire("object:modified", { target: this });
@@ -331,7 +332,7 @@ export class Table extends Group {
   }          
 
   // Get columns data
-  getColumns(): fabric.TableColumnOptions[] {
+  getColumns(): TableColumnOptions[] {
     return this._cols.reduce((p: fabric.TableColumnOptions[], c) => {
       const coldata = { width: c.width } as fabric.TableColumnOptions;
       if (c.header) {
@@ -363,7 +364,7 @@ export class Table extends Group {
   }
 
   // Set rows for the table
-  setRows(value: fabric.TableRowOptions[]) {
+  setRows(value: TableRowOptions[]) {
     this.__setrows(value);
     this.fire("modified");
     this.canvas?.fire("object:modified", { target: this });
@@ -380,7 +381,7 @@ export class Table extends Group {
   }
 
   // Get rows data
-  getRows(): fabric.TableRowOptions[] {
+  getRows(): TableRowOptions[] {
     return this._rows.reduce((p: fabric.TableRowOptions[], c) => {
       const rowdata = { height: c.height } as fabric.TableRowOptions;
       if (c.header) {
@@ -490,7 +491,7 @@ export class Table extends Group {
   }
 
   // Get bounds of the current selection
-  getSelectionBounds(): fabric.TableSelectionBounds | null {
+  getSelectionBounds(): TableSelectionBounds | null {
     if (!this.selection.length) {
       return null;
     }
@@ -528,12 +529,12 @@ export class Table extends Group {
   }
 
   // Check if a cell is a header cell
-  isHeaderCell(cell: fabric.TableCell) {
+  isHeaderCell(cell: TableCell) {
     return cell.r?.header || cell.c?.header;
   }
 
   // Hover over a cell
-  hoverCell(cell: fabric.TableCell) {
+  hoverCell(cell: TableCell) {
     if (cell && cell !== this._hoverCell) {
       this._hoverCell = cell;
       this.dirty = true;
@@ -542,7 +543,7 @@ export class Table extends Group {
   }
 
   // Set selection of cells
-  setSelection(newSelection: fabric.TableCell[] = []) {
+  setSelection(newSelection: TableCell[] = []) {
     this.selection = newSelection;
     this.dirty = true;
     this.canvas?.renderAll();
@@ -623,7 +624,7 @@ export class Table extends Group {
   }
 
   // Set cells data for the table
-  setCells(cells: fabric.TableCellOptions[][]) {
+  setCells(cells: TableCellOptions[][]) {
     this.__setcells(cells);
     this._updateCellsGeometry();
     this.fire("modified");
@@ -1326,8 +1327,8 @@ export class Table extends Group {
   };
 
   //Sets corner and controls position coordinates based on current angle, width and height, left and top.
-  override setCoords(skipCorners: boolean) {
-    Group.prototype.setCoords.call(this, skipCorners);
+  override setCoords() {
+    Group.prototype.setCoords.call(this);
     this._updateRowsAndColumnsControls();
     return this;
   }
@@ -1528,7 +1529,7 @@ export class Table extends Group {
   }
 
   //get current transformation row
-  private _getCurrentRow(): fabric.TableRow | null {
+  private _getCurrentRow(): TableRow | null {
     if (!this.canvas?._currentTransform) {
       return null;
     }
@@ -1536,7 +1537,7 @@ export class Table extends Group {
   }
 
   //get current transformation column
-  private _getCurrentColumn(): fabric.TableColumn | null {
+  private _getCurrentColumn(): TableColumn | null {
     if (!this.canvas?._currentTransform) {
       return null;
     }
@@ -1886,7 +1887,7 @@ export class Table extends Group {
   }
 
   // Deletes a specific cell from the table
-  private _deleteCell(cell: fabric.TableCell): void {
+  private _deleteCell(cell: TableCell): void {
     for (let y = 0; y < this._rows.length; y++) {
       for (let x = 0; x < this._cols.length; x++) {
         if (this._cells[y][x] === cell) {
@@ -1936,6 +1937,35 @@ export class Table extends Group {
 classRegistry.setClass(Table)
 
 
+/**
+ * Data Related to Table Cell
+ */
+export interface TableCell extends Required<TableCellOptions> {
+  /**
+   * row data element
+   */
+  r: TableRow;
+  /**
+   * column data element
+   */
+  c: TableColumn;
+  /**
+   * column width in px
+   */
+  width: number;
+  /**
+   * column height in px
+   */
+  height: number;
+  /**
+   * associated rectangle object in the group
+   */
+  o: fabric.Rect;
+  /**
+   * associated text object in the group
+   */
+  t?: Text;
+}
 export type TableCellDefinition = TableCell | null;
 
 /**
@@ -2077,7 +2107,7 @@ export interface TableCellOutput extends TableCellOptions {
   /**
    * coordinates array related to left top corner of the table in px
    */
-  coords?: [IPoint, IPoint, IPoint, IPoint];
+  coords?: [Point, Point, Point, Point];
 }
 
 /**
