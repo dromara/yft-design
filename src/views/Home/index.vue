@@ -7,7 +7,7 @@
             <img src="@/assets/logo.svg" alt="" class="h-full">
           </el-col>
           <el-col :span="6" class="flex justify-end">
-            <el-button type="primary">登陆/注册</el-button>
+            <el-button type="primary" @click="handleLoginDialog">登陆/注册</el-button>
           </el-col>
         </el-row>
       </el-header>
@@ -42,6 +42,7 @@
         </el-main>
       </el-container>
     </el-container>
+    <LoginDialog :visible="loginVisible" @close="handleLoginDialog" />
   </div>
 </template>
 
@@ -56,6 +57,14 @@ import { PageSize } from "@/configs/size"
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
+const loginVisible = ref(false)
+
+const page = reactive({
+  loading: false,
+  column: 6,
+  move: true,
+  list: [] as TemplateItem[],
+});
 
 const handleScroll = throttle(() => {
   const mainElement = document.getElementById('main') as HTMLElement
@@ -65,12 +74,9 @@ const handleScroll = throttle(() => {
   }
 }, 2000)
 
-const page = reactive({
-  loading: false,
-  column: 6,
-  move: true,
-  list: [] as TemplateItem[],
-});
+const handleLoginDialog = (status: boolean) => {
+  loginVisible.value = status
+}
 
 const setItemStyle = (img: HTMLImageElement, index: number) => {
   if (!img) return;

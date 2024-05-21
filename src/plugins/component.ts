@@ -11,6 +11,7 @@ import FileUpload from '@/components/FileUpload/index.vue'
 import ImageMatting from '@/components/ImageMatting/index.vue'
 import ImageFillColor from '@/components/ImageFillColor.vue'
 import HomePopover from '@/components/HomePopover.vue'
+import LoginDialog from '@/components/LoginDialog/index.vue'
 
 const components = {
   FileInput,
@@ -23,7 +24,8 @@ const components = {
   FileUpload,
   ImageMatting,
   ImageFillColor,
-  HomePopover
+  HomePopover,
+  LoginDialog
 }
 
 export default {
