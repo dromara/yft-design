@@ -8,7 +8,7 @@ export const constantRoutes: RouteRecordRaw[] = [
     component: () => import("@/views/Home/index.vue"),
     meta: { 
       hidden: true,
-      title: 'index'
+      title: 'yft-home'
     },
   },
   {
@@ -16,7 +16,7 @@ export const constantRoutes: RouteRecordRaw[] = [
     name: "/",
     component: () => import("@/views/Editor/index.vue"),
     meta: { 
-      title: 'design'
+      title: 'yft-design'
     },
   },
   {
@@ -41,10 +41,15 @@ const router = createRouter({
   scrollBehavior: () => ({ left: 0, top: 0 }),
 });
 
+router.beforeResolve((to: any, from: any, next: any) => {
+  window.document.title = to.meta.title
+  next()
+})
+
 /**
  * 重置路由
  */
-export function resetRouter() {
+export const resetRouter = () => {
   router.replace({ path: "/" });
 }
 
