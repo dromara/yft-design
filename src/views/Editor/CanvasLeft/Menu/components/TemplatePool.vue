@@ -28,7 +28,7 @@
 <script lang="ts" setup>
 import { Search } from "@element-plus/icons-vue"
 import { onMounted, ref } from "vue"
-import { getTemplatePages } from '@/api/template'
+import { getTemplateDetailPages } from '@/api/template'
 import { TemplateItem } from '@/api/template/types'
 import { useTemplatesStore } from '@/store'
 import { ElMessage, ElMessageBox } from 'element-plus'
@@ -71,7 +71,7 @@ const handleScroll = debounce(async () => {
 
 const getTemplateItems = async () => {
   const pageParams = { page: page.value, size: PageSize }
-  const result = await getTemplatePages(pageParams)
+  const result = await getTemplateDetailPages(pageParams)
   if (result.data && result.data.code === 200) {
     templateItems.value = templateItems.value.concat(result.data.data.items)
   }

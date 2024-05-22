@@ -32,8 +32,8 @@
           <el-row class="mt-[40px]">
             <b class="text-[20px]">今日推荐</b>
           </el-row>
-          <TransitionGroup :name="page.move ? 'group' : ''" tag="div" class="waterfall-box" id="homeWaterfall">
-            <div class="waterfall-item" v-for="(item, index) in page.list" :key="item.id">
+          <TransitionGroup :name="resultReactive.move ? 'group' : ''" tag="div" class="waterfall-box" id="homeWaterfall">
+            <div class="waterfall-item" v-for="(item, index) in resultReactive.items" :key="item.id">
               <img class="pic" :src="item.previewURL + '?image/auto-orient,1/quality,q_50'" alt="" :ref="(e: any) => setItemStyle(e, index)" @click="changeTemplate(item.id)">
               <div class="title">{{ item.title }}</div>
               <div class="content ellipsis_2">{{ item.text }}</div>
@@ -50,7 +50,7 @@
 import MainSearch from './components/MainSearch.vue';
 import MainScene from './components/MainScene.vue';
 import MainTools from './components/MainTools.vue';
-import { getTemplatePages } from '@/api/template'
+import { getTemplateInfoPages } from '@/api/template'
 import { TemplateItem } from '@/api/template/types'
 import { throttle } from 'lodash-es'
 import { PageSize } from "@/configs/size"
@@ -59,20 +59,25 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 const loginVisible = ref(false)
 
-const page = reactive({
+const resultReactive = reactive({
   loading: false,
+  page: 1,
+  totalPage: 1,
   column: 6,
   move: true,
-  list: [] as TemplateItem[],
+  items: [] as TemplateItem[],
 });
 
-const handleScroll = throttle(() => {
+const handleScroll = throttle(async () => {
   const mainElement = document.getElementById('main') as HTMLElement
   const scrollHeight = mainElement.scrollHeight, scrollTop = mainElement.scrollTop, clientHeight = mainElement.clientHeight
   if (scrollHeight - (scrollTop + clientHeight) <= 200) {
-    // await getTemplateItems()
+    if (resultReactive.page < resultReactive.totalPage) {
+      resultReactive.page += 1
+      await getTemplateItems()
+    }
   }
-}, 2000)
+}, 300)
 
 const handleLoginDialog = (status: boolean) => {
   loginVisible.value = status
@@ -83,7 +88,7 @@ const setItemStyle = (img: HTMLImageElement, index: number) => {
   const update = () => {
     const item = img.parentElement;
     if (!item) return;
-    const gapRows = index >= page.column ? 8 : 0;
+    const gapRows = index >= resultReactive.column ? 8 : 0;
     const rows = Math.ceil(item.clientHeight / 2) + gapRows;
     item.style.gridRowEnd = `span ${rows}`;
   }
@@ -96,10 +101,12 @@ const setItemStyle = (img: HTMLImageElement, index: number) => {
 }
 
 const getTemplateItems = async () => {
-  const pageParams = { page: 1, size: PageSize }
-  const result = await getTemplatePages(pageParams)
+  const pageParams = { page: resultReactive.page, size: PageSize }
+  const result = await getTemplateInfoPages(pageParams)
   if (result.data && result.data.code === 200) {
-    page.list = page.list.concat(result.data.data.items)
+    resultReactive.page = result.data.data.page
+    resultReactive.totalPage = result.data.data.total_pages
+    resultReactive.items = resultReactive.items.concat(result.data.data.items)
   }
 }
 
@@ -122,21 +129,21 @@ onMounted(async () => {
   observer = new ResizeObserver((entries) => {
     const rect = entries[0].contentRect;
     if (rect.width > 1200) {
-      page.column = 6;
+      resultReactive.column = 6;
     } 
     else if (rect.width > 900) {
-      page.column = 5;
+      resultReactive.column = 5;
     } 
     else if (rect.width > 600) {
-      page.column = 4;
+      resultReactive.column = 4;
     }
     else if (rect.width > 300) {
-      page.column = 3;
+      resultReactive.column = 3;
     }
     else if (rect.width > 200) {
-      page.column = 2;
+      resultReactive.column = 2;
     }
-    el.style.setProperty("--column", page.column.toString());
+    el.style.setProperty("--column", resultReactive.column.toString());
   });
   observer.observe(el);
 });

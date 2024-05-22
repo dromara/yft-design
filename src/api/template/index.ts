@@ -3,9 +3,17 @@ import request from '@/utils/request'
 import { PageParams, infoParams, TemplateResult, TemplateInfo } from "./types"
 
 
-export const getTemplatePages = (params: PageParams): AxiosPromise<TemplateResult> => {
+export const getTemplateInfoPages = (params: PageParams): AxiosPromise<TemplateResult> => {
   return request({
-    url: '/api/design/template/pages',
+    url: '/api/design/template/info/pages',
+    method: 'get',
+    params,
+  })
+}
+
+export const getTemplateDetailPages = (params: PageParams): AxiosPromise<TemplateResult> => {
+  return request({
+    url: '/api/design/template/detail/pages',
     method: 'get',
     params,
   })
@@ -13,7 +21,7 @@ export const getTemplatePages = (params: PageParams): AxiosPromise<TemplateResul
 
 export const getTemplateInfo = (pk: number): AxiosPromise<TemplateInfo> => {
   return request({
-    url: `/api/design/template/info/${pk}`,
+    url: `/api/design/template/data/${pk}`,
     method: 'get',
   })
 }

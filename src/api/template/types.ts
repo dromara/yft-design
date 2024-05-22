@@ -39,6 +39,7 @@ export interface TemplateItem {
 export interface PageResult {
   total: number
   page: number
+  total_pages: number
   size: number
   pages: number
   items: TemplateItem[]
