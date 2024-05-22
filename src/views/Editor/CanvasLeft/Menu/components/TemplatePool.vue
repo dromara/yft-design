@@ -41,6 +41,7 @@ const templateItems = ref<TemplateItem[]>([])
 const activeTemplate = ref("data");
 const activeSelfTemplate = ref("buy");
 const page = ref(1)
+const totalPage = ref(1)
 const templateRef = ref<HTMLElement | undefined>()
 
 const setItemStyle = (img: HTMLImageElement, index: number) => {
@@ -64,8 +65,10 @@ const handleScroll = debounce(async () => {
   const mainElement = templateRef.value as HTMLElement
   const scrollHeight = mainElement.scrollHeight, scrollTop = mainElement.scrollTop, clientHeight = mainElement.clientHeight
   if (scrollHeight - (scrollTop + clientHeight) <= 200) {
-    page.value += 1
-    await getTemplateItems()
+    if (page.value < totalPage.value) {
+      page.value += 1
+      await getTemplateItems()
+    }
   }
 }, 300)
 
@@ -73,6 +76,8 @@ const getTemplateItems = async () => {
   const pageParams = { page: page.value, size: PageSize }
   const result = await getTemplateDetailPages(pageParams)
   if (result.data && result.data.code === 200) {
+    page.value = result.data.data.page
+    totalPage.value = result.data.data.total_pages
     templateItems.value = templateItems.value.concat(result.data.data.items)
   }
 }
@@ -98,8 +103,8 @@ const handleChangeTemplate = (item: TemplateItem) => {
     })
     .catch(() => {
       ElMessage({
-        type: 'info',
-        message: '取消更换模板',
+        type: 'error',
+        message: '模板加载失败,请联系管理员修改bug了',
       })
     })
   

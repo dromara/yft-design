@@ -171,6 +171,10 @@ export const useTemplatesStore = defineStore('Templates', {
       this.templates = templates
     },
 
+    clearTemplates() {
+      this.templates = []
+    },
+
     setTemplateIndex(index: number) {
       this.templateIndex = index
     },
