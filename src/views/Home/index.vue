@@ -122,9 +122,9 @@ const changeTemplate = (pk: number) => {
 
 let observer: ResizeObserver;
 
-onMounted(async () => {
+onMounted(() => {
   // getData(true);
-  await getTemplateItems()
+  getTemplateItems()
   const el = document.getElementById('homeWaterfall') as HTMLElement;
   observer = new ResizeObserver((entries) => {
     const rect = entries[0].contentRect;
