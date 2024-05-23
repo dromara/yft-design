@@ -32,6 +32,7 @@ export default () => {
 
   const renderCanvas = (element: FabricObject) => {
     const [canvas] = useCanvas();
+	canvas.viewportCenterObject(element); 
     canvas.add(element);
     canvas.setActiveObject(element);
     rightState.value = RightStates.ELEMENT_STYLE;
