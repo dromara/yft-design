@@ -31,7 +31,7 @@ import { onMounted, ref } from "vue"
 import { getTemplateDetailPages } from '@/api/template'
 import { TemplateItem } from '@/api/template/types'
 import { useTemplatesStore } from '@/store'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ElMessage, ElMessageBox, ElLoading } from 'element-plus'
 import { unzip } from "@/utils/crypto"
 import { PageSize } from "@/configs/size"
 import { throttle, debounce } from 'lodash-es'
@@ -95,7 +95,9 @@ const handleChangeTemplate = (item: TemplateItem) => {
       const templateData = unzip(item.data)
       const data = JSON.parse(templateData)
       console.log('data:', data)
+      const loadingInstance = ElLoading.service({ fullscreen: true, background: 'rgba(122, 122, 122, 0.5)' })
       await templatesStore.changeTemplate(data)
+      nextTick(() => loadingInstance.close())
       ElMessage({
         type: 'success',
         message: '更换模板成功',

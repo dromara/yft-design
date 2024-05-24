@@ -21,6 +21,7 @@ interface UpdateElementData {
 }
 
 export interface TemplatesState {
+  templateId: number
   templates: Template[]
   templateIndex: number
 }
@@ -28,6 +29,7 @@ export interface TemplatesState {
 export const useTemplatesStore = defineStore('Templates', {
   state: (): TemplatesState => ({
     // theme: theme, // 主题样式
+    templateId: 0,
     templates: Templates, // 页面页面数据
     templateIndex: 0, // 当前页面索引
     // fixedRatio: false, // 固定比例
@@ -155,23 +157,20 @@ export const useTemplatesStore = defineStore('Templates', {
     },
 
     async changeTemplate(template: Template | Template[]) {
-      const loadingInstance = ElLoading.service({ fullscreen: true, background: 'rgba(122, 122, 122, 0.5)' })
       const { setCanvasTransform } = useCanvasScale()
       const templates = Array.isArray(template) ? template : [template]
       this.templates = templates
       this.templateIndex = 0
       await this.renderTemplate()
       setCanvasTransform()
-      nextTick(() => {
-        loadingInstance.close()
-      })
     },
 
     async setTemplates(templates: Template[]) {
       this.templates = templates
     },
 
-    clearTemplates() {
+    setTemplateId(templateId: number) {
+      this.templateId = templateId
       this.templates = []
     },
 

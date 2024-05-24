@@ -12,20 +12,64 @@
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia'
 import { onMounted, onUnmounted } from 'vue'
-import { useFabricStore, useMainStore } from '@/store'
-
+import { useFabricStore, useMainStore, useTemplatesStore } from '@/store'
+import { useRouter } from 'vue-router'
+import { unzip } from "@/utils/crypto"
+import { getTemplateData } from '@/api/template'
 import { contextMenus } from '@/configs/contextMenu'
 import { initEditor } from '@/views/Canvas/useCanvas'
 import { initPixi } from '@/views/Canvas/usePixi'
+import { ElMessage, ElLoading } from 'element-plus'
 import useCanvasHotkey from '@/hooks/useCanvasHotkey'
 const fabricStore = useFabricStore()
 const mainStore = useMainStore()
+const router = useRouter()
+const templatesStore = useTemplatesStore()
 const { wrapperRef, canvasRef } = storeToRefs(fabricStore)
 const { drawAreaFocus } = storeToRefs(mainStore)
 const { keydownListener, keyupListener, pasteListener } = useCanvasHotkey()
 
-onMounted(() => {
-  initEditor()
+
+const addDrawAreaFocus = () => {
+  if (!drawAreaFocus.value) mainStore.setDrawAreaFocus(true)
+}
+
+const remDrawAreaFocus = () => {
+  if (drawAreaFocus.value) mainStore.setDrawAreaFocus(false)
+}
+
+const getTemplateDetail = async (pk: number) => {
+  const result = await getTemplateData(pk)
+  if (result.data && result.data.code === 200 && result.data.data) {
+    try {
+      const templateData = unzip(result.data.data.data)
+      const data = JSON.parse(templateData)
+      console.log('data:', data)
+      await templatesStore.changeTemplate(data)
+    } 
+    catch (error) {
+      console.log('error:', error)
+      ElMessage({
+        type: 'error',
+        message: '模板加载失败,请联系管理员修改bug了',
+      })
+    }
+  }
+}
+
+const initRouter = async (templateId?: number) => {
+  if (templateId) {
+    templatesStore.setTemplateId(templateId)
+    const loadingInstance = ElLoading.service({ fullscreen: true, background: 'rgba(122, 122, 122, 0.5)' })
+    await getTemplateDetail(templateId)
+    nextTick(() => loadingInstance.close())
+  }
+}
+
+onMounted(async () => {
+  const query = router.currentRoute.value.query
+  initRouter(query.template)
+  initEditor(query.template)
   initPixi()
   document.addEventListener('keydown', keydownListener)
   document.addEventListener('keyup', keyupListener)
@@ -40,14 +84,6 @@ onUnmounted(() => {
   window.removeEventListener('paste', pasteListener as any)
 })
 
-// 点击画布区域
-const addDrawAreaFocus = () => {
-  if (!drawAreaFocus.value) mainStore.setDrawAreaFocus(true)
-}
-
-const remDrawAreaFocus = () => {
-  if (drawAreaFocus.value) mainStore.setDrawAreaFocus(false)
-}
 </script>
 
 <style lang="scss" scoped>

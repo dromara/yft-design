@@ -118,12 +118,14 @@ const initEvent = () => {
 }
 
 // 初始化模板
-const initTemplate = async () => {
+const initTemplate = async (templateId?: number) => {
+  
   if (!canvas) return
-  const templatesStore = useTemplatesStore()
   const { initCommon } = useCommon()
   const { initHammer } = useHammer()
+  const templatesStore = useTemplatesStore()
   const { currentTemplate } = storeToRefs(templatesStore)
+  if (templateId && Number(templateId) > 0) return
   await canvas.loadFromJSON(currentTemplate.value)
   setCanvasTransform()
   initCommon()
@@ -133,12 +135,12 @@ const initTemplate = async () => {
   }
 }
 
-export const initEditor = async () => {
+export const initEditor = async (templateId?: number) => {
   const fabricStore = useFabricStore()
   const { wrapperRef } = storeToRefs(fabricStore)
   initConf()
   initCanvas()
-  initTemplate()
+  initTemplate(templateId)
   const { width, height } = useElementBounding(wrapperRef.value)
   watch([width, height], () => {
     setCanvasTransform()
