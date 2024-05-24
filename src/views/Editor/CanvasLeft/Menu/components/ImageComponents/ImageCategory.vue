@@ -26,15 +26,15 @@
             class="box-image"
             :style="{
               width:
-                (img.previewHeight <= 120
-                  ? (img.previewWidth / img.previewHeight) * 120
-                  : img.previewWidth) + 'px',
+                (img.height <= 120
+                  ? (img.width / img.height) * 120
+                  : img.width) + 'px',
             }"
             v-for="(img, index) in item.category"
             :key="index"
           >
             <img
-              :src="img.previewURL"
+              :src="img.preview"
               :alt="img.tags"
               @click="createImage(img)"
             />
@@ -68,7 +68,7 @@
           }"
         >
           <img
-            :src="img.previewURL"
+            :src="img.preview"
             :alt="img.tags"
             @click="createImage(img)"
           />

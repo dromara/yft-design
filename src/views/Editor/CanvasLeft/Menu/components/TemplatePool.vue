@@ -10,7 +10,7 @@
       <el-tab-pane :label="$t('message.recommendTemp')" name="data">
         <div class="layout-templates" @scroll="handleScroll" ref="templateRef">
           <div v-for="(item, index) in templateItems" :key="item.id" class="thumbnail">
-            <img :src="item.previewURL + '?x-oss-process=style/img_tum'" alt="" :ref="(e: any) => setItemStyle(e, index)" @click="handleChangeTemplate(item)"/>
+            <img :src="item.preview + '?x-oss-process=style/img_tum'" alt="" :ref="(e: any) => setItemStyle(e, index)" @click="handleChangeTemplate(item)"/>
           </div>
         </div>
       </el-tab-pane>

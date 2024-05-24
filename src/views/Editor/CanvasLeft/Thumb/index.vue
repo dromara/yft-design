@@ -64,7 +64,7 @@ const keyboardStore = useKeyboardStore()
 const { t } = useI18n()
 const { templatesLoadLimit } = useLoadTemplates()
 const { templates, templateIndex } = storeToRefs(templatesStore)
-const { selectedTemplatesIndex: _selectedTemplatesIndex, thumbnailsFocus, canvasObject } = storeToRefs(mainStore)
+const { selectedTemplatesIndex: _selectedTemplatesIndex, thumbnailsFocus } = storeToRefs(mainStore)
 const { ctrlKeyState, shiftKeyState } = storeToRefs(keyboardStore)
 const { createTemplate, deleteTemplate, sortTemplates, cutTemplate, pasteTemplate } = useHandleTemplate()
 

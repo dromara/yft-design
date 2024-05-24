@@ -28,9 +28,9 @@ export interface infoParams {
 
 export interface TemplateItem {
   id: number
-  previewURL: string
-  previewWidth: number
-  previewHeight: number
+  preview: string
+  width: number
+  height: number
   data: string
   title: string
   text: string

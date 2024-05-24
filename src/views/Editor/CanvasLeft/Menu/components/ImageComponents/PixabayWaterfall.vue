@@ -139,7 +139,7 @@ onMounted(() => {
               height: cols ? 'auto' : `${child[child.height as string]}px`
             }"
           >
-            <img :src="child[child.previewURL as string]" class="w-full h-full block" alt="" srcset="" />
+            <img :src="child[child.preview as string]" class="w-full h-full block" alt="" srcset="" />
           </div>
         </div>
         <div
