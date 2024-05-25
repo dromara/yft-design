@@ -40,6 +40,7 @@ const templatesStore = useTemplatesStore()
 const templateItems = ref<TemplateItem[]>([])
 const activeTemplate = ref("data");
 const activeSelfTemplate = ref("buy");
+// const images = ref<string[]>([])
 const page = ref(1)
 const totalPage = ref(1)
 const templateRef = ref<HTMLElement | undefined>()
@@ -72,6 +73,23 @@ const handleScroll = debounce(async () => {
   }
 }, 300)
 
+const loadTemplateImage = () => {
+  templateItems.value.forEach(item => {
+    const itemImages = item.images
+    if (itemImages && JSON.parse(itemImages)) {
+      const images = JSON.parse(itemImages) as string[]
+      images.forEach(ele => {
+        const img = new Image()
+        img.crossOrigin = 'anonymous'
+        img.src = ele
+        img.onerror = function() {
+          img.src = new URL(`/src/assets/images/loading.gif`, import.meta.url).href;
+        };
+      })
+    }
+  })
+}
+
 const getTemplateItems = async () => {
   const pageParams = { page: page.value, size: PageSize }
   const result = await getTemplateDetailPages(pageParams)
@@ -79,6 +97,7 @@ const getTemplateItems = async () => {
     page.value = result.data.data.page
     totalPage.value = result.data.data.total_pages
     templateItems.value = templateItems.value.concat(result.data.data.items)
+    loadTemplateImage()
   }
 }
 

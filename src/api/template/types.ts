@@ -34,6 +34,7 @@ export interface TemplateItem {
   data: string
   title: string
   text: string
+  images?: string
 }
 
 export interface PageResult {

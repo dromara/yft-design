@@ -100,6 +100,20 @@ const setItemStyle = (img: HTMLImageElement, index: number) => {
   };
 }
 
+const loadTemplateImage = async () => {
+  resultReactive.items.forEach(item => {
+    const itemImages = item.images
+    if (itemImages && JSON.parse(itemImages)) {
+      const images = JSON.parse(itemImages) as string[]
+      images.forEach(ele => {
+        const img = new Image()
+        img.crossOrigin = 'anonymous'
+        img.src = ele
+      })
+    }
+  })
+}
+
 const getTemplateItems = async () => {
   const pageParams = { page: resultReactive.page, size: PageSize }
   const result = await getTemplateInfoPages(pageParams)
@@ -107,6 +121,7 @@ const getTemplateItems = async () => {
     resultReactive.page = result.data.data.page
     resultReactive.totalPage = result.data.data.total_pages
     resultReactive.items = resultReactive.items.concat(result.data.data.items)
+    // await loadTemplateImage()
   }
 }
 
