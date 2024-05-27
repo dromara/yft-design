@@ -56,11 +56,13 @@ export function polygonPositionHandler(dim: Point, finalMatrix: number[], fabric
   
   const x = (fabricObject.points[pointIndex].x - fabricObject.pathOffset.x)
   const y = (fabricObject.points[pointIndex].y - fabricObject.pathOffset.y)
-  
+  // console.log('fabricObject:', fabricObject.canvas?.viewportTransform)
+  const canvasTransform = fabricObject.canvas?.viewportTransform ? fabricObject.canvas?.viewportTransform : [1, 0, 0, 1, 0, 0]
   const point = util.transformPoint(
     { x, y } as Point,
     util.multiplyTransformMatrices(
-      fabricObject.canvas.viewportTransform,
+      // fabricObject.canvas?.viewportTransform,
+      canvasTransform,
       fabricObject.calcTransformMatrix()
     )
   )

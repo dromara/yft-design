@@ -337,10 +337,10 @@ export class Polyline extends OriginPolyline {
 
   _render(ctx: CanvasRenderingContext2D) {
     super._render(ctx)
-    this.clearGuideline()
-    this.renderStartStyle(ctx)
-    this.renderEndStyle(ctx)
-    this.drawGuideLines()
+    // this.clearGuideline()
+    // this.renderStartStyle(ctx)
+    // this.renderEndStyle(ctx)
+    // this.drawGuideLines()
   }
 
   renderStartStyle(ctx: CanvasRenderingContext2D) {
