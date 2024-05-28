@@ -97,7 +97,7 @@ const getTemplateItems = async () => {
     page.value = result.data.data.page
     totalPage.value = result.data.data.total_pages
     templateItems.value = templateItems.value.concat(result.data.data.items)
-    loadTemplateImage()
+    // loadTemplateImage()
   }
 }
 
