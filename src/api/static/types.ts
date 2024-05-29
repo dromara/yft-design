@@ -1,12 +1,18 @@
-export interface QueryPgaes {
-  t: string
-  page: number
+export interface QueryFont {
+  size?: number
+  page?: number
 }
 
-export interface FontPageResult {
+export interface FontInfo {
+  id: number
+  url: string
+  fontname: string
+}
+
+export interface FontInfoResult {
   code: number
   msg: string
-  data: any[]
+  data: FontInfo[]
 }
 
 

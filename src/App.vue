@@ -30,7 +30,7 @@ const { databaseId } = storeToRefs(useMainStore())
 onMounted(async () => {
   await deleteDiscardedDB()
   await snapshotStore.initSnapshotDatabase()
-  mainStore.setSystemFonts()
+  mainStore.getFonts()
 })
 
 if (import.meta.env.MODE === 'production') {

@@ -246,7 +246,7 @@ import useCanvas from '@/views/Canvas/useCanvas'
 
 const mainStore = useMainStore()
 const templatesStore = useTemplatesStore()
-const { canvasObject, systemFonts } = storeToRefs(mainStore)
+const { canvasObject, systemFonts, onlineFonts } = storeToRefs(mainStore)
 const { createPathElement } = useHandleCreate()
 const [ canvas ] = useCanvas()
 const handleElement = computed(() => canvasObject.value as Textbox | ArcText)
@@ -274,7 +274,7 @@ const fontOptionGroups = ref<FontGroupOption[]>([
   },
   {
     label: '在线字体',
-    options: WEB_FONTS
+    options: onlineFonts.value
   }
 ])
 

@@ -7,6 +7,8 @@ import { getSupportFonts } from '@/utils/fonts'
 import { CanvasElement } from '@/types/canvas'
 import { RightStates, PointElement, ImageCategoryData } from '@/types/elements'
 import { ExportTypes, PoolType, SystemFont } from '@/types/common'
+import { getFontInfo } from '@/api/static/font'
+import { FontInfo } from '@/api/static/types'
 import useCanvas from '@/views/Canvas/useCanvas'
 
 export interface MainState {
@@ -29,6 +31,7 @@ export interface MainState {
   thumbnailsFocus: boolean
   drawAreaFocus: boolean
   systemFonts: SystemFont[]
+  onlineFonts: SystemFont[]
   disableHotkeys: boolean
   exportType: ExportTypes
   lastHelp: PoolType
@@ -61,6 +64,7 @@ export const useMainStore = defineStore('main', {
     thumbnailsFocus: false, // 左侧导航缩略图区域聚焦
     drawAreaFocus: false, // 编辑区聚焦
     systemFonts: SYS_FONTS, // 系统字体
+    onlineFonts: [], // 在线字体
     disableHotkeys: false, // 禁用快捷键
     exportType: 'image', // 导出面板
     lastEdit: 'editor', // 左边栏
@@ -132,8 +136,29 @@ export const useMainStore = defineStore('main', {
       this.thumbnailsFocus = isFocus
     },
 
-    setSystemFonts() {
+    getFonts() {
+      this.getSystemFonts()
+      this.getOnlineFonts()
+    },
+
+    getSystemFonts() {
       this.systemFonts = getSupportFonts(SYS_FONTS)
+    },
+
+    async getOnlineFonts() {
+      const res = await getFontInfo()
+      if (res.data.code === 200) {
+        // this.onlineFonts = res.data.data
+        const style = document.createElement("style");
+        style.type = "text/css";
+        res.data.data.forEach(fontInfo => {
+          this.onlineFonts.push({label: fontInfo.fontname, value: fontInfo.fontname})
+          style.appendChild(document.createTextNode(
+            `@font-face {font-family: '${fontInfo.fontname}'; src: url(${fontInfo.url}) format('truetype');}`
+          ));
+        })
+        document.head.appendChild(style);
+      }
     },
     
     setExportType(type: ExportTypes) {
