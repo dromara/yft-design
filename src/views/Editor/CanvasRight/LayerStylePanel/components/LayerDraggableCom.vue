@@ -23,7 +23,10 @@
           <img :src="(element as Image).mask?.src" alt="">
         </div>
         <div class="element-text" v-if="element.type === ElementNames.TEXTBOX || element.type === ElementNames.TEXT">{{ (element as TextboxElement).text }}</div>
-        <div class="element-layer" v-if="element.layer">{{ element.layer }}</div>
+        <div class="element-layer">
+          <el-input v-if="element.id == handleElementId" v-model="element.layer" @blur="blurElement" size="small"></el-input>
+          <p v-else @dblclick.stop="dbclickElement(element.id)">{{ element.layer ? element.layer : element.id }}</p>
+        </div>
       </div>
       
       <div class="element-handler">
@@ -31,15 +34,6 @@
           <IconLock class="common-icon" v-if="element.lockMovementX && element.lockMovementY" @click.stop="lockElement(element.id, false)"/>
           <IconUnlock class="common-icon" v-else @click.stop="lockElement(element.id, true)"/>
         </el-tooltip>
-        <!-- <el-tooltip placement="top" :hide-after="0" content="删除">
-          <IconDelete class="common-icon" @click.stop="deleteElement(element.id)"/>
-        </el-tooltip> -->
-        <!-- <div v-if="element.type.toLowerCase() === ElementNames.TEXTBOX || element.type.toLowerCase() === ElementNames.ITEXT">
-          <el-tooltip placement="top" :hide-after="0" :content="(element as TextboxElement).editable ? '可编辑文字' : '不可编辑文字'">
-            <IconCheckOne class="common-icon" v-if="(element as TextboxElement).editable" @click.stop="checkElement(element.id)"/>
-            <IconRound class="common-icon" v-else  @click.stop="checkElement(element.id)"/>
-          </el-tooltip>
-        </div> -->
       </div>
     </div>
   </div>
@@ -76,12 +70,23 @@ const props = defineProps({
     required: true,
   }
 })
-// console.log('props:', props.element, 'id:', props.element.id, 'layerName:', props.element.layer)
+
 const mainStore = useMainStore()
 const templatesStore = useTemplatesStore()
-const { canvasObject } = storeToRefs(mainStore)
+const { canvasObject, handleElementId } = storeToRefs(mainStore)
 const { currentTemplate } = storeToRefs(templatesStore)
 const handleElement = computed(() => canvasObject.value as FabricObject)
+
+const inputRef = ref<HTMLInputElement | undefined>()
+
+const dbclickElement = (eid: string) => {
+  handleElementId.value = eid
+}
+
+const blurElement = () => {
+  handleElementId.value = ''
+}
+
 </script>
 <style lang="scss" scoped>
 .layer-content {

@@ -367,13 +367,12 @@ export default () => {
 
   const checkElement = (eid: string) => {
     const [ canvas ] = useCanvas()
-    const element = queryElement(eid) as TextboxElement
-    element.editable = !element.editable
-    canvas.discardActiveObject();
+    const element = queryElement(eid) as FabricObject
+    element.isSelected = true
     canvas.renderAll()
     templatesStore.modifedElement()
-    const elements = canvas.getObjects().filter(item => !WorkSpaceCommonType.includes((item as CanvasElement).id)) as FabricObject[]
-    isChecked.value = queryTextboxChecked(elements)
+    // const elements = canvas.getObjects().filter(item => !WorkSpaceCommonType.includes((item as CanvasElement).id)) as FabricObject[]
+    // isChecked.value = queryTextboxChecked(elements)
   }
 
   const maskElement = (eid: string) => {

@@ -11,9 +11,9 @@
           </el-col>
         </el-row>
         <el-row class="category-box mt-5" v-loading="item.category.length === 0">
-          <div class="box-image" v-for="(img, index) in item.category" :key="index" :style="{ height: (img.height < 100 ? 100 : img.height) + 'px' }">
+          <div class="box-image" v-for="(img, index) in item.category" :key="index" :style="{ height: (img.previewHeight < 100 ? 100 : img.previewHeight) + 'px' }">
             <!-- <el-tooltip placement="top" :content="img.tags" :hide-after="0"> -->
-            <el-image :src="img.preview" :alt="img.tags" @click="createImage(img)" lazy loading="lazy"></el-image>
+            <el-image :src="img.previewURL" :alt="img.tags" @click="createImage(img)" lazy loading="lazy"></el-image>
             <!-- </el-tooltip> -->
           </div>
         </el-row>
@@ -28,7 +28,7 @@
       <el-row class="total-box mt-5" v-loading="categoryData.total.length === 0">
         <div class="box-image" v-for="(img, index) in categoryData.total" :key="index">
           <!-- <el-tooltip placement="top" :content="img.tags" :hide-after="0"> -->
-          <img :src="img.preview" :alt="img.tags" @click="createImage(img)" lazy loading="lazy" :ref="(e: any) => setItemStyle(e, index)" />
+          <img :src="img.previewURL" :alt="img.tags" @click="createImage(img)" lazy loading="lazy" :ref="(e: any) => setItemStyle(e, index)" />
           <!-- </el-tooltip> -->
         </div>
       </el-row>
