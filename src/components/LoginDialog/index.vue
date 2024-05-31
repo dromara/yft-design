@@ -18,7 +18,7 @@
         <div class="w-[170px] h-[45px]">
           <el-row class="h-full">
             <el-col :span="8" class="flex justify-center">
-              <el-button class="h-full"><IconGithub class="text-[20px]" /></el-button>
+              <el-button class="h-full"><IconGithub class="text-[20px]" @click="loginGithub"/></el-button>
             </el-col>
             <el-col :span="8" class="flex justify-center">
               <el-button class="h-full"><IconTencentQq class="text-[20px]" /></el-button>
@@ -40,8 +40,9 @@
 
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue'
-import { oauthWechat } from '@/api/oauth'
-
+import { useRouter } from 'vue-router'
+import { oauthWechat, oauthGithubToken } from '@/api/oauth'
+const router = useRouter()
 const qrcode = ref('')
 const dialogVisible = ref(false)
 
@@ -56,10 +57,10 @@ const emit = defineEmits<{
   (event: 'close', payload: boolean): void
 }>()
 
-watch(() => props.visible, async (val) => {
+watch(() => props.visible, (val) => {
   dialogVisible.value = val
   if (val) {
-    await getOauthWechat()
+    getOauthWechat()
   }
 })
 
@@ -75,8 +76,11 @@ const getOauthWechat = async () => {
   }
 }
 
-const setImageMask = () => {
-  
+const loginGithub = async () => {
+  const res = await oauthGithubToken()
+  if (res.data && res.data.code === 200) {
+    window.open(res.data.data, '_blank')
+  }
 }
 
 </script>

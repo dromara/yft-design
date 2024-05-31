@@ -9,3 +9,9 @@ export interface OauthWechatResult {
   data: OauthWechatData
   msg: string
 }
+
+export interface OauthGithubResult {
+  code: number
+  data: string
+  msg: string
+}
