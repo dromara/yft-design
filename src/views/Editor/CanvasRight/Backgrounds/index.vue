@@ -894,8 +894,7 @@ const generateGridBackground = async (status?: string) => {
   const imageURL = `data:image/svg+xml,${serialize.serializeToString(
     canvasBackground
   )}`;
-  const backgroundImage = await Image.fromURL(imageURL, {
-    crossOrigin: "anonymous",
+  const backgroundImage = await Image.fromURL(imageURL, {crossOrigin: "anonymous"}, {
     left: workSpaceDraw.left,
     top: workSpaceDraw.top,
     angle: workSpaceDraw.angle,
@@ -1050,9 +1049,7 @@ const generateShadingBackground = async () => {
     </svg>
   `;
   const imageURL = `data:image/svg+xml,${svg}`;
-  const backgroundImage = await Image.fromURL(imageURL, {
-    crossOrigin: "anonymous",
-  });
+  const backgroundImage = await Image.fromURL(imageURL, {crossOrigin: "anonymous"}, {});
   const left = workSpaceDraw.left,
     top = workSpaceDraw.top,
     angle = workSpaceDraw.angle,
