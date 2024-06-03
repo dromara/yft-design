@@ -31,7 +31,7 @@ import LayerDraggableSon from './LayerDraggableSon.vue'
 import LayerDraggableCom from './LayerDraggableCom.vue'
 
 
-const {  sortElement, layerElement } = useHandleElement()
+const { sortElement, layerElement } = useHandleElement()
 
 const props = defineProps({
   elements: {

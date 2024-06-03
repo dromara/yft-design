@@ -35,11 +35,11 @@ export default () => {
       elementGroup.objects.splice(newIndex, 0, _element)
     } 
     else {
-      const _elements = JSON.parse(JSON.stringify(currentTemplate.value.objects))
+      const _elements = JSON.parse(JSON.stringify(currentTemplate.value.objects.reverse()))
       const _element = _elements[oldIndex]
       _elements.splice(oldIndex, 1)
       _elements.splice(newIndex, 0, _element)
-      currentTemplate.value.objects = _elements
+      currentTemplate.value.objects = _elements.reverse()
     }
     await templatesStore.renderElement()
     templatesStore.modifedElement()
