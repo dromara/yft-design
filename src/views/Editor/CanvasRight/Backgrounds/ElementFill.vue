@@ -288,19 +288,18 @@ onMounted(async () => {
 });
 
 // 保存缓存最近添加的网格
-watch(
-  gridColorRecent,
-  () => {
-    const recentGridCache = JSON.stringify(gridColorRecent.value);
-    localStorage.setItem(RECENT_GRIDS, recentGridCache);
-  },
-  { deep: true }
+watch(gridColorRecent, () => {
+  const recentGridCache = JSON.stringify(gridColorRecent.value);
+  localStorage.setItem(RECENT_GRIDS, recentGridCache);
+}, 
+{ deep: true }
 );
+
 const handleElement = computed(() => {
   gradientOpacity.value = canvasObject.value?.opacity ?? 1
-  gradientRotate.value = canvasObject.value.fill?.gradientRotate ?? 0
-  gradientOffsetX.value = (canvasObject.value.fill?.offsetX ?? 0) / canvasObject.value?.width
-  gradientOffsetY.value = (canvasObject.value.fill?.offsetY ?? 0) / canvasObject.value?.height
+  gradientRotate.value = canvasObject.value?.fill?.gradientRotate ?? 0
+  gradientOffsetX.value = (canvasObject.value?.fill?.offsetX ?? 0) / canvasObject.value?.width
+  gradientOffsetY.value = (canvasObject.value?.fill?.offsetY ?? 0) / canvasObject.value?.height
   return canvasObject.value as CanvasElement;
 });
 
@@ -484,6 +483,8 @@ const generateGradientBackground = () => {
   } else {
     coords = rotateRectangle(width, height, gradientRotate.value);
   }
+  const rotateCos = Math.cos((gradientRotate.value * Math.PI) / 180.0);
+  const rotateSin = Math.sin((gradientRotate.value * Math.PI) / 180.0);
   const gradient = new Gradient({
     type: background.value.gradientType,
     colorStops: background.value.gradientColor || GradientColorLibs[0].colors,
@@ -491,6 +492,7 @@ const generateGradientBackground = () => {
     offsetX: gradientOffsetX.value * width,
     offsetY: gradientOffsetY.value * height,
     gradientUnits: "pixels",
+    gradientTransform: [rotateCos, rotateSin, -1 * rotateSin, rotateCos, 0, 0],
   });
   gradient.gradientRotate = gradientRotate.value;
 

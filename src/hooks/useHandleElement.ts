@@ -70,7 +70,7 @@ export default () => {
 
   const copyElement = async () => {
     if (!canvasObject.value) return
-    clonedObject.value = await canvasObject.value.clone(propertiesToInclude)
+    clonedObject.value = await canvasObject.value.clone(propertiesToInclude) as any
     navigator.clipboard.writeText('')
   }
 
