@@ -190,6 +190,10 @@ export declare module 'fabric' {
     _drawCroppingPath(ctx: CanvasRenderingContext2D): void
   }
 
+  export declare class Path {
+    mask?: Mask
+  }
+
   export declare class IText {
     renderEffects(type?: string): void
   }
