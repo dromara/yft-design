@@ -1,6 +1,10 @@
 import { Object as FabricObject, Path as OriginPath, classRegistry, PathProps, TOptions, SerializedPathProps, util } from "fabric";
 import { Color } from "./Color";
 
+const isBlack = (num: number) => {
+  return num - 0 === 0
+}
+
 export class Path extends OriginPath {
   declare mask?: FabricObject;
 
@@ -51,7 +55,24 @@ export class Path extends OriginPath {
     // ctx.globalCompositeOperation = 'destination-in';
     mask.transform(ctx);
     ctx.scale(1 / mask.zoomX!, 1 / mask.zoomY!);
+    
     ctx.drawImage(mask._cacheCanvas!, -mask.cacheTranslationX!, -mask.cacheTranslationY!);
+    const maskData = ctx.getImageData(0, 0, mask.width, mask.height)
+    // const defaultColor = mask.defaultColor
+    for (let i = 0; i < maskData.data.length; i += 4) {
+      const r = maskData.data[i]
+      const g = maskData.data[i + 1]
+      const b = maskData.data[i + 2]
+      if (r === g && g === b) {
+        maskData.data[i + 3] = r 
+      }
+      else {
+        if (isBlack(r) && isBlack(g) && isBlack(b)) {
+          maskData.data[i + 3] = 0
+         }
+      }
+    }
+    ctx.putImageData(maskData, 0, 0)
     ctx.globalCompositeOperation = 'source-in';
     ctx.restore();
   }
