@@ -13,6 +13,7 @@ export class IText extends OriginIText {
   }
 
   renderEffects() {
+    console.log('renderEffects:')
     this.canvas?.renderAll()
   }
 

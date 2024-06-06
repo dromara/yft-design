@@ -223,6 +223,7 @@ const updateStroke = (color: string, key: string) => {
 }
 
 const updateStrokeWidth = () => {
+  console.log('handleElement.value.effects:', handleElement.value.effects)
   updateElement()
 }
 

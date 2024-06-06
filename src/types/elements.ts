@@ -32,7 +32,7 @@ export const SupportEffects = [
   'activeselection',
   'itext',
   'text',
-  'textbo',
+  'textbox',
   'image',
 ]
 

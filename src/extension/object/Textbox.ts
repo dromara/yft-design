@@ -40,6 +40,10 @@ export class Textbox extends OriginTextbox {
     }
   }
 
+  renderEffects() {
+    this.canvas?.renderAll()
+  }
+
   _renderChar(method: "fillText" | "strokeText", ctx: CanvasRenderingContext2D, lineIndex: number, charIndex: number, _char: string, left: number, top: number): void {
     if (this.effects) {
       for (let i = 0; i < this.effects.length; i++) {
