@@ -139,6 +139,8 @@ export declare module 'fabric' {
     objects: FabricObject[]
     subTargets: FabricObject[]
     _objects: FabricObject[]
+    mask?: FabricObject
+    _drawMask(ctx: CanvasRenderingContext2D): void
     setDirty(): void
     updateLayout(): void
     forEachObject(callback: (object: FabricObject, index: number, array: FabricObject[]) => any): void
@@ -155,6 +157,7 @@ export declare module 'fabric' {
     layer?: string
     effects?: EffectItem[]
     ref: ObjectRef
+    mask?: FabricObject
     getParent<T extends boolean = false>(strict?: T): T extends true ? Group | undefined : Group | Canvas | StaticCanvas
     noEventObjectAdded: boolean /** 不发送 object:added 事件 */
     getWidthHeight(noFixed?: boolean): Point
@@ -191,7 +194,7 @@ export declare module 'fabric' {
   }
 
   export declare class Path {
-    mask?: Mask
+    mask?: FabricObject
   }
 
   export declare class IText {

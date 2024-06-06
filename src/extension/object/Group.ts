@@ -1,4 +1,4 @@
-import { Object as FabricObject, Group as OriginGroup, classRegistry, TPointerEventInfo, TPointerEvent, GroupProps } from 'fabric'
+import { Object as FabricObject, Group as OriginGroup, classRegistry, TPointerEventInfo, TPointerEvent, util } from 'fabric'
 
 export class Group extends OriginGroup {
   public subTargetCheck = true
@@ -49,10 +49,10 @@ export class Group extends OriginGroup {
     this.set({interactive: true, objectCaching: false})
 
     // 绑定事件
-    this.addDeselectedEvent(this)
+    this.addDeselectedEvent(this as FabricObject)
 
     // 搜索被双击的目标并激活
-    const index = e.subTargets.indexOf(this)
+    const index = e.subTargets.indexOf(this as FabricObject)
     const prevTarget = e.subTargets[index - 1] ?? e.subTargets[e.subTargets.length - 1]
     this.canvas.setActiveObject(prevTarget)
 
@@ -64,8 +64,26 @@ export class Group extends OriginGroup {
     super._onObjectRemoved(object, removeParentTransform)
     if (this.size() === 0) {
       const parent = this.getParent() as Group
-      parent && parent.remove(this)
+      parent && parent.remove(this as FabricObject)
     }
+  }
+
+  override drawObject(ctx: CanvasRenderingContext2D): void {
+    this._renderBackground(ctx);
+    for (let i = 0; i < this._objects.length; i++) {
+      // TODO: handle rendering edge case somehow
+      if (this.canvas?.preserveObjectStacking && this._objects[i].group !== this) {
+        ctx.save();
+        ctx.transform(...util.invertTransform(this.calcTransformMatrix()));
+        this._objects[i].render(ctx);
+        ctx.restore();
+      } 
+      else if (this._objects[i].group === this) {
+        this._objects[i].render(ctx);
+      }
+    }
+    this._drawClipPath(ctx, this.clipPath);
+    // this._drawMask(ctx)
   }
 }
 
