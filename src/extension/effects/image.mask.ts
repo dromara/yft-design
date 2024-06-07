@@ -6,9 +6,12 @@ const isBlack = (num: number) => {
 }
 
 const drawRectByCanvas = (ctx: CanvasRenderingContext2D, image: OriginImage, mask: Mask) => {
-  if (mask.width >= image.width && mask.height >= image.height) return
   const top = mask.top - image.top
   const left = mask.left - image.left
+  // mask全覆盖 则返回
+  if (top <= 0 && left <= 0 && mask.height + top >= image.height && mask.width + left >= image.width) {
+    return
+  }
   ctx.fillStyle = '#000'
   if (top > 0) {
     ctx.fillRect(0, 0, image.width, top)
