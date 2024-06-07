@@ -1,15 +1,17 @@
 import { Path as OriginPath,  } from "@/extension/object/Path"
 import { Image as FabricImage, SerializedPathProps } from "fabric"
-import { Mask } from "@/types/elements"
 
 const isBlack = (num: number) => {
   return num - 0 === 0
 }
 
-const drawRectByCanvas = (ctx: CanvasRenderingContext2D, path: OriginPath, mask: Mask) => {
-  if (mask.width >= path.width && mask.height >= path.height) return
+const drawRectByCanvas = (ctx: CanvasRenderingContext2D, path: OriginPath, mask: FabricImage) => {
+  // if (mask.width >= path.width && mask.height >= path.height) return
   const top = mask.top - path.top
   const left = mask.left - path.left
+  if (top <= 0 && left <= 0 && mask.height + top >= path.height && mask.width + left >= path.width) {
+    return
+  }
   ctx.fillStyle = '#000'
   if (top > 0) {
     ctx.fillRect(0, 0, path.width, top)
@@ -63,7 +65,8 @@ export const getPathMask = async (path: OriginPath) => {
       drawRectByCanvas(ctx, path, mask)
     }
     ctx.globalCompositeOperation = 'source-in'
-    ctx.drawImage(path.toCanvasElement(), 0, 0)
+    const imageElement = await getImageBitmap(path.toDataURL())
+    ctx.drawImage(imageElement, 0, 0)
     const src = canvas.toDataURL()
     const image = await FabricImage.fromURL(src, {}, {})
     return image

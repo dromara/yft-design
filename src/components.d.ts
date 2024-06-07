@@ -183,7 +183,7 @@ export declare module 'fabric' {
   export declare class Image {
     originSrc?: string 
     effects?: EffectItem[]
-    mask?: Mask
+    mask?: SerializedImageProps
     lastEventTop: number
     lastEventLeft: number
     setupDragMatrix(): void
@@ -194,7 +194,7 @@ export declare module 'fabric' {
   }
 
   export declare class Path {
-    mask?: FabricObject
+    mask?: SerializedImageProps
   }
 
   export declare class IText {

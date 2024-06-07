@@ -1,8 +1,8 @@
-import { Object as OriginObject, FabricObjectProps, classRegistry } from "fabric";
+import { Object as OriginObject, FabricObjectProps, classRegistry, Image } from "fabric";
 import { Color } from './Color'
 
 export class Object extends OriginObject {
-  declare mask?: Object;
+  declare mask?: Image;
   constructor(options: FabricObjectProps) {
     super()
     this.setOptions(options)
