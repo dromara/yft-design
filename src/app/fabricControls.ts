@@ -269,9 +269,8 @@ export const defaultControls = (): TControlSet => ({
       const height = fontSize + 6
 
       // 背景
-      //@ts-ignore
-      ctx.roundRect(-width / 2, -height / 2, width, height, 4)
       ctx.fillStyle = '#0066ff'
+      ctx.fillRect(-width / 2, -height / 2, width, height)
       ctx.fill()
 
       // 文字
