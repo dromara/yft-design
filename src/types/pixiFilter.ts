@@ -34,3 +34,15 @@ export interface PixiBlendModeFilter extends PixiFilter {
   mode: number
   alpha: number
 }
+
+export interface PixiBevelFilter extends PixiFilter {
+  lightAlpha?: number
+  lightColor?: number
+  rotation?: number
+  shadowColor?: number
+  thickness?: number
+} 
+
+export interface PixiEmbossFilter extends PixiFilter {
+  strength?: number
+} 

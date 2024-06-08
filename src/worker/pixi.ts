@@ -1,6 +1,15 @@
 import { Application, Texture, Sprite, Container, Filter, Graphics } from '@pixi/webworker';
-import { PixiFilter, PixiGlowFilter, PixiColorOverlayFilter, PixiColorGradientFilter, PixiBlendModeFilter } from '@/types/pixiFilter';
-import { GlowFilter, ColorOverlayFilter, ColorGradientFilter } from 'pixi-filters'
+
+import { GlowFilter, ColorOverlayFilter, ColorGradientFilter, BevelFilter, EmbossFilter } from 'pixi-filters'
+import { 
+  PixiFilter, 
+  PixiGlowFilter, 
+  PixiColorOverlayFilter, 
+  PixiColorGradientFilter, 
+  PixiBlendModeFilter ,
+  PixiBevelFilter,
+  PixiEmbossFilter
+} from '@/types/pixiFilter';
 
 let app: Application | undefined = undefined
 
@@ -29,9 +38,12 @@ self.onmessage = async (e) => {
       if (ele.type === 'ColorGradientFilter') {
         handleColorGradientFilter(ele as PixiColorGradientFilter, sprite.filters)
       }
-      // if (ele.type === 'BlendColorFilter') {
-      //   handleBlendColorFilter(ele as PixiBlendModeFilter, sprite)
-      // }
+      if (ele.type === 'BevelFilter') {
+        handleBevelFilter(ele as PixiBevelFilter, sprite.filters)
+      }
+      if (ele.type === 'EmbossFilter') {
+        handleEmbossFilter(ele as PixiEmbossFilter, sprite.filters)
+      }
     }
     console.log('sprite.filters:', sprite.filters)
     app?.stage.addChild(sprite)
@@ -86,6 +98,21 @@ const handleColorGradientFilter = (item: PixiColorGradientFilter, filters: Filte
   filters.push(colorGradientFilter)
 }
 
+const handleBevelFilter = (item: PixiBevelFilter, filters: Filter[]) => {
+  const bevelFilter = new BevelFilter({
+    lightAlpha: item.lightAlpha,
+    lightColor: item.lightColor,
+    rotation: item.rotation,
+    shadowColor: item.shadowColor,
+    thickness: item.thickness,
+  })
+  filters.push(bevelFilter)
+}
+
+const handleEmbossFilter = (item: PixiEmbossFilter, filters: Filter[]) => {
+  const embossFilter = new EmbossFilter(item.strength)
+  filters.push(embossFilter)
+}
 // const handleBlendColorFilter = (item: PixiBlendModeFilter, sprite: Sprite) => {
 //   sprite.blendMode = item.mode
 // }
