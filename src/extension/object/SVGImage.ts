@@ -3,25 +3,28 @@ import { Image, Object as FabricObject, util, classRegistry, ImageProps, ImageSo
 
 export class SVGImage extends Image {
   static type: string = 'svgimage'
+  originWidth?: number
+  originHeight?: number
 
-  static async getScale (src: string, object: any) : Promise<number> {
+  static async getScale (src: string, object: SVGImage) {
     const { width, height } = await getImageSize(src)
-    const widthScale = object.width / width
-    const heigthScale = object.height / height
-    return widthScale > heigthScale ? widthScale : heigthScale
+    object.originWidth = object.originWidth ? object.originWidth : object.width
+    object.originHeight = object.originHeight ? object.originHeight : object.height
+    const widthScale = object.originWidth / width
+    const heigthScale = object.originHeight / height
+    const scale = widthScale > heigthScale ? widthScale : heigthScale
+    object.scaleX = object.scaleY = scale
+    object.width = object.originWidth / scale
+    object.height = object.originHeight / scale
   }
   
   static async fromURL(url: string, options: any = {}): Promise<Image> {
-    const scale = await this.getScale(url, options)
-    options.scaleX = options.scaleY = scale
     return util.loadImage(url, options).then((img) => new this(img, options));
   }
 
   static async fromObject({ filters: f, resizeFilter: rf, src, crossOrigin, ...object }: any, options: { signal: AbortSignal }): Promise<Image> {
-    const scale = await this.getScale(src, object)
-    object.scaleX = object.scaleY = scale
-    object.width /= scale
-    object.height /= scale
+    await this.getScale(src, object)
+    console.log('width:', object.width, 'height:', object.height, 'originWidth:', object.originWidth, 'originHeight:', object.originHeight)
     return Promise.all([
       util.loadImage(src, { ...options, crossOrigin }),
       f && util.enlivenObjects(f, options),
@@ -40,6 +43,6 @@ export class SVGImage extends Image {
   }
 }
 
-classRegistry.setClass(SVGImage, 'svgimage')
+classRegistry.setClass(SVGImage)
 
 

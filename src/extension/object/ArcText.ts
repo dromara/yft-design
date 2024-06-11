@@ -1031,7 +1031,7 @@ export class ArcText extends OriginIText {
     return `<image xlink:href="${imageData}" width="${this.width * this.scaleX}" height="${this.height * this.scaleY}" x="${this.left}" y="${this.top}"/>`
   }
 
-  _toSVG() {
+  _toSVG(): any {
     const offsets = this._getSVGLeftTopOffsets()
     const textAndBg = this._getSVGTextAndBg(offsets.textTop, offsets.textLeft);
     return this._wrapSVGTextAndBg(textAndBg);
