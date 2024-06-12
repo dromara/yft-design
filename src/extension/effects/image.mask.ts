@@ -1,11 +1,11 @@
-import { Image as OriginImage } from "@/extension/object/Image"
+import { Image as FabricImage } from "@/extension/object/Image"
 import { Mask } from "@/types/elements"
 
 const isBlack = (num: number) => {
   return num - 0 === 0
 }
 
-const drawRectByCanvas = (ctx: CanvasRenderingContext2D, image: OriginImage, mask: Mask) => {
+const drawRectByCanvas = (ctx: CanvasRenderingContext2D, image: FabricImage, mask: Mask) => {
   const top = mask.top - image.top
   const left = mask.left - image.left
   // mask全覆盖 则返回
@@ -27,10 +27,9 @@ const drawRectByCanvas = (ctx: CanvasRenderingContext2D, image: OriginImage, mas
   }
 }
 
-export const setMaskCanvas = async (image: OriginImage) => {
+export const setMaskCanvas = async (image: FabricImage) => {
   try {
     const mask = image.mask || image.groupMask
-    console.log('mask:', mask)
     if (!mask) return
     const maskCanvas = document.createElement('canvas') as HTMLCanvasElement
     maskCanvas.width = mask.width

@@ -22,8 +22,10 @@ import {
   TOptions 
 } from 'fabric'
 import { EffectItem } from '@/types/common'
+import { Mask } from '@/types/elements'
 import type { Abortable } from 'fabric'
 import { parseAttributes } from '../parser/parseAttributes'
+
 
 export class Image extends OriginImage {
   public isCropping?: false
@@ -33,7 +35,7 @@ export class Image extends OriginImage {
   public originWidth?: number
   public originHeight?: number
   public effects?: EffectItem[]
-  public groupMask?: any
+  public groupMask?: Mask
   constructor(element: ImageSource, options?: any) {
     super(element, { filters: [], ...options });
     this.effects = options?.effects
