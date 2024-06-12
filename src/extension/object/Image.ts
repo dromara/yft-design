@@ -262,7 +262,7 @@ export class Image extends OriginImage {
     );
   }
 
-  static async fromObject({ filters: f, resizeFilter: rf, src, crossOrigin, ...object }: any, options: { signal: AbortSignal }): Promise<Image> {
+  static async fromObject({ filters: f, resizeFilter: rf, src, crossOrigin, ...object }: any, options?: { signal: AbortSignal }): Promise<Image> {
     if (object.originSrc && object.effects) src = object.originSrc
     if (object.originWidth && object.effects) object.width = object.originWidth
     if (object.originHeight && object.effects) object.height = object.originHeight

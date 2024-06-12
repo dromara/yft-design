@@ -14,6 +14,7 @@ import type { LoadImageOptions } from '../util/misc/objectEnlive';
 import { Gradient, Group, classRegistry, Point } from 'fabric';
 import { Image } from '../object/Image';
 import { IText } from '../object/IText';
+import { Textbox } from '../object/Textbox';
 import { nanoid } from 'nanoid';
 
 const findTag = (el: Element) => {
@@ -212,27 +213,18 @@ export class ElementsParser {
     if (maskElements) {
       const maskElement = maskElements[0] as HTMLElement
       const maskImage = await Image.fromElement(maskElement)
+      let src = maskImage?.getSrc()
+      if (maskElement.tagName.toLowerCase() === 'text') {
+        const text = await IText.fromElement(maskElement)
+        src = text.toDataURL()
+      }
       obj.set({mask: {
-        src: maskImage?.getSrc(),
+        src: src,
         left: obj.left,
         top: obj.top,
         width: obj.width,
         height: obj.height
       }})
-      // if (obj instanceof Image && obj._originalElement) {
-      //   console.log('maskImage:', maskImage, 'obj:', obj.id)
-      //   const [ pixi ] = usePixi()
-      //   pixi.postMessage({
-      //     id: obj.id,
-      //     type: "mask", 
-      //     src: obj.getSrc(),
-      //     mask: JSON.stringify({
-      //       src: maskImage?.getSrc()
-      //     }), 
-      //     width: obj.width, 
-      //     height: obj.height
-      //   });
-      // }
     }
   }
 }

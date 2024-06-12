@@ -35,7 +35,7 @@ export class IText extends OriginIText {
 
   static async fromElement(
     element: HTMLElement,
-    options: Abortable,
+    options?: Abortable,
     cssRules?: any
   ) {
     const parsedAttributes = parseAttributes(
