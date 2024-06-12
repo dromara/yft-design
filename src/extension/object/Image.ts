@@ -1,6 +1,6 @@
 import { ClipPathType } from '@/configs/images'
 import { strokeImage } from '@/extension/effects/image.stroke'
-import { getMaskCanvas } from '@/extension/effects/image.mask'
+import { setMaskCanvas } from '@/extension/effects/image.mask'
 import { addCropImageInteractions, isolateObjectForEdit } from '@/extension/mixins/cropping.mixin'
 import { 
   croppingControlSet, 
@@ -33,9 +33,11 @@ export class Image extends OriginImage {
   public originWidth?: number
   public originHeight?: number
   public effects?: EffectItem[]
+  public groupMask?: any
   constructor(element: ImageSource, options?: any) {
     super(element, { filters: [], ...options });
     this.effects = options?.effects
+    this.groupMask = options?.groupMask
     this.renderEffects()
     this.on('mousedblclick', this.doubleClickHandler.bind(this))
   }
@@ -43,7 +45,7 @@ export class Image extends OriginImage {
   public doubleClickHandler(e: TPointerEventInfo<TPointerEvent>) {
     if (!this.canvas || !e.target || e.target !== this || (e.target.lockMovementX && e.target.lockMovementY)) return
     this.set({__isCropping: true, clipPath: undefined})
-    this.canvas.setActiveObject(this)
+    this.canvas.setActiveObject(this as any)
     this.canvas.requestRenderAll()
   }
 
@@ -62,7 +64,7 @@ export class Image extends OriginImage {
     const fabricCanvas = this.canvas
     if (!fabricCanvas) return
     fabricCanvas.defaultCursor = 'move';
-    isolateObjectForEdit(this)
+    isolateObjectForEdit(this as any)
     this.lastEventTop = this.top
     this.lastEventLeft = this.left;
     this.setupDragMatrix();
@@ -223,8 +225,8 @@ export class Image extends OriginImage {
   }
 
   async renderMask() {
-    if (this.mask) {
-      await getMaskCanvas(this)
+    if (this.mask || this.groupMask) {
+      await setMaskCanvas(this)
     }
   }
 

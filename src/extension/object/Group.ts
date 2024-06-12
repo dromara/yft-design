@@ -1,11 +1,11 @@
-import { Object as FabricObject, Group as OriginGroup, classRegistry, TPointerEventInfo, TPointerEvent, util } from 'fabric'
+import { Object as FabricObject, Group as OriginGroup, classRegistry, TPointerEventInfo, TPointerEvent, util, TOptions, SerializedGroupProps, GroupProps } from 'fabric'
 
 export class Group extends OriginGroup {
   public subTargetCheck = true
   public interactive = false
   public isShow = false
 
-  constructor(objects?: FabricObject[], options?: FabricObject<Group>, objectsRelativeToGroup?: boolean) {
+  constructor(objects?: FabricObject[], options?: Partial<GroupProps>, objectsRelativeToGroup?: boolean) {
     super(objects, options, objectsRelativeToGroup)
     this.on('mousedblclick', this.doubleClickHandler.bind(this))
   }
@@ -66,6 +66,18 @@ export class Group extends OriginGroup {
       const parent = this.getParent() as Group
       parent && parent.remove(this as FabricObject)
     }
+  }
+
+  static async fromObject<T extends TOptions<SerializedGroupProps>>({ objects = [], ...options}: T) {
+    if (options.mask) {
+      objects.forEach(obj => obj.groupMask = options.mask)
+    }
+    return Promise.all([
+      util.enlivenObjects<FabricObject>(objects),
+      util.enlivenObjectEnlivables(options),
+    ]).then(
+      ([objects, hydratedOptions]) => new this(objects, { ...options, ...hydratedOptions }, true)
+    );
   }
 
   override drawObject(ctx: CanvasRenderingContext2D): void {

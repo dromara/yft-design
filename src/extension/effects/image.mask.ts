@@ -27,9 +27,10 @@ const drawRectByCanvas = (ctx: CanvasRenderingContext2D, image: OriginImage, mas
   }
 }
 
-export const getMaskCanvas = async (image: OriginImage) => {
+export const setMaskCanvas = async (image: OriginImage) => {
   try {
-    const mask = image.mask
+    const mask = image.mask || image.groupMask
+    console.log('mask:', mask)
     if (!mask) return
     const maskCanvas = document.createElement('canvas') as HTMLCanvasElement
     maskCanvas.width = mask.width
