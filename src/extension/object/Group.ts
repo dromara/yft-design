@@ -8,8 +8,6 @@ import {
   TOptions, 
   SerializedGroupProps, 
   GroupProps,
-  Point,
-  LayoutResult
 } from 'fabric'
 
 export class Group extends OriginGroup {
@@ -17,8 +15,8 @@ export class Group extends OriginGroup {
   public interactive = false
   public isShow = false
 
-  constructor(objects?: FabricObject[], options?: Partial<GroupProps>, objectsRelativeToGroup?: boolean) {
-    super(objects, options, objectsRelativeToGroup)
+  constructor(objects?: FabricObject[], options?: Partial<GroupProps>) {
+    super(objects, options)
     this.on('mousedblclick', this.doubleClickHandler.bind(this))
   }
 

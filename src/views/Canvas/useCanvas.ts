@@ -6,7 +6,7 @@ import { useFabricStore } from '@/store/modules/fabric'
 import { useElementBounding } from '@vueuse/core'
 import { FabricTool } from '@/app/fabricTool'
 import { FabricGuide } from '@/app/fabricGuide'
-import { HoverBorders } from '@/app/hoverBorders'
+import { FabricHover } from '@/app/fabricHover'
 import { WheelScroll } from '@/app/wheelScroll'
 import { FabricRuler } from '@/app/fabricRuler'
 import { isMobile } from '@/utils/common'
@@ -105,7 +105,7 @@ const initCanvas = () => {
   // const keybinding = new Keybinding()
   new FabricTool(canvas)
   new FabricGuide(canvas)
-  new HoverBorders(canvas)
+  new FabricHover(canvas)
   new WheelScroll(canvas)
   new FabricRuler(canvas)
   canvas.preserveObjectStacking = true

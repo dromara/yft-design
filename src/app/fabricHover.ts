@@ -11,7 +11,7 @@ import { computed, watch } from 'vue'
 /**
  * 对象获得焦点后在外围显示一个边框
  */
-export class HoverBorders extends Disposable {
+export class FabricHover extends Disposable {
   private canvasEvents
 
   private lineWidth = 2
@@ -21,8 +21,8 @@ export class HoverBorders extends Disposable {
     super()
 
     this.canvasEvents = {
-      'mouse:out': this.drawBorder.bind(this),
-      'mouse:over': this.clearBorder.bind(this),
+      'mouse:out': this.clearBorder.bind(this),
+      'mouse:over': this.drawBorder.bind(this),
     }
 
     canvas.on(this.canvasEvents)
