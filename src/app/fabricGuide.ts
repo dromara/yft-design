@@ -116,7 +116,6 @@ export class FabricGuide extends Disposable {
         add(parent)
       })
     } else {
-      console.log('target:', target)
       const parent = target.getParent() as Group
       if (check.isNativeGroup(parent)) {
         canvasObjects.push(parent)
@@ -177,7 +176,7 @@ export class FabricGuide extends Disposable {
   }
 
   private getCoords(obj: FabricObject) {
-    const [tl, tr, br, bl] = obj.getCoords()
+    const [tl, tr, br, bl] = obj.getCoords(true)
     return { tl, tr, br, bl }
   }
 

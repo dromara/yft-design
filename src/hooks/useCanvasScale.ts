@@ -6,7 +6,6 @@ import { Group, Point } from 'fabric'
 import useCanvas from '@/views/Canvas/useCanvas'
 import useCenter from '@/views/Canvas/useCenter'
 import { WorkSpaceThumbType } from '@/configs/canvas'
-import { getObjectsBoundingBox } from '@/extension/util/common'
 
 export default () => {
   const fabricStore = useFabricStore()
@@ -78,7 +77,7 @@ export default () => {
     if (!canvas) return
     const { zoom } = storeToRefs(fabricStore)
     const objects = canvas.getObjects().filter(ele => !WorkSpaceThumbType.includes(ele.id))
-    const boundingBox = getObjectsBoundingBox(objects)
+    const boundingBox = Group.prototype.getObjectsBoundingBox(objects)
     const { width, height, centerPoint } = useCenter()
     if (!boundingBox) return
     zoom.value = Math.min(canvas.getWidth() / width, canvas.getHeight() / height) * scalePercentage.value / 100

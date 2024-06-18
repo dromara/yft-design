@@ -1,22 +1,12 @@
-import { 
-  Object as FabricObject, 
-  Group as OriginGroup, 
-  classRegistry, 
-  TPointerEventInfo, 
-  TPointerEvent, 
-  util, 
-  TOptions, 
-  SerializedGroupProps, 
-  GroupProps,
-} from 'fabric'
+import { Object as FabricObject, Group as OriginGroup, classRegistry, TPointerEventInfo, TPointerEvent, util, TOptions, SerializedGroupProps, GroupProps } from 'fabric'
 
 export class Group extends OriginGroup {
   public subTargetCheck = true
   public interactive = false
   public isShow = false
 
-  constructor(objects?: FabricObject[], options?: Partial<GroupProps>) {
-    super(objects, options)
+  constructor(objects?: FabricObject[], options?: Partial<GroupProps>, objectsRelativeToGroup?: boolean) {
+    super(objects, options, objectsRelativeToGroup)
     this.on('mousedblclick', this.doubleClickHandler.bind(this))
   }
 
@@ -86,7 +76,7 @@ export class Group extends OriginGroup {
       util.enlivenObjects<FabricObject>(objects),
       util.enlivenObjectEnlivables(options),
     ]).then(
-      ([objects, hydratedOptions]) => new this(objects, { ...options, ...hydratedOptions })
+      ([objects, hydratedOptions]) => new this(objects, { ...options, ...hydratedOptions }, true)
     );
   }
 
@@ -107,45 +97,6 @@ export class Group extends OriginGroup {
     this._drawClipPath(ctx, this.clipPath);
     // this._drawMask(ctx)
   }
-
-  // public getObjectsBoundingBox(
-  //   objects: FabricObject[],
-  //   ignoreOffset?: boolean
-  // ): LayoutResult | null {
-  //   if (objects.length === 0) {
-  //     return null;
-  //   }
-  //   const objectBounds: Point[] = [];
-  //   objects.forEach((object) => {
-  //     const objCenter = object.getRelativeCenterPoint();
-  //     let sizeVector = object._getTransformedDimensions().scalarDivide(2);
-  //     if (object.angle) {
-  //       const rad = util.degreesToRadians(object.angle),
-  //         sine = Math.abs(util.sin(rad)),
-  //         cosine = Math.abs(util.cos(rad)),
-  //         rx = sizeVector.x * cosine + sizeVector.y * sine,
-  //         ry = sizeVector.x * sine + sizeVector.y * cosine;
-  //       sizeVector = new Point(rx, ry);
-  //     }
-  //     objectBounds.push(
-  //       objCenter.subtract(sizeVector),
-  //       objCenter.add(sizeVector)
-  //     );
-  //   });
-  //   const { left, top, width, height } = util.makeBoundingBoxFromPoints(objectBounds);
-
-  //   const size = new Point(width, height),
-  //     relativeCenter = (!ignoreOffset ? new Point(left, top) : new Point()).add(size.scalarDivide(2)),
-  //     //  we send `relativeCenter` up to group's containing plane
-  //     center = relativeCenter.transform(this.calcOwnMatrix());
-
-  //   return {
-  //     centerX: center.x,
-  //     centerY: center.y,
-  //     width: size.x,
-  //     height: size.y,
-  //   };
-  // }
 }
 
 classRegistry.setClass(Group)

@@ -6,14 +6,13 @@ import { useFabricStore } from '@/store/modules/fabric'
 import { useElementBounding } from '@vueuse/core'
 import { FabricTool } from '@/app/fabricTool'
 import { FabricGuide } from '@/app/fabricGuide'
-import { FabricHover } from '@/app/fabricHover'
+import { HoverBorders } from '@/app/hoverBorders'
 import { WheelScroll } from '@/app/wheelScroll'
 import { FabricRuler } from '@/app/fabricRuler'
 import { isMobile } from '@/utils/common'
 import { FabricCanvas } from '@/app/fabricCanvas'
 import { Keybinding } from '@/app/keybinding'
 import { defaultControls, textboxControls } from '@/app/fabricControls'
-import { getObjectsBoundingBox } from '@/extension/util/common'
 import { useTemplatesStore } from '@/store'
 import useCommon from './useCommon'
 import useHammer from './useHammer'
@@ -36,9 +35,9 @@ const initConf = () => {
   FabricObject.ownDefaults.centeredScaling = false
   FabricObject.ownDefaults.centeredRotation = true
   FabricObject.ownDefaults.transparentCorners = false
-  // FabricObject.ownDefaults.rotatingPointOffset = 1
-  // FabricObject.ownDefaults.lockUniScaling = true
-  // FabricObject.ownDefaults.hasRotatingPoint = false
+  FabricObject.ownDefaults.rotatingPointOffset = 1
+  FabricObject.ownDefaults.lockUniScaling = true
+  FabricObject.ownDefaults.hasRotatingPoint = false
   FabricObject.ownDefaults.controls = defaultControls()
 
   Object.assign(Textbox.ownDefaults, { controls: textboxControls() })
@@ -69,14 +68,14 @@ const initConf = () => {
 }
 
 // 更新视图区长宽
-const setCanvasTransform = async () => {
+const setCanvasTransform = () => {
   if (!canvas) return
   const fabricStore = useFabricStore()
   const { zoom, wrapperRef, scalePercentage } = storeToRefs(fabricStore)
   const { width, height } = useElementBounding(wrapperRef.value)
   canvas.setDimensions({width: width.value, height: height.value})
   const objects = canvas.getObjects().filter(ele => !WorkSpaceThumbType.includes(ele.id))
-  const boundingBox = getObjectsBoundingBox(objects)
+  const boundingBox = Group.prototype.getObjectsBoundingBox(objects)
   if (!boundingBox) return
   let boxWidth = boundingBox.width, boxHeight = boundingBox.height
   let centerX = boundingBox.centerX, centerY = boundingBox.centerY
@@ -105,7 +104,7 @@ const initCanvas = () => {
   // const keybinding = new Keybinding()
   new FabricTool(canvas)
   new FabricGuide(canvas)
-  new FabricHover(canvas)
+  new HoverBorders(canvas)
   new WheelScroll(canvas)
   new FabricRuler(canvas)
   canvas.preserveObjectStacking = true
