@@ -5,14 +5,11 @@
     v-contextmenu="contextMenusThumbnails"  
   >
     <el-row class="thumb-handle items-center">
-      <el-col :span="12" class="flex justify-center text-[16px]">
+      <el-col :span="24" class="flex justify-center text-[16px]">
         <div>
-          <el-button text ref="menuRef">文件</el-button>
+          <el-button text ref="menuRef" class="w-[100px]">文件</el-button>
           <HomePopover :menu-ref="menuRef" :menu-popover-ref="menuPopoverRef" />
         </div>
-      </el-col>
-      <el-col :span="12" class="flex justify-center text-[16px]">
-        <el-button @click="createTemplate()" text> <IconPlus class="icon" /></el-button>
       </el-col>
     </el-row>
     <Draggable

@@ -14,11 +14,11 @@
       <!-- <el-row class="pop-row">
         <IconHome class="pop-icon"/>
         <span class="pop-text">返回首页</span>
-      </el-row>
-      <el-row class="pop-row">
-        <IconEdit class="pop-icon"/>
-        <span class="pop-text">未命名</span>
       </el-row> -->
+      <el-row class="pop-row" @click="createTemplate()">
+        <IconPlus class="pop-icon"/>
+        <span class="pop-text">添加模板</span>
+      </el-row>
       <el-row class="pop-row">
         <IconNewlybuild class="pop-icon"/>
         <span class="pop-text">{{ t('message.createDesign') }}</span>
@@ -39,7 +39,9 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue'
 import useI18n from '@/hooks/useI18n'
+import useHandleTemplate from '@/hooks/useHandleTemplate'
 import ReferencePopover from '@/components/ReferencePopover.vue'
+const { createTemplate } = useHandleTemplate()
 
 const { t } = useI18n()
 const hasHelp = ref(false)
