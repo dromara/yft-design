@@ -11,11 +11,11 @@
       </el-tooltip>
       <el-tooltip placement="top" :hide-after="0">
         <template #content>{{ t("message.group") }}</template>
-        <IconGroup class="handler-item" :class="{ disable: !canGroup }" @click="group()" />
+        <IconGroup class="handler-item" :class="{ disable: !canGroup }" @click="group()" v-show="canGroup" />
       </el-tooltip>
-      <el-tooltip placement="top" :hide-after="0">
+      <el-tooltip placement="top" :hide-after="0" >
         <template #content>{{ t("message.ungroup") }}</template>
-        <IconUngroup class="handler-item" :class="{ disable: !canUnGroup }" @click="ungroup()" />
+        <IconUngroup class="handler-item" :class="{ disable: !canUnGroup }" @click="ungroup()" v-show="canUnGroup" />
       </el-tooltip>
       <el-tooltip placement="top" :hide-after="0">
         <template #content>{{ t("message.ruler") }}</template>
@@ -51,20 +51,21 @@
         </template>
         <div class="viewport-size-preset">
           <div class="preset-item" v-for="item in canvasZoomPresets" :key="item" @click="applyCanvasPresetScale(item)">{{ item }}%</div>
+          <div class="preset-item"><IconFullScreen class="handler-item" @click="resetCanvas()" /></div>
         </div>
       </el-popover>
       <IconPlus class="handler-item" @click="scaleCanvas('+')" />
-      <el-tooltip placement="top">
+      <!-- <el-tooltip placement="top">
         <template #content>{{ t("message.undo") }}</template>
         <IconFullScreen class="handler-item" @click="resetCanvas()" />
-      </el-tooltip>
-      <Lang />
+      </el-tooltip> -->
+      <!-- <Lang /> -->
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import Lang from "@/components/Lang/index.vue";
+
 import { ref, computed } from "vue";
 import { ElementNames } from "@/types/elements";
 import { storeToRefs } from "pinia";

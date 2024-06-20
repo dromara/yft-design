@@ -1,23 +1,31 @@
 <template>
   <div>
-    <div class="right-tabs">
-      <div
-        class="tab"
-        :class="[
-          tab.value === rightState && currentTabs.length > 1
-            ? 'active'
-            : 'no-active',
-        ]"
-        v-for="tab in currentTabs"
-        :key="tab.value"
-        @click="setRightState(tab.value)"
-      >
-        {{ tab.label }}
+    <div class="right-top">
+      <div class="flex align-middle px-[8px]">
+        <Lang />
+      </div>
+      <div>
+        <el-button>分享</el-button>
+        <el-button type="primary" @click="exportFile">下载</el-button>
       </div>
     </div>
-    <div class="right-content">
-      <component :is="currentPanelComponent"></component>
+    <div class="right-bottom">
+      <div class="right-tabs">
+        <div
+          class="tab"
+          :class="[ tab.value === rightState && currentTabs.length > 1 ? 'active' : 'no-active' ]"
+          v-for="tab in currentTabs"
+          :key="tab.value"
+          @click="setRightState(tab.value)"
+        >
+          {{ tab.label }}
+        </div>
+      </div>
+      <div class="right-content">
+        <component :is="currentPanelComponent"></component>
+      </div>
     </div>
+    <FileExport v-model:visible="exportFileDialog" @close="exportFileHide" @save="exportFileHandle" />
   </div>
 </template>
 <script lang="ts" setup>
@@ -25,6 +33,7 @@ import { computed, watch } from "vue";
 import { RightStates, ElementNames } from "@/types/elements";
 import { storeToRefs } from "pinia";
 import { useMainStore } from "@/store/modules/main";
+import Lang from "@/components/Lang/index.vue";
 import CanvasStylePanel from "./CanvasStylePanel/index.vue";
 import ElemnetStylePanel from "./ElementStylePanel/index.vue";
 import EffectStylePanel from "./EffectStylePanel/index.vue";
@@ -34,6 +43,20 @@ const { t } = useI18n();
 
 const mainStore = useMainStore();
 const { canvasObject, rightState } = storeToRefs(mainStore);
+const exportFileDialog = ref(false)
+
+
+const exportFileHide = () => {
+  exportFileDialog.value = false
+}
+
+const exportFileHandle = () => {
+  exportFileDialog.value = false
+}
+
+const exportFile = () => {
+  exportFileDialog.value = true
+}
 
 const canvasTabs = [
   { label: t("style.canvas"), value: RightStates.ELEMENT_CANVAS },
@@ -76,6 +99,16 @@ const currentPanelComponent = computed(() => {
 
 
 <style lang="scss" scoped>
+.right-top {
+  height: 40px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid $borderColor;
+}
+.right-bottom {
+  height: calc(100% - 40px)
+}
 .right-tabs {
   height: 40px;
   font-size: 12px;

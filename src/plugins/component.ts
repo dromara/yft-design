@@ -8,6 +8,7 @@ import FullscreenSpin from '@/components/FullscreenSpin.vue'
 import LinePointMarker from '@/components/LinePointMarker.vue'
 import SwipeInput from '@/components/SwipeInput.vue'
 import FileUpload from '@/components/FileUpload/index.vue'
+import FileExport from '@/components/FileExport/index.vue'
 import ImageMatting from '@/components/ImageMatting/index.vue'
 import ImageFillColor from '@/components/ImageFillColor.vue'
 import HomePopover from '@/components/HomePopover.vue'
@@ -22,6 +23,7 @@ const components = {
   LinePointMarker,
   SwipeInput,
   FileUpload,
+  FileExport,
   ImageMatting,
   ImageFillColor,
   HomePopover,

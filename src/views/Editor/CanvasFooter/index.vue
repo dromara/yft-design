@@ -23,7 +23,7 @@
           </el-tooltip>
         </FileInput>
       </div>
-      <div class="right-handle">
+      <!-- <div class="right-handle">
         <el-tooltip placement="top" :hide-after="0" :content="t('message.downloadFiles')">
           <IconDownloadOne class="footer-button" @click="exportFile()"/>
         </el-tooltip>
@@ -32,7 +32,7 @@
         <el-tooltip placement="top" :hide-after="0" :content="t('message.saveTemplate')">
           <IconSave class="footer-button" @click="exportFile()"/>
         </el-tooltip>
-      </div>
+      </div> -->
     </div>
     <ExportFile v-model:visible="exportFileDialog" @close="exportFileHide" @save="exportFileHandle"></ExportFile>
   </div>
