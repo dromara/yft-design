@@ -5,14 +5,14 @@ import { OauthWechatResult, OauthGithubResult } from './types'
 
 export function oauthWechat(): AxiosPromise<OauthWechatResult> {
   return request({
-    url: '/api/design/oauth/wechat',
+    url: '/api/oauth/token/wechat',
     method: 'post',
   })
 }
 
 export function oauthGithubToken(): AxiosPromise<OauthGithubResult> {
   return request({
-    url: '/api/oauth/github/token',
+    url: '/api/oauth/token/github',
     method: 'get',
   })
 }
