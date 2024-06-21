@@ -7,7 +7,12 @@
             <img src="@/assets/logo.svg" alt="" class="h-full">
           </el-col>
           <el-col :span="6" class="flex justify-end">
-            <el-button type="primary" @click="handleLoginDialog">登陆/注册</el-button>
+            <div v-if="!isLogin">
+              <el-button type="primary" @click="handleLoginDialog">登陆/注册</el-button>
+            </div>
+            <div v-else>
+              
+            </div>
           </el-col>
         </el-row>
       </el-header>
@@ -55,10 +60,13 @@ import { TemplateItem } from '@/api/template/types'
 import { throttle } from 'lodash-es'
 import { PageSize } from "@/configs/size"
 import { useRouter } from 'vue-router'
+import { useUserStore } from '@/store';
+import { storeToRefs } from 'pinia';
 
 const router = useRouter()
+const userStore = useUserStore()
 const loginVisible = ref(false)
-
+const { isLogin } = storeToRefs(userStore)
 const resultReactive = reactive({
   loading: false,
   page: 1,

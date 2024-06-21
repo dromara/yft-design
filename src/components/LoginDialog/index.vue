@@ -41,7 +41,7 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import { oauthWechat, oauthGithubToken } from '@/api/oauth'
+import { oauthWechat, oauthTokenGithub } from '@/api/oauth'
 const router = useRouter()
 const qrcode = ref('')
 const dialogVisible = ref(false)
@@ -77,7 +77,7 @@ const getOauthWechat = async () => {
 }
 
 const loginGithub = async () => {
-  const res = await oauthGithubToken()
+  const res = await oauthTokenGithub()
   if (res.data && res.data.code === 200) {
     window.open(res.data.data, '_blank')
   }
