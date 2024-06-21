@@ -79,7 +79,7 @@ const getOauthWechat = async () => {
 const loginGithub = async () => {
   const res = await oauthTokenGithub()
   if (res.data && res.data.code === 200) {
-    window.open(res.data.data, '_blank')
+    window.open(res.data.data, '_self')
   }
 }
 

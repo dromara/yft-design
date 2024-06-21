@@ -30,7 +30,7 @@ const oauthCallback = async (code: string) => {
   if (res.data && res.data.data) {
     userStore.isLogin = true
     const { href } = router.resolve({path: '/home'})
-    window.open(href, '_blank')
+    window.open(href, '_self')
   }
 }
 
