@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="dialogVisible" title="" width="35%" class="login-dialog" :before-close="closeUpload">
+  <el-dialog v-model="dialogVisible" title="" :width="dialogWidth" class="login-dialog" :before-close="closeUpload">
     <el-row>
       <el-row class="text-[20px] text-[#222529] font-semibold leading-snug justify-center">
         微信扫码一键登录
@@ -18,7 +18,7 @@
         <div class="w-[170px] h-[45px]">
           <el-row class="h-full">
             <el-col :span="8" class="flex justify-center">
-              <el-button class="h-full"><IconGithub class="text-[20px]" @click="loginGithub"/></el-button>
+              <el-button class="h-full" @click="loginGithub"><IconGithub class="text-[20px]" /></el-button>
             </el-col>
             <el-col :span="8" class="flex justify-center">
               <el-button class="h-full"><IconTencentQq class="text-[20px]" /></el-button>
@@ -42,6 +42,8 @@
 import { computed, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { oauthWechat, oauthTokenGithub } from '@/api/oauth'
+import { isMobile } from '@/utils/common'
+const dialogWidth = computed(() => isMobile() ? '75%' : '35%')
 const router = useRouter()
 const qrcode = ref('')
 const dialogVisible = ref(false)
@@ -59,9 +61,9 @@ const emit = defineEmits<{
 
 watch(() => props.visible, (val) => {
   dialogVisible.value = val
-  if (val) {
-    getOauthWechat()
-  }
+  // if (val) {
+  //   getOauthWechat()
+  // }
 })
 
 const closeUpload = () => {

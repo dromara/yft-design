@@ -20,17 +20,18 @@ export const constantRoutes: RouteRecordRaw[] = [
     },
   },
   {
-    path: "/oauth",
+    path: "/oauth/github",
     meta: { hidden: true },
-    children: [
-      {
-        path: "/oauth/callback/github",
-        component: () => import('@/views/OAuth/github.vue'),
-        meta: {
-          "keepAlive": true
-        }
-      },
-    ]
+    component: () => import('@/views/OAuth/github.vue'),
+    // children: [
+    //   {
+    //     path: "/oauth/callback/github",
+    //     component: () => import('@/views/OAuth/github.vue'),
+    //     meta: {
+    //       "keepAlive": true
+    //     }
+    //   },
+    // ]
   },
   {
     path: "/401",
