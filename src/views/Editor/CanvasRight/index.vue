@@ -5,7 +5,7 @@
         <Lang />
       </div>
       <div>
-        <el-button>分享</el-button>
+        <el-button text>分享</el-button>
         <el-button type="primary" @click="exportFile">下载</el-button>
       </div>
     </div>
@@ -107,10 +107,10 @@ const currentPanelComponent = computed(() => {
   border-bottom: 1px solid $borderColor;
 }
 .right-bottom {
-  height: calc(100% - 40px)
+  height: calc(100% - 40px);
 }
 .right-tabs {
-  height: 40px;
+  height: 32px;
   font-size: 12px;
   flex-shrink: 0;
   display: flex;
@@ -139,6 +139,7 @@ const currentPanelComponent = computed(() => {
   font-size: 13px;
   overflow-y: scroll;
   overflow-x: hidden;
+  height: 100%;
   // @include overflow-overlay();
 }
 </style>

@@ -9,7 +9,7 @@
 <template>
   <el-dropdown trigger="click" @command="onDropdown">
     <span class="handler-dropdown">
-      <IconTranslate class="handler-icon"/>
+      <el-button text><IconTranslate class="handler-icon"/></el-button>
     </span>
     <template #dropdown>
       <el-dropdown-menu>
