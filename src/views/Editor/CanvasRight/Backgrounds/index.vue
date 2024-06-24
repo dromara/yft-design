@@ -661,19 +661,15 @@ const changeBackgroundType = (type: number) => {
 // 设置背景
 const updateBackground = (props: Partial<WorkSpaceElement>) => {
   const [canvas] = useCanvas();
-  const workSpaceDraw = canvas
-    .getObjects()
-    .filter((item) => item.id === WorkSpaceDrawType)[0];
+  const workSpaceDraw = canvas.getObjects().filter((item) => item.id === WorkSpaceDrawType)[0];
   if (!workSpaceDraw) return;
-  templatesStore.updateWorkSpace({
-    workSpace: { ...background.value, ...props },
-  });
-  const workProps = workSpaceDraw.toObject(propertiesToInclude as any[]);
-  templatesStore.updateElement({
-    id: workSpaceDraw.id,
-    props: { ...workProps, ...props },
-  });
   workSpaceDraw.set({ ...props });
+  if (props.fill instanceof Pattern) {
+    props.fill = props.fill.toObject() as Pattern
+  }
+  templatesStore.updateWorkSpace({ workSpace: { ...background.value, ...props }});
+  const workProps = workSpaceDraw.toObject(propertiesToInclude as any[]);
+  templatesStore.updateElement({ id: workSpaceDraw.id, props: { ...workProps, ...props }});
   canvas.renderAll();
 };
 
