@@ -119,7 +119,6 @@ const initEvent = () => {
 
 // 初始化模板
 const initTemplate = async (templateId?: number) => {
-  
   if (!canvas) return
   const { initCommon } = useCommon()
   const { initHammer } = useHammer()

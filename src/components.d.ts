@@ -157,7 +157,7 @@ export declare module 'fabric' {
     layer?: string
     effects?: EffectItem[]
     ref: ObjectRef
-    mask?: FabricObject
+    mask?: Mask
     getParent<T extends boolean = false>(strict?: T): T extends true ? Group | undefined : Group | Canvas | StaticCanvas
     noEventObjectAdded: boolean /** 不发送 object:added 事件 */
     getWidthHeight(noFixed?: boolean): Point
@@ -206,7 +206,7 @@ export declare module 'fabric' {
   }
 
   export declare class SerializedObjectProps {
-    groupMask: Mask
+    groupMask?: Mask
   }
 
   export declare class Polygon {

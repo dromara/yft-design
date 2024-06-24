@@ -165,7 +165,7 @@ export const useTemplatesStore = defineStore('Templates', {
       setCanvasTransform()
     },
 
-    async setTemplates(templates: Template[]) {
+    setTemplates(templates: Template[]) {
       this.templates = templates
     },
 
