@@ -1,6 +1,8 @@
 import axios, { AxiosResponse } from 'axios';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { localStorage } from '@/utils/storage';
+import { useUserStore } from '@/store';
+import { storeToRefs } from 'pinia';
 
 // 创建 axios 实例
 const service = axios.create({
@@ -17,10 +19,10 @@ service.interceptors.request.use(
         `Expected 'config' and 'config.headers' not to be undefined`
       );
     }
-    // const { user } = useStore();
-    // if (user.token) {
-    //   config.headers.Authorization = `${localStorage.get('token')}`;
-    // }
+    const { loginStatus } = storeToRefs(useUserStore())
+    if (loginStatus && localStorage.get('access_token')) {
+      config.headers.Authorization = `Bearer ${localStorage.get('access_token')}`;
+    }
     return config;
   },
   (error: any) => {
@@ -33,6 +35,10 @@ service.interceptors.response.use(
   (response: AxiosResponse) => {
     const { code, msg } = response.data;
     if (code === 200) {
+      return response;
+    }
+    else if (code === 401) {
+      localStorage.remove('access_token')
       return response;
     }
     else {

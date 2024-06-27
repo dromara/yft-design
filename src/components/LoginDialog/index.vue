@@ -87,8 +87,8 @@ const loginGithub = async () => {
     window.addEventListener('message', (event: any) => {
       if (event.origin === window.location.origin) {
         loginStatus.value = true
-        console.log('event.data2:', event.data)
         const userResult = event.data as UserResult
+        localStorage.set('access_token', userResult.access_token)
         username.value = userResult.user.username
         oauthWindow?.close()
         emit('close', false)
