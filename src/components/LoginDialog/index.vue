@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="dialogVisible" title="" :width="dialogWidth" class="login-dialog" :before-close="closeUpload">
+  <el-dialog v-model="dialogVisible" title="" :width="dialogWidth" class="login-dialog" :before-close="closeLogin">
     <el-row>
       <el-row class="text-[20px] text-[#222529] font-semibold leading-snug justify-center">
         微信扫码一键登录
@@ -41,6 +41,7 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue'
 import { oauthWechat, oauthTokenGithub } from '@/api/oauth'
+import { UserResult } from '@/api/oauth/types'
 import { isMobile } from '@/utils/common'
 import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/store';
@@ -48,8 +49,7 @@ import { localStorage } from '@/utils/storage';
 const dialogWidth = computed(() => isMobile() ? '75%' : '35%')
 const qrcode = ref('')
 const dialogVisible = ref(false)
-const { loginStatus } = storeToRefs(useUserStore())
-const userStore = useUserStore()
+const { loginStatus, username } = storeToRefs(useUserStore())
 const props = defineProps({
   visible: {
     type: Boolean,
@@ -68,7 +68,7 @@ watch(() => props.visible, (val) => {
   // }
 })
 
-const closeUpload = () => {
+const closeLogin = () => {
   emit('close', false)
   qrcode.value = ''
 }
@@ -88,7 +88,10 @@ const loginGithub = async () => {
       if (event.origin === window.location.origin) {
         loginStatus.value = true
         console.log('event.data2:', event.data)
+        const userResult = event.data as UserResult
+        username.value = userResult.user.username
         oauthWindow?.close()
+        emit('close', false)
       }
     });
   }

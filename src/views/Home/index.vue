@@ -6,12 +6,12 @@
           <el-col :span="4" class="h-[50px]">
             <img src="@/assets/logo.svg" alt="" class="h-full">
           </el-col>
-          <el-col :span="6" class="flex justify-end">
-            <div v-if="!loginStatus">
-              <el-button type="primary" @click="handleLoginDialog">登陆/注册</el-button>
+          <el-col :span="6" class="flex justify-end col-user">
+            <div v-if="username" class="cursor-pointer">
+              <el-tag>{{ username }}</el-tag>
             </div>
             <div v-else>
-              
+              <el-button type="primary" @click="handleLoginDialog">登陆/注册</el-button>
             </div>
           </el-col>
         </el-row>
@@ -66,7 +66,7 @@ import { storeToRefs } from 'pinia';
 const router = useRouter()
 const userStore = useUserStore()
 const loginVisible = ref(false)
-const { loginStatus } = storeToRefs(userStore)
+const { loginStatus, username } = storeToRefs(userStore)
 const resultReactive = reactive({
   loading: false,
   page: 1,
@@ -178,6 +178,9 @@ onUnmounted(() => {
 </script>
 
 <style lang="scss" scoped>
+.col-user {
+  display: flex;
+}
 .el-aside .el-menu .el-menu-item {
   height: 40px;
   padding-left: 0;
