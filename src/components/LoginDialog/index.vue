@@ -40,14 +40,16 @@
 
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
 import { oauthWechat, oauthTokenGithub } from '@/api/oauth'
 import { isMobile } from '@/utils/common'
+import { storeToRefs } from 'pinia';
+import { useUserStore } from '@/store';
+import { localStorage } from '@/utils/storage';
 const dialogWidth = computed(() => isMobile() ? '75%' : '35%')
-const router = useRouter()
 const qrcode = ref('')
 const dialogVisible = ref(false)
-
+const { loginStatus } = storeToRefs(useUserStore())
+const userStore = useUserStore()
 const props = defineProps({
   visible: {
     type: Boolean,
@@ -81,7 +83,14 @@ const getOauthWechat = async () => {
 const loginGithub = async () => {
   const res = await oauthTokenGithub()
   if (res.data && res.data.code === 200) {
-    location.href = res.data.data
+    const oauthWindow = window.open(res.data.data, '_blank', 'width=600,height=400,menubar=no,toolbar=no,location=no')
+    window.addEventListener('message', (event: any) => {
+      if (event.origin === window.location.origin) {
+        loginStatus.value = true
+        console.log('event.data2:', event.data)
+        oauthWindow?.close()
+      }
+    });
   }
 }
 

@@ -21,8 +21,10 @@ export const constantRoutes: RouteRecordRaw[] = [
   },
   {
     path: "/github",
-    meta: { hidden: true },
     component: () => import('@/views/OAuth/github.vue'),
+    meta: { 
+      title: 'yft-github'
+    },
     // children: [
     //   {
     //     path: "/oauth/callback/github",

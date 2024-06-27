@@ -7,7 +7,7 @@
             <img src="@/assets/logo.svg" alt="" class="h-full">
           </el-col>
           <el-col :span="6" class="flex justify-end">
-            <div v-if="!isLogin">
+            <div v-if="!loginStatus">
               <el-button type="primary" @click="handleLoginDialog">登陆/注册</el-button>
             </div>
             <div v-else>
@@ -66,7 +66,7 @@ import { storeToRefs } from 'pinia';
 const router = useRouter()
 const userStore = useUserStore()
 const loginVisible = ref(false)
-const { isLogin } = storeToRefs(userStore)
+const { loginStatus } = storeToRefs(userStore)
 const resultReactive = reactive({
   loading: false,
   page: 1,

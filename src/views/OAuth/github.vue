@@ -6,7 +6,7 @@
 
 
 <script setup lang="ts">
-import { reactive, toRefs, onMounted } from 'vue';
+import { onMounted } from 'vue';
 import { useRouter } from "vue-router";
 import { oauthCallbackGithub } from "@/api/oauth";
 import { useUserStore } from '@/store';
@@ -20,17 +20,10 @@ const getQueryParams = (name: string) => {
   return null;
 }
 
-const router = useRouter();
-const userStore = useUserStore()
-
-
 const oauthCallback = async (code: string) => {
   const res = await oauthCallbackGithub({code})
-  console.log('res.data.user:', res.data)
   if (res.data && res.data.data) {
-    userStore.isLogin = true
-    const { href } = router.resolve({path: '/home'})
-    window.open(href, '_self')
+    window.opener.postMessage(res.data.data, '*');
   }
 }
 

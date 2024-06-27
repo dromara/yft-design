@@ -25,7 +25,8 @@ export interface UserState {
   isSuperuser: boolean
   joinTime: string
   lastLoginTime: string
-  isLogin: boolean
+  loginStatus: boolean
+  token: string
 }
 
 export const useUserStore = defineStore('user', {
@@ -43,7 +44,8 @@ export const useUserStore = defineStore('user', {
     isSuperuser: false,
     joinTime: '',
     lastLoginTime: '',
-    isLogin: false
+    loginStatus: false,
+    token: ''
   }),
 
   getters: {
@@ -58,7 +60,9 @@ export const useUserStore = defineStore('user', {
 
   actions: {
     
-    
+    setLoginStatus(status: boolean) {
+      this.loginStatus = status
+    }
     
   },
 })
