@@ -47,7 +47,6 @@ export class ArcText extends OriginIText {
   private _charTransformations: any = []
   public textTransform: string = ''
   public useBothRenderingMethod = true
-  public storeProperties = ["type", "clipPath","frame","deco",'textLines','textTransform']
 
   public backgroundStroke?: TBackgroundStroke
 

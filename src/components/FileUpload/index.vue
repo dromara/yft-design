@@ -105,22 +105,26 @@ const uploadHandle = async (option: any) => {
     // await templatesStore.renderTemplate()
     setCanvasTransform()
     emit('close')
+    return
   }
   if (fileSuffix === 'json') {
     const dataText = await getImageText(option.file)
     const template = JSON.parse(dataText)
     addTemplate(template)
     emit('close')
+    return
   }
   if (['jpg', 'jpeg', 'png', 'webp'].includes(fileSuffix)) {
     const dataURL = await getImageDataURL(option.file)
     createImageElement(dataURL)
     emit('close')
+    return
   }
   if (['mp4'].includes(fileSuffix)) {
     const dataURL = URL.createObjectURL(option.file)
     createVideoElement(dataURL)
     emit('close')
+    return
   }
   uploading.value = true
   const res = await uploadFile(option.file, fileSuffix)
