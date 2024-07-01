@@ -582,4 +582,4 @@ export class VerticalText extends IText {
 
 Object.assign(VerticalText.prototype, { ...VerticalTextMixin })
 
-classRegistry.setClass(VerticalText, 'VerticalText')
+classRegistry.setClass(VerticalText)

@@ -561,7 +561,7 @@ export class FabricRuler extends Disposable {
       return
     }
     const allRect = activeObjects.reduce((rects, obj) => {
-      const rect: HighlightRect = obj.getBoundingRect(true)
+      const rect: HighlightRect = obj.getBoundingRect()
       rects.push(rect)
       return rects
     }, [] as HighlightRect[])

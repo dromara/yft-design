@@ -106,7 +106,7 @@ export class FabricGuide extends Disposable {
     if (check.isActiveSelection(target)) {
       const needAddParent = new Set<Group | Canvas | StaticCanvas>()
       target.forEachObject((obj) => {
-        const parent = obj.getParent()
+        const parent = obj.group ? obj.group : this.canvas
         if (parent) needAddParent.add(parent as Group)
       })
       needAddParent.forEach((parent) => {
@@ -116,7 +116,7 @@ export class FabricGuide extends Disposable {
         add(parent)
       })
     } else {
-      const parent = target.getParent() as Group
+      const parent = target.group ? target.group : this.canvas
       if (check.isNativeGroup(parent)) {
         canvasObjects.push(parent)
       }
@@ -176,7 +176,7 @@ export class FabricGuide extends Disposable {
   }
 
   private getCoords(obj: FabricObject) {
-    const [tl, tr, br, bl] = obj.getCoords(true)
+    const [tl, tr, br, bl] = obj.getCoords()
     return { tl, tr, br, bl }
   }
 

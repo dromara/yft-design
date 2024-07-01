@@ -96,8 +96,8 @@ export declare module 'fabric' {
   export declare class Observable<EventSpec> {
     on(eventName: 'referenceline:moving' | 'referenceline:mouseup', handler: (event: { e: Event; target: ReferenceLine }) => void): T;
     on(events: { [key: EventName]: (event: { e: Event; target: fabric.GuideLine }) => void }): T;
-    // on<K extends keyof EventSpec, E extends EventSpec[K]>(eventName: K, handler: TEventCallback<E>): VoidFunction;
-    // on<K extends string, E>(eventName: K, handler: TEventCallback<E>): VoidFunction;
+    on<K extends keyof EventSpec, E extends EventSpec[K]>(eventName: K, handler: TEventCallback<E>): VoidFunction;
+    on<K extends string, E>(eventName: K, handler: TEventCallback<E>): VoidFunction;
     // on<K extends keyof EventSpec, E extends EventSpec[K]>(handlers: EventRegistryObject<K, E>): VoidFunction;
   }
 
@@ -157,7 +157,6 @@ export declare module 'fabric' {
     layer?: string
     effects?: EffectItem[]
     ref: ObjectRef
-    mask?: Mask
     getParent<T extends boolean = false>(strict?: T): T extends true ? Group | undefined : Group | Canvas | StaticCanvas
     noEventObjectAdded: boolean /** 不发送 object:added 事件 */
     getWidthHeight(noFixed?: boolean): Point

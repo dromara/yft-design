@@ -13,6 +13,7 @@ import { isMobile } from '@/utils/common'
 import { FabricCanvas } from '@/app/fabricCanvas'
 import { Keybinding } from '@/app/keybinding'
 import { defaultControls, textboxControls } from '@/app/fabricControls'
+import { getObjectsBoundingBox } from '@/extension/util/common'
 import { useTemplatesStore } from '@/store'
 import useCommon from './useCommon'
 import useHammer from './useHammer'
@@ -35,9 +36,9 @@ const initConf = () => {
   FabricObject.ownDefaults.centeredScaling = false
   FabricObject.ownDefaults.centeredRotation = true
   FabricObject.ownDefaults.transparentCorners = false
-  FabricObject.ownDefaults.rotatingPointOffset = 1
-  FabricObject.ownDefaults.lockUniScaling = true
-  FabricObject.ownDefaults.hasRotatingPoint = false
+  // FabricObject.ownDefaults.rotatingPointOffset = 1
+  // FabricObject.ownDefaults.lockUniScaling = true
+  // FabricObject.ownDefaults.hasRotatingPoint = false
   FabricObject.ownDefaults.controls = defaultControls()
 
   Object.assign(Textbox.ownDefaults, { controls: textboxControls() })
@@ -75,7 +76,7 @@ const setCanvasTransform = () => {
   const { width, height } = useElementBounding(wrapperRef.value)
   canvas.setDimensions({width: width.value, height: height.value})
   const objects = canvas.getObjects().filter(ele => !WorkSpaceThumbType.includes(ele.id))
-  const boundingBox = Group.prototype.getObjectsBoundingBox(objects)
+  const boundingBox = getObjectsBoundingBox(objects)
   if (!boundingBox) return
   let boxWidth = boundingBox.width, boxHeight = boundingBox.height
   let centerX = boundingBox.centerX, centerY = boundingBox.centerY

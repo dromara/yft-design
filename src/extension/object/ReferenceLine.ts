@@ -1,12 +1,12 @@
-import { Object as FabricObject, Line, classRegistry, TProps, Point, TPointerEventInfo, TPointerEvent } from "fabric"
+import { Object as FabricObject, Line, classRegistry, Point, TPointerEventInfo, TPointerEvent } from "fabric"
 import { ReferenceLineProps } from "@/types/canvas"
 import { FabricCanvas } from "@/app/fabricCanvas";
 
 export class ReferenceLine extends Line {
   static type: string = 'ReferenceLine';
-  public axis: string = ''
+  public axis: string | undefined = ''
 
-  constructor(point: number | [number, number, number, number], options: any) {
+  constructor(point: number | [number, number, number, number], options: Partial<ReferenceLineProps> = {}) {
     // 设置新的点
     // point += 100
     const size = 999999
@@ -29,7 +29,7 @@ export class ReferenceLine extends Line {
   public initEvent() {
     const callback = () => {}
 
-    this.on('mousedown:before', (e) => {
+    this.on('mousedown:before', (e: TPointerEventInfo<TPointerEvent>) => {
       if (this.activeOn === 'down') {
         this.canvas?.setActiveObject(this, e.e);
       }
@@ -48,7 +48,7 @@ export class ReferenceLine extends Line {
       });
     });
 
-    this.on('mouseup', (e) => {
+    this.on('mouseup', (e: TPointerEventInfo<TPointerEvent>) => {
       if (this.isPointOnRuler(e.e)) {
         this.canvas?.remove(this);
         return;
@@ -74,11 +74,11 @@ export class ReferenceLine extends Line {
   isHorizontal() {
     return this.height === 0;
   }
-
+  
   getBoundingRect(absolute?: boolean, calculate?: boolean) {
     this.canvas?.bringObjectToFront(this);
     const isHorizontal = this.isHorizontal();
-    const rect = super.getBoundingRect(absolute, calculate)
+    const rect = super.getBoundingRect()
     rect[isHorizontal ? 'top' : 'left'] += rect[isHorizontal ? 'height' : 'width'] / 2;
     rect[isHorizontal ? 'height' : 'width'] = 0;
     return rect;

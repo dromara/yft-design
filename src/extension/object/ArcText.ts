@@ -1244,4 +1244,4 @@ Object.assign(ArcText.prototype, {
   ...ArcTextMixin
 })
 
-classRegistry.setClass(ArcText, 'ArcText')
+classRegistry.setClass(ArcText)

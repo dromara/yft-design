@@ -21,8 +21,10 @@ export class HoverBorders extends Disposable {
     super()
 
     this.canvasEvents = {
-      'mouse:out': this.drawBorder.bind(this),
-      'mouse:over': this.clearBorder.bind(this),
+      // 'mouse:out': this.drawBorder.bind(this),
+      // 'mouse:over': this.clearBorder.bind(this),
+      'mouse:out': this.clearBorder.bind(this),
+      'mouse:over': this.drawBorder.bind(this),
     }
 
     canvas.on(this.canvasEvents)

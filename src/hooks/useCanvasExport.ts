@@ -40,6 +40,7 @@ export default () => {
     canvas.renderAll()
     let result = canvas.toDataURL({
       multiplier: 1 / zoom,
+      // multiplier: 2,
       quality: quality,
       format: format,
       width: width * zoom,
