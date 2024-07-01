@@ -7,6 +7,13 @@
       <div>
         <el-button text>分享</el-button>
         <el-button type="primary" @click="exportFile">下载</el-button>
+        <el-button text href="https://github.com/dromara/yft-design" tag="a" target="_blank" rel="noopener noreferrer">
+          <!-- <a href="https://github.com/dromara/yft-design" target="_blank" rel="noopener noreferrer"> -->
+            <!-- <el-tooltip placement="top" :hide-after="0" :content="t('message.github')"> -->
+            <IconGithub class="footer-button"></IconGithub>
+            <!-- </el-tooltip> -->
+          <!-- </a> -->
+        </el-button>
       </div>
     </div>
     <div class="right-bottom">
