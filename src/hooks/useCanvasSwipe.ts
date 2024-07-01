@@ -47,14 +47,14 @@ export default(options: UseSwipeOptions = {}) => {
   const mouseDown = (e: TPointerEventInfo<TPointerEvent>) => {
     if (e.e instanceof TouchEvent && e.e.touches.length !== 1) return
     isPointerDown.value = true
-    updateCoordsStart(e.absolutePointer)
-    updateCoordsEnd(e.absolutePointer)
+    updateCoordsStart(e.viewportPoint)
+    updateCoordsEnd(e.viewportPoint)
     onSwipeStart?.(e)
   }
   const mouseMove = (e: TPointerEventInfo<TPointerEvent>) => {
     if (!isPointerDown.value) return
     if (e.e instanceof TouchEvent && e.e.touches.length !== 1) return
-    updateCoordsEnd(e.absolutePointer)
+    updateCoordsEnd(e.viewportPoint)
     isSwiping.value = true
     onSwipe?.(e)
   }

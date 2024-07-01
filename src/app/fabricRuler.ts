@@ -113,10 +113,6 @@ export class FabricRuler extends Disposable {
       }
       this.render({ ctx: this.canvas.contextContainer })
     })
-    // computed(() => {
-    //   this.options.unit = unitName
-    //   this.render({ ctx: this.canvas.contextContainer })
-    // })
     
     this.canvasEvents = {
       'after:render': this.render.bind(this),
@@ -156,14 +152,14 @@ export class FabricRuler extends Disposable {
   }
 
   private mouseMove(e: TPointerEventInfo<TPointerEvent>) {
-    if (!e.pointer) return
-    if (this.tempReferenceLine && e.absolutePointer) {
+    if (!e.viewportPoint) return
+    if (this.tempReferenceLine && e.scenePoint) {
       const pos: Partial<ReferenceLine> = {};
       if (this.tempReferenceLine.axis === 'horizontal') {
-        pos.top = e.pointer.y;
+        pos.top = e.scenePoint.y;
       } 
       else {
-        pos.left = e.pointer.x;
+        pos.left = e.scenePoint.x;
       }
       this.tempReferenceLine.set({ ...pos, visible: true });
       this.canvas.renderAll();
@@ -171,7 +167,7 @@ export class FabricRuler extends Disposable {
       this.canvas.fire('object:moving', event);
       this.tempReferenceLine.fire('moving', event);
     }
-    const status = this.getPointHover(e.absolutePointer)
+    const status = this.getPointHover(e.viewportPoint)
     this.canvas.defaultCursor = this.lastCursor
     if (!status) return
     this.lastCursor = this.canvas.defaultCursor
@@ -179,12 +175,12 @@ export class FabricRuler extends Disposable {
   }
 
   private mouseDown(e: TPointerEventInfo<TPointerEvent>) {
-    const pointHover = this.getPointHover(e.absolutePointer)
+    const pointHover = this.getPointHover(e.viewportPoint)
     if (!pointHover) return
     if (this.activeOn === 'up') {
       this.canvas.selection = false
       this.activeOn = 'down'
-      const point = pointHover === 'horizontal' ? e.pointer.y : e.pointer.x
+      const point = pointHover === 'horizontal' ? e.viewportPoint.y : e.viewportPoint.x
       this.tempReferenceLine = new ReferenceLine(
         point,
         {
@@ -212,13 +208,13 @@ export class FabricRuler extends Disposable {
   }
 
   private getCommonEventInfo(e: TPointerEventInfo<TPointerEvent>) {
-    if (!this.tempReferenceLine || !e.absolutePointer) return;
+    if (!this.tempReferenceLine || !e.scenePoint) return;
     return {
       e: e.e,
       transform: this.tempReferenceLine.get('transform'),
       pointer: {
-        x: e.absolutePointer.x,
-        y: e.absolutePointer.y,
+        x: e.scenePoint.x,
+        y: e.scenePoint.y,
       },
       target: this.tempReferenceLine,
     };
