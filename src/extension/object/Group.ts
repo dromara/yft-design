@@ -1,12 +1,12 @@
-import { Object as FabricObject, Group as OriginGroup, classRegistry, TPointerEventInfo, TPointerEvent, util, TOptions, SerializedGroupProps, GroupProps } from 'fabric'
+import { Object as FabricObject, Group as OriginGroup, classRegistry, TPointerEventInfo, TPointerEvent, Abortable, TOptions, SerializedGroupProps, GroupProps } from 'fabric'
 
 export class Group extends OriginGroup {
   public subTargetCheck = true
   public interactive = false
   public isShow = false
 
-  constructor(objects?: FabricObject[], options?: Partial<GroupProps>, objectsRelativeToGroup?: boolean) {
-    super(objects, options, objectsRelativeToGroup)
+  constructor(objects?: FabricObject[], options?: Partial<GroupProps>) {
+    super(objects, options)
     this.on('mousedblclick', this.doubleClickHandler.bind(this))
   }
 
@@ -16,7 +16,7 @@ export class Group extends OriginGroup {
   public addDeselectedEvent(target: FabricObject) {
     target.once('deselected', () => {
       const activeObject = this.canvas?.getActiveObject()
-      if (!activeObject || !activeObject.getAncestors(true).includes(this)) {
+      if (!activeObject || !activeObject.getAncestors().includes(this)) {
         // 关闭
         this.set({interactive: false, objectCaching: true,})
       } else {
@@ -31,7 +31,7 @@ export class Group extends OriginGroup {
    */
   public onActiveTarget(target: FabricObject) {
     if (!this.canvas || !target.group || target.group.interactive) return
-    target.getAncestors(true).forEach((_group) => {
+    target.getAncestors().forEach((_group) => {
       const group = _group as Group
       if (group.interactive) return
       group.set({ interactive: true, objectCaching: false,})
@@ -63,40 +63,35 @@ export class Group extends OriginGroup {
   override _onObjectRemoved(object: FabricObject, removeParentTransform?: boolean): void {
     super._onObjectRemoved(object, removeParentTransform)
     if (this.size() === 0) {
-      const parent = this.getParent() as Group
+      const parent = this.group ? this.group : this.canvas
       parent && parent.remove(this as FabricObject)
     }
   }
 
-  static async fromObject<T extends TOptions<SerializedGroupProps>>({ objects = [], ...options}: T) {
+  static async fromObject<T extends TOptions<SerializedGroupProps>>({ type, objects = [], layoutManager, ...options }: T, abortable?: Abortable) {
     if (options.mask) {
       objects.forEach(obj => obj.groupMask = options.mask)
     }
-    return Promise.all([
-      util.enlivenObjects<FabricObject>(objects),
-      util.enlivenObjectEnlivables(options),
-    ]).then(
-      ([objects, hydratedOptions]) => new this(objects, { ...options, ...hydratedOptions }, true)
-    );
+    return super.fromObject({ type, objects, layoutManager, ...options }, abortable)
   }
 
-  override drawObject(ctx: CanvasRenderingContext2D): void {
-    this._renderBackground(ctx);
-    for (let i = 0; i < this._objects.length; i++) {
-      // TODO: handle rendering edge case somehow
-      if (this.canvas?.preserveObjectStacking && this._objects[i].group !== this) {
-        ctx.save();
-        ctx.transform(...util.invertTransform(this.calcTransformMatrix()));
-        this._objects[i].render(ctx);
-        ctx.restore();
-      } 
-      else if (this._objects[i].group === this) {
-        this._objects[i].render(ctx);
-      }
-    }
-    this._drawClipPath(ctx, this.clipPath);
-    // this._drawMask(ctx)
-  }
+  // override drawObject(ctx: CanvasRenderingContext2D): void {
+  //   this._renderBackground(ctx);
+  //   for (let i = 0; i < this._objects.length; i++) {
+  //     // TODO: handle rendering edge case somehow
+  //     if (this.canvas?.preserveObjectStacking && this._objects[i].group !== this) {
+  //       ctx.save();
+  //       ctx.transform(...util.invertTransform(this.calcTransformMatrix()));
+  //       this._objects[i].render(ctx);
+  //       ctx.restore();
+  //     } 
+  //     else if (this._objects[i].group === this) {
+  //       this._objects[i].render(ctx);
+  //     }
+  //   }
+  //   this._drawClipPath(ctx, this.clipPath);
+  //   // this._drawMask(ctx)
+  // }
 }
 
 classRegistry.setClass(Group)

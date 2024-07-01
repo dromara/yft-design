@@ -1,11 +1,10 @@
-import { Point, Canvas, Object as FabricObject } from 'fabric'
+import { Point, Canvas } from 'fabric'
 import { watch, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { Disposable } from '@/utils/lifecycle'
 import useCanvasSwipe from '@/hooks/useCanvasSwipe'
 import { useKeyboardStore } from '@/store'
 import { useActiveElement, toValue } from '@vueuse/core'
-
 
 type ToolOption = {
   defaultCursor: string
@@ -185,14 +184,13 @@ export class FabricTool extends Disposable {
     let vpt = canvas.viewportTransform
     const { spaceKeyState } = storeToRefs(useKeyboardStore())
     const { lengthX, lengthY, isSwiping } = useCanvasSwipe({
-      onSwipeStart: (e) => {
-        
-        if (e.button === 2 || (spaceKeyState.value && e.button === 1)) {
+      onSwipeStart: (e: any) => {
+        if (e.e.buttons === 2 || (spaceKeyState.value && e.e.buttons === 1)) {
           isSwiping.value = true
           vpt = canvas.viewportTransform
           this.handMoveActivate = true
-          // this.applyOption('handMove')
-          // canvas.setCursor('grab')
+          this.applyOption('handMove')
+          canvas.setCursor('grab')
         }
       },
       onSwipe: () => {

@@ -100,7 +100,7 @@ export class Line extends OriginLine {
       })
       canvasObjects.push(...objects as FabricObject[])
     }
-    const parent = this.getParent() as Group
+    const parent = this.group ? this.group : this.canvas
     if (check.isNativeGroup(parent)) {
       canvasObjects.push(parent)
     }
@@ -265,7 +265,7 @@ export class Line extends OriginLine {
   }
 
   private __getCoords(obj: FabricObject) {
-    const [tl, tr, br, bl] = obj.getCoords(true)
+    const [tl, tr, br, bl] = obj.getCoords()
     return { tl, tr, br, bl }
   }
 
