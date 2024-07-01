@@ -1,15 +1,12 @@
 <template>
   <div class="yft-design">
     <div class="layout-content">
-      <!-- <CanvasLeft class="layout-content-left" />
-      <CanvasMenu class="layout-content-menu" />-->
-      <MobileThumb class="layout-mobile-thumb" /> 
+      <!-- <MobileThumb class="layout-mobile-thumb" />  -->
       <div class="layout-mobile-center">
         <CanvasHeader class="center-header" />
         <CanvasCenter class="center-body"/>
         <CanvasFooter class="center-footer"/>
       </div>
-      <!-- <CanvasRight class="layout-content-right" /> -->
     </div>
     <div class="layout-barcode">
       <svg id="barcode"></svg>
@@ -20,12 +17,10 @@
 <script lang="ts" setup>
 // import CanvasLeft from './CanvasLeft/index.vue'
 // import CanvasMenu from './CanvasMenu/index.vue'
-import MobileThumb from './CanvasLeft/Thumb/mobile.vue'
+// import MobileThumb from './CanvasLeft/Thumb/mobile.vue'
 import CanvasHeader from './CanvasHeader/index.vue'
 import CanvasCenter from './CanvasCenter/index.vue'
-import CanvasRight from './CanvasRight/index.vue'
 import CanvasFooter from './CanvasFooter/index.vue'
-import CanvasAffix from './CanvasAffix/index.vue'
 
 </script>
 

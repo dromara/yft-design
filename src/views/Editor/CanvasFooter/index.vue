@@ -1,40 +1,19 @@
 <template>
   <div>
-    <!-- <div class="resize-handler"></div> -->
-    <div class="footer-left">
-      <div class="left-handle">
-        <el-tooltip placement="top" :hide-after="0" :content="t('message.inviteCollaboration')">
-          <IconPeoples class="footer-button"/>
-        </el-tooltip>
-      </div>
-      <div class="left-handle">
-        <a href="https://github.com/dromara/yft-design" target="_blank" rel="noopener noreferrer">
-          <el-tooltip placement="top" :hide-after="0" :content="t('message.github')">
-            <IconGithub class="footer-button"></IconGithub>
-          </el-tooltip>
-        </a>
-      </div>
-    </div>
-    <div class="footer-right">
-      <div class="right-handle" v-if="isChecked">
-        <FileInput :accept="'.json'" @change="(files: FileList) => loadFile(files)">
-          <el-tooltip placement="top" :hide-after="0" :content="t('message.uploadFiles')">
-            <IconUploadOne class="footer-button"/>
-          </el-tooltip>
-        </FileInput>
-      </div>
-      <!-- <div class="right-handle">
-        <el-tooltip placement="top" :hide-after="0" :content="t('message.downloadFiles')">
-          <IconDownloadOne class="footer-button" @click="exportFile()"/>
-        </el-tooltip>
-      </div>
-      <div class="right-handle">
-        <el-tooltip placement="top" :hide-after="0" :content="t('message.saveTemplate')">
-          <IconSave class="footer-button" @click="exportFile()"/>
-        </el-tooltip>
-      </div> -->
-    </div>
-    <ExportFile v-model:visible="exportFileDialog" @close="exportFileHide" @save="exportFileHandle"></ExportFile>
+    <el-row>
+      <el-col :span="6">
+        换模板
+      </el-col>
+      <el-col :span="6">
+        换文字
+      </el-col>
+      <el-col :span="6">
+        换图片
+      </el-col>
+      <el-col :span="6">
+        添加
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -42,7 +21,6 @@
 import { ref, watch } from 'vue'
 import useCanvas from "@/views/Canvas/useCanvas"
 import useHandleElement  from '@/hooks/useHandleElement'
-import ExportFile from './components/index.vue'
 import useI18n from '@/hooks/useI18n'
 import { storeToRefs } from 'pinia'
 import { useFabricStore, useTemplatesStore } from '@/store'
