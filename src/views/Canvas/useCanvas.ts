@@ -9,6 +9,7 @@ import { FabricGuide } from '@/app/fabricGuide'
 import { HoverBorders } from '@/app/hoverBorders'
 import { WheelScroll } from '@/app/wheelScroll'
 import { FabricRuler } from '@/app/fabricRuler'
+import { FabricTouch } from '@/app/fabricTouch'
 import { isMobile } from '@/utils/common'
 import { FabricCanvas } from '@/app/fabricCanvas'
 import { Keybinding } from '@/app/keybinding'
@@ -108,6 +109,7 @@ const initCanvas = () => {
   new HoverBorders(canvas)
   new WheelScroll(canvas)
   new FabricRuler(canvas)
+  new FabricTouch(canvas)
   canvas.preserveObjectStacking = true
   canvas.renderAll()
 }

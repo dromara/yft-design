@@ -1,17 +1,17 @@
 <template>
   <div>
-    <el-row>
-      <el-col :span="6">
-        换模板
+    <el-row class="content-center">
+      <el-col :span="6" class="center-col">
+        <el-button text>换模板</el-button>
       </el-col>
-      <el-col :span="6">
-        换文字
+      <el-col :span="6" class="center-col">
+        <el-button text>换文字</el-button>
       </el-col>
-      <el-col :span="6">
-        换图片
+      <el-col :span="6" class="center-col">
+        <el-button text>换图片</el-button>
       </el-col>
-      <el-col :span="6">
-        添加
+      <el-col :span="6" class="center-col">
+        <el-button text>添加</el-button>
       </el-col>
     </el-row>
   </div>
@@ -61,49 +61,10 @@ const loadFile = (files: FileList) => {
 </script>
 
 <style lang="scss" scoped>
-.footer-left {
-  display: flex;
-  width: 80px;
-  cursor: pointer;
-  align-items: center;
-}
-.left-handle {
-  height: 24px;
-  flex: 1;
-  position: relative;
-  border-radius: $borderRadius;
-  &:hover{
-    background-color: #f1f1f1;
-  }
-  a {
-    color: inherit;
+.content-center {
+  .center-col {
+    display: flex;
+    justify-content: center;
   }
 }
-
-.footer-right {
-  display: flex;
-  cursor: pointer;
-}
-
-.footer-button {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.right-handle {
-  width: 40px;
-  flex: 1;
-  position: relative;
-}
-// .resize-handler {
-//   height: 7px;
-//   position: absolute;
-//   top: -3px;
-//   left: 0;
-//   right: 0;
-//   cursor: n-resize;
-//   z-index: 2;
-// }
 </style>

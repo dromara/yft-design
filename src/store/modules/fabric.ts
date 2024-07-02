@@ -70,9 +70,9 @@ export const useFabricStore = defineStore({
     // setMouseFrom(data: { x?: number; y?: number; pressure?: number }) {
     //   Object.assign(this.mouseFrom, data)
     // },
-    // setMouseTo(data: { x?: number; y?: number; pressure?: number }) {
-    //   Object.assign(this.mouseTo, data)
-    // },
+    setZoom(val: number) {
+      this.zoom = val
+    },
     setCanvasPercentage(val: number) {
       this.scalePercentage = val
     },
