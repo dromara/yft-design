@@ -17,7 +17,6 @@ import { defaultControls, textboxControls } from '@/app/fabricControls'
 import { getObjectsBoundingBox } from '@/extension/util/common'
 import { useTemplatesStore } from '@/store'
 import useCommon from './useCommon'
-import useHammer from './useHammer'
 
 
 
@@ -124,7 +123,6 @@ const initEvent = () => {
 const initTemplate = async (templateId?: number) => {
   if (!canvas) return
   const { initCommon } = useCommon()
-  const { initHammer } = useHammer()
   const templatesStore = useTemplatesStore()
   const { currentTemplate } = storeToRefs(templatesStore)
   if (templateId && Number(templateId) > 0) return
@@ -132,9 +130,6 @@ const initTemplate = async (templateId?: number) => {
   setCanvasTransform()
   initCommon()
   initEvent()
-  if (isMobile()) {
-    initHammer()
-  }
 }
 
 export const initEditor = async (templateId?: number) => {

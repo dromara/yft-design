@@ -34,7 +34,6 @@
     "fabric": "^6.0.0",
     "file-saver": "^2.0.5",
     "gifler": "^0.1.0",
-    "hammerjs": "^2.0.8",
     "html-to-image": "^1.11.11",
     "js-base64": "^3.7.7",
     "jsbarcode": "^3.11.6",
