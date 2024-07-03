@@ -2,8 +2,10 @@
 1，一款美观且功能强大的在线设计工具，具备海报设计和图片编辑功能，基于Canvas的开源版【稿定设计】。适用于多种场景，如海报生成、电商产品图制作、文章长图设计、视频/公众号封面编辑等。  
 2，适配稿定设计导出pdf还原，支持导入psd还原  
 3，可导出图片，svg，pdf  
-<b>（国内）Demo：[https://yft.design](https://yft.design)</b>  
-<b>（国外）Demo：[https://dromara.org/yft-design](https://dromara.org/yft-design)</b>【无法体验psd,pdf,抠图服务】 
+<b>Demo：[https://yft.design](https://yft.design)</b>  
+<b>备用：[https://morestrive.com](https://morestrive.com)</b>  
+<b>作者找工作中,有岗位请联系`15972699417`,微信电话同号</b>
+<!-- <b>（国外）Demo：[https://dromara.org/yft-design](https://dromara.org/yft-design)</b>【无法体验psd,pdf,抠图服务】  -->
 
 
 ![image](/docs/example.png)
