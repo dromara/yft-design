@@ -32,7 +32,7 @@ export const Templates: Template[] = [
         "top": 0,
         "width": 1070.5512,
         "height": 645.3543,
-        "stroke": "rgba(255,255,255,1)",
+        "stroke": "",
         "strokeWidth": 1,
         "strokeDashArray": null,
         "strokeLineCap": "butt",

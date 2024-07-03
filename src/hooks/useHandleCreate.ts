@@ -13,6 +13,8 @@ import { Image } from "@/extension/object/Image";
 import { QRCode } from "@/extension/object/QRCode";
 import { BarCode } from "@/extension/object/BarCode";
 import { ArcText } from '@/extension/object/ArcText';
+import { Polyline } from '@/extension/object/Polyline';
+import { Circle, makeCurveCircle, makeCurvePoint } from '@/extension/object/Circle';
 import { VerticalText } from '@/extension/object/VerticalText'
 import { Table } from "@/extension/object/Table"
 import JsBarcode from "jsbarcode";
@@ -31,8 +33,8 @@ export default () => {
   const { rightState, systemFonts } = storeToRefs(mainStore);
 
   const renderCanvas = (element: FabricObject) => {
-    const [canvas] = useCanvas();
-	canvas.viewportCenterObject(element); 
+    const [ canvas ] = useCanvas();
+	  canvas.viewportCenterObject(element); 
     canvas.add(element);
     canvas.setActiveObject(element);
     rightState.value = RightStates.ELEMENT_STYLE;
@@ -177,12 +179,41 @@ export default () => {
     // setZindex(canvas)
     createPolylineElement(path, startStyle, endStyle, strokeDashArray);
     // createArrowElement(path)
+    // createCurverElement()
   };
+
+  const createCurverElement = () => {
+    const [ canvas ] = useCanvas();
+    var line = new Path('M 65 0 Q 100, 100, 200, 0', { fill: '', stroke: 'black', objectCaching: false });
+
+    line.path[0][1] = 100;
+    line.path[0][2] = 100;
+
+    line.path[1][1] = 200;
+    line.path[1][2] = 200;
+
+    line.path[1][3] = 300;
+    line.path[1][4] = 100;
+    console.log('path:', line.path)
+    line.selectable = false;
+    canvas.add(line);
+
+    var p1 = makeCurvePoint(200, 200, null, line, null)
+    p1.name = "p1";
+    canvas.add(p1);
+
+    var p0 = makeCurveCircle(100, 100, line, p1, null);
+    p0.name = "p0";
+    canvas.add(p0);
+
+    var p2 = makeCurveCircle(300, 100, null, p1, line);
+    p2.name = "p2";
+    canvas.add(p2);
+  }
 
   const createPolylineElement = (path: XY[], startStyle: LinePoint, endStyle: LinePoint, strokeDashArray?: [number, number]) => {
     const { centerPoint } = useCenter();
     // const points = [ { x: 0, y: 0 }, { x: 200, y: 0 } ]
-    const Polyline = classRegistry.getClass("Polyline");
 
     const element = new Polyline(path, {
       id: nanoid(10),
