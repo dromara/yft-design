@@ -4,23 +4,48 @@
 3，可导出图片，svg，pdf  
 <b>Demo：[https://yft.design](https://yft.design)</b>  
 <b>备用：[https://morestrive.com](https://morestrive.com)</b>  
-<b>作者找工作中,有岗位请联系`15972699417`,微信电话同号</b>
-<!-- <b>（国外）Demo：[https://dromara.org/yft-design](https://dromara.org/yft-design)</b>【无法体验psd,pdf,抠图服务】  -->
+# 作者找工作中,有岗位请联系 yft.design@163.com
 
 
 ![image](/docs/example.png)
 
-# 🎉 pdf解析
+<table rules="none" align="center">
+   <tr>
+      <td>
+         <center>
+            <img src="docs/psd-parse.gif" width="100%"/>
+            <br/>
+            <font color="AAAAAA">psd解析</font>
+         </center>
+      </td>
+      <td>
+         <center>
+            <img src="docs/pdf-parse.gif" width="100%"/>
+            <br/>
+            <font color="AAAAAA">pdf解析</font>
+         </center>
+      </td>
+   </tr>
+</table>
 
-![psd-parse](/docs/pdf-parse.gif)
-
-# 🎉 psd解析
-
-![psd-parse](/docs/psd-parse.gif)
-
-# 📋 色彩演示
-
-![background](/docs/background.gif)
+<table rules="none" align="center">
+   <tr>
+      <td>
+         <center>
+            <img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d443519bc05f4dfbb98bbcf7df7e6bef~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=1907&h=997&s=639936&e=jpg&b=f8f0ee" width="100%" />
+            <br/>
+            <font color="AAAAAA">psd解析</font>
+         </center>
+      </td>
+      <td>
+         <center>
+            <img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/59e36b4a389246a1873372e80a94e7cb~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=1917&h=993&s=655084&e=png&b=fcfbfb" width="100%" />
+            <br/>
+            <font color="AAAAAA">pdf解析</font>
+         </center>
+      </td>
+   </tr>
+</table>
 
 # 🚀 项目运行
 ```
@@ -62,12 +87,12 @@ npm run build
 ```
 
 # 🧾 API接口文档
-### 使用fabric.js的编辑器文件解析器可以查看如下 [接口文档](/docs/api.md)
+### 使用后端文件解析器可以查看如下
   - 支持pdf
   - 支持psd
   - 支持ai(pdf结构)
-  - 抠图功能
-  - cdr解析测试中  
+  - 支持抠图
+  - cdr解析开发中  
 ### 如果有需要可以联系作者 yft.design@163.com
 
 # 📚 功能列表
@@ -133,14 +158,8 @@ npm run build
 
 ## 联系作者
 wechat: 15972699417  
-email:  15972699417@163.com
+email:  yft.design@163.com
 
-## 友情赞助商
-
-| Dooring低代码 |
-| --- |
-| <a href="https://dooring.vip/"> <img style="height: 90px" src="https://github.com/palxiao/poster-design/assets/21021314/2240801f-8484-4fd2-8505-8205daa6d53c" /></a> |
 
 ## License
-
 Licensed under the MIT License.
