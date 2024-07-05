@@ -18,10 +18,10 @@
 ### 接口详情
 * <span id="upload">上传文件（psd, pdf, ai<pdf格式>, cdr<测试>）</span>
  
-    * 接口地址：/api/upload/file
+    * 接口地址：/api/design/upload/file
     * 返回格式：json
     * 请求方式：post
-    * 请求示例：https://yft.design/api/upload/file
+    * 请求示例：https://yft.design/api/design/upload/file
     * 接口备注：上传文件解析成fabric.js格式的数据。
     * 请求参数说明：
         | 名称 | 类型 | 必填 |说明|
@@ -82,10 +82,10 @@
  
 * <span id="export">导出pdf</span>
  
-    * 接口地址：/api/export/file
+    * 接口地址：/api/design/export/file
     * 返回格式：json
     * 请求方式：post
-    * 请求示例：https://yft.design/api/export/file
+    * 请求示例：https://yft.design/api/design/export/file
     * 接口备注：通过svg文件生成pdf。
     * 请求参数说明：
         | 名称 | 类型 | 必填 |说明|
@@ -113,10 +113,10 @@
 
 * <span id="matting">抠图API</span>
  
-    * 接口地址：/api/matting/file
+    * 接口地址：/api/design/matting/file
     * 返回格式：json
     * 请求方式：post
-    * 请求示例：https://yft.design/api/matting/file
+    * 请求示例：https://yft.design/api/design/matting/file
     * 接口备注：抠图API。
     * 请求参数说明：
         | 名称 | 类型 | 必填 |说明|

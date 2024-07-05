@@ -4,23 +4,24 @@
 3，可导出图片，svg，pdf  
 <b>Demo：[https://yft.design](https://yft.design)</b>  
 <b>备用：[https://morestrive.com](https://morestrive.com)</b>  
+[介绍文章](https://juejin.cn/post/7238804998276087868)
 # 作者找工作中,有岗位请联系 yft.design@163.com
 
 
-![image](/docs/example.png)
+![image](https://github.com/dromara/yft-design/assets/113762408/9df19ced-4058-4966-989a-9c8e3d848d4b)
 
 <table rules="none" align="center">
    <tr>
       <td>
          <center>
-            <img src="docs/psd-parse.gif" width="100%"/>
+            <img src="https://github.com/dromara/yft-design/assets/113762408/ce9d2c5b-0249-4fb3-8327-a533513e5619" width="100%"/>
             <br/>
             <font color="AAAAAA">psd解析</font>
          </center>
       </td>
       <td>
          <center>
-            <img src="docs/pdf-parse.gif" width="100%"/>
+            <img src="https://github.com/dromara/yft-design/assets/113762408/8bd89208-cc9e-4b77-b976-1bce078e73bb" width="100%"/>
             <br/>
             <font color="AAAAAA">pdf解析</font>
          </center>
