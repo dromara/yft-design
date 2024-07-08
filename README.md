@@ -164,3 +164,11 @@ email:  yft.design@163.com
 
 ## License
 Licensed under the MIT License.
+
+## 管理员
+<!-- readme: collaborators -start -->
+<!-- readme: collaborators -end -->
+
+## 贡献者
+<!-- readme: collaborators,contributors -start -->
+<!-- readme: collaborators,contributors -end -->

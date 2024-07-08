@@ -1,0 +1,21 @@
+on:
+  push:
+    branches:
+      - beta12
+
+# action 名称
+name: Contributes
+
+jobs:
+  # 任务
+  contrib-readme-en-job:
+    runs-on: ubuntu-latest
+    name: A job to automate contrib in readme
+    steps:
+      - name: Contribute List
+        uses: akhilmhdh/contributors-readme-action@v2.3.4
+        with:
+          image_size: 80
+          use_username: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.YFT_DESIGN }}
