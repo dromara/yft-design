@@ -99,23 +99,23 @@ export default ({ command }: ConfigEnv): UserConfigExport => {
           theme_color: "#d14424",
           icons: [
             {
-              src: "./favicon.ico",
+              src: "./public/img/icons/yft-design-192x192.png",
               sizes: "192x192",
               type: "image/png",
             },
             {
-              src: "./favicon.ico",
+              src: "./public/img/icons/yft-design-512x512.png",
               sizes: "512x512",
               type: "image/png",
             },
             {
-              src: "./favicon.ico",
+              src: "./public/img/icons/yft-design-192x192.png",
               sizes: "192x192",
               type: "image/png",
               purpose: "maskable",
             },
             {
-              src: "./favicon.ico",
+              src: "./public/img/icons/yft-design-512x512.png",
               sizes: "512x512",
               type: "image/png",
               purpose: "maskable",
@@ -125,6 +125,9 @@ export default ({ command }: ConfigEnv): UserConfigExport => {
           display: "standalone",
           background_color: "#000000",
         },
+        devOptions: {
+          enabled: true,
+        }
       }),
       createSvgIconsPlugin({
         iconDirs: [path.resolve(process.cwd(), "src/icons/svg")], // icon存放的目录

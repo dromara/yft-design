@@ -31,6 +31,14 @@ onMounted(async () => {
   await snapshotStore.initSnapshotDatabase()
   mainStore.getFonts()
 })
+
+// 在主入口监听PWA注册事件
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    window.deferredPrompt = e;
+})
+
+
 </script>
 
 <style lang="scss">
