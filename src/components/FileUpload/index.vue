@@ -133,15 +133,15 @@ const uploadHandle = async (option: any) => {
     const template = res.data.data
     if (!template) return
     if (['pdf', 'ai'].includes(fileSuffix)) {
-      const parseTemplate: Template[] = []
-      const pdfTemplate = template as any[]
-      for (let i = 0; i < pdfTemplate.length; i++) {
-        const dataText = pdfTemplate[i]
-        const emptyTemplate = await generateSVGTemplate(dataText)
-        parseTemplate.push(emptyTemplate)
-      }
+      // const parseTemplate: Template[] = []
+      // const pdfTemplate = template as any[]
+      // for (let i = 0; i < pdfTemplate.length; i++) {
+      //   const dataText = pdfTemplate[i]
+      //   // const emptyTemplate = await generateSVGTemplate(dataText)
+      //   // parseTemplate.push(emptyTemplate)
+      // }
       
-      await templatesStore.addTemplate(parseTemplate)
+      await templatesStore.addTemplate(template)
       setCanvasTransform()
       emit('close')
       return
