@@ -40,7 +40,7 @@ export const useFabricStore = defineStore({
       safe: 5,
       round: 0,
       diagonal: 18,
-      opacity: 1,
+      opacity: 0.1,
       showClip: false,
       showSafe: false,
       isDragging: false,

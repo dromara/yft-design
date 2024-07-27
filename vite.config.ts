@@ -22,22 +22,19 @@ export default ({ command }: ConfigEnv): UserConfigExport => {
       proxy: {
         '/api': {
           // target: 'https://yft.design',
-          target: 'http://120.77.139.244:8789',
-          // target: 'http://127.0.0.1:8789',
+          target: 'http://127.0.0.1:8789',
           changeOrigin: true,
           rewrite: (path) => path.replace(new RegExp('^'), ''),
         },
         '/static': {
           // target: 'https://yft.design',
-          target: 'http://120.77.139.244:8789',
-          // target: 'http://127.0.0.1:8789',
+          target: 'http://127.0.0.1:8789',
           changeOrigin: true,
           rewrite: (path) => path.replace(new RegExp('^'), ''),
         },
         '/yft-static': {
-          target: 'https://yft.design',
-          // target: 'http://120.77.139.244:8789',
-          // target: 'http://127.0.0.1:8789',
+          // target: 'https://yft.design',
+          target: 'http://127.0.0.1:8789',
           changeOrigin: true,
           rewrite: (path) => path.replace(new RegExp('^'), ''),
         },
@@ -99,23 +96,23 @@ export default ({ command }: ConfigEnv): UserConfigExport => {
           theme_color: "#d14424",
           icons: [
             {
-              src: "./public/img/icons/yft-design-192x192.png",
+              src: "/img/icons/yft-design-192x192.png",
               sizes: "192x192",
               type: "image/png",
             },
             {
-              src: "./public/img/icons/yft-design-512x512.png",
+              src: "/img/icons/yft-design-512x512.png",
               sizes: "512x512",
               type: "image/png",
             },
             {
-              src: "./public/img/icons/yft-design-192x192.png",
+              src: "/img/icons/yft-design-192x192.png",
               sizes: "192x192",
               type: "image/png",
               purpose: "maskable",
             },
             {
-              src: "./public/img/icons/yft-design-512x512.png",
+              src: "/img/icons/yft-design-512x512.png",
               sizes: "512x512",
               type: "image/png",
               purpose: "maskable",

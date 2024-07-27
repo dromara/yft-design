@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-affix position="bottom" :offset="10" v-show="unitMode === 0" style="width: calc(100%)">
+    <el-affix position="bottom" :offset="25" v-show="unitMode === 0" style="width: calc(100%)">
       <el-checkbox-group v-model="showWorkLines" @change="changeWorkLines">
         <el-tooltip placement="top" :hide-after="0" :content="(showClip ?t('message.hideBloodsLine') : t('message.showBloodsLine'))">
           <el-checkbox-button type="primary" class="clip-btn" value="clip" :checked="showClip">
