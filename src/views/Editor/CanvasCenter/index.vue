@@ -42,8 +42,8 @@ const getTemplateDetail = async (pk: number) => {
   const result = await getTemplateData(pk)
   if (result.data && result.data.code === 200 && result.data.data) {
     try {
-      const templateData = unzip(result.data.data.data)
-      const data = JSON.parse(templateData)
+      const data = unzip(result.data.data.data)
+      // const data = JSON.parse(templateData)
       console.log('data:', data)
       await templatesStore.changeTemplate(data)
     } 

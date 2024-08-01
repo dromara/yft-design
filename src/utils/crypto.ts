@@ -34,5 +34,5 @@ export const unzip = (b64Data: string) => {
   const binData = new Uint8Array(charData);
   const data = pako.inflate(binData);
   strData = new TextDecoder("utf-8").decode(data);
-  return decodeURIComponent(strData);
+  return JSON.parse(strData);
 };

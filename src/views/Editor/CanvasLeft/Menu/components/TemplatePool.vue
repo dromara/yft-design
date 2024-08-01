@@ -111,8 +111,8 @@ const handleChangeTemplate = (item: TemplateItem) => {
     }
   )
     .then(async () => {
-      const templateData = unzip(item.data)
-      const data = JSON.parse(templateData)
+      const data = unzip(item.data)
+      // const data = JSON.parse(templateData)
       console.log('data:', data)
       const loadingInstance = ElLoading.service({ fullscreen: true, background: 'rgba(122, 122, 122, 0.5)' })
       await templatesStore.changeTemplate(data)
