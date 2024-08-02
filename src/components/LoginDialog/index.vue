@@ -2,16 +2,33 @@
   <el-dialog v-model="dialogVisible" title="" :width="dialogWidth" class="login-dialog" :before-close="closeLogin">
     <el-row>
       <el-row class="text-[20px] text-[#222529] font-semibold leading-snug justify-center">
-        微信扫码一键登录
+        {{tipInfo}}登录
       </el-row>
       <el-row class="text-[12px] mt-[10px] justify-center">
         仅用于身份识别，yft-design不会获取您的任何隐私信息~
       </el-row>
-      <el-row>
+      <el-row v-if="loginType === 1">
         <div class="overflow-hidden relative mt-[20px] mx-auto p-[10px] border border-solid border-[rgba(0, 0, 0, .08)] rounded-[8px] justify-center">
           <div class="w-[150px] h-[150px] ">
             <el-image :src="qrcode" v-loading="!qrcode" class="w-full h-full"></el-image>
           </div>
+        </div>
+      </el-row>
+      <el-row v-if="loginType === 2">
+        <div class="h-[172px] mx-auto mt-[20px]">
+          <el-form
+            ref="formRef"
+            style="max-width: 600px"
+            label-width="auto"
+            class="demo-dynamic"
+          >
+            <el-form-item>
+              <el-input type="password" autocomplete="off" />
+            </el-form-item>
+            <el-form-item>
+              <el-input type="password" autocomplete="off" />
+            </el-form-item>
+          </el-form>
         </div>
       </el-row>
       <el-row class="mt-[28px] justify-center">
@@ -21,10 +38,10 @@
               <el-button class="h-full" @click="loginGithub"><IconGithub class="text-[20px]" /></el-button>
             </el-col>
             <el-col :span="8" class="flex justify-center">
-              <el-button class="h-full"><IconTencentQq class="text-[20px]" /></el-button>
+              <el-button class="h-full" @click="loginQQ"><IconTencentQq class="text-[20px]" /></el-button>
             </el-col>
             <el-col :span="8" class="flex justify-center">
-              <el-button class="h-full"><IconMail class="text-[20px]" /></el-button>
+              <el-button class="h-full" @click="loginEmail"><IconMail class="text-[20px]" /></el-button>
             </el-col>
           </el-row>
         </div>
@@ -49,6 +66,8 @@ import { localStorage } from '@/utils/storage';
 const dialogWidth = computed(() => isMobile() ? '75%' : '35%')
 const qrcode = ref('')
 const dialogVisible = ref(false)
+const loginType = ref(1)
+const tipInfo = ref('微信')
 const { loginStatus, username } = storeToRefs(useUserStore())
 const props = defineProps({
   visible: {
@@ -63,9 +82,6 @@ const emit = defineEmits<{
 
 watch(() => props.visible, (val) => {
   dialogVisible.value = val
-  // if (val) {
-  //   getOauthWechat()
-  // }
 })
 
 const closeLogin = () => {
@@ -95,6 +111,16 @@ const loginGithub = async () => {
       }
     });
   }
+}
+
+const loginQQ = () => {
+  loginType.value = 1
+  tipInfo.value = '微信'
+}
+
+const loginEmail = () => {
+  loginType.value = 2
+  tipInfo.value = '邮箱'
 }
 
 </script>
