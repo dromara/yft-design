@@ -15,21 +15,27 @@
         </div>
       </el-row>
       <el-row v-if="loginType === 2">
-        <div class="h-[172px] mx-auto mt-[20px]">
+        <el-row class="h-[172px] mx-auto mt-[20px] login-form">
           <el-form
             ref="formRef"
-            style="max-width: 600px"
+            style="max-width: 800px"
             label-width="auto"
             class="demo-dynamic"
           >
             <el-form-item>
-              <el-input type="password" autocomplete="off" />
+              <el-input type="username" autocomplete="off" :prefix-icon="User"/>
             </el-form-item>
             <el-form-item>
-              <el-input type="password" autocomplete="off" />
+              <el-input type="password" autocomplete="off" :prefix-icon="Lock"/>
+            </el-form-item>
+            <el-form-item>
+              <el-input type="password" autocomplete="off" :prefix-icon="Lock"/>
             </el-form-item>
           </el-form>
-        </div>
+        </el-row>
+        <el-row class="mx-auto">
+          <el-button>登陆</el-button>
+        </el-row>
       </el-row>
       <el-row class="mt-[28px] justify-center">
         <div class="w-[170px] h-[45px]">
@@ -63,6 +69,7 @@ import { isMobile } from '@/utils/common'
 import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/store';
 import { localStorage } from '@/utils/storage';
+import { Lock, User } from '@element-plus/icons-vue'
 const dialogWidth = computed(() => isMobile() ? '75%' : '35%')
 const qrcode = ref('')
 const dialogVisible = ref(false)
@@ -128,6 +135,9 @@ const loginEmail = () => {
 <style lang="scss" scoped>
 .h-full {
   height: 100%;
+}
+.login-form {
+  align-items: center
 }
 </style>
 <style>
