@@ -13,6 +13,7 @@ export default () => {
     const handleElement = canvas.getActiveObject()
     const templatesStore = useTemplatesStore()
     if (!handleElement) return
+    canvas.discardActiveObject()
     if (handleElement.type === ElementNames.ACTIVE) {
       const activeObject = handleElement as Group
       const activeObjectLeft = activeObject.left - activeObject.width / 2, activeObjectTop = activeObject.top - activeObject.height / 2
@@ -44,30 +45,31 @@ export default () => {
     } else {
       switch (command) {
         case AlignCommand.LEFT: 
-          handleElement.set({left: left + handleElement.width / 2 })
+          handleElement.set({left: left })
           break
         case AlignCommand.RIGHT: 
-          handleElement.set({left: left + width - handleElement.width / 2})
+          handleElement.set({left: left + width - handleElement.width})
           break
         case AlignCommand.TOP: 
-          handleElement.set({top: top + handleElement.height / 2 })
+          handleElement.set({top: top })
           break
         case AlignCommand.BOTTOM: 
-          handleElement.set({top: top + height - handleElement.height / 2})
+          handleElement.set({top: top + height - handleElement.height})
           break
         case AlignCommand.HORIZONTAL: 
-          handleElement.set({left : centerPoint.x})
+          handleElement.set({left : centerPoint.x - handleElement.width / 2})
           break
         case AlignCommand.VERTICAL: 
-          handleElement.set({top: centerPoint.y})
+          handleElement.set({top: centerPoint.y - handleElement.height / 2})
           break
         case AlignCommand.CENTER: 
-          handleElement.set({left : centerPoint.x})
-          handleElement.set({top: centerPoint.y})
+          handleElement.set({left : centerPoint.x - handleElement.width / 2})
+          handleElement.set({top: centerPoint.y - handleElement.height / 2})
           break
         default: break
       }
     }
+    canvas.setActiveObject(handleElement)
     canvas.renderAll()
     templatesStore.modifedElement()
   }

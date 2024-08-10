@@ -476,7 +476,12 @@ export class VerticalText extends IText {
     ctx.fillStyle = originalFill;
     this._removeShadow(ctx);
   }
-
+  
+  toSVG(reviver?: TSVGReviver): string {
+    const imageData = this.toDataURL()
+    return `<image xlink:href="${imageData}" width="${this.width * this.scaleX}" height="${this.height * this.scaleY}" x="${this.left}" y="${this.top}"/>`
+  }
+  
   getLocalPointer(e: TPointerEvent, pointer?: Point) {
     pointer = pointer || this.canvas!.getPointer(e);
     let pClicked = new Point(pointer.x, pointer.y)
