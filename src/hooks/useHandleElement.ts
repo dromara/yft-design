@@ -8,7 +8,7 @@ import { useFabricStore, useMainStore, useTemplatesStore } from "@/store"
 import { TextboxElement, CanvasElement, GroupElement } from "@/types/canvas"
 import { clipperPath } from '@/utils/clipper'
 import { useActiveElement } from '@vueuse/core'
-import { computed } from 'vue'
+import { ElMessageBox } from "element-plus"
 import useCanvas from "@/views/Canvas/useCanvas"
 import useCanvasZindex from "./useCanvasZindex"
 import { copyText } from '@/utils/clipboard'
@@ -28,7 +28,7 @@ export default () => {
     const element = queryElement(option.id)
     if (!element) return
     if (element.group) {
-      const elementGroup = queryOption((element.group as GroupElement).id) as Group
+      const elementGroup = queryOption((element.group as GroupElement).id) as GroupElement | undefined
       if (!elementGroup) return
       const _element = elementGroup.objects[oldIndex]
       elementGroup.objects.splice(oldIndex, 1)
@@ -379,6 +379,16 @@ export default () => {
 
   }
 
+  const resetElements = () => {
+    const [ canvas ] = useCanvas()
+    ElMessageBox.confirm('确认是否清空画布？', 'Warning', {
+      confirmButtonText: 'OK',
+      type: 'warning',
+    }).then(() => {
+      templatesStore.clearTemplate()
+    });
+  }
+
   return {
     // createElement,
     layerElement,
@@ -402,6 +412,7 @@ export default () => {
     backwardElement,
     checkElement,
     intersectElements,
-    maskElement
+    maskElement,
+    resetElements
   }
 }

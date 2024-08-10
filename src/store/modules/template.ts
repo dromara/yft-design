@@ -212,6 +212,12 @@ export const useTemplatesStore = defineStore('Templates', {
       addHistorySnapshot()
     },
 
+    clearTemplate() {
+      const objects = this.templates[this.templateIndex].objects.filter(item => item.id === WorkSpaceDrawType)
+      this.templates[this.templateIndex].objects = objects
+      this.renderTemplate()
+    },
+
     updateWorkSpace(props: Partial<Template>) {
       const templateIndex = this.templateIndex
       this.templates[templateIndex] = { ...this.templates[templateIndex], ...props }

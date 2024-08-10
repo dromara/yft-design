@@ -1,6 +1,5 @@
-import { ContextMenu } from '@/components/ContextMenu/types'
+import { ContextMenu } from '@/components/Contextmenu/types'
 import { ElementNames, AlignCommand, LayerCommand } from '@/types/elements'
-import { Object as FabricObject } from 'fabric'
 import { storeToRefs } from 'pinia'
 import { useMainStore } from '@/store'
 import useHandleElement from '@/hooks/useHandleElement'
@@ -35,10 +34,10 @@ export const contextMenuThumbnails = (): ContextMenu[] => {
 }
 
 export const contextMenus = (): ContextMenu[] => {
-  const { lockElement, deleteElement, cutElement, copyElement, pasteElement, uncombineElements, combineElements } = useHandleElement()
+  const { lockElement, deleteElement, cutElement, copyElement, pasteElement, uncombineElements, combineElements, resetElements } = useHandleElement()
   const { alignElement, layerElement } = useHandleTool()
   const { canvasObject } = storeToRefs(useMainStore())
-  const element = canvasObject.value as FabricObject
+  const element = canvasObject.value
   if (!element) {
     return [
       {
@@ -62,7 +61,7 @@ export const contextMenus = (): ContextMenu[] => {
       },
       {
         text: '重置',
-        // handler: enterScreeningFromStart,
+        handler: resetElements,
       },
     ]
   }
