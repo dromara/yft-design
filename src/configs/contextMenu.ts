@@ -35,7 +35,7 @@ export const contextMenuThumbnails = (): ContextMenu[] => {
 }
 
 export const contextMenus = (): ContextMenu[] => {
-  const { lockElement, deleteElement, cutElement, copyElement, pasteElement } = useHandleElement()
+  const { lockElement, deleteElement, cutElement, copyElement, pasteElement, uncombineElements, combineElements } = useHandleElement()
   const { alignElement, layerElement } = useHandleTool()
   const { canvasObject } = storeToRefs(useMainStore())
   const element = canvasObject.value as FabricObject
@@ -133,7 +133,7 @@ export const contextMenus = (): ContextMenu[] => {
     {
       text: element.type === ElementNames.GROUP ? '取消组合' : '组合',
       subText: 'Ctrl + G',
-      // handler: props.elementInfo.groupId ? uncombineElements : combineElements,
+      handler: element.type === ElementNames.GROUP ? uncombineElements : combineElements,
       // hide: !props.isMultiSelect,
     },
     {
