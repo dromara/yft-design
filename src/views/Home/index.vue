@@ -11,7 +11,7 @@
               <el-tag>{{ username }}</el-tag>
             </div>
             <div v-else>
-              <el-button type="primary" @click="handleLoginDialog">登陆/注册</el-button>
+              <el-button type="primary" @click="handleLoginDialog(true)">登陆/注册</el-button>
             </div>
           </el-col>
         </el-row>

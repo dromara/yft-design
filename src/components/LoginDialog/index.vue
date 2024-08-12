@@ -26,13 +26,13 @@
             <el-form-item>
               <el-input style="width: 100px;" v-model="ruleForm.captcha"/>
               <div class="w-[100px] h-full outline-box" @click="getOauthCaptcha">
-                <img :src="loginCaptcha" alt="">
+                <img :src="loginCaptchaImage" alt="" v-loading="loginCaptchaLoading">
               </div>
             </el-form-item>
           </el-form>
         </el-row>
         <el-row class="content-center">
-          <el-button class="w-[200px]" type="primary">登陆</el-button>
+          <el-button class="w-[200px]" type="primary" @click="loginHandle">登陆</el-button>
         </el-row>
       </el-row>
       <el-row class="mt-[28px] justify-center">
@@ -67,17 +67,18 @@ import { isMobile } from '@/utils/common'
 import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/store';
 import { localStorage } from '@/utils/storage';
-import { Lock, User, Calendar } from '@element-plus/icons-vue'
+import { Lock, User } from '@element-plus/icons-vue'
 import { OauthLoginData } from '@/api/oauth/types';
-import { oauthCaptcha } from '@/api/oauth';
+import { oauthCaptcha, oauthLogin } from '@/api/oauth';
 import type { FormRules } from 'element-plus'
 
 const dialogVisible = ref(false)
 const dialogWidth = computed(() => isMobile() ? '75%' : '35%')
 const qrcode = ref('')
-const loginType = ref(1)
-const loginInfo = ref('微信')
-const loginCaptcha = ref('')
+const loginType = ref(2)
+const loginInfo = ref('普通')
+const loginCaptchaImage = ref('')
+const loginCaptchaLoading = ref(false)
 const { loginStatus, username } = storeToRefs(useUserStore())
 const props = defineProps({
   visible: {
@@ -137,10 +138,17 @@ const getOauthWechat = async () => {
 }
 
 const getOauthCaptcha = async () => {
+  loginCaptchaLoading.value = true
   const result = await oauthCaptcha()
   if (result.data.code === 200) {
-    loginCaptcha.value = 'data:image/png;base64,' + result.data.data.image
+    loginCaptchaImage.value = 'data:image/png;base64,' + result.data.data.image
+    loginCaptchaLoading.value = false
   }
+}
+
+const loginHandle = async () => {
+  const result = await oauthLogin(ruleForm)
+  console.log('result:', result)
 }
 
 const loginGithub = async () => {
@@ -167,9 +175,13 @@ const loginQQ = () => {
 
 const loginEmail = () => {
   loginType.value = 2
-  loginInfo.value = '邮箱'
+  loginInfo.value = '普通'
   getOauthCaptcha()
 }
+
+onMounted(() => {
+  getOauthCaptcha()
+})
 
 </script>
 
