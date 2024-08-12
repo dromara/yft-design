@@ -1,7 +1,22 @@
 import request from '@/utils/request'
 import { AxiosPromise } from 'axios'
-import { OauthWechatResult, OauthGithubResult, CodeParams, githubCallbackResult } from './types'
+import { OauthWechatResult, OauthCaptchaResult, OauthLoginData, OauthGithubResult, CodeParams, GithubCallbackResult } from './types'
 
+
+export function oauthCaptcha(): AxiosPromise<OauthCaptchaResult> {
+  return request({
+    url: '/api/oauth/captcha',
+    method: 'get',
+  })
+}
+
+export function oauthLogin(data: OauthLoginData): AxiosPromise<OauthWechatResult> {
+  return request({
+    url: '/api/oauth/login',
+    method: 'post',
+    data
+  })
+}
 
 export function oauthWechat(): AxiosPromise<OauthWechatResult> {
   return request({
@@ -12,14 +27,14 @@ export function oauthWechat(): AxiosPromise<OauthWechatResult> {
 
 export function oauthTokenGithub(): AxiosPromise<OauthGithubResult> {
   return request({
-    url: '/api/oauth/token/github',
+    url: '/api/oauth/github/token',
     method: 'get',
   })
 }
 
-export function oauthCallbackGithub(params: CodeParams): AxiosPromise<githubCallbackResult> {
+export function oauthCallbackGithub(params: CodeParams): AxiosPromise<GithubCallbackResult> {
   return request({
-    url: '/api/oauth/callback/github',
+    url: '/api/oauth/github/callback',
     method: 'get',
     params,
   })

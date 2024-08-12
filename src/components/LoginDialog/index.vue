@@ -2,7 +2,7 @@
   <el-dialog v-model="dialogVisible" title="" :width="dialogWidth" class="login-dialog" :before-close="closeLogin">
     <el-row>
       <el-row class="text-[20px] text-[#222529] font-semibold leading-snug justify-center">
-        {{tipInfo}}登录
+        {{loginInfo}}登录
       </el-row>
       <el-row class="text-[12px] mt-[10px] justify-center">
         仅用于身份识别，yft-design不会获取您的任何隐私信息~
@@ -16,17 +16,17 @@
       </el-row>
       <el-row v-if="loginType === 2">
         <el-row class="h-[172px] mx-auto mt-[20px] content-center">
-          <el-form ref="formRef" label-width="auto">
-            <el-form-item>
-              <el-input type="username" autocomplete="off" :prefix-icon="User"/>
+          <el-form ref="loginFormRef" :model="ruleForm" :rules="rules" label-width="auto">
+            <el-form-item prop="username">
+              <el-input type="username" autocomplete="off" :prefix-icon="User" v-model="ruleForm.username" />
             </el-form-item>
             <el-form-item>
-              <el-input type="password" autocomplete="off" :prefix-icon="Lock" show-password />
+              <el-input type="password" autocomplete="off" :prefix-icon="Lock" v-model="ruleForm.password" show-password />
             </el-form-item>
             <el-form-item>
-              <el-input style="width: 100px;" />
-              <div class="w-[100px] h-full">
-                <img src="" alt="">
+              <el-input style="width: 100px;" v-model="ruleForm.captcha"/>
+              <div class="w-[100px] h-full outline-box" @click="getOauthCaptcha">
+                <img :src="loginCaptcha" alt="">
               </div>
             </el-form-item>
           </el-form>
@@ -67,18 +67,53 @@ import { isMobile } from '@/utils/common'
 import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/store';
 import { localStorage } from '@/utils/storage';
-import { Lock, User } from '@element-plus/icons-vue'
+import { Lock, User, Calendar } from '@element-plus/icons-vue'
+import { OauthLoginData } from '@/api/oauth/types';
+import { oauthCaptcha } from '@/api/oauth';
+import type { FormRules } from 'element-plus'
+
+const dialogVisible = ref(false)
 const dialogWidth = computed(() => isMobile() ? '75%' : '35%')
 const qrcode = ref('')
-const dialogVisible = ref(false)
 const loginType = ref(1)
-const tipInfo = ref('微信')
+const loginInfo = ref('微信')
+const loginCaptcha = ref('')
 const { loginStatus, username } = storeToRefs(useUserStore())
 const props = defineProps({
   visible: {
     type: Boolean,
     required: true,
   },
+})
+
+const ruleForm = reactive<OauthLoginData>({
+  username: '',
+  password: '',
+  captcha: '',
+})
+
+const rules = reactive<FormRules<OauthLoginData>>({
+  username: [
+    {
+      required: true,
+      message: '请输入用户名或者邮箱地址',
+      trigger: 'blur',
+    },
+  ],
+  password: [
+    {
+      required: true,
+      message: '请输入密码',
+      trigger: 'blur',
+    },
+  ],
+  captcha: [
+    {
+      required: true,
+      message: '请输入验证码',
+      trigger: 'blur',
+    },
+  ],
 })
 
 const emit = defineEmits<{
@@ -101,6 +136,13 @@ const getOauthWechat = async () => {
   }
 }
 
+const getOauthCaptcha = async () => {
+  const result = await oauthCaptcha()
+  if (result.data.code === 200) {
+    loginCaptcha.value = 'data:image/png;base64,' + result.data.data.image
+  }
+}
+
 const loginGithub = async () => {
   const res = await oauthTokenGithub()
   if (res.data && res.data.code === 200) {
@@ -120,12 +162,13 @@ const loginGithub = async () => {
 
 const loginQQ = () => {
   loginType.value = 1
-  tipInfo.value = '微信'
+  loginInfo.value = '微信'
 }
 
 const loginEmail = () => {
   loginType.value = 2
-  tipInfo.value = '邮箱'
+  loginInfo.value = '邮箱'
+  getOauthCaptcha()
 }
 
 </script>
@@ -136,6 +179,12 @@ const loginEmail = () => {
 }
 .content-center {
   justify-content: center
+}
+.outline-box {
+  cursor: pointer;
+  &:hover {
+    outline: 1px solid $borderColor;
+  }
 }
 </style>
 <style>
