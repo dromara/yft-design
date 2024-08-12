@@ -48,7 +48,7 @@ const onDropdown = (command: string) => {
 }
 </script>
 
-<style  lang="scss" scoped>
+<style lang="scss" scoped>
 .handler-icon {
   font-size: 16px;
   width: 18px;

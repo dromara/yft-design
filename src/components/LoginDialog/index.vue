@@ -15,26 +15,24 @@
         </div>
       </el-row>
       <el-row v-if="loginType === 2">
-        <el-row class="h-[172px] mx-auto mt-[20px] login-form">
-          <el-form
-            ref="formRef"
-            style="max-width: 800px"
-            label-width="auto"
-            class="demo-dynamic"
-          >
+        <el-row class="h-[172px] mx-auto mt-[20px] content-center">
+          <el-form ref="formRef" label-width="auto">
             <el-form-item>
               <el-input type="username" autocomplete="off" :prefix-icon="User"/>
             </el-form-item>
             <el-form-item>
-              <el-input type="password" autocomplete="off" :prefix-icon="Lock"/>
+              <el-input type="password" autocomplete="off" :prefix-icon="Lock" show-password />
             </el-form-item>
             <el-form-item>
-              <el-input type="password" autocomplete="off" :prefix-icon="Lock"/>
+              <el-input style="width: 100px;" />
+              <div class="w-[100px] h-full">
+                <img src="" alt="">
+              </div>
             </el-form-item>
           </el-form>
         </el-row>
-        <el-row class="mx-auto">
-          <el-button>登陆</el-button>
+        <el-row class="content-center">
+          <el-button class="w-[200px]" type="primary">登陆</el-button>
         </el-row>
       </el-row>
       <el-row class="mt-[28px] justify-center">
@@ -136,8 +134,8 @@ const loginEmail = () => {
 .h-full {
   height: 100%;
 }
-.login-form {
-  align-items: center
+.content-center {
+  justify-content: center
 }
 </style>
 <style>
@@ -153,5 +151,8 @@ const loginEmail = () => {
 .login-dialog .el-upload-list__item-info {
   width: 100%;
   margin-left: 0;
+}
+.login-form .el-input {
+  width: 200px;
 }
 </style>
