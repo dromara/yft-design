@@ -42,13 +42,12 @@ const getTemplateDetail = async (pk: number) => {
   const result = await getTemplateData(pk)
   if (result.data && result.data.code === 200 && result.data.data) {
     try {
+      router.push(`${router.currentRoute.value.path}?template=${pk}`)
+      console.log('result.data.data.id:', result.data.data.id)
       const data = unzip(result.data.data.data)
-      // const data = JSON.parse(templateData)
-      console.log('data:', data)
       await templatesStore.changeTemplate(data)
     } 
     catch (error) {
-      console.log('error:', error)
       ElMessage({
         type: 'error',
         message: '模板加载失败,请联系管理员修改bug了',

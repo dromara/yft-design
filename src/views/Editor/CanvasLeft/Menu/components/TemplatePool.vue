@@ -35,7 +35,9 @@ import { ElMessage, ElMessageBox, ElLoading } from 'element-plus'
 import { unzip } from "@/utils/crypto"
 import { PageSize } from "@/configs/size"
 import { throttle, debounce } from 'lodash-es'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const templatesStore = useTemplatesStore()
 const templateItems = ref<TemplateItem[]>([])
 const activeTemplate = ref("data");
@@ -111,9 +113,8 @@ const handleChangeTemplate = (item: TemplateItem) => {
     }
   )
     .then(async () => {
+      router.push(`${router.currentRoute.value.path}?template=${item.id}`)
       const data = unzip(item.data)
-      // const data = JSON.parse(templateData)
-      console.log('data:', data)
       const loadingInstance = ElLoading.service({ fullscreen: true, background: 'rgba(122, 122, 122, 0.5)' })
       await templatesStore.changeTemplate(data)
       nextTick(() => loadingInstance.close())
