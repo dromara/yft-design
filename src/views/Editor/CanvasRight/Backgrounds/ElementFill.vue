@@ -392,7 +392,8 @@ const updateBackground = (props: Partial<BackgroundElement>) => {
   const [canvas] = useCanvas();
   if (!canvasObject.value) return;
   const color = props.color ? props.color : (handleElement.value as TextboxElement).color;
-  canvasObject.value.set({ fill: props.fill, color, fillType: background.value.fillType, background: { ...background.value, ...props }, opacity: props.opacity });
+  const opacity = props.opacity !== undefined ? props.opacity : 1
+  canvasObject.value.set({ fill: props.fill, color, fillType: background.value.fillType, background: { ...background.value, ...props }, opacity });
   canvas.renderAll();
   templatesStore.modifedElement();
 };
