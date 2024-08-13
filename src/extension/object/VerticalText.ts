@@ -100,6 +100,7 @@ export class VerticalText extends IText {
       chars += this._textLines[lineIndex][i];
       drawWidth += this.__charBounds[lineIndex][i].width;
     }
+    // const widthFactor = (drawWidth + localLineHeight / this.lineHeight);
     const widthFactor = (localLineHeight / this.lineHeight);
     const heightFactor = drawWidth / 2 - charBox.height;
     drawLeft = drawLeft - widthFactor / 2;

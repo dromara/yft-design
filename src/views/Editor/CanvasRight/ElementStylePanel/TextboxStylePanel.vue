@@ -95,12 +95,12 @@
     <el-row class="mt-10">
       <el-button-group class="full-group">
         <el-tooltip placement="top" content="横向" :hide-after="0">
-          <el-button @click="handleElementArrange(false)" :type="!elementGrapheme ? 'primary': ''">
+          <el-button @click="handleElementArrange(false)" :type="elementGrapheme ? 'primary': ''">
             <IconTextRotationNone />
           </el-button>
         </el-tooltip>
         <el-tooltip placement="top" content="纵向" :hide-after="0">
-          <el-button @click="handleElementArrange(true)" :type="elementGrapheme ? 'primary': ''">
+          <el-button @click="handleElementArrange(true)" :type="!elementGrapheme ? 'primary': ''">
             <IconTextRotationDown />
           </el-button>
         </el-tooltip>
@@ -250,7 +250,7 @@ const { canvasObject, systemFonts, onlineFonts } = storeToRefs(mainStore)
 const { createPathElement } = useHandleCreate()
 const [ canvas ] = useCanvas()
 const handleElement = computed(() => canvasObject.value as Textbox | ArcText)
-const elementGrapheme = computed(() => handleElement.value.type !== ElementNames.ARCTEXT)
+const elementGrapheme = computed(() => handleElement.value.type.toLowerCase() !== ElementNames.VERTICALTEXT)
 const elementBackgrounColor = computed(() => {
   if (handleElement.value.type.toLowerCase() === ElementNames.ARCTEXT) {
     return handleElement.value.textBackgroundColor
@@ -469,16 +469,21 @@ const changeCharSpacing = (charSpacing: number) => {
 
 const handleElementArrange = (status: boolean) => {
   // handleElement.value.set({splitByGrapheme: status, width: handleElement.value.fontSize})
+  console.log('status:', status)
   const options = (handleElement.value as any).toObject(propertiesToInclude as any[])
   options.lineHeight = 12
   delete options.type
   options.id = nanoid(10)
-  const verticalText = new VerticalText(handleElement.value.text, options)
+  let textElement = new Textbox(handleElement.value.text, options)
+  if (status) {
+    textElement = new VerticalText(handleElement.value.text, options)
+  }
   canvas.remove(canvas.getActiveObject())
   canvas.discardActiveObject()
-  canvas.add(verticalText)
+  canvas.add(textElement)
   templatesStore.modifedElement()
-  canvas.setActiveObject(verticalText)
+  canvas.setActiveObject(textElement)
+  mainStore.setCanvasObject(textElement)
   canvas.renderAll()
 }
 
