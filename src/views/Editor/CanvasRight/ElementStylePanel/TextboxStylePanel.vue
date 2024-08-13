@@ -250,7 +250,7 @@ const { canvasObject, systemFonts, onlineFonts } = storeToRefs(mainStore)
 const { createPathElement } = useHandleCreate()
 const [ canvas ] = useCanvas()
 const handleElement = computed(() => canvasObject.value as Textbox | ArcText)
-const elementGrapheme = computed(() => handleElement.value.splitByGrapheme)
+const elementGrapheme = computed(() => handleElement.value.type !== ElementNames.ARCTEXT)
 const elementBackgrounColor = computed(() => {
   if (handleElement.value.type.toLowerCase() === ElementNames.ARCTEXT) {
     return handleElement.value.textBackgroundColor
@@ -474,9 +474,11 @@ const handleElementArrange = (status: boolean) => {
   delete options.type
   options.id = nanoid(10)
   const verticalText = new VerticalText(handleElement.value.text, options)
-  // const verticalText = new VerticalText('abc你好啊xyz', options)
+  canvas.remove(canvas.getActiveObject())
+  canvas.discardActiveObject()
   canvas.add(verticalText)
   templatesStore.modifedElement()
+  canvas.setActiveObject(verticalText)
   canvas.renderAll()
 }
 

@@ -18,8 +18,10 @@ export class VerticalText extends IText {
 
   constructor(text: string, options: any) {
     super(text, options)
-    this.textAlign = 'right'
-    this.direction = 'rtl'
+    // this.textAlign = 'right'
+    // this.direction = 'rtl'
+    this.textAlign = 'left'
+    this.direction = 'ltr'
     this.minHeight = options.width
 
     this.offsets = {
@@ -98,13 +100,13 @@ export class VerticalText extends IText {
       chars += this._textLines[lineIndex][i];
       drawWidth += this.__charBounds[lineIndex][i].width;
     }
-    const widthFactor = (drawWidth + localLineHeight / this.lineHeight);
+    const widthFactor = (localLineHeight / this.lineHeight);
     const heightFactor = drawWidth / 2 - charBox.height;
     drawLeft = drawLeft - widthFactor / 2;
     drawTop = drawTop + heightFactor;
     ctx.save();
     ctx.direction = 'ltr'
-    ctx.textAlign = 'start'
+    ctx.textAlign = 'left'
     const _boxHeight = charBox.height;
     const tx = drawLeft + drawWidth / 2 - _boxHeight / 8, ty = drawTop - _boxHeight / 8;
     ctx.translate(tx, ty);
