@@ -18,14 +18,14 @@
         <el-tooltip
           placement="top"
           :hide-after="0"
-          :content="$t('style.centerHorizontal')"
+          :content="$t('style.verticalCenter')"
         >
           <el-col
             :span="4"
             class="align-item"
-            @click="alignElement(AlignCommand.HORIZONTAL)"
+            @click="alignElement(AlignCommand.VERTICAL)"
           >
-            <IconAlignVertically />
+            <IconAlignHorizontally />
           </el-col>
         </el-tooltip>
         <el-tooltip
@@ -57,14 +57,14 @@
         <el-tooltip
           placement="top"
           :hide-after="0"
-          :content="$t('style.verticalCenter')"
+          :content="$t('style.centerHorizontal')"
         >
           <el-col
             :span="4"
             class="align-item"
-            @click="alignElement(AlignCommand.VERTICAL)"
+            @click="alignElement(AlignCommand.HORIZONTAL)"
           >
-            <IconAlignHorizontally />
+            <IconAlignVertically />
           </el-col>
         </el-tooltip>
         <el-tooltip
