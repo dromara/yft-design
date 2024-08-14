@@ -24,7 +24,6 @@ import {
 import { EffectItem } from '@/types/common'
 import { Mask } from '@/types/elements'
 import type { Abortable } from 'fabric'
-import { parseAttributes } from '../parser/parseAttributes'
 
 
 export class Image extends OriginImage {
@@ -285,26 +284,6 @@ export class Image extends OriginImage {
     });
   }
 
-  static async fromElement(
-    element: HTMLElement,
-    options: Abortable = {},
-    cssRules?: any
-  ) {
-    const attributeNames = this.ATTRIBUTE_NAMES.concat(['mask'])
-    const parsedAttributes = parseAttributes(
-      element,
-      attributeNames,
-      cssRules
-    );
-    return this.fromURL(
-      parsedAttributes['xlink:href'],
-      options,
-      parsedAttributes
-    ).catch((err) => {
-      console.log(err);
-      return null;
-    });
-  }
 }
 
 const imageDefaultValues: Partial<TClassProperties<Image>> = {
