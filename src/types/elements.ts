@@ -6,6 +6,7 @@ export const enum ElementNames {
   TEXTBOX = 'textbox',
   TEXT = 'text',
   ITEXT = 'i-text',
+  INPUTTEXT = 'itext',
   ARCTEXT = 'arctext',
   VERTICALTEXT = 'verticaltext',
   IMAGE = 'image',

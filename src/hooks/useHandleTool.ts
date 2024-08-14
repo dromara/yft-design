@@ -13,28 +13,29 @@ export default () => {
     const handleElement = canvas.getActiveObject()
     const templatesStore = useTemplatesStore()
     if (!handleElement) return
-    canvas.discardActiveObject()
-    if (handleElement.type === ElementNames.ACTIVE) {
+    
+    
+    if (handleElement.type.toLowerCase() === ElementNames.ACTIVE) {
       const activeObject = handleElement as Group
-      const activeObjectLeft = activeObject.left - activeObject.width / 2, activeObjectTop = activeObject.top - activeObject.height / 2
+      console.log('Command:', command)
       switch (command) {
         case AlignCommand.LEFT: 
-          activeObject._objects.forEach(item => item.set({left: activeObjectLeft}))
+          activeObject._objects.forEach(item => item.set({left: -activeObject.width / 2}))
           break
         case AlignCommand.RIGHT: 
-          activeObject._objects.forEach(item => item.set({left: activeObjectLeft + activeObject.width - item.width}))
+          activeObject._objects.forEach(item => item.set({left: activeObject.width / 2 - item.width}))
           break
         case AlignCommand.TOP: 
-          activeObject._objects.forEach(item => item.set({top: activeObjectTop}))
+          activeObject._objects.forEach(item => item.set({top: -activeObject.height / 2}))
           break
         case AlignCommand.BOTTOM: 
-          activeObject._objects.forEach(item => item.set({top: activeObjectTop + activeObject.height - item.height}))
+          activeObject._objects.forEach(item => item.set({top: activeObject.height / 2 - item.height}))
           break
         case AlignCommand.HORIZONTAL: 
-          activeObject._objects.forEach(item => item.set({left: activeObject.left - item.width / 2}))
+          activeObject._objects.forEach(item => item.set({top: -item.height / 2}))
           break
         case AlignCommand.VERTICAL: 
-          activeObject._objects.forEach(item => item.set({top: activeObject.top - item.height / 2}))
+          activeObject._objects.forEach(item => item.set({left: -item.width / 2}))
           break
         case AlignCommand.CENTER: 
           activeObject._objects.forEach(item => item.set({left: activeObject.left - item.width / 2}))
@@ -42,7 +43,9 @@ export default () => {
           break
         default: break
       }
-    } else {
+    } 
+    else {
+      canvas.discardActiveObject()
       switch (command) {
         case AlignCommand.LEFT: 
           handleElement.set({left: left })
@@ -57,10 +60,10 @@ export default () => {
           handleElement.set({top: top + height - handleElement.height})
           break
         case AlignCommand.HORIZONTAL: 
-          handleElement.set({left : centerPoint.x - handleElement.width / 2})
+          handleElement.set({top: centerPoint.y - handleElement.height / 2})
           break
         case AlignCommand.VERTICAL: 
-          handleElement.set({top: centerPoint.y - handleElement.height / 2})
+          handleElement.set({left : centerPoint.x - handleElement.width / 2})
           break
         case AlignCommand.CENTER: 
           handleElement.set({left : centerPoint.x - handleElement.width / 2})

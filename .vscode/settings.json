@@ -11,5 +11,8 @@
     "i18n-ally.localesPaths": [
         "src/language"
     ],
-    "i18n-ally.sourceLanguage": "zh" // 需要Prettier的配置文件
+    "i18n-ally.sourceLanguage": "zh",
+    "[json]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    } // 需要Prettier的配置文件
 }
