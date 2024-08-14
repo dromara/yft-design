@@ -5,7 +5,7 @@ import useHandleTemplate from "@/hooks/useHandleTemplate";
 import useHandleCreate from "@/hooks/useHandleCreate";
 import useCanvasScale from "@/hooks/useCanvasScale";
 import { useTemplatesStore } from "@/store";
-import { loadSVGFromString } from '@/extension/parser/loadSVGFromString'
+import { loadSVGFromString } from 'fabric'
 import { uploadFile } from "@/api/file";
 // import axios from 'axios'; // 确保你已经安装并导入了axios
 

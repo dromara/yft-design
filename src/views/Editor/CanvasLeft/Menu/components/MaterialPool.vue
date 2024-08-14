@@ -44,8 +44,7 @@ import { Search } from "@element-plus/icons-vue";
 import { nanoid } from "nanoid";
 
 import { PathPoolItem, LinePoolItem, ElementNames } from "@/types/elements";
-import { Object as FabricObject} from "fabric";
-import { loadSVGFromString } from '@/extension/parser/loadSVGFromString'
+import { Object as FabricObject, loadSVGFromString} from "fabric";
 import { getImageDataURL, getImageText } from "@/utils/image";
 import { useTemplatesStore } from "@/store";
 import useCanvas from "@/views/Canvas/useCanvas";

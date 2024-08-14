@@ -23,7 +23,7 @@ import { getImageDataURL, getImageText } from '@/utils/image'
 import { ElMessage, genFileId, UploadInstance, UploadProps, UploadRawFile } from "element-plus"
 import { uploadFile } from '@/api/file'
 import { useTemplatesStore } from '@/store'
-import { loadSVGFromString } from '@/extension/parser/loadSVGFromString'
+import { loadSVGFromString } from 'fabric'
 import { ElementNames } from '@/types/elements'
 import { WorkSpaceDrawData, propertiesToInclude } from '@/configs/canvas'
 import { Image, Object as FabricObject } from 'fabric'
