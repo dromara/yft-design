@@ -174,7 +174,7 @@ const goHome = () => {
   cursor: pointer;
   height: 88px;
   position: absolute;
-  right: -19px;
+  right: -17px;
   top: 50%;
   transform: translateY(-50%);
   transition: right 0.1s linear;

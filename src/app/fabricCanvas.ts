@@ -1,5 +1,5 @@
 import { useMainStore, useTemplatesStore } from '@/store'
-import { Canvas, Object as FabricObject, Image } from 'fabric'
+import { Canvas, Object as FabricObject, Image, Point, TMat2D } from 'fabric'
 import { shallowRef } from 'vue'
 import { toRef } from './attribute/toRef'
 import { check } from '@/utils/check'
@@ -64,5 +64,31 @@ export class FabricCanvas extends Canvas {
         this.setDefaultAttr(obj)
       })
     }
+  }
+
+  override absolutePan(point: Point, skipSetCoords?: boolean) {
+    const vpt: TMat2D = [...this.viewportTransform]
+    vpt[4] = -point.x
+    vpt[5] = -point.y
+    // 执行 setCoords 导致卡顿，添加一个跳过属性
+    if (skipSetCoords) {
+      this.viewportTransform = vpt
+      // this.getObjects()?.forEach((board) => {
+      //   FabricObject.prototype.setCoords.call(board)
+      // })
+      this.requestRenderAll()
+      return
+    }
+    this.setViewportTransform(vpt)
+  }
+
+  override relativePan(point: Point, skipSetCoords?: boolean) {
+    return this.absolutePan(
+      new Point(
+        -point.x - this.viewportTransform[4],
+        -point.y - this.viewportTransform[5]
+      ),
+      skipSetCoords
+    );
   }
 }

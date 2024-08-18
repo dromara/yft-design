@@ -51,7 +51,7 @@
       </el-row>
     </el-row>
     <ImageMatting :visible="dialogVisible" @close="closeUpload" />
-    <ImageFillColor :visible="ImageFillColorVisible" @close="closeImageFillColor" />\
+    <ImageFillColor :visible="ImageFillColorVisible" @close="closeImageFillColor" />
     <OpenGpt :visible="openGPTVisible" @close="openGPTVisible = false"  />
   </div>
 </template>

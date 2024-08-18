@@ -1,6 +1,7 @@
 <template>
   <div class="absolute bottom-[5px] text-[12px] icp">
     进网许可证：<a href="https://beian.miit.gov.cn/">鄂ICP备2022008030号-1</a>
+    <span class="w-[10px]"/>联系：15972699417
   </div>
 </template>
 

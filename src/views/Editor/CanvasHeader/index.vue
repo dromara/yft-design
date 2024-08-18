@@ -51,7 +51,7 @@
         </template>
         <div class="viewport-size-preset">
           <div class="preset-item" v-for="item in canvasZoomPresets" :key="item" @click="applyCanvasPresetScale(item)">{{ item }}%</div>
-          <div class="preset-item"><IconFullScreen class="handler-item" @click="resetCanvas()" /></div>
+          <div class="preset-item" @click="resetCanvas()"><IconFullScreen class="handler-item"/></div>
         </div>
       </el-popover>
       <IconPlus class="handler-item" @click="scaleCanvas('+')" />
