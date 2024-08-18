@@ -40,6 +40,7 @@ export default () => {
     const [ canvas ] = useCanvas()
     const { centerPoint } = useCenter()
     canvas.zoomToPoint(centerPoint, value / 100)
+    canvas.absolutePan(new Point(centerPoint.x, centerPoint.y).scalarMultiply(canvas.getZoom()).subtract(canvas.getCenterPoint()))
     zoom.value = canvas.getZoom()
   }
 
