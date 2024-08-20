@@ -22,7 +22,7 @@ export interface ExportContent {
 }
 
 export interface ExportData {
-  data: string
+  data: string[]
   width: number
   height: number
 }

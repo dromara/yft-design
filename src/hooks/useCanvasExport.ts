@@ -4,7 +4,7 @@ import { saveAs } from 'file-saver'
 import { storeToRefs } from 'pinia'
 import { useFabricStore, useTemplatesStore } from '@/store'
 import { WorkSpaceThumbType, WorkSpaceClipType, WorkSpaceCommonType, WorkSpaceSafeType, propertiesToInclude } from '@/configs/canvas'
-import { ImageFormat } from 'fabric'
+import { ImageFormat, StaticCanvas } from 'fabric'
 import { downloadSVGFile, downloadLinkFile } from '@/utils/download'
 import { changeDpiDataUrl } from 'changedpi'
 import useCanvas from '@/views/Canvas/useCanvas'
@@ -16,7 +16,7 @@ export default () => {
   
   const Exporting = ref(false)
   const { showClip, showSafe } = storeToRefs(useFabricStore())
-  const { currentTemplate } = storeToRefs(useTemplatesStore())
+  const { currentTemplate, templateCanvas, templates } = storeToRefs(useTemplatesStore())
   // 导出图片
   const exportImage = (format: ImageFormat, quality: number, dpi: number, ignoreClip = true) => {
     Exporting.value = true
@@ -85,7 +85,7 @@ export default () => {
     serializer.zoom = currentTemplate.value.zoom
     serializer.width = currentTemplate.value.width
     serializer.height = currentTemplate.value.height
-    console.log(JSON.stringify(serializer));
+    // console.log(JSON.stringify(serializer));
     
     return serializer
   }
@@ -104,8 +104,8 @@ export default () => {
   }
 
   // 导出PDF
-  const exportPDF = async () => {
-    convertFile('pdf')
+  const exportPDF = async (rangeType: string) => {
+    convertFile('pdf', rangeType)
   }
 
   // 导出PSD
@@ -113,10 +113,35 @@ export default () => {
     convertFile('psd')
   }
 
-  const convertFile = async (filetype: string) => {
+  const convertFile = async (filetype: string, rangeType?: string) => {
     Exporting.value = true
+    const svgData: string[] = []
+    if (rangeType === 'all') {
+      for (let i = 0; i < templates.value.length; i++) {
+        const template = templates.value[i]
+        const width = template.width / template.zoom
+        const height = template.height / template.zoom
+        const thumpCanvas = templateCanvas.value.get(template.id) as StaticCanvas
+        thumpCanvas.getObjects().filter(item => item.type === ElementNames.REFERENCELINE && item.visible === true).map(item => item.set({visible: false}))
+        const svg = thumpCanvas.toSVG({
+          viewBox: {
+            x: 0,
+            y: 0,
+            width: width,
+            height: height,
+          },
+          width: width + 'px',
+          height: height + 'px'
+        }, (element) => element)
+        svgData.push(btoa(unescape(encodeURIComponent(svg))))
+        thumpCanvas.getObjects().filter(item => item.type === ElementNames.REFERENCELINE && item.visible === false).map(item => item.set({visible: true}))
+      }
+    } 
+    else {
+      svgData.push(btoa(unescape(encodeURIComponent(getSVGData()))))
+    }
     const content = {
-      data: btoa(unescape(encodeURIComponent(getSVGData()))),
+      data: svgData,
       filetype,
       width: currentTemplate.value.width / currentTemplate.value.zoom,
       height: currentTemplate.value.height / currentTemplate.value.zoom,

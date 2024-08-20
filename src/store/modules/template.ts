@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { Templates } from '@/mocks/templates'
 import { Template, CanvasElement, ImageElement, GroupElement, RectElement } from '@/types/canvas'
-import { Object as FabricObject, SerializedImageProps, Image, Group } from 'fabric'
+import { Object as FabricObject, SerializedImageProps, Image, Group, StaticCanvas } from 'fabric'
 import { WorkSpaceDrawType, propertiesToInclude } from '@/configs/canvas'
 import { useMainStore } from './main'
 import { ElementNames } from '@/types/elements'
@@ -24,6 +24,7 @@ export interface TemplatesState {
   templateId: number
   templates: Template[]
   templateIndex: number
+  templateCanvas: Map<string, StaticCanvas>
 }
 
 export const useTemplatesStore = defineStore('Templates', {
@@ -32,6 +33,7 @@ export const useTemplatesStore = defineStore('Templates', {
     templateId: 0,
     templates: Templates, // 页面页面数据
     templateIndex: 0, // 当前页面索引
+    templateCanvas: new Map()
     // fixedRatio: false, // 固定比例
     // slideUnit: 'mm', // 尺寸单位
     // slideName: '', // 模板名称

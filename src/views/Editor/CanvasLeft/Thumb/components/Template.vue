@@ -16,8 +16,10 @@
 import { computed, onMounted, PropType, ref, watch } from 'vue'
 import { StaticCanvas, Group } from 'fabric'
 import { Template, CanvasElement } from '@/types/canvas'
+import { useTemplatesStore } from '@/store'
 import { WorkSpaceThumbType, WorkSpaceDrawType } from '@/configs/canvas'
 import { getObjectsBoundingBox } from '@/extension/util/common'
+import { storeToRefs } from 'pinia'
 
 const props = defineProps({
   template: {
@@ -33,41 +35,44 @@ const props = defineProps({
     default: true,
   },
 })
- 
+
+const templatesStore = useTemplatesStore()
+const { templateCanvas } = storeToRefs(templatesStore)
 const viewportRatio = computed(() => props.template.height / props.template.width)
 const height = computed(() => props.size * viewportRatio.value)
 const thumbnailTemplate = ref()
 // let thumbnailCanvas: StaticCanvas 
-const thumbCanvas = ref<StaticCanvas | undefined>(undefined)
+let thumbCanvas: StaticCanvas | undefined
 
 onMounted(() => {
-  thumbCanvas.value = new StaticCanvas(thumbnailTemplate.value, {
+  thumbCanvas = new StaticCanvas(thumbnailTemplate.value, {
     width: props.size,
     height: props.size * viewportRatio.value,
     backgroundColor: props.template.workSpace.fillType === 0 ? props.template.workSpace.fill as string : '#fff'
-  }) as any
+  })
+  templateCanvas.value.set(props.template.id, thumbCanvas as any)
   setThumbnailElement()
 })
 
 watch(props, () => {
-  if (!thumbCanvas.value) return
+  if (!thumbCanvas) return
   setThumbnailElement()
 }, { deep: true })
 
 const setThumbnailElement = async () => {
-  if (!thumbCanvas.value) return
-  await thumbCanvas.value.loadFromJSON(props.template)
-  const thumbWorkSpaceDraw = thumbCanvas.value.getObjects().filter(item => (item as CanvasElement).id === WorkSpaceDrawType)[0]
-  thumbCanvas.value.getObjects().filter(item => WorkSpaceThumbType.includes(item.id)).map(item => (item as CanvasElement).visible = false)
+  if (!thumbCanvas) return
+  await thumbCanvas.loadFromJSON(props.template)
+  const thumbWorkSpaceDraw = thumbCanvas.getObjects().filter(item => (item as CanvasElement).id === WorkSpaceDrawType)[0]
+  thumbCanvas.getObjects().filter(item => WorkSpaceThumbType.includes(item.id)).map(item => (item as CanvasElement).visible = false)
   const width = props.template.width / props.template.zoom
   const thumbZoom = props.size / width
-  thumbCanvas.value.setDimensions({
+  thumbCanvas.setDimensions({
     width: props.size,
     height: props.size * viewportRatio.value
   })
-  thumbCanvas.value.setZoom(thumbZoom)
-  const thumbViewportTransform = thumbCanvas.value.viewportTransform
-  const objects = thumbCanvas.value.getObjects().filter(ele => !WorkSpaceThumbType.includes(ele.id))
+  thumbCanvas.setZoom(thumbZoom)
+  const thumbViewportTransform = thumbCanvas.viewportTransform
+  const objects = thumbCanvas.getObjects().filter(ele => !WorkSpaceThumbType.includes(ele.id))
   // const boundingBox = Group.prototype.getObjectsBoundingBox(objects)
   const boundingBox = getObjectsBoundingBox(objects)
   let left = 0, top = 0
@@ -81,8 +86,8 @@ const setThumbnailElement = async () => {
   }
   thumbViewportTransform[4] = -left * thumbZoom
   thumbViewportTransform[5] = -top * thumbZoom
-  thumbCanvas.value.setViewportTransform(thumbViewportTransform)
-  thumbCanvas.value.renderAll()
+  thumbCanvas.setViewportTransform(thumbViewportTransform)
+  thumbCanvas.renderAll()
 }
 </script>
 

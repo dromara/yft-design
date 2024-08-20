@@ -10,22 +10,22 @@
       </div>
       <div class="row">
         <div class="title">{{ t('message.quantityPerPage') }}：</div>
-        <el-select class="config-item" v-model:value="count">
-          <el-option :value="1">1</el-option>
-          <el-option :value="2">2</el-option>
-          <el-option :value="3">3</el-option>
+        <el-select class="config-item" v-model="count" @change="changeCount">
+          <el-option value="1" label="1"></el-option>
+          <el-option value="2" label="2"></el-option>
+          <el-option value="3" label="3"></el-option>
         </el-select>
       </div>
       <div class="row">
         <div class="title">{{ t('message.blankEdges') }}：</div>
         <div class="config-item">
-          <el-switch v-model:checked="padding" />
+          <el-switch v-model="padding" />
         </div>
       </div>
     </div>
 
     <div class="btns">
-      <el-button class="btn export" type="primary" @click="expPDF()">{{ t('message.exportPDF') }}</el-button>
+      <el-button class="btn export" type="primary" @click="exportPDF(rangeType)">{{ t('message.exportPDF') }}</el-button>
       <el-button class="btn close" @click="emit('close')">{{ t('message.close') }}</el-button>
     </div>
   </div>
@@ -53,15 +53,8 @@ const rangeType = ref<'all' | 'current'>('all')
 const count = ref(1)
 const padding = ref(false)
 
-const expPDF = () => {
-  exportPDF()
-  // if (!pdfThumbnailsRef.value) return
-  // const pageSize = {
-  //   width: 1600,
-  //   height: rangeType.value === 'all' ? 1600 * viewportRatio.value * count.value : 1600 * viewportRatio.value,
-  //   margin: padding.value ? 50 : 0,
-  // }
-  // print(pdfThumbnailsRef.value, pageSize)
+const changeCount = (val: number) => {
+  count.value = val
 }
 </script>
 
