@@ -10,7 +10,6 @@ import { changeDpiDataUrl } from 'changedpi'
 import useCanvas from '@/views/Canvas/useCanvas'
 import useCenter from '@/views/Canvas/useCenter'
 import { exportFile } from '@/api/file'
-import { Base64 } from 'js-base64'
 import { ElementNames } from '@/types/elements'
 
 export default () => {
@@ -115,8 +114,9 @@ export default () => {
   }
 
   const convertFile = async (filetype: string) => {
+    Exporting.value = true
     const content = {
-      data: Base64.encode(getSVGData()),
+      data: btoa(unescape(encodeURIComponent(getSVGData()))),
       filetype,
       width: currentTemplate.value.width / currentTemplate.value.zoom,
       height: currentTemplate.value.height / currentTemplate.value.zoom,
@@ -125,6 +125,7 @@ export default () => {
     if (result && result.data.link) {
       downloadLinkFile(result.data.link, `yft-design-${Date.now()}.${filetype}`)
     }
+    Exporting.value = false
   }
 
   // 导出json

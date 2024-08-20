@@ -887,9 +887,7 @@ const generateGridBackground = async (status?: string) => {
   const trianglifier = trianglify(defaultOptions);
   const canvasBackground = trianglifier.toSVG(undefined, undefined);
   const serialize = new XMLSerializer();
-  const imageURL = `data:image/svg+xml,${serialize.serializeToString(
-    canvasBackground
-  )}`;
+  const imageURL = `data:image/svg+xml;base64,${btoa(serialize.serializeToString(canvasBackground))}`;
   const backgroundImage = await Image.fromURL(imageURL, {crossOrigin: "anonymous"}, {
     left: workSpaceDraw.left,
     top: workSpaceDraw.top,
@@ -933,7 +931,7 @@ const shadingSvgPattern = (
     "'/>" +
     strokeGroup +
     "</pattern></defs><rect width='100%' height='100%' fill='url(%23a)'/></svg>";
-  const svgShading = `data:image/svg+xml,${patternData}`;
+  const svgShading = `data:image/svg+xml;base64,${btoa(patternData)}`;
   return svgShading;
 };
 
@@ -1044,7 +1042,7 @@ const generateShadingBackground = async () => {
       <rect x="0" y="0" width='${imageWidth}' height='${imageHeight}' transform='translate(${translateX},${translateY})' fill='url(%23a)' />
     </svg>
   `;
-  const imageURL = `data:image/svg+xml,${svg}`;
+  const imageURL = `data:image/svg+xml;base64,${btoa(svg)}`;
   const backgroundImage = await Image.fromURL(imageURL, {crossOrigin: "anonymous"}, {});
   const left = workSpaceDraw.left,
     top = workSpaceDraw.top,

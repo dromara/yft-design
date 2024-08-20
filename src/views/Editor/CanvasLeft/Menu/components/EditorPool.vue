@@ -124,8 +124,6 @@
 
 <script lang="ts" setup>
 import { ref } from "vue";
-import { Base64 } from "js-base64";
-import { Search } from "@element-plus/icons-vue";
 import { ShapePathFormulasKeys, PathListItem } from "@/types/elements";
 import { ElMessage, genFileId, UploadInstance, UploadProps, UploadRawFile } from "element-plus"
 import { encodeData, renderer25D, rendererRect, rendererRound, rendererRandRound, rendererDSJ, rendererRandRect, rendererImage, rendererCircle, rendererLine, rendererLine2, rendererFuncA, rendererFuncB, CodeOption } from "beautify-qrcode";
@@ -218,12 +216,12 @@ const createBarElement = () => {
   const barcode = document.getElementById("barcode");
   if (!barcode) return;
   const s = new XMLSerializer().serializeToString(barcode);
-  const src = `data:image/svg+xml;base64,` + Base64.encode(s);
+  const src = `data:image/svg+xml;base64,` + btoa(s);
   createBarCodeElement(src, "1234", codeOption);
 };
 
 const createQRElement = (style: QRCodeType) => {
-  const src = `data:image/svg+xml;base64,` + Base64.encode(generateQRCodeMap[style](getEncodeData(118, 118)));
+  const src = `data:image/svg+xml;base64,` + btoa(generateQRCodeMap[style](getEncodeData(118, 118)));
   const codeOption = {
     codeStyle: style,
     codeSpace: codeSpace.value,

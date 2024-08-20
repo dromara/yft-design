@@ -87,7 +87,6 @@ import { computed, onMounted, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useMainStore, useTemplatesStore } from "@/store";
 import { BarCodeStyleLibs } from "@/configs/codeStyles";
-import { Base64 } from "js-base64";
 import { BarCodeElement } from "@/types/canvas";
 import JsBarCode from "jsbarcode";
 import useCanvas from "@/views/Canvas/useCanvas";
@@ -139,9 +138,7 @@ const generateBarCode = async () => {
   );
   const barcode = document.getElementById("barcode");
   if (!barcode) return;
-  const src =
-    `data:image/svg+xml;base64,` +
-    Base64.encode(new XMLSerializer().serializeToString(barcode));
+  const src = `data:image/svg+xml;base64,` + btoa(new XMLSerializer().serializeToString(barcode));
   await handleElement.value.setSrc(src);
   templatesStore.modifedElement();
   canvas.renderAll();

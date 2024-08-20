@@ -8,7 +8,7 @@
       <el-carousel type="card" height="135px" :autoplay="false" trigger="click" indicator-position="none">
         <el-carousel-item v-for="item in QRCodeStyleLibs" :key="item">
           <div justify="center" @click="createElement(item.name as QRCodeType)">
-            <img v-if="item.name !== 'C2'" :src="`data:image/svg+xml;base64,` + Base64.encode(generateQRCodeMap[item.name as QRCodeType](getEncodeData()))" :alt="item.name">
+            <img v-if="item.name !== 'C2'" :src="`data:image/svg+xml;base64,` + getC2QRcode(item.name)" :alt="item.name">
             <img v-else :src="c2QRURL" alt="">
           </div>
         </el-carousel-item>
@@ -39,7 +39,6 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { Base64 } from 'js-base64'
 import { QRCodeType } from '@/types/canvas'
 import { QRCodeStyleLibs } from '@/configs/codeStyles'
 import { 
@@ -109,8 +108,12 @@ const getEncodeData = (width = 135, height = 135) => {
   return encodeData(codeOption)
 }
 
+const getC2QRcode = (name: string) => {
+  return btoa(generateQRCodeMap[name as QRCodeType](getEncodeData()))
+}
+
 const createElement = (style: QRCodeType) => {
-  const src = `data:image/svg+xml;base64,` + Base64.encode(generateQRCodeMap[style](getEncodeData(50, 50)))
+  const src = `data:image/svg+xml;base64,` + btoa(generateQRCodeMap[style](getEncodeData(50, 50)))
   const codeOption = {
     codeStyle: style,
     codeSpace: codeSpace.value,

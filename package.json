@@ -35,7 +35,6 @@
     "file-saver": "^2.0.5",
     "gifler": "^0.1.0",
     "html-to-image": "^1.11.11",
-    "js-base64": "^3.7.7",
     "jsbarcode": "^3.11.6",
     "lodash-es": "^4.17.21",
     "mousetrap": "^1.6.5",
