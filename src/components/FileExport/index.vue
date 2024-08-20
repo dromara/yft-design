@@ -121,6 +121,9 @@ const closeExport = () => {
 </style>
 
 <style>
+.export-dialog {
+  padding: 0;
+}
 .export-dialog .el-dialog__body {
   padding: 0;
 }

@@ -124,7 +124,7 @@ const downloaImage = () => {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
   }
 
   .title {
