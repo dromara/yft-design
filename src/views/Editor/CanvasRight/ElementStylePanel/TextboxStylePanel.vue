@@ -11,7 +11,15 @@
         </el-select>
       </el-col>
       <el-col :span="12">
-        <el-select class="fontsize" filterable allow-create default-first-option v-model="handleElement.fontSize" placement="left" @change="handleElementFontSize">
+        <el-select 
+          v-model="handleElement.fontSize" 
+          filterable 
+          allow-create 
+          default-first-option 
+          :filterMethod="handleElementInputSize" 
+          placement="left" 
+          @change="handleElementFontSize"
+        >
           <el-option v-for="item in FontSizeLibs" :key="item" :label="item" :value="item"></el-option>
         </el-select>
       </el-col>
@@ -220,7 +228,7 @@ import { computed, ref, onMounted } from 'vue'
 import { useMainStore, useTemplatesStore } from '@/store'
 import { storeToRefs } from 'pinia'
 import { ElMessage } from 'element-plus'
-import { IText, Textbox } from 'fabric'
+import { FabricObject, IText, Textbox } from 'fabric'
 import { FontSizeLibs, LineHeightLibs, CharSpaceLibs } from '@/configs/texts'
 import { WEB_FONTS } from '@/configs/fonts'
 import { propertiesToInclude } from '@/configs/canvas'
@@ -290,9 +298,19 @@ const handleElementFontFamily = (fontFamily: string) => {
   canvas.renderAll()
 }
 
+// 
+const handleElementInputSize = (val: string) => {
+  val = val.replace(/[^\d]/g, '')
+  if (val) {
+    console.log('handleSize:', val)
+    handleElement.value.set({fontSize: val})
+  }
+}
+
 // 修改字体大小
-const handleElementFontSize = (fontSize: number) => {
-  
+const handleElementFontSize = (fontSize: string) => {
+  fontSize = fontSize.replace(/[^\d]/g, '')
+  if (!fontSize) return
   if (handleElement.value.isEditing) {
     handleElement.value.setSelectionStyles({fontSize})
   }
@@ -469,16 +487,17 @@ const changeCharSpacing = (charSpacing: number) => {
 
 const handleElementArrange = (status: boolean) => {
   // handleElement.value.set({splitByGrapheme: status, width: handleElement.value.fontSize})
-  console.log('status:', status)
+  // console.log('status:', status)
   const options = (handleElement.value as any).toObject(propertiesToInclude as any[])
   options.lineHeight = 12
   delete options.type
   options.id = nanoid(10)
-  let textElement = new Textbox(handleElement.value.text, options)
+  let textElement: FabricObject = new Textbox(handleElement.value.text, options)
   if (status) {
     textElement = new VerticalText(handleElement.value.text, options)
   }
-  canvas.remove(canvas.getActiveObject())
+  const activeObject = canvas.getActiveObject()
+  if (activeObject) canvas.remove(activeObject)
   canvas.discardActiveObject()
   canvas.add(textElement)
   templatesStore.modifedElement()
@@ -542,11 +561,12 @@ const changeArcTextStatus = (showCurvature: boolean) => {
 }
 
 onMounted(() => {
-  const fontsizeSelect = document.querySelector('.fontsize input')
-  if (!fontsizeSelect) return
-  fontsizeSelect.addEventListener('input', (val: any) => {
-    val.target.value = val.target.value.replace(/[^\d]/g,'')
-  })
+  // const fontsizeSelect = document.querySelector('.fontsize input')
+  // if (!fontsizeSelect) return
+  // // fontsizeSelect.addEventListener('input', (val: any) => {
+  // //   console.log('val:', val)
+  // //   val.target.value = val.target.value.replace(/[^\d]/g,'')
+  // // })
 })
 </script>
 
