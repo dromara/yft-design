@@ -29,13 +29,13 @@ const mainStore = useMainStore()
 onMounted(async () => {
   await deleteDiscardedDB()
   await snapshotStore.initSnapshotDatabase()
-  mainStore.getFonts()
+  // mainStore.getFonts()
 })
 
 // 在主入口监听PWA注册事件
 window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    window.deferredPrompt = e;
+  e.preventDefault();
+  window.deferredPrompt = e;
 })
 
 

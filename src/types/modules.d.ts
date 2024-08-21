@@ -349,6 +349,10 @@ declare module 'clipper-lib' {
 
 }
 
+declare interface Window {
+  deferredPrompt: Event
+}
+
 declare module 'changedpi';
 declare module 'vue-router';
 declare module 'element-plus/dist/locale/zh-cn.mjs';
