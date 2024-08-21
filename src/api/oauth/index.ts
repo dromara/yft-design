@@ -3,9 +3,16 @@ import { AxiosPromise } from 'axios'
 import { OauthWechatResult, OauthCaptchaResult, OauthLoginData, OauthGithubResult, CodeParams, GithubCallbackResult } from './types'
 
 
-export function oauthCaptcha(): AxiosPromise<OauthCaptchaResult> {
+export function imageCaptcha(): AxiosPromise<OauthCaptchaResult> {
   return request({
-    url: '/api/oauth/captcha',
+    url: '/api/oauth/captcha/image',
+    method: 'get',
+  })
+}
+
+export function emailCaptcha(): AxiosPromise<OauthCaptchaResult> {
+  return request({
+    url: '/api/oauth/captcha/email',
     method: 'get',
   })
 }

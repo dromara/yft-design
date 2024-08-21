@@ -181,7 +181,10 @@ import {
   CopyOne,
   Wechat,
   TencentQq,
-  Mail
+  Mail,
+  ShareOne,
+  Navigation,
+  ViewList
 } from '@icon-park/vue-next'
 
 export const icons = {
@@ -364,6 +367,9 @@ export const icons = {
   IconWechat: Wechat,
   IconTencentQq: TencentQq,
   IconMail: Mail,
+  IconShareOne: ShareOne,
+  IconNavigation: Navigation,
+  IconViewList: ViewList
 }
 
 export default {

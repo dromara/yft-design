@@ -14,25 +14,35 @@
           </div>
         </div>
       </el-row>
-      <el-row v-if="loginType === 2">
-        <el-row class="h-[172px] mx-auto mt-[20px] content-center">
-          <el-form ref="loginFormRef" :model="ruleForm" :rules="rules" label-width="auto">
-            <el-form-item prop="username">
-              <el-input type="username" autocomplete="off" :prefix-icon="User" v-model="ruleForm.username" />
+      <el-row v-if="loginType === 2" class="content-center">
+        <el-row class="mx-auto mt-[5px] content-center">
+          <el-radio-group v-model="checkType" size="small" class="w-[240px]">
+            <el-radio-button :value="1">登录</el-radio-button>
+            <el-radio-button :value="2">注册</el-radio-button>
+          </el-radio-group>
+        </el-row>
+        <el-row class="h-[170px] mx-auto content-center">
+          <el-form ref="loginFormRef" :model="ruleForm" :rules="rules" class="w-[235px]">
+            <el-form-item prop="email">
+              <el-input type="email" autocomplete="off" :prefix-icon="Message" v-model="ruleForm.email" />
             </el-form-item>
-            <el-form-item>
+            <el-form-item prop="password">
               <el-input type="password" autocomplete="off" :prefix-icon="Lock" v-model="ruleForm.password" show-password />
             </el-form-item>
-            <el-form-item>
-              <el-input style="width: 100px;" v-model="ruleForm.captcha"/>
-              <div class="w-[100px] h-full outline-box" @click="getOauthCaptcha">
+            <el-form-item v-if="checkType === 1" class="captcha">
+              <el-input style="width: 120px;" v-model="ruleForm.captcha"/>
+              <div class="w-[90px] h-full captcha-image" @click="getOauthCaptcha">
                 <img :src="loginCaptchaImage" alt="" v-loading="loginCaptchaLoading">
               </div>
+            </el-form-item>
+            <el-form-item v-if="checkType === 2" class="captcha">
+              <el-input style="width: 120px;" v-model="ruleForm.captcha"/>
+              <el-button @click="getEmailCaptcha">获取验证码</el-button>
             </el-form-item>
           </el-form>
         </el-row>
         <el-row class="content-center">
-          <el-button class="w-[200px]" type="primary" @click="loginHandle">登陆</el-button>
+          <el-button class="w-[230px]" type="primary" @click="loginHandle">登陆</el-button>
         </el-row>
       </el-row>
       <el-row class="mt-[28px] justify-center">
@@ -67,16 +77,17 @@ import { isMobile } from '@/utils/common'
 import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/store';
 import { localStorage } from '@/utils/storage';
-import { Lock, User } from '@element-plus/icons-vue'
+import { Lock, User, Message } from '@element-plus/icons-vue'
 import { OauthLoginData } from '@/api/oauth/types';
-import { oauthCaptcha, oauthLogin } from '@/api/oauth';
+import { imageCaptcha, emailCaptcha, oauthLogin } from '@/api/oauth';
 import type { FormRules } from 'element-plus'
 
 const dialogVisible = ref(false)
 const dialogWidth = computed(() => isMobile() ? '75%' : '35%')
 const qrcode = ref('')
+const checkType = ref(1)
 const loginType = ref(2)
-const loginInfo = ref('普通')
+const loginInfo = ref('用户')
 const loginCaptchaImage = ref('')
 const loginCaptchaLoading = ref(false)
 const { loginStatus, username } = storeToRefs(useUserStore())
@@ -88,16 +99,16 @@ const props = defineProps({
 })
 
 const ruleForm = reactive<OauthLoginData>({
-  username: '',
+  email: '',
   password: '',
   captcha: '',
 })
 
 const rules = reactive<FormRules<OauthLoginData>>({
-  username: [
+  email: [
     {
       required: true,
-      message: '请输入用户名或者邮箱地址',
+      message: '请输入邮箱',
       trigger: 'blur',
     },
   ],
@@ -139,11 +150,15 @@ const getOauthWechat = async () => {
 
 const getOauthCaptcha = async () => {
   loginCaptchaLoading.value = true
-  const result = await oauthCaptcha()
+  const result = await imageCaptcha()
   if (result.data.code === 200) {
     loginCaptchaImage.value = 'data:image/png;base64,' + result.data.data.image
     loginCaptchaLoading.value = false
   }
+}
+
+const getEmailCaptcha = async () => {
+  const result = await emailCaptcha()
 }
 
 const loginHandle = async () => {
@@ -175,7 +190,7 @@ const loginQQ = () => {
 
 const loginEmail = () => {
   loginType.value = 2
-  loginInfo.value = '普通'
+  loginInfo.value = '用户'
   getOauthCaptcha()
 }
 
@@ -192,11 +207,9 @@ onMounted(() => {
 .content-center {
   justify-content: center
 }
-.outline-box {
+.captcha-image {
   cursor: pointer;
-  &:hover {
-    outline: 1px solid $borderColor;
-  }
+  outline: 1px solid $borderColor
 }
 </style>
 <style>
@@ -213,7 +226,7 @@ onMounted(() => {
   width: 100%;
   margin-left: 0;
 }
-.login-form .el-input {
-  width: 200px;
+.captcha .el-form-item__content {
+  justify-content: space-between;
 }
 </style>

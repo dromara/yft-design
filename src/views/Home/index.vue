@@ -20,20 +20,29 @@
         <el-aside width="216px">
           <el-menu active-text-color="#000" default-active="1" class="pt-[20px] h-lvh">
             <el-menu-item index="1">
-              <IconMapDraw/>为你推荐
+              <span class="flex w-[30px] justify-center">
+                <IconNavigation/>
+              </span>
+              <span>为你推荐</span>
             </el-menu-item>
             <el-menu-item index="2">
-              智能AI
+              <span class="flex w-[30px] justify-center">
+                <SvgIcon icon-class="chatgpt" className="svg-size" />
+              </span>
+              <span>智能AI</span>
             </el-menu-item>
             <el-menu-item index="3">
-              <IconMapDraw/>模版空间
+              <span class="flex w-[30px] justify-center">
+                <IconViewList/>
+              </span>
+              <span>模版空间</span>
             </el-menu-item>
           </el-menu>
         </el-aside>
         <el-main @scroll="handleScroll" class="h-lvh" id="main">
           <MainSearch />
-          <MainScene />
-          <MainTools />
+          <!-- <MainScene />
+          <MainTools /> -->
           <el-row class="mt-[40px]">
             <b class="text-[20px]">今日推荐</b>
           </el-row>
@@ -191,7 +200,9 @@ onUnmounted(() => {
     background-color: #f1f2f4;
   }
 }
-
+.el-aside .el-menu .is-active {
+  background-color: #f1f2f4;
+}
 .group-move,
 .group-enter-active,
 .group-leave-active {

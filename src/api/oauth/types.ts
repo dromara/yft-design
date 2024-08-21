@@ -26,7 +26,7 @@ export interface OauthCaptchaResult {
 }
 
 export interface OauthLoginData {
-  username: string
+  email: string
   password: string
   captcha: string
 }
