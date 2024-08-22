@@ -172,6 +172,15 @@ const getEmailCaptcha = async () => {
 
 const verifyHandle = async () => {
   const result = await oauthVerify(ruleForm)
+  if (ruleForm.checkType === 2) {
+    if (result.data.code === 200) {
+      ElMessage.success('注册成功')
+      checkType.value = 1
+    }
+  } 
+  else {
+
+  }
   console.log('result:', result)
 }
 

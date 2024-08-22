@@ -8,7 +8,8 @@ import {
   OauthGithubResult, 
   CodeParams, 
   EmailData,
-  GithubCallbackResult 
+  GithubCallbackResult,
+  OauthVerifyResult
 } from './types'
 
 
@@ -27,7 +28,7 @@ export function emailCaptcha(data: EmailData): AxiosPromise<EmailCaptchaResult> 
   })
 }
 
-export function oauthVerify(data: OauthVerifyData): AxiosPromise<OauthWechatResult> {
+export function oauthVerify(data: OauthVerifyData): AxiosPromise<OauthVerifyResult> {
   return request({
     url: '/api/oauth/verify',
     method: 'post',

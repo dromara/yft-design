@@ -42,6 +42,16 @@ export interface OauthVerifyData {
   checkType: number
 }
 
+export interface VerifyResult {
+
+}
+
+export interface OauthVerifyResult {
+  code: number
+  data: VerifyResult
+  msg: string
+}
+
 export interface OauthWechatData {
   img: string
 }
