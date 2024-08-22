@@ -5,11 +5,12 @@ import {
   ImageCaptchaResult, 
   EmailCaptchaResult,
   OauthVerifyData, 
+  OauthCheckData,
   OauthGithubResult, 
   CodeParams, 
   EmailData,
-  GithubCallbackResult,
-  OauthVerifyResult
+  OauthUserResult,
+  OauthRegisterResult
 } from './types'
 
 
@@ -28,9 +29,17 @@ export function emailCaptcha(data: EmailData): AxiosPromise<EmailCaptchaResult> 
   })
 }
 
-export function oauthVerify(data: OauthVerifyData): AxiosPromise<OauthVerifyResult> {
+export function oauthRegister(data: OauthVerifyData): AxiosPromise<OauthRegisterResult> {
   return request({
-    url: '/api/oauth/verify',
+    url: '/api/oauth/register',
+    method: 'post',
+    data
+  })
+}
+
+export function oauthLogin(data: OauthVerifyData): AxiosPromise<OauthUserResult> {
+  return request({
+    url: '/api/oauth/login',
     method: 'post',
     data
   })
@@ -50,7 +59,7 @@ export function oauthTokenGithub(): AxiosPromise<OauthGithubResult> {
   })
 }
 
-export function oauthCallbackGithub(params: CodeParams): AxiosPromise<GithubCallbackResult> {
+export function oauthCallbackGithub(params: CodeParams): AxiosPromise<OauthUserResult> {
   return request({
     url: '/api/oauth/github/callback',
     method: 'get',

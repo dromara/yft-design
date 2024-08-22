@@ -39,16 +39,21 @@ export interface OauthVerifyData {
   email: string
   password: string
   captcha: string
-  checkType: number
 }
 
-export interface VerifyResult {
-
+export interface OauthCheckData {
+  email: string
+  password: string
 }
 
-export interface OauthVerifyResult {
+
+export interface RegisterResult {
+  code: string
+}
+
+export interface OauthRegisterResult {
   code: number
-  data: VerifyResult
+  data: RegisterResult
   msg: string
 }
 
@@ -86,7 +91,7 @@ export interface UserResult {
   user: YFTUser
 }
 
-export interface GithubCallbackResult {
+export interface OauthUserResult {
   code: number
   data: UserResult
   msg: string

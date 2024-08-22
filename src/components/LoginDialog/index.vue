@@ -15,13 +15,7 @@
         </div>
       </el-row>
       <el-row v-if="loginType === 2" class="content-center">
-        <el-row class="mx-auto mt-[5px] content-center">
-          <el-radio-group v-model="checkType" size="small" class="w-[240px]" @change="changeCheckType">
-            <el-radio-button :value="1">登录</el-radio-button>
-            <el-radio-button :value="2">注册</el-radio-button>
-          </el-radio-group>
-        </el-row>
-        <el-row class="h-[170px] mx-auto content-center">
+        <el-row class="h-[170px] mx-auto mt-[20px] content-center">
           <el-form ref="loginFormRef" :model="ruleForm" :rules="rules" class="w-[235px]">
             <el-form-item prop="email">
               <el-input type="email" autocomplete="off" :prefix-icon="Message" v-model="ruleForm.email" />
@@ -42,7 +36,11 @@
           </el-form>
         </el-row>
         <el-row class="content-center">
-          <el-button class="w-[230px]" type="primary" @click="verifyHandle">{{ checkType === 1 ? '登录' : '注册' }}</el-button>
+          <el-button class="w-[230px]" type="primary" @click="handleVerify">{{ checkType === 1 ? '登录' : '注册' }}</el-button>
+        </el-row>
+        <el-row class="content-center mt-[5px] text-[12px]">
+          <span v-if="checkType === 1">没有账号？点击<a href="javascript:;" class="text-[#1e2ad7] font-[800]" @click="changeCheckType(2)">注册账号</a></span>
+          <span v-if="checkType === 2">已有账号！<a href="javascript:;" class="text-[#1e2ad7] font-[800]" @click="changeCheckType(1)">立即登陆</a></span>
         </el-row>
       </el-row>
       <el-row class="mt-[28px] justify-center">
@@ -79,7 +77,7 @@ import { useUserStore } from '@/store';
 import { localStorage } from '@/utils/storage';
 import { Lock, User, Message } from '@element-plus/icons-vue'
 import { OauthVerifyData } from '@/api/oauth/types';
-import { imageCaptcha, emailCaptcha, oauthVerify } from '@/api/oauth';
+import { imageCaptcha, emailCaptcha, oauthRegister, oauthLogin } from '@/api/oauth';
 import { ElMessage, type FormRules } from 'element-plus'
 
 const dialogVisible = ref(false)
@@ -102,7 +100,6 @@ const ruleForm = reactive<OauthVerifyData>({
   email: '',
   password: '',
   captcha: '',
-  checkType: 1
 })
 
 const rules = reactive<FormRules<OauthVerifyData>>({
@@ -142,8 +139,8 @@ const closeLogin = () => {
   qrcode.value = ''
 }
 
-const changeCheckType = () => {
-  ruleForm.checkType = checkType.value
+const changeCheckType = (val: number) => {
+  checkType.value = val
 }
 
 const getOauthWechat = async () => {
@@ -170,18 +167,35 @@ const getEmailCaptcha = async () => {
   }
 }
 
-const verifyHandle = async () => {
-  const result = await oauthVerify(ruleForm)
-  if (ruleForm.checkType === 2) {
-    if (result.data.code === 200) {
-      ElMessage.success('注册成功')
-      checkType.value = 1
-    }
+const handleVerify = () => {
+  if (checkType.value === 1) {
+    handleLogin()
   } 
   else {
-
+    handleRegister()
   }
-  console.log('result:', result)
+}
+
+const handleRegister = async () => {
+  const result = await oauthRegister(ruleForm)
+  if (result.data.code === 200 && result.data.data.code) {
+    ElMessage.success('注册成功')
+    const code = result.data.data.code
+    await handleLogin(code)
+  }
+}
+
+const handleLogin = async (code?: string) => {
+  if (code) ruleForm.captcha = code
+  const result = await oauthLogin(ruleForm)
+  if (result.data.code === 200) {
+    loginStatus.value = true
+    const userResult = result.data.data
+    localStorage.set('access_token', userResult.access_token)
+    username.value = userResult.user.username
+    emit('close', false)
+    ElMessage.success('登陆成功')
+  }
 }
 
 const loginGithub = async () => {
