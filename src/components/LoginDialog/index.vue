@@ -16,7 +16,7 @@
       </el-row>
       <el-row v-if="loginType === 2" class="content-center">
         <el-row class="mx-auto mt-[5px] content-center">
-          <el-radio-group v-model="checkType" size="small" class="w-[240px]">
+          <el-radio-group v-model="checkType" size="small" class="w-[240px]" @change="changeCheckType">
             <el-radio-button :value="1">登录</el-radio-button>
             <el-radio-button :value="2">注册</el-radio-button>
           </el-radio-group>
@@ -102,7 +102,7 @@ const ruleForm = reactive<OauthVerifyData>({
   email: '',
   password: '',
   captcha: '',
-  checkType: checkType.value
+  checkType: 1
 })
 
 const rules = reactive<FormRules<OauthVerifyData>>({
@@ -140,6 +140,10 @@ watch(() => props.visible, (val) => {
 const closeLogin = () => {
   emit('close', false)
   qrcode.value = ''
+}
+
+const changeCheckType = () => {
+  ruleForm.checkType = checkType.value
 }
 
 const getOauthWechat = async () => {
