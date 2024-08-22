@@ -13,24 +13,10 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, computed } from 'vue'
-import { deleteDiscardedDB } from '@/utils/database'
-import { useMainStore, useSnapshotStore } from '@/store'
-import { storeToRefs } from 'pinia'
-import { LocalStorageDiscardedKey } from '@/configs/canvas'
 import useI18n from '@/hooks/useI18n'
 
 const { messages }= useI18n()
 const locale = computed(() => messages.value)
-
-const snapshotStore = useSnapshotStore()
-const mainStore = useMainStore()
-
-onMounted(async () => {
-  await deleteDiscardedDB()
-  await snapshotStore.initSnapshotDatabase()
-  // mainStore.getFonts()
-})
 
 // 在主入口监听PWA注册事件
 window.addEventListener('beforeinstallprompt', (e) => {
