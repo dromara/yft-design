@@ -42,7 +42,7 @@
           </el-form>
         </el-row>
         <el-row class="content-center">
-          <el-button class="w-[230px]" type="primary" @click="loginHandle">登陆</el-button>
+          <el-button class="w-[230px]" type="primary" @click="verifyHandle">{{ checkType === 1 ? '登录' : '注册' }}</el-button>
         </el-row>
       </el-row>
       <el-row class="mt-[28px] justify-center">
@@ -78,9 +78,9 @@ import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/store';
 import { localStorage } from '@/utils/storage';
 import { Lock, User, Message } from '@element-plus/icons-vue'
-import { OauthLoginData } from '@/api/oauth/types';
-import { imageCaptcha, emailCaptcha, oauthLogin } from '@/api/oauth';
-import type { FormRules } from 'element-plus'
+import { OauthVerifyData } from '@/api/oauth/types';
+import { imageCaptcha, emailCaptcha, oauthVerify } from '@/api/oauth';
+import { ElMessage, type FormRules } from 'element-plus'
 
 const dialogVisible = ref(false)
 const dialogWidth = computed(() => isMobile() ? '75%' : '35%')
@@ -98,13 +98,14 @@ const props = defineProps({
   },
 })
 
-const ruleForm = reactive<OauthLoginData>({
+const ruleForm = reactive<OauthVerifyData>({
   email: '',
   password: '',
   captcha: '',
+  checkType: checkType.value
 })
 
-const rules = reactive<FormRules<OauthLoginData>>({
+const rules = reactive<FormRules<OauthVerifyData>>({
   email: [
     {
       required: true,
@@ -158,11 +159,15 @@ const getOauthCaptcha = async () => {
 }
 
 const getEmailCaptcha = async () => {
-  const result = await emailCaptcha()
+  if (!ruleForm.email) return
+  const result = await emailCaptcha({email: ruleForm.email})
+  if (result && result.data) {
+    ElMessage.success(result.data.data.msg)
+  }
 }
 
-const loginHandle = async () => {
-  const result = await oauthLogin(ruleForm)
+const verifyHandle = async () => {
+  const result = await oauthVerify(ruleForm)
   console.log('result:', result)
 }
 

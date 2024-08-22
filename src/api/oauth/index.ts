@@ -1,25 +1,35 @@
 import request from '@/utils/request'
 import { AxiosPromise } from 'axios'
-import { OauthWechatResult, OauthCaptchaResult, OauthLoginData, OauthGithubResult, CodeParams, GithubCallbackResult } from './types'
+import { 
+  OauthWechatResult, 
+  ImageCaptchaResult, 
+  EmailCaptchaResult,
+  OauthVerifyData, 
+  OauthGithubResult, 
+  CodeParams, 
+  EmailData,
+  GithubCallbackResult 
+} from './types'
 
 
-export function imageCaptcha(): AxiosPromise<OauthCaptchaResult> {
+export function imageCaptcha(): AxiosPromise<ImageCaptchaResult> {
   return request({
     url: '/api/oauth/captcha/image',
     method: 'get',
   })
 }
 
-export function emailCaptcha(): AxiosPromise<OauthCaptchaResult> {
+export function emailCaptcha(data: EmailData): AxiosPromise<EmailCaptchaResult> {
   return request({
     url: '/api/oauth/captcha/email',
-    method: 'get',
+    method: 'post',
+    data
   })
 }
 
-export function oauthLogin(data: OauthLoginData): AxiosPromise<OauthWechatResult> {
+export function oauthVerify(data: OauthVerifyData): AxiosPromise<OauthWechatResult> {
   return request({
-    url: '/api/oauth/login',
+    url: '/api/oauth/verify',
     method: 'post',
     data
   })

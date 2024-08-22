@@ -14,21 +14,32 @@ export interface YFTUser {
   last_login_time: string
 }
 
-export interface CaptchaReult {
+export interface CaptchaResult {
   image: string
   image_type: string
 }
 
-export interface OauthCaptchaResult {
+export interface ImageCaptchaResult {
   code: number
-  data: CaptchaReult
+  data: CaptchaResult
   msg: string
 }
 
-export interface OauthLoginData {
+export interface EmailResult {
+  msg: string
+}
+
+export interface EmailCaptchaResult {
+  code: number
+  data: EmailResult
+  msg: string
+}
+
+export interface OauthVerifyData {
   email: string
   password: string
   captcha: string
+  checkType: number
 }
 
 export interface OauthWechatData {
@@ -45,6 +56,10 @@ export interface OauthGithubResult {
   code: number
   data: string
   msg: string
+}
+
+export interface EmailData {
+  email: string
 }
 
 export interface CodeParams {
