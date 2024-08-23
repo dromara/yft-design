@@ -132,6 +132,9 @@ const emit = defineEmits<{
 
 watch(() => props.visible, (val) => {
   dialogVisible.value = val
+  if (val) {
+    getOauthCaptcha()
+  }
 })
 
 const closeLogin = () => {
@@ -226,9 +229,9 @@ const loginEmail = () => {
   getOauthCaptcha()
 }
 
-onMounted(() => {
-  getOauthCaptcha()
-})
+// onMounted(() => {
+//   getOauthCaptcha()
+// })
 
 </script>
 

@@ -48,7 +48,7 @@
           </el-row>
           <TransitionGroup :name="resultReactive.move ? 'group' : ''" tag="div" class="waterfall-box" id="homeWaterfall">
             <div class="waterfall-item" v-for="(item, index) in resultReactive.items" :key="item.id">
-              <img class="pic" :src="item.preview + '?x-oss-process=style/img_thumb'" alt="" :ref="(e: any) => setItemStyle(e, index)" @click="changeTemplate(item.id)">
+              <img class="pic" :src="item.preview" alt="" :ref="(e: any) => setItemStyle(e, index)" @click="changeTemplate(item.id)">
               <div class="title">{{ item.title }}</div>
               <div class="content ellipsis_2">{{ item.text }}</div>
             </div>

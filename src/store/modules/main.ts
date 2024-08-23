@@ -92,7 +92,7 @@ export const useMainStore = defineStore('main', {
     
     setCanvasObject(canvasObject: FabricObject | undefined) {
       this.canvasObject = canvasObject
-      this.getFonts()
+      // this.getFonts()
     },
 
     setHoveredObject(hoveredObject: FabricObject | undefined) {
