@@ -25,7 +25,7 @@ export const createVitePlugins = (
     }),
     AutoImport({
       imports: ['vue'],
-      dts: './src/types/auto-imports.d.ts',
+      dts: path.resolve(__dirname, "../src/types/auto-imports.d.ts"),
       eslintrc: {
         enabled: true
       },
@@ -33,6 +33,7 @@ export const createVitePlugins = (
     }),
     Components({
       resolvers: [ElementPlusResolver()],
+      dts: path.resolve(__dirname, "../src/types/components.d.d.ts"),
     }),
     VitePWA({
       registerType: "autoUpdate",
@@ -95,7 +96,7 @@ export const createVitePlugins = (
         background_color: "#000000",
       },
       devOptions: {
-        enabled: true,
+        enabled: false,
       }
     }),
     createSvgIconsPlugin({
