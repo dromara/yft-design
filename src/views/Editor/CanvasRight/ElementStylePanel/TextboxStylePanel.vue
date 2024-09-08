@@ -292,7 +292,6 @@ const handleElementFontFamily = (fontFamily: string) => {
     handleElement.value.setSelectionStyles({fontFamily})
   }
   else {
-    handleElement.value.set({fontFamily})
     templatesStore.modifedElement(handleElement.value, {fontFamily})
   }
   canvas.renderAll()
@@ -302,7 +301,6 @@ const handleElementFontFamily = (fontFamily: string) => {
 const handleElementInputSize = (val: string) => {
   val = val.replace(/[^\d]/g, '')
   if (val) {
-    handleElement.value.set({fontSize: val})
     templatesStore.modifedElement(handleElement.value, {fontSize: val})
   }
 }
@@ -315,7 +313,6 @@ const handleElementFontSize = (fontSize: string) => {
     handleElement.value.setSelectionStyles({fontSize})
   }
   else {
-    handleElement.value.set({fontSize})
     templatesStore.modifedElement(handleElement.value, {fontSize})
   }
   canvas.renderAll()
@@ -342,7 +339,6 @@ const updateBackgroundColor = (backgroundColor: string) => {
     handleElement.value.setSelectionStyles(changeData)
   }
   else {
-    handleElement.value.set(changeData)
     templatesStore.modifedElement(handleElement.value, changeData)
   }
 }
@@ -355,7 +351,6 @@ const handleElementFontsize = (mode: string) => {
     handleElement.value.setSelectionStyles({fontSize})
   }
   else {
-    handleElement.value.set({fontSize})
     templatesStore.modifedElement(handleElement.value, {fontSize})
   }
   canvas.renderAll()
@@ -376,7 +371,6 @@ const handleElementBlod = () => {
   else {
     const elementStyle = handleElement.value.styles
     if (handleElement.value.fontWeight === fontBold) {
-      handleElement.value.set({fontWeight: fontNormal})
       templatesStore.modifedElement(handleElement.value, {fontWeight: fontNormal})
       for (let i in elementStyle) {
         for (let j in elementStyle[i]) {
@@ -385,7 +379,6 @@ const handleElementBlod = () => {
       }
     }
     else {
-      handleElement.value.set({fontWeight: fontBold})
       templatesStore.modifedElement(handleElement.value, {fontWeight: fontBold})
       for (let i in elementStyle) {
         for (let j in elementStyle[i]) {
@@ -405,7 +398,6 @@ const handleElementItalic = () => {
     handleElement.value.setSelectionStyles({fontStyle})
   }
   else {
-    handleElement.value.set({fontStyle})
     templatesStore.modifedElement(handleElement.value, {fontStyle})
   }
   
@@ -417,7 +409,6 @@ const handleElementLinethrough = () => {
     handleElement.value.setSelectionStyles({linethrough: !handleElement.value.linethrough})
   }
   else {
-    handleElement.value.set({linethrough: !handleElement.value.linethrough})
     templatesStore.modifedElement(handleElement.value, {linethrough: !handleElement.value.linethrough})
   }
 }
@@ -428,7 +419,6 @@ const handleElementUnderline = () => {
     handleElement.value.setSelectionStyles({underline: !handleElement.value.underline})
   }
   else {
-    handleElement.value.set({underline: !handleElement.value.underline})
     templatesStore.modifedElement(handleElement.value, {underline: !handleElement.value.underline})
   }
 }
@@ -439,7 +429,6 @@ const handleTextAlign = (textAlign: string) => {
     handleElement.value.setSelectionStyles({textAlign})
   }
   else {
-    handleElement.value.set({textAlign})
     templatesStore.modifedElement(handleElement.value, {textAlign})
   }
 }
@@ -447,11 +436,7 @@ const handleTextAlign = (textAlign: string) => {
 // 修改缩进
 const handleElementCharSpacing = (mode: '+' | '-') => {
   const handleCharSpacing = handleElement.value.charSpacing
-  if (!handleCharSpacing) {
-    handleElement.value.set({charSpacing: 3})
-  }
   const charSpacing = mode === '+' ? handleCharSpacing + 10 : handleCharSpacing - 10
-  handleElement.value.set({ charSpacing })
   templatesStore.modifedElement(handleElement.value, { charSpacing })
 }
 
@@ -460,7 +445,6 @@ const changeLineHeight = (lineHeight: number) => {
     handleElement.value.setSelectionStyles({lineHeight})
   }
   else {
-    handleElement.value.set({lineHeight})
     templatesStore.modifedElement(handleElement.value, { lineHeight })
   }
 }
@@ -470,7 +454,6 @@ const changeCharSpacing = (charSpacing: number) => {
     handleElement.value.setSelectionStyles({charSpacing})
   }
   else {
-    handleElement.value.set({charSpacing})
     templatesStore.modifedElement(handleElement.value, {charSpacing})
   }
   
@@ -478,8 +461,6 @@ const changeCharSpacing = (charSpacing: number) => {
 }
 
 const handleElementArrange = (status: boolean) => {
-  // handleElement.value.set({splitByGrapheme: status, width: handleElement.value.fontSize})
-  // console.log('status:', status)
   const options = (handleElement.value as any).toObject(propertiesToInclude as any[])
   options.lineHeight = 12
   delete options.type
