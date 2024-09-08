@@ -53,9 +53,9 @@
 # 🚀 项目运行
 ```
 node >= 16+
-npm install
-npm run dev
-npm run build
+pnpm install
+pnpm run dev
+pnpm run build
 ```
 
 # 📖 项目结构
