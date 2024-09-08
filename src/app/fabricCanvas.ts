@@ -1,5 +1,5 @@
 import { useMainStore, useTemplatesStore } from '@/store'
-import { Canvas, Object as FabricObject, Image, Point, TMat2D } from 'fabric'
+import { Canvas, FabricObject, FabricImage, Point, TMat2D } from 'fabric'
 import { shallowRef } from 'vue'
 import { toRef } from './attribute/toRef'
 import { check } from '@/utils/check'
@@ -8,13 +8,11 @@ import { FabricRuler } from './fabricRuler'
 
 export class FabricCanvas extends Canvas {
   public ruler?: FabricRuler
-  public loading?: Image 
+  public loading?: FabricImage 
   public activeObject = shallowRef<FabricObject>()
 
   constructor(el: string | HTMLCanvasElement, options?: any) {
     super(el, options)
-    // const templatesStore = useTemplatesStore()
-    // this.on('object:modified', () => templatesStore.modifedElement())
   }
 
   // @ts-ignore
@@ -76,7 +74,7 @@ export class FabricCanvas extends Canvas {
       // this.getObjects()?.forEach((board) => {
       //   FabricObject.prototype.setCoords.call(board)
       // })
-      this.requestRenderAll()
+      // this.requestRenderAll()
       return
     }
     this.setViewportTransform(vpt)

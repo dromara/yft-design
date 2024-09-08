@@ -27,7 +27,7 @@ export default () => {
     if (command === '-' && percentage >= min) percentage -= step
     const { centerPoint } = useCenter()
     canvas.zoomToPoint(centerPoint, percentage / 100)
-    canvas.absolutePan(new Point(centerPoint.x, centerPoint.y).scalarMultiply(canvas.getZoom()).subtract(canvas.getCenterPoint()))
+    canvas.absolutePan(new Point(centerPoint.x, centerPoint.y).scalarMultiply(canvas.getZoom()).subtract(canvas.getCenterPoint()), true)
     zoom.value = canvas.getZoom()
   }
 
@@ -86,7 +86,7 @@ export default () => {
     if (!boundingBox) return
     zoom.value = Math.min(canvas.getWidth() / width, canvas.getHeight() / height) * scalePercentage.value / 100
     canvas.setZoom(zoom.value)
-    canvas.absolutePan(new Point(centerPoint.x, centerPoint.y).scalarMultiply(zoom.value).subtract(canvas.getCenterPoint()))
+    canvas.absolutePan(new Point(centerPoint.x, centerPoint.y).scalarMultiply(zoom.value).subtract(canvas.getCenterPoint()), true)
   }
 
   /**

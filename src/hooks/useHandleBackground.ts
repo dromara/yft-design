@@ -31,7 +31,6 @@ export default () => {
     backgroundImage.set({ left, top, scaleX, scaleY })
     canvas.set({backgroundImage})
     canvas.renderAll()
-    templatesStore.modifedElement()
   }
   
   const getBackgroundImageOption = () => {
@@ -84,7 +83,6 @@ export default () => {
       else if (workSpaceData.fillType === 4) {
         workSpaceData.shadingImageURL = src
       }
-      templatesStore.modifedElement()
     }
   }
 

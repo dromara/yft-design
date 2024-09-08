@@ -23,3 +23,5 @@ pnpm-debug.log*
 *.sw?
 dist/*
 dev-dist/*
+types/auto-imports.d.ts
+types/components.d.ts

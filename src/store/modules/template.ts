@@ -1,11 +1,12 @@
 import { defineStore } from 'pinia'
 import { Templates } from '@/mocks/templates'
 import { Template, CanvasElement, ImageElement, GroupElement, RectElement } from '@/types/canvas'
-import { Object as FabricObject, SerializedImageProps, Image, Group, StaticCanvas } from 'fabric'
+import { FabricObject, SerializedImageProps, FabricImage, Group, StaticCanvas } from 'fabric'
 import { WorkSpaceDrawType, propertiesToInclude } from '@/configs/canvas'
 import { useMainStore } from './main'
 import { ElementNames } from '@/types/elements'
 import { ElLoading } from 'element-plus'
+import { Snapshot, SnapshotType } from '@/types/history'
 import useCanvasScale from '@/hooks/useCanvasScale'
 import useCanvas from '@/views/Canvas/useCanvas'
 import useHistorySnapshot from '@/hooks/useHistorySnapshot'
@@ -21,7 +22,7 @@ interface UpdateElementData {
 }
 
 export interface TemplatesState {
-  templateId: number
+  templateId: string
   templates: Template[]
   templateIndex: number
   templateCanvas: Map<string, StaticCanvas>
@@ -30,7 +31,7 @@ export interface TemplatesState {
 export const useTemplatesStore = defineStore('Templates', {
   state: (): TemplatesState => ({
     // theme: theme, // 主题样式
-    templateId: 0,
+    templateId: '',
     templates: Templates, // 页面页面数据
     templateIndex: 0, // 当前页面索引
     templateCanvas: new Map()
@@ -86,14 +87,65 @@ export const useTemplatesStore = defineStore('Templates', {
       initCommon()
     },
 
-    modifedElement() {
+    modifedElement(target: FabricObject, options: Record<string, any>,) {
       const [ canvas ] = useCanvas()
       const { addHistorySnapshot } = useHistorySnapshot()
-      const canvasTemplate = canvas.toObject(propertiesToInclude)
-      this.templates[this.templateIndex].objects = canvasTemplate.objects
-      this.templates[this.templateIndex].background = canvasTemplate.background
-      this.templates[this.templateIndex].backgroundImage = canvasTemplate.backgroundImage
-      addHistorySnapshot()
+      const data: Snapshot = {
+        type: SnapshotType.MODIFY,
+        index: canvas._objects.indexOf(target),
+        target: target.toObject(propertiesToInclude),
+        tid: this.templateId
+      }
+      addHistorySnapshot(data)
+      target.set({...options});
+      if (options.filters) {
+        (target as FabricImage).applyFilters();
+      }
+      canvas.setActiveObject(target)
+      canvas.renderAll()
+    },
+
+    addElement(target: FabricObject) {
+      const [ canvas ] = useCanvas()
+      const { addHistorySnapshot } = useHistorySnapshot()
+      const data: Snapshot = {
+        type: SnapshotType.ADD,
+        index: canvas._objects.indexOf(target),
+        target: target.toObject(propertiesToInclude),
+        tid: this.templateId
+      }
+      addHistorySnapshot(data)
+    },
+
+    groupElement(target: FabricObject, objects: FabricObject[]) {
+      const [ canvas ] = useCanvas()
+      const { addHistorySnapshot } = useHistorySnapshot()
+      const data: Snapshot = {
+        type: SnapshotType.GROUP,
+        index: canvas._objects.indexOf(target),
+        target: target.toObject(propertiesToInclude),
+        objects: objects.map(item => item.toObject(propertiesToInclude)),
+        tid: this.templateId
+      }
+      addHistorySnapshot(data)
+    },
+
+    ungroupElement() {
+
+    },
+
+    deleteElement(target: FabricObject) {
+      const [ canvas ] = useCanvas()
+      const { addHistorySnapshot } = useHistorySnapshot()
+      const data: Snapshot = {
+        type: SnapshotType.DELETE,
+        index: canvas._objects.indexOf(target),
+        target: target.toObject(propertiesToInclude),
+        tid: this.templateId
+      }
+      canvas.remove(target)
+      canvas.renderAll()
+      addHistorySnapshot(data)
     },
 
     setClip(clip: number) {
@@ -101,7 +153,7 @@ export const useTemplatesStore = defineStore('Templates', {
       this.templates.forEach(template => {
         template.clip = clip
       })
-      addHistorySnapshot()
+      // addHistorySnapshot()
     },
 
     setSize(width: number, height: number, zoom: number) {
@@ -117,7 +169,7 @@ export const useTemplatesStore = defineStore('Templates', {
         })
       })
       initCommon()
-      addHistorySnapshot()
+      // addHistorySnapshot()
     },
 
     setObjectFilter(objects: CanvasElement[]) {
@@ -171,9 +223,8 @@ export const useTemplatesStore = defineStore('Templates', {
       this.templates = templates
     },
 
-    setTemplateId(templateId: number) {
+    setTemplateId(templateId: string) {
       this.templateId = templateId
-      this.templates = []
     },
 
     setTemplateIndex(index: number) {
@@ -192,7 +243,7 @@ export const useTemplatesStore = defineStore('Templates', {
       const { addHistorySnapshot } = useHistorySnapshot()
       const templateIndex = this.templateIndex
       this.templates[templateIndex] = { ...this.templates[templateIndex], ...props }
-      addHistorySnapshot()
+      // addHistorySnapshot()
     },
 
     deleteTemplate(templateId: string | string[]) {
@@ -211,7 +262,7 @@ export const useTemplatesStore = defineStore('Templates', {
   
       this.templateIndex = newIndex
       this.templates = this.templates.filter(item => !templateIds.includes(item.id))
-      addHistorySnapshot()
+      // addHistorySnapshot()
     },
 
     clearTemplate() {
@@ -233,26 +284,26 @@ export const useTemplatesStore = defineStore('Templates', {
       const template = this.templates[this.templateIndex]
       const elements = template.objects.map(el => elementIds.includes(el.id) ? { ...el, ...props }: el)
       this.templates[this.templateIndex].objects = elements as FabricObject[]
-      addHistorySnapshot()
+      // addHistorySnapshot()
     },
 
-    addElement(element: FabricObject | FabricObject[]) {
-      const { addHistorySnapshot } = useHistorySnapshot()
-      const elements = Array.isArray(element) ? element : [element]
-      const currentTemplateElements = this.templates[this.templateIndex].objects
-      const newElements = [...currentTemplateElements, ...elements]
-      this.templates[this.templateIndex].objects = newElements as FabricObject[]
-      addHistorySnapshot()
-    },
+    // addElement(element: FabricObject | FabricObject[]) {
+    //   const { addHistorySnapshot } = useHistorySnapshot()
+    //   const elements = Array.isArray(element) ? element : [element]
+    //   const currentTemplateElements = this.templates[this.templateIndex].objects
+    //   const newElements = [...currentTemplateElements, ...elements]
+    //   this.templates[this.templateIndex].objects = newElements as FabricObject[]
+    //   addHistorySnapshot()
+    // },
 
-    deleteElement(elementId: string | string[]) {
-      const { addHistorySnapshot } = useHistorySnapshot()
-      const elementIds = Array.isArray(elementId) ? elementId : [elementId]
-      const currentTemplateElements = this.templates[this.templateIndex].objects
-      const newElements = currentTemplateElements.filter(item => !elementIds.includes(item.id))
-      this.templates[this.templateIndex].objects = newElements
-      addHistorySnapshot()
-    },
+    // deleteElement(elementId: string | string[]) {
+    //   const { addHistorySnapshot } = useHistorySnapshot()
+    //   const elementIds = Array.isArray(elementId) ? elementId : [elementId]
+    //   const currentTemplateElements = this.templates[this.templateIndex].objects
+    //   const newElements = currentTemplateElements.filter(item => !elementIds.includes(item.id))
+    //   this.templates[this.templateIndex].objects = newElements
+    //   addHistorySnapshot()
+    // },
 
     setBackgroundImage(props: SerializedImageProps) {
       this.currentTemplate.backgroundImage = props

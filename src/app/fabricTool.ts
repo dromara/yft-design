@@ -200,7 +200,7 @@ export class FabricTool extends Disposable {
 
         requestAnimationFrame(() => {
           const deltaPoint = new Point(lengthX.value, lengthY.value).scalarDivide(canvas.getZoom()).transform(vpt).scalarMultiply(-1)
-          canvas.absolutePan(deltaPoint)
+          canvas.absolutePan(deltaPoint, true)
         })
       },
       onSwipeEnd: () => {

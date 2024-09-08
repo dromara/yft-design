@@ -31,7 +31,7 @@
     "delaunator": "^5.0.1",
     "dexie": "^3.2.7",
     "element-plus": "^2.7.6",
-    "fabric": "^6.2.0",
+    "fabric": "^6.4.1",
     "file-saver": "^2.0.5",
     "gifler": "^0.1.0",
     "html-to-image": "^1.11.11",

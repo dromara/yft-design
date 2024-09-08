@@ -40,7 +40,7 @@ export default () => {
     rightState.value = RightStates.ELEMENT_STYLE;
     setZindex(canvas);
     canvas.renderAll();
-    templatesStore.modifedElement();
+    templatesStore.addElement(element);
   };
 
   const createTextElement = (fontSize: number, textStyle = "transverse", textHollow = false, textValue = t("default.textValue")) => {
@@ -175,7 +175,6 @@ export default () => {
     // canvas.add(lineElement)
     // canvas.setActiveObject(lineElement)
     // rightState.value = RightStates.ELEMENT_STYLE
-    // templatesStore.modifedElement()
     // setZindex(canvas)
     createPolylineElement(path, startStyle, endStyle, strokeDashArray);
     // createArrowElement(path)

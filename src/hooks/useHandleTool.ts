@@ -14,32 +14,31 @@ export default () => {
     const templatesStore = useTemplatesStore()
     if (!handleElement) return
     
-    
+    let options: Record<string, any> = {}
     if (handleElement.type.toLowerCase() === ElementNames.ACTIVE) {
       const activeObject = handleElement as Group
-      console.log('Command:', command)
       switch (command) {
         case AlignCommand.LEFT: 
           activeObject._objects.forEach(item => item.set({left: -activeObject.width / 2}))
           break
         case AlignCommand.RIGHT: 
-          activeObject._objects.forEach(item => item.set({left: activeObject.width / 2 - item.width}))
+          activeObject._objects.forEach(item => item.set({left: activeObject.width / 2 - item.width * item.scaleX}))
           break
         case AlignCommand.TOP: 
           activeObject._objects.forEach(item => item.set({top: -activeObject.height / 2}))
           break
         case AlignCommand.BOTTOM: 
-          activeObject._objects.forEach(item => item.set({top: activeObject.height / 2 - item.height}))
+          activeObject._objects.forEach(item => item.set({top: activeObject.height / 2 - item.height * item.scaleY}))
           break
         case AlignCommand.HORIZONTAL: 
-          activeObject._objects.forEach(item => item.set({top: -item.height / 2}))
+          activeObject._objects.forEach(item => item.set({top: -item.height / 2 * item.scaleY}))
           break
         case AlignCommand.VERTICAL: 
-          activeObject._objects.forEach(item => item.set({left: -item.width / 2}))
+          activeObject._objects.forEach(item => item.set({left: -item.width / 2 * item.scaleX}))
           break
         case AlignCommand.CENTER: 
-          activeObject._objects.forEach(item => item.set({left: activeObject.left - item.width / 2}))
-          activeObject._objects.forEach(item => item.set({top: activeObject.top - item.height / 2}))
+          activeObject._objects.forEach(item => item.set({left: activeObject.left - item.width / 2 * item.scaleX}))
+          activeObject._objects.forEach(item => item.set({top: activeObject.top - item.height / 2 * item.scaleY}))
           break
         default: break
       }
@@ -48,33 +47,40 @@ export default () => {
       canvas.discardActiveObject()
       switch (command) {
         case AlignCommand.LEFT: 
-          handleElement.set({left: left })
+          options = {left: left }
+          handleElement.set(options)
           break
         case AlignCommand.RIGHT: 
-          handleElement.set({left: left + width - handleElement.width})
+          options = {left: left + width - handleElement.width * handleElement.scaleX}
+          handleElement.set(options)
           break
         case AlignCommand.TOP: 
-          handleElement.set({top: top })
+          options = {top: top }
+          handleElement.set(options)
           break
         case AlignCommand.BOTTOM: 
-          handleElement.set({top: top + height - handleElement.height})
+          options = {top: top + height - handleElement.height * handleElement.scaleY}
+          handleElement.set(options)
           break
         case AlignCommand.HORIZONTAL: 
-          handleElement.set({top: centerPoint.y - handleElement.height / 2})
+          options = {top: centerPoint.y - handleElement.height / 2 * handleElement.scaleY}
+          handleElement.set(options)
           break
         case AlignCommand.VERTICAL: 
-          handleElement.set({left : centerPoint.x - handleElement.width / 2})
+          options = {left : centerPoint.x - handleElement.width / 2 * handleElement.scaleX}
+          handleElement.set(options)
           break
         case AlignCommand.CENTER: 
-          handleElement.set({left : centerPoint.x - handleElement.width / 2})
-          handleElement.set({top: centerPoint.y - handleElement.height / 2})
+          options = {left : centerPoint.x - handleElement.width / 2 * handleElement.scaleX, top: centerPoint.y - handleElement.height / 2 * handleElement.scaleY}
+          handleElement.set(options)
           break
         default: break
       }
     }
     canvas.setActiveObject(handleElement)
     canvas.renderAll()
-    templatesStore.modifedElement()
+    templatesStore.modifedElement(handleElement, options)
+    
   }
 
   const layerElement = (command: LayerCommand) => {
@@ -100,7 +106,7 @@ export default () => {
     }
     setZindex(canvas)
     canvas.renderAll()
-    templatesStore.modifedElement()
+    templatesStore.modifedElement(handleElement, {})
   }
 
   return {

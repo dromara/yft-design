@@ -1,7 +1,7 @@
 import Dexie from "dexie"
 import { LocalStorageDiscardedKey } from "@/configs/canvas"
 import { databaseId } from '@/store'
-import { Template } from "@/types/canvas"
+import { Snapshot } from "@/types/history"
 
 
 export interface WritingBoardImg {
@@ -9,10 +9,10 @@ export interface WritingBoardImg {
   dataURL: string
 }
 
-export interface Snapshot {
-  index: number
-  templates: Template[]
-}
+// export interface Snapshot {
+//   index: number
+//   templates: Template[]
+// }
 
 const DatabaseNamePrefix = 'YFT'
 // 删除失效/过期的数据库

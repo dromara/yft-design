@@ -79,7 +79,7 @@ const addReference = () => {
   canvas.add(tempReferenceLine)
   canvas.renderAll()
   const templatesStore = useTemplatesStore()
-  templatesStore.modifedElement()
+  templatesStore.addElement(tempReferenceLine)
 }
 
 </script>

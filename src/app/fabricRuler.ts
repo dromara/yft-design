@@ -200,7 +200,7 @@ export class FabricRuler extends Disposable {
       );
       this.canvas.add(this.tempReferenceLine)
       const templatesStore = useTemplatesStore()
-      templatesStore.modifedElement()
+      templatesStore.addElement(this.tempReferenceLine)
       this.canvas.setActiveObject(this.tempReferenceLine)
       this.canvas._setupCurrentTransform(e.e, this.tempReferenceLine, true)
       this.tempReferenceLine.fire('down', this.getCommonEventInfo(e));

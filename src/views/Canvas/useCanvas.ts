@@ -1,7 +1,7 @@
 import { watch } from 'vue'
 import { storeToRefs } from 'pinia'
-import { Canvas, Object as FabricObject, Textbox, Group, Point, IText, Line } from 'fabric'
-import { WorkSpaceThumbType, WorkSpaceDrawType } from "@/configs/canvas"
+import { Canvas, FabricObject, Textbox, Group, Point, IText, Line, ModifiedEvent } from 'fabric'
+import { WorkSpaceThumbType, WorkSpaceDrawType, propertiesToInclude } from "@/configs/canvas"
 import { useFabricStore } from '@/store/modules/fabric'
 import { useElementBounding } from '@vueuse/core'
 import { FabricTool } from '@/app/fabricTool'
@@ -17,6 +17,8 @@ import { defaultControls, textboxControls } from '@/app/fabricControls'
 import { getObjectsBoundingBox } from '@/extension/util/common'
 import { useTemplatesStore } from '@/store'
 import useCommon from './useCommon'
+import { SnapshotType, Snapshot } from '@/types/history'
+import useHistorySnapshot from '@/hooks/useHistorySnapshot'
 
 
 
@@ -89,7 +91,7 @@ const setCanvasTransform = () => {
   }
   zoom.value = Math.min(canvas.getWidth() / boxWidth, canvas.getHeight() / boxHeight) * scalePercentage.value / 100
   canvas.setZoom(zoom.value)
-  canvas.absolutePan(new Point(centerX, centerY).scalarMultiply(zoom.value).subtract(canvas.getCenterPoint()))
+  canvas.absolutePan(new Point(centerX, centerY).scalarMultiply(zoom.value).subtract(canvas.getCenterPoint()), true)
 }
 
 const initCanvas = () => {
@@ -116,7 +118,23 @@ const initCanvas = () => {
 const initEvent = () => {
   if (!canvas) return
   const templatesStore = useTemplatesStore()
-  canvas.on('object:modified', () => templatesStore.modifedElement())
+  const { templateId } = storeToRefs(templatesStore)
+  canvas.on('object:modified', (e: ModifiedEvent) => {
+    const { transform, action } = e; 
+    const target = canvas?._activeObject?.toObject(propertiesToInclude)
+    const index = canvas?._objects.findIndex(item => item.id === target.id)
+    if (!index) return
+    const data: Snapshot = {
+      type: SnapshotType.MODIFY,
+      index,
+      target,
+      transform,
+      action,
+      tid: templateId.value
+    };
+    const { addHistorySnapshot } = useHistorySnapshot()
+    addHistorySnapshot(data)
+  })
 }
 
 // 初始化模板

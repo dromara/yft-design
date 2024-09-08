@@ -42,7 +42,7 @@ export default () => {
       currentTemplate.value.objects = _elements.reverse()
     }
     await templatesStore.renderElement()
-    templatesStore.modifedElement()
+    // templatesStore.modifedElement()
   }
 
   const layerElement = (e: any, originalEvent: any) => {
@@ -55,9 +55,11 @@ export default () => {
     const [ canvas ] = useCanvas()
     const element = queryElement(eid)
     if (!element) return
-    element.lockMovementX = status
-    element.lockMovementY = status
-    element.selectable = !status;
+    const options = {
+      lockMovementX: status,
+      lockMovementY: status,
+      selectable: false
+    }
     if (status ) {
       element.hoverCursor = 'not-allowed';
       if (canvasObject.value && canvasObject.value.id == element.id) {
@@ -65,7 +67,7 @@ export default () => {
       }
     }
     canvas.renderAll()
-    templatesStore.modifedElement()
+    templatesStore.modifedElement(element, options)
   }
 
   const copyElement = async () => {
@@ -89,17 +91,16 @@ export default () => {
       clonedObj.canvas = canvas
       const groupObject = clonedObj as GroupElement
       groupObject.forEachObject(item => {
-        const obj = item as CanvasElement
-        canvas.add(obj as FabricObject)
+        canvas.add(item as FabricObject)
         setZindex(canvas)
-        templatesStore.modifedElement()
+        templatesStore.addElement(item)
       })
       clonedObj.setCoords()
     }
     else {
       canvas.add(clonedObj as FabricObject)
       setZindex(canvas)
-      templatesStore.modifedElement()
+      templatesStore.addElement(clonedObj)
     }
     clonedObject.value.top = top
     clonedObject.value.left = left
@@ -143,7 +144,7 @@ export default () => {
     mainStore.setCanvasObject(undefined)
     canvas.remove(element as FabricObject)
     canvas.renderAll()
-    templatesStore.modifedElement()
+    templatesStore.deleteElement(element)
   }
 
   const moveElement = (command: string, step = 2) => {
@@ -194,7 +195,6 @@ export default () => {
     if (!activeObjects) return
     canvas.discardActiveObject()
     const group = new Group(activeObjects, { 
-      // @ts-ignore
       id: nanoid(10),
       name: ElementNames.GROUP, 
       interactive: false, 
@@ -202,7 +202,7 @@ export default () => {
     })
     canvas.remove(...activeObjects)
     canvas.add(group)
-    templatesStore.modifedElement()
+    templatesStore.addElement(group)
     templatesStore.renderElement()
   }
 
@@ -234,7 +234,7 @@ export default () => {
       canvas.add(...objects)
       canvas.remove(activeObject as FabricObject)
     }
-    templatesStore.modifedElement()
+    // templatesStore.modifedElement()
     setZindex(canvas)
     canvas.renderAll()
   }
@@ -295,18 +295,15 @@ export default () => {
     const [ canvas ] = useCanvas()
     const element = queryElement(eid)
     if (!element) return
-    element.set({visible})
-    
     canvas.discardActiveObject()
     canvas.renderAll()
-    templatesStore.modifedElement()
+    templatesStore.modifedElement(element, {visible})
   }
 
   const showElement = (eid: string) => {
     const element = queryElement(eid) as GroupElement
     if (!element) return 
-    element.isShow = !element.isShow
-    templatesStore.modifedElement()
+    templatesStore.modifedElement(element, {isShow: !element.isShow})
   }
 
   const mouseoverElement = (eid: string) => {
@@ -336,10 +333,9 @@ export default () => {
   const forwardElement = () => {
     const [ canvas ] = useCanvas()
     if (!canvasObject.value) return
-    // canvas.bringObjectForward(canvasObject.value)
     setZindex(canvas)
     canvas.renderAll()
-    templatesStore.modifedElement()
+    // templatesStore.modifedElement()
   }
 
   const backwardElement = () => {
@@ -347,7 +343,7 @@ export default () => {
     if (!canvasObject.value) return
     setZindex(canvas)
     canvas.renderAll()
-    templatesStore.modifedElement()
+    // templatesStore.modifedElement()
   }
 
   const queryTextboxChecked = (elements: FabricObject[]): boolean => {
