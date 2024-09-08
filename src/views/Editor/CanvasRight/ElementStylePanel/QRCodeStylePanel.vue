@@ -135,7 +135,7 @@ const generateQRCode = async (style?: QRCodeType) => {
   const src = `data:image/svg+xml;base64,` + btoa(generateQRCodeMap[codeStyle](encodeData))
   const qrcodeElement = canvasObject.value as QRCodeElement
   await qrcodeElement.setSrc(src)
-  templatesStore.modifedElement()
+  templatesStore.modifedElement(qrcodeElement, { src })
   canvas.renderAll()
 }
 </script>

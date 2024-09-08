@@ -67,24 +67,28 @@ const lineStyle = ref<number>(handleElement.value.strokeDashArray ? 1 : 0)
 const updateStrokeColor = (color: string) => {
   if (!handleElement.value) return
   handleElement.value.stroke = color
-  updateTemplateElement()
+  updateTemplateElement({stroke: color})
 }
 
 const changeLineStyle = () => {
   if (!handleElement.value) return
   const strokeDashArray = lineStyle.value === 1 ? [6, 6] : null
   handleElement.value.set({strokeDashArray})
-  updateTemplateElement()
+  updateTemplateElement({strokeDashArray})
 }
 
 const changeLineMode = (value: LinePoint, mode: 'start' | 'end') => {
   handleElement.value.setLineMode(value, mode)
-  updateTemplateElement()
+  let options: Record<string, any> = { 'startStyle': value }
+  if (mode === 'end') {
+    options = {'endStyle': value }
+  }
+  updateTemplateElement(options)
 }
 
-const updateTemplateElement = () => {
+const updateTemplateElement = (options: Record<string, any>) => {
   canvas.renderAll()
-  templatesStore.modifedElement()
+  templatesStore.modifedElement(handleElement.value, options)
 }
 
 </script>

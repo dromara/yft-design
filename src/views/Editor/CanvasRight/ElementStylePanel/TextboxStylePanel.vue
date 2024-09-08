@@ -293,17 +293,17 @@ const handleElementFontFamily = (fontFamily: string) => {
   }
   else {
     handleElement.value.set({fontFamily})
+    templatesStore.modifedElement(handleElement.value, {fontFamily})
   }
-  templatesStore.modifedElement()
   canvas.renderAll()
 }
 
-// 
+// 修改输入字体大小
 const handleElementInputSize = (val: string) => {
   val = val.replace(/[^\d]/g, '')
   if (val) {
-    console.log('handleSize:', val)
     handleElement.value.set({fontSize: val})
+    templatesStore.modifedElement(handleElement.value, {fontSize: val})
   }
 }
 
@@ -316,8 +316,8 @@ const handleElementFontSize = (fontSize: string) => {
   }
   else {
     handleElement.value.set({fontSize})
+    templatesStore.modifedElement(handleElement.value, {fontSize})
   }
-  templatesStore.modifedElement()
   canvas.renderAll()
 }
 
@@ -328,10 +328,8 @@ const updateFontColor = (fill: string) => {
     handleElement.value.setSelectionStyles({fill})
   }
   else {
-    handleElement.value.set({fill, color: fill})
+    templatesStore.modifedElement(handleElement.value, {fill, color: fill})
   }
-  templatesStore.modifedElement()
-  canvas.renderAll()
 }
 
 // 修改背景颜色
@@ -345,9 +343,8 @@ const updateBackgroundColor = (backgroundColor: string) => {
   }
   else {
     handleElement.value.set(changeData)
+    templatesStore.modifedElement(handleElement.value, changeData)
   }
-  templatesStore.modifedElement()
-  canvas.renderAll()
 }
 
 // 修改字体大小
@@ -359,8 +356,8 @@ const handleElementFontsize = (mode: string) => {
   }
   else {
     handleElement.value.set({fontSize})
+    templatesStore.modifedElement(handleElement.value, {fontSize})
   }
-  templatesStore.modifedElement()
   canvas.renderAll()
 }
 
@@ -368,7 +365,6 @@ const handleElementFontsize = (mode: string) => {
 const handleElementBlod = () => {
   const fontBold = 'bold', fontNormal = 'normal'
   if (handleElement.value.isEditing) {
-    console.log('handleElement.value:', handleElement.value.styles)
     const blodState = handleElement.value.getSelectionStyles().find(item => item.fontWeight !== fontBold)
     if (!blodState || (JSON.stringify(blodState) === '{}' && handleElement.value.fontWeight === fontBold)) {
       handleElement.value.setSelectionStyles({'fontWeight': fontNormal})
@@ -381,6 +377,7 @@ const handleElementBlod = () => {
     const elementStyle = handleElement.value.styles
     if (handleElement.value.fontWeight === fontBold) {
       handleElement.value.set({fontWeight: fontNormal})
+      templatesStore.modifedElement(handleElement.value, {fontWeight: fontNormal})
       for (let i in elementStyle) {
         for (let j in elementStyle[i]) {
           (elementStyle[i][j] as TextboxElement).set({fontWeight: fontNormal})
@@ -389,6 +386,7 @@ const handleElementBlod = () => {
     }
     else {
       handleElement.value.set({fontWeight: fontBold})
+      templatesStore.modifedElement(handleElement.value, {fontWeight: fontBold})
       for (let i in elementStyle) {
         for (let j in elementStyle[i]) {
           (elementStyle[i][j] as TextboxElement).set({fontWeight: fontBold})
@@ -397,8 +395,6 @@ const handleElementBlod = () => {
       }
     }
   }
-  templatesStore.modifedElement()
-  canvas.renderAll()
 }
 
 // 修改斜体
@@ -410,9 +406,9 @@ const handleElementItalic = () => {
   }
   else {
     handleElement.value.set({fontStyle})
+    templatesStore.modifedElement(handleElement.value, {fontStyle})
   }
-  templatesStore.modifedElement()
-  canvas.renderAll()
+  
 }
 
 // 修改删除线
@@ -422,9 +418,8 @@ const handleElementLinethrough = () => {
   }
   else {
     handleElement.value.set({linethrough: !handleElement.value.linethrough})
+    templatesStore.modifedElement(handleElement.value, {linethrough: !handleElement.value.linethrough})
   }
-  templatesStore.modifedElement()
-  canvas.renderAll()
 }
 
 // 修改中划线
@@ -434,9 +429,8 @@ const handleElementUnderline = () => {
   }
   else {
     handleElement.value.set({underline: !handleElement.value.underline})
+    templatesStore.modifedElement(handleElement.value, {underline: !handleElement.value.underline})
   }
-  templatesStore.modifedElement()
-  canvas.renderAll()
 }
 
 // 修改字体居中
@@ -446,9 +440,8 @@ const handleTextAlign = (textAlign: string) => {
   }
   else {
     handleElement.value.set({textAlign})
+    templatesStore.modifedElement(handleElement.value, {textAlign})
   }
-  templatesStore.modifedElement()
-  canvas.renderAll()
 }
 
 // 修改缩进
@@ -459,8 +452,7 @@ const handleElementCharSpacing = (mode: '+' | '-') => {
   }
   const charSpacing = mode === '+' ? handleCharSpacing + 10 : handleCharSpacing - 10
   handleElement.value.set({ charSpacing })
-  templatesStore.modifedElement()
-  canvas.renderAll()
+  templatesStore.modifedElement(handleElement.value, { charSpacing })
 }
 
 const changeLineHeight = (lineHeight: number) => {
@@ -469,9 +461,8 @@ const changeLineHeight = (lineHeight: number) => {
   }
   else {
     handleElement.value.set({lineHeight})
+    templatesStore.modifedElement(handleElement.value, { lineHeight })
   }
-  templatesStore.modifedElement()
-  canvas.renderAll()
 }
 
 const changeCharSpacing = (charSpacing: number) => {
@@ -480,8 +471,9 @@ const changeCharSpacing = (charSpacing: number) => {
   }
   else {
     handleElement.value.set({charSpacing})
+    templatesStore.modifedElement(handleElement.value, {charSpacing})
   }
-  templatesStore.modifedElement()
+  
   canvas.renderAll()
 }
 
@@ -500,7 +492,7 @@ const handleElementArrange = (status: boolean) => {
   if (activeObject) canvas.remove(activeObject)
   canvas.discardActiveObject()
   canvas.add(textElement)
-  templatesStore.modifedElement()
+  templatesStore.addElement(textElement)
   canvas.setActiveObject(textElement)
   mainStore.setCanvasObject(textElement)
   canvas.renderAll()
@@ -539,35 +531,21 @@ const handleElementDeformation = () => {
   }
   canvas.add(text)
   handleElement.value.set({visible: false})
-  templatesStore.modifedElement()
+  templatesStore.addElement(text)
   canvas.setActiveObject(text)
-  canvas.renderAll()
-}
-
-const handleElementStyleClear = () => {
-  handleElement.value.cleanStyle('fontWeight')
-  templatesStore.modifedElement()
   canvas.renderAll()
 }
 
 const changeArcTextRadius = (val: number) => {
   (handleElement.value as ArcText).setRadius(val)
-  canvas.renderAll()
+  templatesStore.modifedElement(handleElement.value, { radius: val })
 }
 
 const changeArcTextStatus = (showCurvature: boolean) => {
   (handleElement.value as ArcText).set({showCurvature})
-  canvas.renderAll()
+  templatesStore.modifedElement(handleElement.value, { showCurvature })
 }
 
-onMounted(() => {
-  // const fontsizeSelect = document.querySelector('.fontsize input')
-  // if (!fontsizeSelect) return
-  // // fontsizeSelect.addEventListener('input', (val: any) => {
-  // //   console.log('val:', val)
-  // //   val.target.value = val.target.value.replace(/[^\d]/g,'')
-  // // })
-})
 </script>
 
 <style lang="scss" scoped>

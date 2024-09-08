@@ -140,7 +140,7 @@ const generateBarCode = async () => {
   if (!barcode) return;
   const src = `data:image/svg+xml;base64,` + btoa(new XMLSerializer().serializeToString(barcode));
   await handleElement.value.setSrc(src);
-  templatesStore.modifedElement();
+  templatesStore.modifedElement(handleElement.value, { src });
   canvas.renderAll();
 };
 </script>

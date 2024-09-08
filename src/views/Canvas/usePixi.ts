@@ -49,7 +49,7 @@ export const handleFilter = (worker: Worker) => {
       await element.setSrc(data.res)
       element.dirty = true
       canvas.renderAll()
-      templatesStore.modifedElement()
+      // templatesStore.modifedElement()
     }
   });
 }

@@ -90,9 +90,10 @@ export const useTemplatesStore = defineStore('Templates', {
     modifedElement(target: FabricObject, options: Record<string, any>,) {
       const [ canvas ] = useCanvas()
       const { addHistorySnapshot } = useHistorySnapshot()
+      const index = canvas._objects.findIndex(item => item.id === target.id)
       const data: Snapshot = {
         type: SnapshotType.MODIFY,
-        index: canvas._objects.indexOf(target),
+        index,
         target: target.toObject(propertiesToInclude),
         tid: this.templateId
       }

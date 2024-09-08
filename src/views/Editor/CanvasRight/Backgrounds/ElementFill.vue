@@ -393,9 +393,9 @@ const updateBackground = (props: Partial<BackgroundElement>) => {
   if (!canvasObject.value) return;
   const color = props.color ? props.color : (handleElement.value as TextboxElement).color;
   const opacity = props.opacity !== undefined ? props.opacity : 1
-  canvasObject.value.set({ fill: props.fill, color, fillType: background.value.fillType, background: { ...background.value, ...props }, opacity });
+  // canvasObject.value.set({ fill: props.fill, color, fillType: background.value.fillType, background: { ...background.value, ...props }, opacity });
   canvas.renderAll();
-  templatesStore.modifedElement();
+  templatesStore.modifedElement(canvasObject.value, { fill: props.fill, color, fillType: background.value.fillType, background: { ...background.value, ...props }, opacity: opacity ? opacity : 1 });
 };
 
 // 修改上传背景

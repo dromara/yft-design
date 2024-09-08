@@ -238,9 +238,7 @@ const changeRotate45 = (command: "+" | "-") => {
   else if (command === "-") _rotate = _rotate - 45;
   if (_rotate < -180) _rotate = -180;
   if (_rotate > 180) _rotate = 180;
-  canvasObject.value.angle = _rotate;
-  canvas.renderAll();
-  templatesStore.modifedElement();
+  templatesStore.modifedElement(canvasObject.value, {angle: _rotate});
 };
 </script>
 
