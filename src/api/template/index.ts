@@ -19,7 +19,7 @@ export const getTemplateDetailPages = (params: PageParams): AxiosPromise<Templat
   })
 }
 
-export const getTemplateData = (pk: number): AxiosPromise<TemplateInfo> => {
+export const getTemplateData = (pk: string): AxiosPromise<TemplateInfo> => {
   return request({
     url: `/api/design/template/data/${pk}`,
     method: 'get',

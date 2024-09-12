@@ -39,7 +39,7 @@ const remDrawAreaFocus = () => {
   if (drawAreaFocus.value) mainStore.setDrawAreaFocus(false)
 }
 
-const getTemplateDetail = async (pk: number) => {
+const getTemplateDetail = async (pk: string) => {
   const result = await getTemplateData(pk)
   if (result.data && result.data.code === 200 && result.data.data) {
     try {
@@ -57,7 +57,7 @@ const getTemplateDetail = async (pk: number) => {
   }
 }
 
-const initRouter = async (templateId?: number) => {
+const initRouter = async (templateId?: string) => {
   if (templateId) {
     templatesStore.setTemplateId(templateId)
     const loadingInstance = ElLoading.service({ fullscreen: true, background: 'rgba(122, 122, 122, 0.5)' })
