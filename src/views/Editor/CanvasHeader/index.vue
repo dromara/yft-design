@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="h-[59px] w-full flex justify-between px-[16px]">
     <div class="left-handler">
       <el-tooltip placement="top" :hide-after="0">
         <template #content>{{ t("message.undo") }}</template>
