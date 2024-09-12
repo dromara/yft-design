@@ -7,17 +7,18 @@
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
-  <div class="h-full" v-drop-image="{ url: 'UploadUrl', highlightStyle: { backgroundColor: 'lightblue' } }">
-    <div class="layout-content flex">
-      <CanvasLeft />
+  <div class="h-full">
+    <div class="layout-content">
+      <CanvasHeader class="h-[60px]"/>
+      <CanvasContent />
+      <!-- <CanvasLeft />
       <div class="layout-content-center">
         <CanvasHeader class="center-header relative flex justify-between py-[10px] text-[14px] select-none h-[39px]" />
         <CanvasCenter class="center-body" />
-        <!-- <CanvasFooter class="center-footer h-[40px] relative leading-1.5 flex justify-between" /> -->
         <CanvasAffix  class="center-affix"/>
         <CanvasICP />
       </div>
-      <CanvasRight class="layout-content-right h-full w-[260px] bg-[#fff] flex flex-col" />
+      <CanvasRight class="layout-content-right h-full w-[260px] bg-[#fff] flex flex-col" /> -->
       <CanvasDom class="absolute -z-[200] -left-[300px]" />
     </div>
     <CanvasTour />
@@ -27,6 +28,7 @@
 <script lang="ts" setup>
 import CanvasLeft from "./CanvasLeft/index.vue";
 import CanvasHeader from "./CanvasHeader/index.vue";
+import CanvasContent from "./CanvasContent/index.vue";
 import CanvasCenter from "./CanvasCenter/index.vue";
 import CanvasRight from "./CanvasRight/index.vue";
 import CanvasFooter from "./CanvasFooter/index.vue";
