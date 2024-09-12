@@ -4,6 +4,7 @@
     @mousedown="addDrawAreaFocus"
     v-contextmenu="contextMenus" 
     v-click-outside="remDrawAreaFocus"
+    class="h-full w-full"
   >
     <canvas ref="canvasRef" class="background-grid"></canvas>
   </div>
@@ -86,10 +87,6 @@ onUnmounted(() => {
 </script>
 
 <style lang="scss" scoped>
-.full-size {
-  height: 100%;
-  width: 100%;
-}
 .background-grid {
   --offsetX: 0px;
   --offsetY: 0px;

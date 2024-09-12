@@ -37,9 +37,6 @@ import CanvasTour from "./CanvasTour/index.vue";
 .layout-content-center {
   width: calc(100% - 50px - 160px - 260px);
 
-  .center-header {
-    // border-left: 1px solid $borderColor;
-  }
   .center-body {
     height: 100%;
     // margin: 100px;
@@ -48,8 +45,5 @@ import CanvasTour from "./CanvasTour/index.vue";
     border-top: 1px solid $borderColor;
     background-color: $lightGray;
   }
-}
-.layout-content-right {
-  // border-left: solid 1px $borderColor;
 }
 </style>
