@@ -33,7 +33,7 @@ export const createVitePlugins = (
     }),
     Components({
       resolvers: [ElementPlusResolver()],
-      dts: path.resolve(__dirname, "../src/types/components.d.d.ts"),
+      dts: path.resolve(__dirname, "../src/types/components.d.ts"),
     }),
     VitePWA({
       registerType: "autoUpdate",
