@@ -1,6 +1,9 @@
 <template>
   <div class="h-[59px] w-full flex justify-between px-[16px]">
     <div class="left-handler">
+      <el-tooltip placement="top" :hide-after="0" content="首页">
+        <IconHome class="handler-item" />
+      </el-tooltip>
       <el-tooltip placement="top" :hide-after="0">
         <template #content>{{ t("message.undo") }}</template>
         <IconBack class="handler-item" :class="{ disable: !canUndo }" @click="undo()" />

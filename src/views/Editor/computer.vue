@@ -9,8 +9,8 @@
 <template>
   <div class="h-full">
     <div class="layout-content">
-      <CanvasHeader class="h-[60px]"/>
-      <CanvasContent />
+      <CanvasHeader />
+      <CanvasBody />
       <CanvasDom class="absolute -z-[200] -left-[300px]" />
     </div>
     <CanvasTour />
@@ -20,10 +20,9 @@
 <script lang="ts" setup>
 import CanvasLeft from "./CanvasLeft/index.vue";
 import CanvasHeader from "./CanvasHeader/index.vue";
-import CanvasContent from "./CanvasContent/index.vue";
+import CanvasBody from "./CanvasBody/index.vue";
 import CanvasCenter from "./CanvasCenter/index.vue";
 import CanvasRight from "./CanvasRight/index.vue";
-import CanvasFooter from "./CanvasFooter/index.vue";
 import CanvasICP from "./CanvasICP/index.vue";
 import CanvasAffix from "./CanvasAffix/index.vue";
 import CanvasDom from "./CanvasDom/index.vue";
