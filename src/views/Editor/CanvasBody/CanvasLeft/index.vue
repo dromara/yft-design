@@ -1,6 +1,6 @@
 <template>
   <div class="flex">
-    <Label class="w-[50px] h-[100vh] z-10 bg-[#fff]" />
+    <Label class="w-[72px] h-[100vh] z-10 bg-[#fff]" />
     <Menu />
     <Thumb class="w-[160px] h-full flex flex-shrink-0 bg-[#fff] flex-col select-none" />
   </div>
