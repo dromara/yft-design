@@ -4,14 +4,14 @@
     v-click-outside="() => setThumbnailsFocus(false)"
     v-contextmenu="contextMenusThumbnails"  
   >
-    <el-row class="thumb-handle items-center">
+    <!-- <el-row class="thumb-handle items-center">
       <el-col :span="12" class="flex justify-center text-[16px]">
         <div>
           <el-button text ref="menuRef">文件</el-button>
           <HomePopover :menu-ref="menuRef" :menu-popover-ref="menuPopoverRef" />
         </div>
       </el-col>
-    </el-row>
+    </el-row> -->
     <Draggable
       class="thumb-content"
       :modelValue="templates"

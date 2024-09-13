@@ -60,7 +60,7 @@ const leftToggle = () => {
   position: absolute;
   width: 300px;
   left: 50px;
-  top: 40px;
+  top: 59px;
   z-index: 1;
   background: #fff;
   border-left: 1px solid $borderColor;
@@ -77,7 +77,7 @@ const leftToggle = () => {
 .menu-close {
   cursor: default;
   left: -251px;
-  top: calc(50% + 40px);
+  top: calc(50% + 59px);
   transform: translateY(-50%);
   position: absolute;;
   // z-index: 1;

@@ -1,12 +1,5 @@
 <template>
   <div>
-    <!-- <div class="left-top-tabs" id="left-top-tabs">
-      <div class="top-tab">
-        <el-tooltip placement="top" :hide-after="0" content="首页">
-          <IconHome class="handler-item" @click="goHome"/>
-        </el-tooltip>
-      </div>
-    </div> -->
     <div class="left-bottom-tabs">
       <div class="center-tabs">
         <div class="center-tab" :class="{ 'left-active': tab.key === poolType }" v-for="tab in topTabs" :key="tab.key" @click="setPoolType(tab.key)">
