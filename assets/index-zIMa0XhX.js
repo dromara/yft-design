@@ -1,0 +1,1 @@
+import{r as a}from"./index-C_6LyHV6.js";const e=e=>a({url:"/api/design/template/info/pages",method:"get",params:e}),t=e=>a({url:"/api/design/template/detail/pages",method:"get",params:e}),s=e=>a({url:`/api/design/template/data/${e}`,method:"get"});export{t as a,s as b,e as g};
