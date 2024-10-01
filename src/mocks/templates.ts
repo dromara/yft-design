@@ -33,7 +33,7 @@ export const Templates: Template[] = [
         "width": 1070.5512,
         "height": 645.3543,
         "stroke": "",
-        "strokeWidth": 1,
+        "strokeWidth": 0,
         "strokeDashArray": null,
         "strokeLineCap": "butt",
         "strokeDashOffset": 0,

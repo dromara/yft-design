@@ -74,7 +74,7 @@ export class FabricCanvas extends Canvas {
       // this.getObjects()?.forEach((board) => {
       //   FabricObject.prototype.setCoords.call(board)
       // })
-      // this.requestRenderAll()
+      this.requestRenderAll()
       return
     }
     this.setViewportTransform(vpt)

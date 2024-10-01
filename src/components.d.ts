@@ -101,7 +101,7 @@ export declare module 'fabric' {
     // on<K extends keyof EventSpec, E extends EventSpec[K]>(handlers: EventRegistryObject<K, E>): VoidFunction;
   }
 
-  export declare class Canvas {
+  export declare interface Canvas {
     __targetlessCanvasDrag?: boolean
     _objects: FabricObject[]
     ref: {
@@ -122,7 +122,7 @@ export declare module 'fabric' {
     fire<T>(eventName: EventName, options?: any): T;
   }
 
-  export declare class ActiveSelection {
+  export declare interface ActiveSelection {
     multiSelectAdd(...targets: FabricObject[]): void
     getObjects(...types: string[]): FabricObject[]
     forEachObject(
@@ -130,7 +130,7 @@ export declare module 'fabric' {
     ): void
   }
 
-  export declare class Group {
+  export declare interface Group {
     id: string
     name: string
     canvas: Canvas | undefined
@@ -150,7 +150,7 @@ export declare module 'fabric' {
     doubleClickHandler(e: TPointerEventInfo<TPointerEvent>): void
   }
 
-  export declare class FabricObject {
+  export declare interface FabricObject {
     group: Group | undefined
     id: string
     name: string
@@ -180,7 +180,7 @@ export declare module 'fabric' {
     hideOnLayer: boolean /** 在图层上隐藏 */
   }
 
-  export declare class FabricImage {
+  export declare interface FabricImage {
     originSrc?: string 
     effects?: EffectItem[]
     mask?: SerializedImageProps
@@ -193,26 +193,26 @@ export declare module 'fabric' {
     _drawCroppingPath(ctx: CanvasRenderingContext2D): void
   }
 
-  export declare class Path {
+  export declare interface Path {
     mask?: SerializedImageProps
   }
 
-  export declare class IText {
+  export declare interface IText {
     renderEffects(type?: string): void
   }
 
-  export declare class Textbox {
+  export declare interface Textbox {
     color: string
   }
 
 
-  export declare class Polygon {
+  export declare interface Polygon {
     startStyle: LinePoint
     endStyle: LinePoint
     pointMoving(index: number, point: Point): Point
   }
 
-  export declare class Line {
+  export declare interface Line {
     setLineMode(value: string, model: 'start' | 'end'): void
   }
 
@@ -226,13 +226,13 @@ export declare module 'fabric' {
     | 'fit'
   export declare type PatternOptions = Partial<Pick<Pattern, ExportedKeys>>
 
-  export declare class Pattern {
+  export declare interface Pattern {
     constructor(options?: PatternOptions)
     /** 契合度 */
     fit: 'fill' | 'padding' | 'clip' | 'repeat'
   }
 
-  export declare class StaticCanvas {
+  export declare interface StaticCanvas {
     _objects: FabricObject[]
     getObjects(): FabricObject[]
   }
