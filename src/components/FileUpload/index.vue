@@ -34,6 +34,8 @@ import useHandleCreate from '@/hooks/useHandleCreate'
 import useHandleTemplate from '@/hooks/useHandleTemplate'
 import useCanvas from '@/views/Canvas/useCanvas'
 import usePixi from '@/views/Canvas/usePixi';
+import { getObjectsFromSvgContent } from '@/extension/parse/svg'
+import { getObjectsFromPsd } from '@/extension/parse/psd'
 
 
 const templatesStore = useTemplatesStore()
@@ -67,7 +69,8 @@ const closeUpload = () => {
 }
 
 const generateSVGTemplate = async (dataText: string) => {
-  const content = await loadSVGFromString(dataText)
+  let content = await loadSVGFromString(dataText)
+  content = await getObjectsFromSvgContent(content);
   const options = content.options
   const svgData: any[] = []
   content.objects.slice(0, 1000).forEach(ele => svgData.push((ele as FabricObject).toObject(propertiesToInclude)))
@@ -107,6 +110,14 @@ const uploadHandle = async (option: any) => {
     emit('close')
     return
   }
+  if (fileSuffix === 'psd') {
+    const templete: any = await getObjectsFromPsd({ file:option.file });
+    templete.id = nanoid(10)
+    addTemplate(templete)
+    emit('close')
+    return
+  }
+
   if (fileSuffix === 'json') {
     const dataText = await getImageText(option.file)
     const template = JSON.parse(dataText)

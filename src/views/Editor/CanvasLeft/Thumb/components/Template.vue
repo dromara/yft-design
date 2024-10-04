@@ -48,7 +48,7 @@ onMounted(() => {
   thumbCanvas = new StaticCanvas(thumbnailTemplate.value, {
     width: props.size,
     height: props.size * viewportRatio.value,
-    backgroundColor: props.template.workSpace.fillType === 0 ? props.template.workSpace.fill as string : '#fff'
+    backgroundColor: props.template.workSpace?.fillType === 0 ? props.template.workSpace?.fill as string : '#fff'
   })
   templateCanvas.value.set(props.template.id, thumbCanvas as any)
   setThumbnailElement()
