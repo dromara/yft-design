@@ -101,6 +101,7 @@ export default () => {
           break
 
         default:
+          // @ts-ignore
           value = activeObject[key]
           break
       }
@@ -125,7 +126,10 @@ export default () => {
       const activeObject = canvas.activeObject.value as FabricObject & Textbox
       if (lockChange || !isDefined(activeObject)) return
       if (['width', 'height', 'left', 'top', 'angle'].includes(key)) {
+        const currentObject = activeObject
+        activeObject.canvas?.discardActiveObject()
         activeObject.set(key, Number(newValue))
+        activeObject.canvas?.setActiveObject(currentObject)
         if (type === 'change' && activeObject.group?.updateLayout) {
           activeObject.group.updateLayout()
         }
@@ -153,18 +157,48 @@ export default () => {
       canvas.requestRenderAll()
     }
 
-    return computed(() => ({
-      disabled: !isDefined(canvas.activeObject.value),
-      modelValue: modelValue.value as T,
-      onSwipe: (value: T) => {
-        changeValue(value, 'swipe')
+    // return computed(() => ({
+    //   disabled: !isDefined(canvas.activeObject.value),
+    //   modelValue: modelValue.value as T,
+    //   onSwipe: (value: T) => {
+    //     changeValue(value, 'swipe')
+    //   },
+    //   onChange: (value: T) => {
+    //     changeValue(value, 'change')
+    //     if (!isDefined(canvas.activeObject)) return
+    //     canvas.fire('object:modified', { target: canvas.activeObject.value })
+    //   },
+    // }))
+    return computed({
+      get() {
+        return {
+          disabled: !isDefined(canvas.activeObject.value),
+          modelValue: modelValue.value as T,
+          onSwipe: (value: T) => {
+            changeValue(value, 'swipe')
+          },
+          onChange: (value: T) => {
+            changeValue(value, 'change')
+            if (!isDefined(canvas.activeObject)) return
+            canvas.fire('object:modified', { target: canvas.activeObject.value })
+          }
+        }
       },
-      onChange: (value: T) => {
-        changeValue(value, 'change')
-        if (!isDefined(canvas.activeObject)) return
-        canvas.fire('object:modified', { target: canvas.activeObject.value })
-      },
-    }))
+      set() {
+        return {
+          disabled: !isDefined(canvas.activeObject.value),
+          modelValue: modelValue.value as T,
+          onSwipe: (value: T) => {
+            changeValue(value, 'swipe')
+          },
+          onChange: (value: T) => {
+            changeValue(value, 'change')
+            if (!isDefined(canvas.activeObject)) return
+            canvas.fire('object:modified', { target: canvas.activeObject.value })
+          }
+        }
+      }
+    })
   }
 
   return {
