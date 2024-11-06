@@ -603,8 +603,8 @@ const generateGridBackground = async (status?: string) => {
     points: null,
   };
   const trianglifier = trianglify(defaultOptions);
-  // @ts-ignore
-  const canvasBackground = trianglifier.toCanvas();
+  const canvas = document.createElement('canvas')
+  const canvasBackground = trianglifier.toCanvas(canvas, {});
   const dataURL = canvasBackground.toDataURL("image/svg");
   const source = await util.loadImage(dataURL);
   const elementPattern = new Pattern({ source, repeat: "repeat" });
