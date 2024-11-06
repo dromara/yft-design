@@ -53,9 +53,9 @@
 # 🚀 项目运行
 ```
 node >= 16+
-pnpm install
-pnpm run dev
-pnpm run build
+pnpm install  // 安装依赖
+pnpm dev      // debug
+pnpm build    // prod
 ```
 
 # 📖 项目结构

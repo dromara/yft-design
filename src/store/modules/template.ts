@@ -56,12 +56,12 @@ export const useTemplatesStore = defineStore('Templates', {
       return currentTemplate.height / currentTemplate.zoom
     },
 
-    currentTemplateElement(state) {
-      const currentTemplate = state.templates[state.templateIndex]
-      const [ canvas ] = useCanvas()
-      const activeObject = canvas.getActiveObject() as CanvasElement
-      return currentTemplate.objects.filter(ele => ele.id === activeObject.id)[0]
-    }
+    // currentTemplateElement(state) {
+    //   const currentTemplate = state.templates[state.templateIndex]
+    //   const [ canvas ] = useCanvas()
+    //   const activeObject = canvas.getActiveObject() as CanvasElement
+    //   return currentTemplate.objects.filter(ele => ele.id === activeObject.id)[0]
+    // }
   },
 
   actions: {
