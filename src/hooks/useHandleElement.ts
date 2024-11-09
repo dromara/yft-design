@@ -86,11 +86,12 @@ export default () => {
     }
     canvas.discardActiveObject()
     mainStore.setCanvasObject(undefined)
-    clonedObj.set({left, top, evented: true})
+    clonedObj.set({left, top, evented: true, id: nanoid(10)})
     if (clonedObj.type === ElementNames.ACTIVE) {
       clonedObj.canvas = canvas
       const groupObject = clonedObj as GroupElement
       groupObject.forEachObject(item => {
+        item.set({id: nanoid(10)})
         canvas.add(item as FabricObject)
         setZindex(canvas)
         templatesStore.addElement(item)
@@ -257,7 +258,7 @@ export default () => {
   const queryElement = (eid: string): FabricObject | undefined => {
     const [ canvas ] = useCanvas()
     const elements = canvas.getObjects().filter(item => !WorkSpaceCommonType.includes((item as FabricObject).id))
-    let element = elements.filter(obj => (obj as FabricObject).id === eid)[0] as FabricObject
+    const element = elements.filter(obj => (obj as FabricObject).id === eid)[0] as FabricObject
     if (!element) {
       return findElement(eid, elements as FabricObject[])
     }
@@ -278,7 +279,7 @@ export default () => {
 
   const queryOption = (eid: string): FabricObject | undefined => {
     const options = currentTemplate.value.objects as FabricObject[]
-    let option = options.filter(obj => obj.id === eid)[0] as FabricObject
+    const option = options.filter(obj => obj.id === eid)[0] as FabricObject
     if (option) return option
     return findOption(eid, options)
   }
