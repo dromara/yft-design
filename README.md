@@ -7,8 +7,7 @@
 [介绍文章](https://juejin.cn/post/7238804998276087868)  
 [介绍视频](https://www.bilibili.com/video/BV1Zb421H7fT/?buvid=XY3B1253C1118CEF7B4DE80267E1AD86732A0&from_spmid=main.space.0.0&is_story_h5=false&mid=TIDtF8b2h0f7OVMypYFAZQ%3D%3D&p=1&plat_id=116&share_from=ugc&share_medium=android&share_plat=android&share_session_id=56bc8446-776d-4fd6-a742-132ac702b09b&share_source=WEIXIN&share_tag=s_i&spmid=united.player-video-detail.0.0&timestamp=1719707202&unique_k=Z8LQOMT&up_id=149041192)
 
-
-![image](https://github.com/dromara/yft-design/assets/113762408/9df19ced-4058-4966-989a-9c8e3d848d4b)
+![image](https://github.com/user-attachments/assets/b6918883-2675-409e-b908-fe50151e91fa)
 
 <table rules="none" align="center">
    <tr>
