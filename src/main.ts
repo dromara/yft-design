@@ -18,8 +18,6 @@ import Component from "@/plugins/component"
 import Directive from "@/plugins/directive"
 
 import "virtual:svg-icons-register"
-import { useRegisterSW } from 'virtual:pwa-register/vue'
-useRegisterSW()
 
 async function start() {
     const app = createApp(App);

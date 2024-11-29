@@ -101,4 +101,4 @@ onUnmounted(() => {
   background-position: var(--offsetX) var(--offsetY), calc(var(--size) + var(--offsetX)) calc(var(--size) + var(--offsetY));
   background-size: calc(var(--size) * 2) calc(var(--size) * 2);
 }
-</style>@/views/Canvas/usePixi
+</style>
