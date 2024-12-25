@@ -10,8 +10,8 @@ export default ({ command, mode }: ConfigEnv): UserConfigExport => {
   return {
     base: "./", // publicPath
     server: {
-      host: 'localhost',
-      port: 5173,
+      host: '0.0.0.0',
+      port: 5174,
       proxy: {
         '/api': {
           // target: 'https://yft.design',
