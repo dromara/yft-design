@@ -170,6 +170,13 @@ Licensed under the MIT License.
 <!-- readme: collaborators -start -->
 <table>
 <tr>
+   <td align="center">
+        <a href="https://github.com/more-strive">
+            <img src="https://avatars.githubusercontent.com/u/113762408?v=4" width="80;" alt="more-strive"/>
+            <br />
+            <sub><b>more-strive(作者)</b></sub>
+        </a>
+    </td>
     <td align="center">
         <a href="https://github.com/Qiu-Jun">
             <img src="https://avatars.githubusercontent.com/u/24954362?v=4" width="80;" alt="Qiu-Jun"/>
@@ -184,13 +191,8 @@ Licensed under the MIT License.
             <sub><b>zjc2233</b></sub>
         </a>
     </td>
-    <td align="center">
-        <a href="https://github.com/more-strive">
-            <img src="https://avatars.githubusercontent.com/u/113762408?v=4" width="80;" alt="more-strive"/>
-            <br />
-            <sub><b>more-strive</b></sub>
-        </a>
-    </td></tr>
+    
+</tr>
 </table>
 <!-- readme: collaborators -end -->
 
@@ -198,6 +200,13 @@ Licensed under the MIT License.
 <!-- readme: collaborators,contributors -start -->
 <table>
 <tr>
+   <td align="center">
+        <a href="https://github.com/more-strive">
+            <img src="https://avatars.githubusercontent.com/u/113762408?v=4" width="80;" alt="more-strive"/>
+            <br />
+            <sub><b>more-strive(作者)</b></sub>
+        </a>
+    </td>
     <td align="center">
         <a href="https://github.com/Qiu-Jun">
             <img src="https://avatars.githubusercontent.com/u/24954362?v=4" width="80;" alt="Qiu-Jun"/>
@@ -210,13 +219,6 @@ Licensed under the MIT License.
             <img src="https://avatars.githubusercontent.com/u/43945226?v=4" width="80;" alt="zjc2233"/>
             <br />
             <sub><b>zjc2233</b></sub>
-        </a>
-    </td>
-    <td align="center">
-        <a href="https://github.com/more-strive">
-            <img src="https://avatars.githubusercontent.com/u/113762408?v=4" width="80;" alt="more-strive"/>
-            <br />
-            <sub><b>more-strive</b></sub>
         </a>
     </td>
     <td align="center">
@@ -239,7 +241,7 @@ Licensed under the MIT License.
             <br />
             <sub><b>mjhcc365</b></sub>
         </a>
-    </td></tr>
+    </td>
 <tr>
     <td align="center">
         <a href="https://github.com/ieleg">
