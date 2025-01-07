@@ -25,4 +25,3 @@ dist/*
 dev-dist/*
 types/auto-imports.d.ts
 types/components.d.ts
-pnpm-lock.yaml
