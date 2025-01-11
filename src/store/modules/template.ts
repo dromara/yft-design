@@ -11,7 +11,6 @@ import useCanvasScale from '@/hooks/useCanvasScale'
 import useCanvas from '@/views/Canvas/useCanvas'
 import useHistorySnapshot from '@/hooks/useHistorySnapshot'
 import useCommon from '@/views/Canvas/useCommon'
-import usePixi from '@/views/Canvas/usePixi'
 
 
 interface UpdateElementData {
