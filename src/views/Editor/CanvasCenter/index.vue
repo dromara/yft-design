@@ -18,7 +18,6 @@ import { unzip } from "@/utils/crypto"
 import { getTemplateData } from '@/api/template'
 import { contextMenus } from '@/configs/contextMenu'
 import { initEditor } from '@/views/Canvas/useCanvas'
-import { initPixi } from '@/views/Canvas/usePixi'
 import { ElMessage, ElLoading } from 'element-plus'
 import useCanvasHotkey from '@/hooks/useCanvasHotkey'
 const fabricStore = useFabricStore()
@@ -69,7 +68,6 @@ onMounted(async () => {
   const query = router.currentRoute.value.query
   initRouter(query.template)
   initEditor(query.template)
-  initPixi()
   document.addEventListener('keydown', keydownListener)
   document.addEventListener('keyup', keyupListener)
   window.addEventListener('blur', keyupListener)
