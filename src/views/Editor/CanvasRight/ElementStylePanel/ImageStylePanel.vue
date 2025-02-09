@@ -63,7 +63,7 @@
     <el-divider style="margin: 12px 0" />
     <ElementShadow :hasShadow="hasShadow" />
     <el-divider style="margin: 12px 0" />
-
+    <ElementOpacity />
     <el-divider style="margin: 12px 0" />
 
     <el-row>
@@ -105,6 +105,7 @@ import ElementFilter from "../Components/ElementFilter.vue";
 import ElementMask from "../Components/ElementMask.vue";
 import ElementBlend from "../Components/ElementBlend.vue";
 import ElementEffects from "../Components/ElementEffects.vue";
+import ElementOpacity from "../Components/ElementOpacity.vue";
 import useCanvas from "@/views/Canvas/useCanvas";
 
 const mainStore = useMainStore();
