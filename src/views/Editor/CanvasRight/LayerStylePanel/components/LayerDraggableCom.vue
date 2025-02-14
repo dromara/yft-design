@@ -9,18 +9,18 @@
       >
       <div class="element-info">
         
-        <IconPreviewOpen class="common-icon" v-if="element.visible" @click.stop="visibleElement(element.id, false)"/>
-        <IconPreviewClose class="common-icon" v-else @click.stop="visibleElement(element.id, true)"/>
+        <IconPreviewOpen class="common-icon" v-if="element.visible" @click.stop="visibleElement(element.id)"/>
+        <IconPreviewClose class="common-icon" v-else @click.stop="visibleElement(element.id)"/>
         <span class="common-span" v-if="props.index"/>
         <div v-if="element.type.toLowerCase() === ElementNames.GROUP">
           <IconDownOne v-if="(element as Group).isShow" class="common-icon text-[20px]" @click.stop="showElement(element.id)"/>
           <IconRightOne v-else class="common-icon text-[20px]" @click.stop="showElement(element.id)"/>
         </div>
         <div class="element-type">{{ element.type }}</div>
-        <i class="icon-font iconfont icon-mask" v-if="(element as Image).mask" @click.stop="maskElement(element.id)"/>
+        <i class="icon-font iconfont icon-mask" v-if="(element as FabricImage).mask" @click.stop="maskElement(element.id)"/>
         <span class="icon-span" v-else/>
-        <div class="mask-image" v-if="(element as Image).mask">
-          <img :src="(element as Image).mask?.src" alt="">
+        <div class="mask-image" v-if="(element as FabricImage).mask">
+          <img :src="(element as FabricImage).mask?.src" alt="">
         </div>
         <div class="element-text" v-if="element.type === ElementNames.TEXTBOX || element.type === ElementNames.TEXT">{{ (element as TextboxElement).text }}</div>
         <div class="element-layer">
@@ -40,13 +40,13 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, PropType } from 'vue'
-import { CanvasElement, TextboxElement, ImageElement } from '@/types/canvas'
-import { ElementNames } from '@/types/elements'
-import { useMainStore, useTemplatesStore } from '@/store'
-import { storeToRefs } from 'pinia'
-import { Group, Object as FabricObject, Image } from 'fabric'
 import useHandleElement from "@/hooks/useHandleElement"
+import { useMainStore, useTemplatesStore } from '@/store'
+import { TextboxElement } from '@/types/canvas'
+import { ElementNames } from '@/types/elements'
+import { FabricImage, FabricObject, Group } from 'fabric'
+import { storeToRefs } from 'pinia'
+import { computed, PropType } from 'vue'
 
 const { 
   selectElement, 

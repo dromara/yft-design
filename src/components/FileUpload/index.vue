@@ -17,22 +17,20 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue'
-import { UploadFilled } from '@element-plus/icons-vue'
-import { getImageDataURL, getImageText } from '@/utils/image'
-import { ElMessage, genFileId, UploadInstance, UploadProps, UploadRawFile } from "element-plus"
 import { uploadFile } from '@/api/file'
-import { useTemplatesStore } from '@/store'
-import { loadSVGFromString } from 'fabric'
-import { ElementNames } from '@/types/elements'
-import { WorkSpaceDrawData, propertiesToInclude } from '@/configs/canvas'
-import { Image, Object as FabricObject } from 'fabric'
-import { Template } from "@/types/canvas"
-import { nanoid } from 'nanoid'
+import { propertiesToInclude, WorkSpaceDrawData } from '@/configs/canvas'
 import useCanvasScale from '@/hooks/useCanvasScale'
 import useHandleCreate from '@/hooks/useHandleCreate'
 import useHandleTemplate from '@/hooks/useHandleTemplate'
+import { useTemplatesStore } from '@/store'
+import { Template } from "@/types/canvas"
+import { getImageDataURL, getImageText } from '@/utils/image'
 import useCanvas from '@/views/Canvas/useCanvas'
+import { UploadFilled } from '@element-plus/icons-vue'
+import { genFileId, UploadInstance, UploadProps, UploadRawFile } from "element-plus"
+import { Object as FabricObject, Image, loadSVGFromString } from 'fabric'
+import { nanoid } from 'nanoid'
+import { ref, watch } from 'vue'
 
 
 const templatesStore = useTemplatesStore()
@@ -153,15 +151,15 @@ const uploadHandle = async (option: any) => {
 
 const setImageMask = (image: Image) => {
   if (!image.mask) return
-  const [ pixi ] = usePixi()
-  pixi.postMessage({
-    id: image.id,
-    type: "mask", 
-    src: image.getSrc(),
-    mask: JSON.stringify(image.mask), 
-    width: image.width, 
-    height: image.height
-  });
+  // const [ pixi ] = usePixi()
+  // pixi.postMessage({
+  //   id: image.id,
+  //   type: "mask", 
+  //   src: image.getSrc(),
+  //   mask: JSON.stringify(image.mask), 
+  //   width: image.width, 
+  //   height: image.height
+  // });
 }
 
 const handleExceed: UploadProps['onExceed'] = (files: File[]) => {

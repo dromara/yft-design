@@ -1,17 +1,16 @@
-import { Object as FabricObject, Group, Path } from 'fabric'
-import { nanoid } from "nanoid"
-import { storeToRefs } from "pinia"
-import { KEYS } from '@/configs/hotkey'
-import { ElementNames } from "@/types/elements"
 import { propertiesToInclude, WorkSpaceCommonType } from "@/configs/canvas"
+import { KEYS } from '@/configs/hotkey'
 import { useFabricStore, useMainStore, useTemplatesStore } from "@/store"
-import { TextboxElement, CanvasElement, GroupElement } from "@/types/canvas"
+import { CanvasElement, GroupElement, TextboxElement } from "@/types/canvas"
+import { ElementNames } from "@/types/elements"
 import { clipperPath } from '@/utils/clipper'
+import useCanvas from "@/views/Canvas/useCanvas"
 import { useActiveElement } from '@vueuse/core'
 import { ElMessageBox } from "element-plus"
-import useCanvas from "@/views/Canvas/useCanvas"
+import { FabricObject, Group, Path } from 'fabric'
+import { nanoid } from "nanoid"
+import { storeToRefs } from "pinia"
 import useCanvasZindex from "./useCanvasZindex"
-import { copyText } from '@/utils/clipboard'
 
 export default () => {
   const templatesStore = useTemplatesStore()
@@ -292,13 +291,13 @@ export default () => {
     canvas.renderAll()
   }
 
-  const visibleElement = (eid: string, visible: boolean) => {
+  const visibleElement = (eid: string) => {
     const [ canvas ] = useCanvas()
     const element = queryElement(eid)
     if (!element) return
     canvas.discardActiveObject()
-    canvas.renderAll()
-    templatesStore.modifedElement(element, {visible})
+    canvas.requestRenderAll()
+    templatesStore.modifedElement(element, {visible: !element.visible})
   }
 
   const showElement = (eid: string) => {
@@ -365,9 +364,9 @@ export default () => {
   const checkElement = (eid: string) => {
     const [ canvas ] = useCanvas()
     const element = queryElement(eid) as FabricObject
-    element.isSelected = true
+    // element.isSelected = true
     canvas.renderAll()
-    templatesStore.modifedElement()
+    // templatesStore.modifedElement()
     // const elements = canvas.getObjects().filter(item => !WorkSpaceCommonType.includes((item as CanvasElement).id)) as FabricObject[]
     // isChecked.value = queryTextboxChecked(elements)
   }
