@@ -44,9 +44,6 @@ export const useSnapshotStore = defineStore('snapshot', {
     setProcessing(status: boolean) {
       this.processing = status
     },
-    async initSnapshotDatabase() {
-      
-    },
     async addSnapshot(data: Snapshot) {
       // const templatesStore = useTemplatesStore()
       // const { templateIndex, templates } = storeToRefs(templatesStore)
@@ -54,7 +51,7 @@ export const useSnapshotStore = defineStore('snapshot', {
       if (!data) return
       const allKeys = await db.snapshots.orderBy('id').keys()
   
-      let needDeleteKeys: IndexableTypeArray = []
+      const needDeleteKeys: IndexableTypeArray = []
   
       // // 记录需要删除的快照ID
       // // 若当前快照指针不处在最后一位，那么再添加快照时，应该将当前指针位置后面的快照全部删除，对应的实际情况是：

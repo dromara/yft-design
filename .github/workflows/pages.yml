@@ -22,3 +22,14 @@ jobs:
           branch: gh-pages # 指定推送到的远程分支
           folder: dist # The folder the action should deploy.
           single-commit: true # 单个提交
+
+      - name: Deploy via SCP (覆盖文件)
+        uses: appleboy/scp-action@v0.1.6
+        with:
+          username: root
+          host: ${{ secrets.SSH_IP }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: dist/ # 本地打包目录
+          target: /root/code/yft-admin # 服务器目标路径
+          overwrite: true # 关键参数：强制覆盖
+          rm: true

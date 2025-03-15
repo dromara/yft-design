@@ -22,7 +22,7 @@
 
 <script lang="ts" setup>
 import { PropType } from 'vue'
-import { Object as FabricObject } from 'fabric'
+import { FabricObject } from 'fabric'
 import { ElementNames } from '@/types/elements'
 import { contextMenusThumbnails } from '@/configs/contextMenu'
 import Draggable from 'vuedraggable'
