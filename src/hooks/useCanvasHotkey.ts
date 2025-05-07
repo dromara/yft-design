@@ -205,7 +205,7 @@ export default () => {
       golbelPreventDefault(e);
       // order(ElementOrderCommands.BOTTOM)
     }
-    if (key === KEYS.DELETE) {
+    if (key === KEYS.DELETE || key === KEYS.BACKSPACE) {
       if (disableHotkeys.value) return;
       golbelPreventDefault(e);
       remove();
