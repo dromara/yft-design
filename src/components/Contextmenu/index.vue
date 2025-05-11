@@ -22,7 +22,7 @@
 
 <script lang="ts" setup>
 import { computed, PropType } from 'vue'
-import { ContextmenuItem, Axis } from './types'
+import { ContextMenu, Axis } from './types'
 
 import MenuContent from './MenuContent.vue'
 
@@ -36,7 +36,7 @@ const props = defineProps({
     required: true,
   },
   menus: {
-    type: Array as PropType<ContextmenuItem[]>,
+    type: Array as PropType<ContextMenu[]>,
     required: true,
   },
   removeContextmenu: {
