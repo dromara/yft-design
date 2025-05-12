@@ -18,7 +18,7 @@
         </el-row>
       </el-col>
     </el-row>
-    <el-row class="row-effect" v-for="(item, index) in handleElement.effects?.filter(ele => ele.type === 0)">
+    <el-row class="row-effect" v-for="(item, index) in handleElement.effects?.filter(ele => ele.type === 0)" :key="index">
       <el-row>
         <el-col :span="12" class="effect-layer">
           <IconHamburgerButton class="layer-icon"/>
@@ -105,7 +105,7 @@
         </el-row>
       </el-col>
     </el-row>
-    <el-row class="row-effect" v-for="(item, index) in handleElement.effects?.filter(ele => ele.type === 1)">
+    <el-row class="row-effect" :key="index" v-for="(item, index) in handleElement.effects?.filter(ele => ele.type === 1)">
       <el-row>
         <el-col :span="12" class="effect-layer">
           <el-row>
