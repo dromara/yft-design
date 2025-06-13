@@ -96,8 +96,17 @@ export const useTemplatesStore = defineStore('Templates', {
         target: target.toObject(propertiesToInclude),
         tid: this.templateId
       }
+      const proxyEl: any = this.currentTemplate.objects.find(i => i.id === target.id)
       addHistorySnapshot(data)
       target.set({...options});
+      // 更新target同时更新template的对象
+      if (proxyEl) {
+        Object.keys(options).forEach((key) => {
+          if (key in proxyEl) {
+            proxyEl[key] = options[key]
+          }
+        })
+      }
       if (options.filters) {
         (target as FabricImage).applyFilters();
       }
