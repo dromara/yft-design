@@ -28,7 +28,7 @@ const snapshotStore = useSnapshotStore()
 
 onMounted(async () => {
   await deleteDiscardedDB()
-  await snapshotStore.initSnapshotDatabase()
+  // await snapshotStore.initSnapshotDatabase()
   // mainStore.getFonts()
 })
 
