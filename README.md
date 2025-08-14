@@ -2,10 +2,30 @@
 1，一款美观且功能强大的在线设计工具，具备海报设计和图片编辑功能，基于Canvas的开源版【稿定设计】。适用于多种场景，如海报生成、电商产品图制作、文章长图设计、视频/公众号封面编辑等。  
 2，适配稿定设计pdf还原，支持导入psd还原  
 3，可导出图片，svg，pdf  
-<b>demo：[https://demo.yft.design](https://demo.yft.design)</b>  
-<b> pro：[https://yft.design](https://yft.design)</b>  
-<b> wechat: 15972699417 </b>
-<b> email: yft.design@163.com </b>
+## 📞 联系我们
+
+<div align="left">
+
+### 🌐 在线体验
+
+| 版本     | 链接                                               | 描述         |
+| -------- | -------------------------------------------------- | ------------ |
+| **Demo** | [https://demo.yft.design](https://demo.yft.design) | 免费体验版本 |
+| **Pro**  | [https://yft.design](https://yft.design)           | 专业完整版本 |
+
+### 💬 联系方式
+
+| 平台         | 联系方式                                   | 说明                 |
+| ------------ | ------------------------------------------ | -------------------- |
+| **微信**     | `15972699417`                              | 添加微信获取技术支持 |
+| **邮箱**     | `yft.design@163.com`                       | 商务合作与技术支持   |
+| **Telegram** | [加入群组](https://t.me/+YBqps3QqAAI4NzVl) | 技术交流与社区讨论   |
+
+</div>
+
+---
+
+## 🚀 开发状态
 
 [介绍文章](https://juejin.cn/post/7238804998276087868)  
 [介绍视频](https://www.bilibili.com/video/BV1Zb421H7fT/?buvid=XY3B1253C1118CEF7B4DE80267E1AD86732A0&from_spmid=main.space.0.0&is_story_h5=false&mid=TIDtF8b2h0f7OVMypYFAZQ%3D%3D&p=1&plat_id=116&share_from=ugc&share_medium=android&share_plat=android&share_session_id=56bc8446-776d-4fd6-a742-132ac702b09b&share_source=WEIXIN&share_tag=s_i&spmid=united.player-video-detail.0.0&timestamp=1719707202&unique_k=Z8LQOMT&up_id=149041192)
