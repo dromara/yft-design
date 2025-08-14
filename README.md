@@ -109,15 +109,6 @@ pnpm build    // prod
 └── worker                        // web worker
 ```
 
-# 🧾 API接口文档
-### 使用后端文件解析器可以查看如下
-  - 支持pdf
-  - 支持psd
-  - 支持ai(pdf结构)
-  - 支持抠图
-  - cdr解析开发中  
-### 如果有需要可以联系作者 yft.design@163.com
-
 # 📚 功能列表
 ### 基础功能
 - 历史记录（撤销、重做）
