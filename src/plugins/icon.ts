@@ -184,7 +184,8 @@ import {
   Mail,
   ShareOne,
   Navigation,
-  ViewList
+  ViewList,
+  FourRoundPointConnection
 } from '@icon-park/vue-next'
 
 export const icons = {
@@ -369,7 +370,8 @@ export const icons = {
   IconMail: Mail,
   IconShareOne: ShareOne,
   IconNavigation: Navigation,
-  IconViewList: ViewList
+  IconViewList: ViewList,
+  IconFourRoundPointConnection: FourRoundPointConnection
 }
 
 export default {
