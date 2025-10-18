@@ -185,7 +185,8 @@ import {
   ShareOne,
   Navigation,
   ViewList,
-  FourRoundPointConnection
+  FourRoundPointConnection,
+  Point
 } from '@icon-park/vue-next'
 
 export const icons = {
@@ -371,7 +372,8 @@ export const icons = {
   IconShareOne: ShareOne,
   IconNavigation: Navigation,
   IconViewList: ViewList,
-  IconFourRoundPointConnection: FourRoundPointConnection
+  IconFourRoundPointConnection: FourRoundPointConnection,
+  IconPoint: Point
 }
 
 export default {

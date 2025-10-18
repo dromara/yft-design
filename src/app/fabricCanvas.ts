@@ -5,10 +5,13 @@ import { Canvas, FabricImage, FabricObject } from 'fabric'
 import { shallowRef } from 'vue'
 import { toRef } from './attribute/toRef'
 import { FabricRuler } from './fabricRuler'
+import { FabricTool } from './fabricTool'
 
 export class FabricCanvas extends Canvas {
   public ruler?: FabricRuler
+  public tool?: FabricTool
   public loading?: FabricImage 
+  public swipe?: boolean
   public activeObject = shallowRef<FabricObject>()
 
   constructor(el: string | HTMLCanvasElement, options?: any) {

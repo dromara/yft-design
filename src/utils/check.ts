@@ -33,6 +33,10 @@ const isPattern = (thing: unknown): thing is Pattern => {
 const isTextObject = (thing?: FabricObject): thing is Text => {
   return !!thing && thing.isType('Text', 'IText', 'Textbox', 'ArcText')
 }
+
+const isCircleNum = (thing?: FabricObject): thing is FabricObject => {
+  return !!thing && thing.isType('CircleNum')
+}
   
 // const isFiller = (filler: TFiller | string | null): filler is TFiller => {
 //     return !!filler && (filler as TFiller).toLive !== undefined
@@ -50,6 +54,7 @@ export const check = {
   isTextObject,
   isGroup,
   isNativeGroup,
-  isCircle
+  isCircle,
+  isCircleNum,
 }
   

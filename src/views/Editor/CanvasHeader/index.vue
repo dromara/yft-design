@@ -23,7 +23,11 @@
       </el-tooltip>
       <el-tooltip placement="top" :hide-after="0">
         <template #content>标注</template>
-        <IconFourRoundPointConnection class="handler-item" @click="changeSwipe()" />
+        <IconFourRoundPointConnection class="handler-item" :class="{ 'is-active': isShape }" @click="setShapeTool()" />
+      </el-tooltip>
+      <el-tooltip placement="top" :hide-after="0">
+        <template #content>选择</template>
+        <IconPoint class="handler-item" :class="{ 'is-active': isMove }" @click="setMoveTool()" />
       </el-tooltip>
     </div>
 
@@ -144,10 +148,27 @@ const changeRuler = () => {
   canvas.ruler.enabled = !canvas.ruler.enabled
 };
 
-const changeSwipe = () => {
+const setShapeTool = () => {
   const [ canvas ] = useCanvas();
-  canvas.swipe = !canvas.swipe
+  canvas.tool?.setTool('shape')
+  canvas.requestRenderAll()
 };
+
+const setMoveTool = () => {
+  const [ canvas ] = useCanvas();
+  canvas.tool?.setTool('move')
+  canvas.requestRenderAll()
+};
+
+const isShape = computed(() => {
+  const [ canvas ] = useCanvas();
+  return canvas?.tool?.getTool() === 'shape'
+})
+
+const isMove = computed(() => {
+  const [ canvas ] = useCanvas();
+  return canvas?.tool?.getTool() === 'move'
+})
 
 const intersection = (val: number) => {
   if (!handleElement.value) return;
@@ -193,10 +214,17 @@ const applyCanvasPresetScale = (value: number) => {
   font-size: 14px;
   overflow: hidden;
   cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease;
 
   &.disable {
     opacity: 0.5;
     cursor: not-allowed;
+  }
+
+  &.is-active {
+    color: $themeColor;
+    background: #f1f1f1;
+    border-radius: $borderRadius;
   }
 }
 .right-handler {

@@ -76,6 +76,7 @@ export class FabricRuler extends Disposable {
     x: HighlightRect[],
     y: HighlightRect[]
   }
+  private isHoveringRuler: boolean = false
 
   constructor(private readonly canvas: FabricCanvas) {
     super()
@@ -124,6 +125,18 @@ export class FabricRuler extends Disposable {
     }
     this.enabled = this.options.enabled
     canvas.ruler = this
+
+    // 当鼠标离开画布时，若处于标尺区样式，恢复到进入前的样式
+    this.canvas.upperCanvasEl?.addEventListener('mouseleave', this.onCanvasMouseLeave)
+  }
+
+  private onCanvasMouseLeave = () => {
+    if (!this.isHoveringRuler) return
+    const restore = this.lastCursor || 'default'
+    this.canvas.defaultCursor = restore
+    this.canvas.setCursor(restore)
+    this.canvas.upperCanvasEl && (this.canvas.upperCanvasEl.style.cursor = restore)
+    this.isHoveringRuler = false
   }
 
   public getPointHover(point: Point): 'vertical' | 'horizontal' | '' {
@@ -168,10 +181,24 @@ export class FabricRuler extends Disposable {
       this.tempReferenceLine.fire('moving', event);
     }
     const status = this.getPointHover(e.viewportPoint)
-    this.canvas.defaultCursor = this.lastCursor
-    if (!status) return
-    this.lastCursor = this.canvas.defaultCursor
-    this.canvas.defaultCursor = status === 'horizontal' ? 'ns-resize' : 'ew-resize';
+    if (status) {
+      if (!this.isHoveringRuler) {
+        // 首次进入标尺区，记录进入前的光标
+        this.lastCursor = this.canvas.defaultCursor
+        this.isHoveringRuler = true
+      }
+      const resizeCursor = status === 'horizontal' ? 'ns-resize' : 'ew-resize'
+      this.canvas.defaultCursor = resizeCursor
+      this.canvas.setCursor(resizeCursor)
+      this.canvas.upperCanvasEl && (this.canvas.upperCanvasEl.style.cursor = resizeCursor)
+    } else if (this.isHoveringRuler) {
+      // 离开标尺区，恢复光标
+      const restore = this.lastCursor || 'default'
+      this.canvas.defaultCursor = restore
+      this.canvas.setCursor(restore)
+      this.canvas.upperCanvasEl && (this.canvas.upperCanvasEl.style.cursor = restore)
+      this.isHoveringRuler = false
+    }
   }
 
   private mouseDown(e: TPointerEventInfo<TPointerEvent>) {
@@ -596,5 +623,6 @@ export class FabricRuler extends Disposable {
   public dispose(): void {
     super.dispose()
     this.enabled = false
+    this.canvas.upperCanvasEl?.removeEventListener('mouseleave', this.onCanvasMouseLeave)
   }
 }

@@ -64,7 +64,7 @@ export class FabricGuide extends Disposable {
 
   private objectMoving({ target }: any) {
     this.clearStretLine()
-    if (check.isCircle(target)) {
+    if (check.isCircle(target) || target.type.toLowerCase() === 'circlenum') {
       return false
     }
     const transform = this.canvas._currentTransform
